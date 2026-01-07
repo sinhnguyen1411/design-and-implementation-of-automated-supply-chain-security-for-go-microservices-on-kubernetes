@@ -193,7 +193,7 @@ jobs:
 
       - name: Verify signature in registry
         run: |
-          cosign verify --keyless ${{ steps.image_ref.outputs.image_digest }}
+          cosign verify ${{ steps.image_ref.outputs.image_digest }}
 
       - name: Upload Cosign bundle
         uses: actions/upload-artifact@v4
