@@ -193,7 +193,10 @@ jobs:
 
       - name: Verify signature in registry
         run: |
-          cosign verify ${{ steps.image_ref.outputs.image_digest }}
+          cosign verify \
+            --certificate-identity-regexp "https://github.com/${{ github.repository }}/.github/workflows/secure-supply-chain.yml@refs/heads/Thesis-SCS" \
+            --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+            ${{ steps.image_ref.outputs.image_digest }}
 
       - name: Upload Cosign bundle
         uses: actions/upload-artifact@v4
