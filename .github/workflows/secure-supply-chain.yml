@@ -36,10 +36,14 @@ jobs:
         id: meta
         run: |
           TAG=${GITHUB_SHA::12}
+          IMAGE_REPO="${REGISTRY}/${IMAGE_NAME}"
           IMAGE="${REGISTRY}/${IMAGE_NAME}:${TAG}"
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "image_repo=${IMAGE_REPO}" >> "$GITHUB_OUTPUT"
           echo "image=${IMAGE}" >> "$GITHUB_OUTPUT"
-          echo "image_ref=${IMAGE}@${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -48,12 +52,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build image
+      - name: Build and push image
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.image }}
+
+      - name: Resolve image digest reference
+        id: image_ref
         run: |
-          docker build \
-            --file Dockerfile \
-            --tag ${{ steps.meta.outputs.image }} \
-            .
+          IMAGE_DIGEST="${{ steps.meta.outputs.image_repo }}@${{ steps.build.outputs.digest }}"
+          echo "image_digest=${IMAGE_DIGEST}" >> "$GITHUB_OUTPUT"
 
       - name: Run unit tests
         run: go test ./...
@@ -110,7 +122,7 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "1"
         run: |
-          cosign sign --yes ${{ steps.meta.outputs.image }}
+          cosign sign --yes ${{ steps.image_ref.outputs.image_digest }}
 
       - name: Generate SLSA-style provenance predicate
         id: provenance
@@ -141,7 +153,7 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "1"
         run: |
-          cosign attach sbom --sbom ${{ env.SBOM_PATH }} ${{ steps.meta.outputs.image }}
+          cosign attach sbom --sbom ${{ env.SBOM_PATH }} ${{ steps.image_ref.outputs.image_digest }}
 
       - name: Attest provenance
         env:
@@ -150,7 +162,7 @@ jobs:
           cosign attest --yes \
             --predicate ${{ steps.provenance.outputs.predicate }} \
             --type slsaprovenance \
-            ${{ steps.meta.outputs.image }}
+            ${{ steps.image_ref.outputs.image_digest }}
 
       - name: Render Kustomize annotations overlay (with scan/SBOM values)
         run: |
@@ -179,10 +191,9 @@ jobs:
             - path: patch-annotations.yaml
           EOF
 
-      - name: Push image + artifacts to registry
+      - name: Verify signature in registry
         run: |
-          docker push ${{ steps.meta.outputs.image }}
-          cosign verify --keyless ${{ steps.meta.outputs.image }}
+          cosign verify --keyless ${{ steps.image_ref.outputs.image_digest }}
 
       - name: Upload Cosign bundle
         uses: actions/upload-artifact@v4
