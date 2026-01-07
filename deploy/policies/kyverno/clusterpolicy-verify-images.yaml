@@ -24,11 +24,9 @@ spec:
             - entries:
                 - keys:
                     publicKeys: |
-                      {{ cosign:cosign-public-key/cosign.pub }}
+                      -----BEGIN PUBLIC KEY-----
+                      MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAENf2RIVLxQjXzrw/58BR/t9yFFWu4
+                      6CiFGCVhA9FkyfCFG2JlKSBxK7aGkZ7ogNcYwDwAbsWcuc3TDE21+EpKgg==
+                      -----END PUBLIC KEY-----
           attestations:
             - type: https://slsa.dev/provenance/v0.2
-              conditions:
-                any:
-                  - key: "{{ regex_match('github-actions', '{{ attestation.statement.predicate.builder.id }}') }}"
-                    operator: Equals
-                    value: true

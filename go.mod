@@ -1,6 +1,6 @@
 module github.com/sinhnguyen1411/stock-trading-be
 
-go 1.23.2
+go 1.24.11
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.2.1
