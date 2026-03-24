@@ -10,18 +10,56 @@ This repository provides a practical DevSecOps baseline for implementing and val
 
 ## Architecture Overview
 ```mermaid
-flowchart LR
-  Dev["Developer"] -->|"git push"| Repo["Git Repository"]
-  Repo -->|"Trigger"| CI["CI/CD Pipeline"]
-  CI --> Build["Build and Test"]
-  Build --> SBOM["Generate SBOM"]
-  SBOM --> Scan["Vulnerability Scan"]
-  Scan --> Sign["Sign and Attest"]
-  Sign --> Registry["Container Registry"]
-  Registry --> Deploy["Deploy"]
-  Deploy --> Admit["Kubernetes Admission"]
-  Admit --> Allow["Allow Valid Artifact"]
-  Admit --> Deny["Deny Non-compliant Artifact"]
+flowchart TD
+  subgraph DevLayer["Developer and Source"]
+    Dev["Developer"]
+    Repo["Git repository"]
+    Dev -->|"git push"| Repo
+  end
+
+  subgraph CILayer["CICD Pipeline and SCS"]
+    CI["CICD pipeline"]
+    Build["Build Go binary and Docker image"]
+    SBOM["Generate SBOM Syft"]
+    Scan["Scan vulnerabilities Grype"]
+    FailBuild["Fail pipeline and block image"]
+    Sign["Sign image Cosign"]
+    Attest["Create SLSA provenance"]
+  end
+
+  Repo -->|"trigger pipeline"| CI
+  CI --> Build --> SBOM --> Scan
+  Scan -->|"Fail CVE high or critical"| FailBuild
+  Scan -->|"Pass"| Sign --> Attest
+
+  subgraph DeployLayer["Registry and Kubernetes"]
+    Registry["Secure container registry"]
+    Deploy["Apply deployment manifest"]
+    K8s["Kubernetes cluster"]
+    AC["Admission controller or Kyverno"]
+    Verify["Verify signature and security policy"]
+    Decision{"Policy ok"}
+    Reject["Reject deployment"]
+    Pod["Running pod on Kubernetes"]
+  end
+
+  Sign --> Registry
+  Attest --> Registry
+  Dev --> Deploy --> K8s
+  Registry --> AC
+  K8s --> AC
+  AC --> Verify --> Decision
+  Decision -->|"No"| Reject
+  Decision -->|"Yes"| Pod
+
+  subgraph LogLayer["Logs and Evidence"]
+    LogsCI["CICD logs"]
+    LogsAC["Admission controller logs"]
+    Evidence["Security evidence for report"]
+  end
+
+  CI --> LogsCI --> Evidence
+  AC --> LogsAC --> Evidence
 ```
 
 ## Quickstart
