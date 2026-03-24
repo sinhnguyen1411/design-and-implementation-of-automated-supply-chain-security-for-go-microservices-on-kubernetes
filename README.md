@@ -9,6 +9,8 @@ This repository provides a practical DevSecOps baseline for implementing and val
 - Thesis-aligned documentation, traceability, and evidence artifacts.
 
 ## Architecture Overview
+For the thesis-facing presentation version with visual legend and explanatory notes, open [docs/scs_architecture_diagram.html](docs/scs_architecture_diagram.html).
+
 ```mermaid
 flowchart TD
   subgraph DevLayer["Developer and Source"]
@@ -83,7 +85,7 @@ kubectl get clusterpolicies
 
 ## Thesis Documentation
 - [Thesis specification (English)](docs/thesis_spec_en.md)
-- [Interactive architecture diagram (HTML + Mermaid)](docs/scs_architecture_diagram.html)
+- [Interactive architecture diagram (HTML + Mermaid, presentation layout)](docs/scs_architecture_diagram.html)
 - [Go dependency integrity baseline](docs/go_dependency_integrity_baseline.md)
 - [CI and admission flow](docs/devsecops_ci_admission.md)
 - [Implementation roadmap and milestones](docs/implementation_roadmap.md)

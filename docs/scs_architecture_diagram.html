@@ -2,48 +2,306 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SCS Architecture Diagram</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
 
     <!-- Mermaid JS 10.x -->
     <script type="module">
       import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
       mermaid.initialize({
         startOnLoad: true,
-        flowchart: { useMaxWidth: true }
+        theme: "base",
+        themeVariables: {
+          primaryColor: "#edf4ff",
+          primaryTextColor: "#0f172a",
+          primaryBorderColor: "#8fb4ff",
+          lineColor: "#4c6ef5",
+          secondaryColor: "#eefbf3",
+          tertiaryColor: "#fff7e8",
+          background: "#ffffff",
+          mainBkg: "#ffffff",
+          fontFamily: "\"Plus Jakarta Sans\", sans-serif"
+        },
+        flowchart: {
+          useMaxWidth: true,
+          curve: "basis",
+          nodeSpacing: 34,
+          rankSpacing: 42,
+          padding: 18
+        }
       });
     </script>
 
     <style>
+        :root {
+            --bg: #eef2f9;
+            --bg-accent: radial-gradient(circle at top left, rgba(76, 110, 245, 0.16), transparent 28%),
+                         radial-gradient(circle at top right, rgba(15, 23, 42, 0.08), transparent 24%),
+                         linear-gradient(180deg, #f8fbff 0%, #eef2f9 52%, #e8edf6 100%);
+            --panel: rgba(255, 255, 255, 0.88);
+            --panel-border: rgba(140, 163, 191, 0.32);
+            --text: #0f172a;
+            --muted: #526072;
+            --blue: #4c6ef5;
+            --blue-soft: #eaf1ff;
+            --green-soft: #ebf9f0;
+            --amber-soft: #fff4df;
+            --shadow: 0 28px 70px rgba(15, 23, 42, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            background: #f5f6fa;
-            padding: 20px;
-            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            padding: 32px 20px 48px;
+            color: var(--text);
+            font-family: "Plus Jakarta Sans", sans-serif;
+            background: var(--bg-accent);
         }
-        h2 {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 16px;
+
+        .page {
+            max-width: 1480px;
+            margin: 0 auto;
         }
-        .container {
-            background: white;
-            padding: 20px;
+
+        .hero {
+            display: grid;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .eyebrow {
+            width: fit-content;
+            padding: 8px 12px;
+            border: 1px solid rgba(76, 110, 245, 0.18);
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--blue);
+            background: rgba(255, 255, 255, 0.72);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(32px, 4vw, 54px);
+            line-height: 1.02;
+            letter-spacing: -0.04em;
+            max-width: 980px;
+        }
+
+        .subtitle {
+            max-width: 980px;
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.75;
+            color: var(--muted);
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .meta-chip {
+            padding: 10px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            background: rgba(255, 255, 255, 0.72);
+            color: #1e293b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .frame {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--panel-border);
+            border-radius: 28px;
+            background: var(--panel);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(16px);
+        }
+
+        .frame::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(135deg, rgba(76, 110, 245, 0.08), transparent 26%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.35));
+            pointer-events: none;
+        }
+
+        .frame-header {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 24px 0;
+        }
+
+        .frame-title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .frame-note {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .frame-badge {
+            padding: 10px 12px;
             border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background: #0f172a;
+            color: #f8fafc;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .diagram-shell {
+            position: relative;
+            padding: 14px 18px 24px;
             overflow: auto;
         }
+
         .mermaid {
-            zoom: 1.5;
-            -moz-transform: scale(1.5);
-            -moz-transform-origin: top left;
+            min-width: 1180px;
+            padding: 12px;
+        }
+
+        .supporting-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .card {
+            position: relative;
+            padding: 18px 18px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            background: rgba(255, 255, 255, 0.72);
+        }
+
+        .card h3 {
+            margin: 0 0 8px;
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.74);
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            font-size: 13px;
+            color: #334155;
+        }
+
+        .swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+        }
+
+        .footnote {
+            margin-top: 14px;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        code {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.94em;
+            color: #1d4ed8;
+        }
+
+        @media (max-width: 980px) {
+            body {
+                padding: 20px 14px 28px;
+            }
+
+            .frame-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .supporting-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mermaid {
+                min-width: 980px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h2>Supply Chain Security Architecture - Automated Pipeline</h2>
+    <main class="page">
+        <section class="hero">
+            <div class="eyebrow">Thesis Architecture View</div>
+            <h1>Supply Chain Security Architecture for Go Microservices on Kubernetes</h1>
+            <p class="subtitle">
+                This diagram presents the end-to-end control chain defined by the thesis baseline:
+                dependency integrity, vulnerability gating, signed artifact publication, provenance attestation,
+                and Kubernetes admission enforcement with auditable evidence collection.
+            </p>
+            <div class="meta">
+                <div class="meta-chip">Scope: Go microservice + Kubernetes</div>
+                <div class="meta-chip">Trust model: verify before release, enforce before run</div>
+                <div class="meta-chip">Evidence: CI logs, attestation, admission events</div>
+            </div>
+        </section>
 
-    <div class="container">
-        <div class="mermaid">
+        <section class="frame">
+            <div class="frame-header">
+                <div>
+                    <p class="frame-title">Automated Supply Chain Security Pipeline</p>
+                    <p class="frame-note">Aligned with the thesis flow from developer commit to cluster admission decision.</p>
+                </div>
+                <div class="frame-badge">Baseline v1</div>
+            </div>
+
+            <div class="diagram-shell">
+                <div class="mermaid">
 flowchart TD
 
     %% LAYER 1: DEVELOPER
@@ -103,7 +361,61 @@ flowchart TD
 
     CI --> LogsCI --> Evidence
     AC --> LogsAC --> Evidence
+    
+    classDef source fill:#f5f7ff,stroke:#8fb4ff,stroke-width:1.4px,color:#0f172a;
+    classDef pipeline fill:#eef6ff,stroke:#4c6ef5,stroke-width:1.6px,color:#0f172a;
+    classDef secure fill:#ebf9f0,stroke:#2f9e6f,stroke-width:1.5px,color:#0f172a;
+    classDef warning fill:#fff4df,stroke:#f59f00,stroke-width:1.5px,color:#0f172a;
+    classDef policy fill:#eef2ff,stroke:#6d5efc,stroke-width:1.5px,color:#0f172a;
+    classDef evidence fill:#f6f7fb,stroke:#94a3b8,stroke-width:1.3px,color:#334155;
+
+    class Dev,Repo source;
+    class CI,Integrity,Govuln,Build,SBOM,Scan pipeline;
+    class Sign,Attest,Registry,Pod secure;
+    class FailBuild,Reject warning;
+    class Deploy,K8s,AC,Verify,Decision policy;
+    class LogsCI,LogsAC,Evidence evidence;
+                </div>
+            </div>
+        </section>
+
+        <div class="legend">
+            <div class="legend-item"><span class="swatch" style="background:#4c6ef5;"></span> CI and verification controls</div>
+            <div class="legend-item"><span class="swatch" style="background:#2f9e6f;"></span> Trusted artifact and runtime path</div>
+            <div class="legend-item"><span class="swatch" style="background:#f59f00;"></span> Rejection and fail-fast path</div>
+            <div class="legend-item"><span class="swatch" style="background:#6d5efc;"></span> Deployment and admission policy path</div>
         </div>
-    </div>
+
+        <section class="supporting-grid">
+            <article class="card">
+                <h3>Pre-release control</h3>
+                <p>
+                    The CI path validates Go dependency integrity, runs <code>govulncheck</code>,
+                    generates an SBOM with Syft, scans risk with Grype, and blocks publication when policy is violated.
+                </p>
+            </article>
+
+            <article class="card">
+                <h3>Artifact trust</h3>
+                <p>
+                    Only artifacts that pass the pipeline are signed with Cosign and accompanied by SLSA-style provenance,
+                    making image origin and build lineage verifiable before deployment.
+                </p>
+            </article>
+
+            <article class="card">
+                <h3>Runtime enforcement</h3>
+                <p>
+                    Kubernetes admission applies trust policy at deploy time, rejecting unsigned or non-compliant workloads
+                    and preserving decision evidence for the thesis validation report.
+                </p>
+            </article>
+        </section>
+
+        <p class="footnote">
+            Presentation note: this view is intentionally thesis-facing. It emphasizes control objectives and enforcement points,
+            while implementation details remain documented in <code>README.md</code> and <code>docs/devsecops_ci_admission.md</code>.
+        </p>
+    </main>
 </body>
 </html>
