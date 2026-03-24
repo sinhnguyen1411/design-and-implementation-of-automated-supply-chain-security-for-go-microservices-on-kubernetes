@@ -1,60 +1,94 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <title>SCS Architecture Diagram</title>
+# Design and Implementation of Automated Supply Chain Security for Go Microservices on Kubernetes
 
-    <!-- Mermaid JS (Latest 10.x) -->
-    <script type="module">
-      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
-      mermaid.initialize({ startOnLoad: true });
-    </script>
+This repository contains the implementation baseline for a thesis project on automated software supply-chain security for Go microservices deployed to Kubernetes.
 
-    <style>
-        body {
-            background: #f5f6fa;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-        }
-        h2 {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-    </style>
-</head>
+## Thesis Objective
+Build and validate an end-to-end security pipeline where each container artifact is:
+- built reproducibly,
+- analyzed (SBOM + vulnerability scan),
+- signed and attested,
+- and enforced at Kubernetes admission time.
 
-<body>
-    <h2>Supply Chain Security Architecture – Automated Pipeline</h2>
+## Scope
+- Target service: existing Go `user-service`.
+- Build/deploy target: Docker image and Kubernetes manifests (Kustomize base + overlays).
+- Security controls in scope:
+  - SBOM generation (`Syft`)
+  - Vulnerability scanning (`Grype`)
+  - Image signing and provenance attestation (`Cosign`/Sigstore)
+  - Admission enforcement (`Kyverno` policies)
 
-    <div class="container">
-        <div class="mermaid">
+## Target Architecture
+```mermaid
 flowchart LR
+  Dev["Developer"] -->|"git push"| Repo["Git Repository"]
+  Repo -->|"Trigger"| CI["CI/CD Pipeline"]
+  CI --> Build["Build and Test"]
+  Build --> SBOM["Generate SBOM (Syft)"]
+  SBOM --> Scan["Scan Vulnerabilities (Grype)"]
+  Scan -->|"Pass"| Sign["Sign Image (Cosign)"]
+  Sign --> Attest["Create Provenance Attestation (SLSA style)"]
+  Sign --> Registry["Container Registry"]
+  Attest --> Registry
+  Registry -->|"Deploy"| K8s["Kubernetes Cluster"]
+  K8s --> Admit["Kyverno Admission Policies"]
+  Admit -->|"allow"| Run["Workload Running"]
+  Admit -->|"deny"| Block["Unsigned / Non-compliant Rejected"]
+```
 
-    %% ====== LAYER 1: DEVELOPER ======
-    Dev[Developer] -->|git push| Repo[Source Code Repository]
+## Repository Layout
+```text
+.
+|- .github/workflows/secure-supply-chain.yml  # CI pipeline for build, scan, sign, attest
+|- deploy/kubernetes/                          # Base manifests + overlays
+|- deploy/policies/kyverno/                    # Admission policies
+|- docs/                                       # Thesis plan, CI/admission flow, evidence
+`- scripts/                                    # Kind/Kyverno bootstrap and demo scripts
+```
 
-    %% ====== LAYER 2: CI/CD & SCS ======
-    Repo -->|Trigger Pipeline| CI[CI/CD Pipeline]
+## Current Implementation Highlights
+- Hardened multi-stage Docker build with non-root distroless runtime.
+- Automated CI workflow (`secure-supply-chain`) on branch `Thesis-SCS`.
+- SBOM output (`sbom.spdx.json`) and Grype report (`grype-report.json`) as CI artifacts.
+- Keyless image signing and SLSA-style attestation with Cosign.
+- Kubernetes policy set for signature/provenance/CVE/SBOM annotation checks.
 
-    CI --> Build[Build Go Binary and Docker Image]
-    Build --> SBOM[Generate SBOM (Syft)]
-    SBOM --> Scan[Scan Vulnerabilities (Grype)]
+## Quickstart
+### 1) Local service run
+Prerequisites:
+- Go `1.24.11` (or compatible with `go.mod`)
+- Local dependencies matching `cmd/server/config/local.yaml` (MySQL, Kafka, SMTP if needed)
 
-    Scan -->|Fail: High or Critical CVE| FailBuild[Pipeline Fails - Unsafe Image Blocked]
-    Scan -->|Pass| Sign[Sign Image (Cosign)]
-    Sign --> Attest[Create SLSA Provenance Attestation]
+Run:
+```bash
+go test ./...
+go run main.go server --config cmd/server/config/local.yaml
+```
 
-    Sign --> Registry[Secure Container Registry]
-    Attest --> Registry
+### 2) Trigger secure supply-chain workflow
+- Push to branch `Thesis-SCS` or run `workflow_dispatch` on:
+  - `.github/workflows/secure-supply-chain.yml`
 
-    %% ====== LAYER 3: KUBERNETES ======
-    Dev -->|Deploy (kubectl / Helm)| K8s[Kubernetes Cluster]
+### 3) Bootstrap local admission demo (Kind + Kyverno)
+Prerequisites:
+- `kind`
+- `kubectl`
+- `cosign.pub` available at repo root (or set custom path)
 
-    K8s --> AC[Admission Controller / Kyverno]
-    Reg
+Run:
+```bash
+COSIGN_PUB_PATH=./cosign.pub ./scripts/devsecops_kind_bootstrap.sh
+kubectl get clusterpolicies
+```
+
+## Evidence and Technical Documents
+- [Supply-chain implementation plan](docs/devsecops_supply_chain_plan.md)
+- [CI and admission flow details](docs/devsecops_ci_admission.md)
+- [Demo evidence logs](docs/demo_evidence.md)
+- [Roadmap milestones and issues](docs/implementation_roadmap.md)
+
+## Evaluation Criteria (Thesis)
+- CI blocks artifacts with disallowed vulnerability severity.
+- Signed artifacts can be verified and traced to build provenance.
+- Kubernetes admission denies unsigned/missing-metadata workloads.
+- Process is reusable for additional Go microservices with minimal changes.
