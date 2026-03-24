@@ -42,6 +42,7 @@ kubectl get clusterpolicies
 
 ## Thesis Documentation
 - [Thesis specification (English)](docs/thesis_spec_en.md)
+- [Interactive architecture diagram (HTML + Mermaid)](docs/scs_architecture_diagram.html)
 - [CI and admission flow](docs/devsecops_ci_admission.md)
 - [Implementation roadmap and milestones](docs/implementation_roadmap.md)
 - [Demo evidence logs](docs/demo_evidence.md)
