@@ -178,7 +178,7 @@ Evaluation scope is intentionally bounded to feasibility and reproducibility of 
 
 [2] M. Tamanna, S. Hamer, M. Tran, S. Fahl, Y. Acar, and L. Williams, "Analyzing challenges in deployment of the SLSA framework for software supply chain security," Dec. 2024.
 
-[3] National Institute of Standards and Technology (NIST), "Improving the Nation's Cybersecurity: NIST's Responsibilities under Executive Order 14028—Software Supply Chain Security Guidance," U.S. Department of Commerce, July 2022.
+[3] National Institute of Standards and Technology (NIST), "Improving the Nation's Cybersecurity: NIST's Responsibilities under Executive Order 14028-Software Supply Chain Security Guidance," U.S. Department of Commerce, July 2022.
 
 [4] The Linux Foundation, "Safeguarding artifact integrity across any software supply chain: What is SLSA?," Open Source Security Foundation, 2025.
 
