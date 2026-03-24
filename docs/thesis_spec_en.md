@@ -166,7 +166,7 @@ Evaluation scope is intentionally bounded to feasibility and reproducibility of 
 ## Thesis-to-Implementation Traceability
 | Objective Item | Control/Mechanism | Evidence Artifact or Log | Related Issue(s) | Status |
 |---|---|---|---|---|
-| Dependency transparency and control | Go modules (`go.mod`, `go.sum`), checksum rationale, SBOM generation in CI | `go.mod`, `go.sum`, `sbom.spdx.json` artifact, `docs/devsecops_ci_admission.md` | #3, #12, #14 | Planned |
+| Dependency transparency and control | Go modules (`go.mod`, `go.sum`), checksum rationale, CI integrity checks (`go mod verify`, readonly graph, `go mod tidy -diff` audit), SBOM generation | `go.mod`, `go.sum`, `dependency-integrity-report.txt`, `sbom.spdx.json`, `docs/devsecops_ci_admission.md`, `docs/go_dependency_integrity_baseline.md` | #3, #12, #14 | Implemented |
 | Go vulnerability and image risk gating | `govulncheck` + Grype fail-fast scan threshold | CI logs, `govulncheck-report.txt`, `grype-report.json`, workflow outputs | #4, #13 | Implemented |
 | Image signing and provenance attestation | Cosign keyless sign + SLSA-style attestation | `.github/workflows/secure-supply-chain.yml`, `provenance.json`, `docs/demo_evidence.md` | #5, #6 | Implemented |
 | Admission enforcement of trust controls | Kyverno verifyImages + CVE/SBOM annotation policies | `deploy/policies/kyverno/*`, admission deny events in `docs/demo_evidence.md` | #7, #8 | Implemented |

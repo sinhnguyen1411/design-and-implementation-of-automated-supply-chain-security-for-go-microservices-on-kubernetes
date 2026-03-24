@@ -13,6 +13,7 @@ env:
   GO_VERSION: "1.24.11"
   GOVULNCHECK_VERSION: "v1.1.4"
   GOVULNCHECK_REPORT: govulncheck-report.txt
+  DEPENDENCY_INTEGRITY_REPORT: dependency-integrity-report.txt
   SBOM_PATH: sbom.spdx.json
   SCAN_REPORT: grype-report.json
   SECURITY_GATE: "false"
@@ -33,6 +34,36 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
+
+      - name: Dependency integrity checks (Go modules) - fail fast
+        run: |
+          set -euo pipefail
+          {
+            echo "== go mod download =="
+            go mod download
+            echo
+            echo "== go mod verify =="
+            go mod verify
+            echo
+            echo "== go list -deps -mod=readonly ./... =="
+            go list -deps -mod=readonly ./... >/dev/null
+            echo "OK: readonly dependency graph resolved without go.mod/go.sum mutation."
+            echo
+            echo "== go mod tidy -diff (audit) =="
+            if go mod tidy -diff; then
+              echo "OK: no module drift detected by tidy diff."
+            else
+              echo "WARN: go mod tidy -diff reported drift. Treated as audit-only; see issue #14 follow-up."
+            fi
+          } 2>&1 | tee "${{ env.DEPENDENCY_INTEGRITY_REPORT }}"
+
+      - name: Upload dependency integrity report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-integrity-report
+          path: ${{ env.DEPENDENCY_INTEGRITY_REPORT }}
+          if-no-files-found: warn
 
       - name: Run unit tests
         run: go test ./...
