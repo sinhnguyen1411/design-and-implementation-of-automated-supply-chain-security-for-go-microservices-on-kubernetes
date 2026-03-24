@@ -1,73 +1,80 @@
 # DevSecOps CI + Admission Flow
 
-This document explains how to run the supply-chain pipeline (SBOM → scan → sign → attest → push) and enforce it with Kyverno.
+This document describes the secure supply-chain pipeline (`test -> govulncheck -> build -> SBOM -> scan -> sign -> attest -> push`) and Kyverno-based admission enforcement.
 
 ## CI Workflow (`.github/workflows/secure-supply-chain.yml`)
-Pipeline steps:
-1. Build Go binary via multi-stage Dockerfile and run `go test ./...`.
-2. Generate SBOM with Syft (`sbom.spdx.json`).
-3. Scan with Grype; fail on High/Critical; publish `grype-report.json`.
-4. Sign image with Cosign keyless (OIDC) and attach SBOM.
-5. Emit SLSA-style provenance predicate and attestation via Cosign.
-6. Push image + artifacts to GHCR and upload SBOM/scan/Cosign bundle as workflow artifacts.
-7. Compute deploy annotations from pipeline outputs:
-   - `security.grype.io/high_critical`: total High+Critical from Grype (`high_critical` output).
-   - `security.stock-trading.dev/sbom-digest`: SHA256 of the SBOM (`sbom_digest` output).
-   The workflow renders a ready-to-use Kustomize overlay under `deploy/kubernetes/overlays/ci/` and uploads it as an artifact for deployment.
+The workflow runs on pushes/PRs to `Thesis-SCS` and on manual dispatch.
 
-Required secrets/permissions:
-- `GITHUB_TOKEN` (default) with `packages:write` and `id-token:write` permissions.
-- For private registries or key-based signing, provide `COSIGN_PASSWORD` and `COSIGN_PRIVATE_KEY` (extend workflow accordingly).
+Pipeline stages:
+1. Run Go unit tests (`go test ./...`).
+2. Run Go vulnerability analysis with `govulncheck` (fail-fast).
+3. Build and push image to GHCR.
+4. Generate SBOM with Syft (`sbom.spdx.json`).
+5. Scan SBOM with Grype and count High/Critical findings (`grype-report.json`).
+6. Sign image with Cosign (keyless OIDC), attach SBOM, and attest SLSA-style provenance.
+7. Render Kustomize overlay annotations from scan/SBOM outputs for deployment.
+8. Verify Cosign signature in registry and upload evidence artifacts.
 
-Trigger manually (`workflow_dispatch`) or on push/PR to main/master.
+### Fail-fast Behavior
+- `govulncheck` is a hard gate. If it reports actionable Go vulnerabilities, the job fails.
+- Grype findings are captured, and enforcement can be switched on with `SECURITY_GATE=true`.
+- Deployment-side admission policies still enforce runtime constraints even if deployment is attempted manually.
+
+### CI Evidence Artifacts
+- `govulncheck-report`: Go vulnerability scan output.
+- `sbom`: `sbom.spdx.json`.
+- `grype-report`: `grype-report.json`.
+- `cosign-bundle`: provenance file, SBOM, scan report, and generated Kustomize overlay.
+
+### Required Permissions/Secrets
+- `GITHUB_TOKEN` with `packages:write` and `id-token:write`.
+- For key-based signing scenarios, add private-key secrets as needed (`COSIGN_PRIVATE_KEY`, `COSIGN_PASSWORD`).
 
 ## Admission Policies (Kyverno)
 Resources under `deploy/policies/kyverno/`:
-- `cosign-public-key.yaml`: ConfigMap for the Cosign public key (replace with your key or use keyless verification once supported).
-- `clusterpolicy-verify-images.yaml`: Enforces Cosign signature + SLSA provenance for `ghcr.io/sinhnguyen1411/stock-trading/user-service:*`.
-- `clusterpolicy-cve-threshold.yaml`: Requires annotation `security.grype.io/high_critical: "0"` on Pods (set from CI results).
-- `clusterpolicy-require-sbom.yaml`: Requires annotation `security.stock-trading.dev/sbom-digest` on Pods.
+- `cosign-public-key.yaml`: ConfigMap containing Cosign public key material.
+- `clusterpolicy-verify-images.yaml`: verifies signed images and provenance.
+- `clusterpolicy-cve-threshold.yaml`: requires `security.grype.io/high_critical: "0"`.
+- `clusterpolicy-require-sbom.yaml`: requires `security.stock-trading.dev/sbom-digest`.
 
-Apply with:
+Apply policies:
 ```bash
 kubectl apply -k deploy/policies/kyverno
 ```
 
-Populate the Cosign key:
+Publish Cosign key:
 ```bash
 kubectl -n kyverno create configmap cosign-public-key --from-file=cosign.pub=./cosign.pub
 ```
 
 ## Local Demo (Kind)
-Use `scripts/devsecops_kind_bootstrap.sh`:
+Bootstrap a local cluster with Kyverno and policies:
 ```bash
 COSIGN_PUB_PATH=./cosign.pub ./scripts/devsecops_kind_bootstrap.sh
 ```
-This creates a Kind cluster, installs Kyverno, publishes the Cosign key, and applies the policies.
 
-## Deploying the Service with Required Annotations
-When deploying, ensure Pods carry:
-- `security.grype.io/high_critical: "<value from CI>"` (expect 0; pipeline should fail otherwise).
-- `security.stock-trading.dev/sbom-digest: "<sha256-of-sbom-or-oci-ref>"` (from CI output).
+## Deployment Metadata Requirements
+Required Pod annotations:
+- `security.grype.io/high_critical: "<value from CI>"` (expected `0` for compliant builds)
+- `security.stock-trading.dev/sbom-digest: "<sbom-sha256-or-oci-ref>"`
 
-You can use the generated overlay artifact (`deploy/kubernetes/overlays/ci/`) created by the workflow:
+When available, apply generated CI overlay:
 ```bash
 kubectl apply -k deploy/kubernetes/overlays/ci
 ```
-If you deploy outside the workflow context, set these annotations manually or regenerate the overlay with your values.
-
-If using Kustomize, you can add these under `metadata.annotations` in the Deployment template.
 
 ## Verifying Enforcement
-- Try to deploy an unsigned or unannotated image: Pod admission should be denied with Kyverno messages.
-- Deploy the signed, scanned image with annotations: Pod should be admitted.
-- Validate signatures/attestations manually:
+- Deploy unsigned or unannotated images: admission should deny.
+- Deploy signed/scanned image with required annotations: admission should allow.
+- Verify cryptographic evidence manually:
   ```bash
   cosign verify --keyless ghcr.io/sinhnguyen1411/stock-trading/user-service:dev
   cosign verify-attestation --type slsaprovenance --keyless ghcr.io/sinhnguyen1411/stock-trading/user-service:dev
   ```
 
-## Evidence Collection
-- CI artifacts: SBOM (`sbom.spdx.json`), scan report (`grype-report.json`), Cosign bundle (`provenance.json`).
-- Admission denials: `kubectl events` or Kyverno audit logs showing rejection reasons.
-- Successful deploy: `kubectl get pods -n <ns>` plus Kyverno status to show policy passes.
+## Evidence Collection Guidance
+Collect:
+- CI logs for test, `govulncheck`, Grype, signing, and attestation steps.
+- Uploaded artifacts listed above.
+- Kubernetes denial/allow events (`kubectl events`, Kyverno policy reports/logs).
+

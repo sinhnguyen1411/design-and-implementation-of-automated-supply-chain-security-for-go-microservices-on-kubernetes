@@ -167,10 +167,10 @@ Evaluation scope is intentionally bounded to feasibility and reproducibility of 
 | Objective Item | Control/Mechanism | Evidence Artifact or Log | Related Issue(s) | Status |
 |---|---|---|---|---|
 | Dependency transparency and control | Go modules (`go.mod`, `go.sum`), checksum rationale, SBOM generation in CI | `go.mod`, `go.sum`, `sbom.spdx.json` artifact, `docs/devsecops_ci_admission.md` | #3, #12, #14 | Planned |
-| Go vulnerability and image risk gating | `govulncheck` (planned) + Grype fail-fast scan threshold | CI logs, `grype-report.json`, workflow outputs | #4, #13 | Planned |
+| Go vulnerability and image risk gating | `govulncheck` + Grype fail-fast scan threshold | CI logs, `govulncheck-report.txt`, `grype-report.json`, workflow outputs | #4, #13 | Implemented |
 | Image signing and provenance attestation | Cosign keyless sign + SLSA-style attestation | `.github/workflows/secure-supply-chain.yml`, `provenance.json`, `docs/demo_evidence.md` | #5, #6 | Implemented |
 | Admission enforcement of trust controls | Kyverno verifyImages + CVE/SBOM annotation policies | `deploy/policies/kyverno/*`, admission deny events in `docs/demo_evidence.md` | #7, #8 | Implemented |
-| End-to-end reproducible pipeline | CI pipeline from build to push + deployment annotation overlay | `.github/workflows/secure-supply-chain.yml`, `deploy/kubernetes/overlays/ci` artifact, `docs/devsecops_ci_admission.md` | #3, #4, #9 | Implemented |
+| End-to-end reproducible pipeline | CI pipeline from test/govulncheck to push + deployment annotation overlay | `.github/workflows/secure-supply-chain.yml`, `deploy/kubernetes/overlays/ci` artifact, `docs/devsecops_ci_admission.md` | #3, #4, #9, #13 | Implemented |
 | Reusability and thesis packaging | Traceability matrix, onboarding and reuse guide | `docs/implementation_roadmap.md`, thesis docs, future onboarding doc | #11, #12 | Planned |
 
 ## References
@@ -178,7 +178,7 @@ Evaluation scope is intentionally bounded to feasibility and reproducibility of 
 
 [2] M. Tamanna, S. Hamer, M. Tran, S. Fahl, Y. Acar, and L. Williams, "Analyzing challenges in deployment of the SLSA framework for software supply chain security," Dec. 2024.
 
-[3] National Institute of Standards and Technology (NIST), "Improving the Nation's Cybersecurity: NIST's Responsibilities under Executive Order 14028—Software Supply Chain Security Guidance," U.S. Department of Commerce, July 2022.
+[3] National Institute of Standards and Technology (NIST), "Improving the Nation's Cybersecurity: NIST's Responsibilities under Executive Order 14028â€”Software Supply Chain Security Guidance," U.S. Department of Commerce, July 2022.
 
 [4] The Linux Foundation, "Safeguarding artifact integrity across any software supply chain: What is SLSA?," Open Source Security Foundation, 2025.
 
@@ -193,3 +193,4 @@ Evaluation scope is intentionally bounded to feasibility and reproducibility of 
 [9] Sigstore, "Policy Controller Overview," Sigstore Documentation, accessed Mar. 18, 2026.
 
 [10] Kubernetes, "Validating Admission Policy," Kubernetes Documentation, 2024.
+
