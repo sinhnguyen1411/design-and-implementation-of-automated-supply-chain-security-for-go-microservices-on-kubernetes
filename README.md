@@ -19,6 +19,8 @@ flowchart TD
 
   subgraph CILayer["CICD Pipeline and SCS"]
     CI["CICD pipeline"]
+    Integrity["Verify Go dependency integrity"]
+    Govuln["Scan Go vulnerabilities govulncheck"]
     Build["Build Go binary and Docker image"]
     SBOM["Generate SBOM Syft"]
     Scan["Scan vulnerabilities Grype"]
@@ -28,16 +30,17 @@ flowchart TD
   end
 
   Repo -->|"trigger pipeline"| CI
-  CI --> Build --> SBOM --> Scan
+  CI --> Integrity --> Govuln --> Build --> SBOM --> Scan
+  Govuln -->|"Fail Go vulnerability gate"| FailBuild
   Scan -->|"Fail CVE high or critical"| FailBuild
   Scan -->|"Pass"| Sign --> Attest
 
   subgraph DeployLayer["Registry and Kubernetes"]
     Registry["Secure container registry"]
-    Deploy["Apply deployment manifest"]
+    Deploy["Apply CI rendered deployment overlay"]
     K8s["Kubernetes cluster"]
     AC["Admission controller or Kyverno"]
-    Verify["Verify signature and security policy"]
+    Verify["Verify signature provenance SBOM and policy"]
     Decision{"Policy ok"}
     Reject["Reject deployment"]
     Pod["Running pod on Kubernetes"]
@@ -74,7 +77,7 @@ go run main.go server --config cmd/server/config/local.yaml
 
 ### 3) Bootstrap local admission demo
 ```bash
-COSIGN_PUB_PATH=./cosign.pub ./scripts/devsecops_kind_bootstrap.sh
+./scripts/devsecops_kind_bootstrap.sh
 kubectl get clusterpolicies
 ```
 

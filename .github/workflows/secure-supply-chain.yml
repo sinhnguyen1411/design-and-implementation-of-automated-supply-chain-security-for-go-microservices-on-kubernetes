@@ -16,7 +16,7 @@ env:
   DEPENDENCY_INTEGRITY_REPORT: dependency-integrity-report.txt
   SBOM_PATH: sbom.spdx.json
   SCAN_REPORT: grype-report.json
-  SECURITY_GATE: "false"
+  SECURITY_GATE: "true"
 
 jobs:
   build-sign-verify:
@@ -131,7 +131,6 @@ jobs:
 
       - name: Vulnerability scan (Grype) - fail on High/Critical
         id: grype
-        continue-on-error: true
         run: |
           grype sbom:${{ env.SBOM_PATH }} -o json --fail-on high > ${{ env.SCAN_REPORT }}
 
@@ -153,12 +152,14 @@ jobs:
           fi
 
       - name: Upload SBOM artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sbom
           path: ${{ env.SBOM_PATH }}
 
       - name: Upload scan report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: grype-report
