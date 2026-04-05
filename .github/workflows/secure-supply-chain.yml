@@ -10,13 +10,14 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: sinhnguyen1411/stock-trading/user-service
-  GO_VERSION: "1.24.11"
+  GO_VERSION: "1.25.8"
   GOVULNCHECK_VERSION: "v1.1.4"
   GOVULNCHECK_REPORT: govulncheck-report.txt
   DEPENDENCY_INTEGRITY_REPORT: dependency-integrity-report.txt
   SBOM_PATH: sbom.spdx.json
   SCAN_REPORT: grype-report.json
   SECURITY_GATE: "true"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
   build-sign-verify:
@@ -157,6 +158,7 @@ jobs:
         with:
           name: sbom
           path: ${{ env.SBOM_PATH }}
+          if-no-files-found: ignore
 
       - name: Upload scan report
         if: always()
@@ -164,6 +166,7 @@ jobs:
         with:
           name: grype-report
           path: ${{ env.SCAN_REPORT }}
+          if-no-files-found: ignore
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.7.0
@@ -249,6 +252,7 @@ jobs:
             ${{ steps.image_ref.outputs.image_digest }}
 
       - name: Upload Cosign bundle
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cosign-bundle
@@ -258,3 +262,4 @@ jobs:
             ${{ env.SCAN_REPORT }}
             deploy/kubernetes/overlays/ci/patch-annotations.yaml
             deploy/kubernetes/overlays/ci/kustomization.yaml
+          if-no-files-found: ignore
