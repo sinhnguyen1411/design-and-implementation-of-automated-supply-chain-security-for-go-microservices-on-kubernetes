@@ -92,7 +92,7 @@ jobs:
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             IMAGE_REPO="${REGISTRY}/${IMAGE_NAME}"
             IMAGE="${REGISTRY}/${IMAGE_NAME}:${TAG}"
-            REGISTRY_MODE="pr-build-only"
+            REGISTRY_MODE="local"
             REQUIRES_LOGIN="false"
           elif [ -n "${{ secrets.GHCR_TOKEN }}" ]; then
             IMAGE_REPO="${REGISTRY}/${IMAGE_NAME}"
@@ -100,9 +100,9 @@ jobs:
             REGISTRY_MODE="ghcr"
             REQUIRES_LOGIN="true"
           else
-            IMAGE_REPO="ttl.sh/stock-trading-${TAG}"
-            IMAGE="${IMAGE_REPO}:24h"
-            REGISTRY_MODE="ttl"
+            IMAGE_REPO="${REGISTRY}/${IMAGE_NAME}"
+            IMAGE="${REGISTRY}/${IMAGE_NAME}:${TAG}"
+            REGISTRY_MODE="local"
             REQUIRES_LOGIN="false"
           fi
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
@@ -115,18 +115,16 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Explain GHCR credential strategy
-        if: ${{ github.event_name != 'pull_request' }}
         run: |
           if [ "${{ steps.meta.outputs.registry_mode }}" = "ghcr" ]; then
             echo "Using GHCR_TOKEN/GHCR_USERNAME secrets for GHCR push."
-          elif [ "${{ steps.meta.outputs.registry_mode }}" = "ttl" ]; then
-            echo "GHCR_TOKEN not configured. Falling back to ttl.sh for an ephemeral signed image."
           else
-            echo "PR build only. Registry push is disabled for pull_request events."
+            echo "Registry publishing disabled for this run."
+            echo "Workflow will still build, test, generate SBOM, and run vulnerability scanning."
           fi
 
       - name: Log in to GHCR
-        if: ${{ github.event_name != 'pull_request' && steps.meta.outputs.requires_login == 'true' }}
+        if: ${{ steps.meta.outputs.requires_login == 'true' }}
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
@@ -139,13 +137,13 @@ jobs:
         with:
           context: .
           file: Dockerfile
-          load: ${{ github.event_name == 'pull_request' }}
-          push: ${{ github.event_name != 'pull_request' }}
+          load: ${{ steps.meta.outputs.registry_mode == 'local' }}
+          push: ${{ steps.meta.outputs.registry_mode == 'ghcr' }}
           tags: ${{ steps.meta.outputs.image }}
 
       - name: Resolve image digest reference
         id: image_ref
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ steps.meta.outputs.registry_mode == 'ghcr' }}
         run: |
           IMAGE_DIGEST="${{ steps.meta.outputs.image_repo }}@${{ steps.build.outputs.digest }}"
           echo "image_digest=${IMAGE_DIGEST}" >> "$GITHUB_OUTPUT"
@@ -199,11 +197,11 @@ jobs:
           if-no-files-found: ignore
 
       - name: Install Cosign
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ steps.meta.outputs.registry_mode == 'ghcr' }}
         uses: sigstore/cosign-installer@v3.7.0
 
       - name: Sign image with keyless Cosign
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ steps.meta.outputs.registry_mode == 'ghcr' }}
         env:
           COSIGN_EXPERIMENTAL: "1"
         run: |
@@ -211,7 +209,7 @@ jobs:
 
       - name: Generate SLSA-style provenance predicate
         id: provenance
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ steps.meta.outputs.registry_mode == 'ghcr' }}
         run: |
           cat > provenance.json <<'EOF'
           {
@@ -236,14 +234,14 @@ jobs:
           echo "predicate=provenance.json" >> "$GITHUB_OUTPUT"
 
       - name: Attach SBOM to image
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ steps.meta.outputs.registry_mode == 'ghcr' }}
         env:
           COSIGN_EXPERIMENTAL: "1"
         run: |
           cosign attach sbom --sbom ${{ env.SBOM_PATH }} ${{ steps.image_ref.outputs.image_digest }}
 
       - name: Attest provenance
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ steps.meta.outputs.registry_mode == 'ghcr' }}
         env:
           COSIGN_EXPERIMENTAL: "1"
         run: |
@@ -280,7 +278,7 @@ jobs:
           EOF
 
       - name: Verify signature in registry
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ steps.meta.outputs.registry_mode == 'ghcr' }}
         run: |
           cosign verify \
             --certificate-identity-regexp "https://github.com/${{ github.repository }}/.github/workflows/secure-supply-chain.yml@refs/heads/main" \

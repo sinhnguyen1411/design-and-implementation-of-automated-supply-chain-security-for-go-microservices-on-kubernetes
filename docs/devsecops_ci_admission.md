@@ -20,6 +20,11 @@ Pipeline stages:
 8. Render Kustomize overlay annotations from scan/SBOM outputs for deployment.
 9. Verify Cosign signature in registry and upload evidence artifacts.
 
+Registry-backed publishing behavior:
+- On `main`, if `GHCR_TOKEN` is configured, the workflow pushes to GHCR, signs the image, attaches SBOM, and attests provenance.
+- Without `GHCR_TOKEN`, the workflow falls back to local verification mode: build, test, SBOM, and vulnerability scanning still run, but registry push/sign/attestation steps are skipped.
+- On `pull_request`, the workflow also runs in local verification mode.
+
 ### Fail-fast Behavior
 - Dependency integrity is a hard gate. The pipeline fails when:
   - downloaded module checksums do not verify,
@@ -41,7 +46,6 @@ Pipeline stages:
 - Optional fallback secrets for GHCR pushes when repository package permissions are restricted:
   - `GHCR_USERNAME`
   - `GHCR_TOKEN`
-- If `GHCR_TOKEN` is not configured, push runs fall back to `ttl.sh` for an ephemeral signed image so the pipeline can still complete end-to-end.
 
 ## Admission Policies (Kyverno)
 Resources under `deploy/policies/kyverno/`:
