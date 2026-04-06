@@ -75,7 +75,7 @@ go run main.go server --config cmd/server/config/local.yaml
 ```
 
 ### 2) Trigger secure supply-chain workflow
-- Push to branch `Thesis-SCS` or manually run `.github/workflows/secure-supply-chain.yml`.
+- Push to branch `main` or manually run `.github/workflows/secure-supply-chain.yml`.
 
 ### 3) Bootstrap local admission demo
 ```bash

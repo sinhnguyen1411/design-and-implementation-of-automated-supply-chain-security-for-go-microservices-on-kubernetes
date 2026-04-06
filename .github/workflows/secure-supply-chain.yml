@@ -3,9 +3,9 @@ name: secure-supply-chain
 on:
   workflow_dispatch:
   push:
-    branches: [ "Thesis-SCS" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "Thesis-SCS" ]
+    branches: [ "main" ]
 
 env:
   REGISTRY: ghcr.io
@@ -247,7 +247,7 @@ jobs:
       - name: Verify signature in registry
         run: |
           cosign verify \
-            --certificate-identity-regexp "https://github.com/${{ github.repository }}/.github/workflows/secure-supply-chain.yml@refs/heads/Thesis-SCS" \
+            --certificate-identity-regexp "https://github.com/${{ github.repository }}/.github/workflows/secure-supply-chain.yml@refs/heads/main" \
             --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
             ${{ steps.image_ref.outputs.image_digest }}
 

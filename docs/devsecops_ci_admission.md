@@ -3,7 +3,7 @@
 This document describes the secure supply-chain pipeline (`dependency-integrity -> test -> govulncheck -> build -> SBOM -> scan -> sign -> attest -> push`) and Kyverno-based admission enforcement.
 
 ## CI Workflow (`.github/workflows/secure-supply-chain.yml`)
-The workflow runs on pushes/PRs to `Thesis-SCS` and on manual dispatch.
+The workflow runs on pushes/PRs to `main` and on manual dispatch.
 
 Pipeline stages:
 1. Run dependency-integrity checks for Go modules:
