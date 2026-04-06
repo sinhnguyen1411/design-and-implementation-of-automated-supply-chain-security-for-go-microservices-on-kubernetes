@@ -33,7 +33,7 @@ Key components:
    - Run `syft packages <image>` to emit SPDX JSON.
    - Store artifact as `sbom.spdx.json`; upload to pipeline artifacts + `cosign attach sbom`.
 3. **Vulnerability Scan Stage**
-   - Execute `grype sbom:sbom.spdx.json --fail-on High` (configurable threshold for High/Critical).
+   - Execute `grype sbom:sbom.spdx.json -o json` and fail the gate when fixable High/Critical findings exceed the configured threshold.
    - Fail pipeline when findings exceed threshold; publish SARIF for observability.
 4. **Signing + Attestation Stage**
    - `cosign sign --key $COSIGN_KEY_REFP` for the built image digest.
@@ -75,7 +75,7 @@ Key components:
    - Policies:
      1. Reject unsigned images or mismatched public key.
      2. Require attestation with provenance fields (builder ID, commit SHA).
-     3. Block deployment if vulnerability report annotation indicates High/Critical > 0.
+     3. Block deployment if vulnerability report annotation indicates fixable High/Critical > 0.
      4. (Optional) Validate SBOM digest label matches `cosign attach sbom`.
 6. **Demo & Evaluation Assets**
    - Write scripts (`scripts/devsecops_demo.sh|ps1`) to:
@@ -88,7 +88,7 @@ Key components:
    - Provide reproducible instructions for other Go services to reuse the pipeline.
 
 ## 6. Demo & Evaluation Criteria
-- **Pipeline enforcement**: Provide CI logs demonstrating automatic failure when `grype` finds disallowed CVEs.
+- **Pipeline enforcement**: Provide CI logs demonstrating automatic failure when `grype` finds disallowed fixable CVEs.
 - **Trust verification**: Show `cosign verify` output + Rekor entry for released image.
 - **Admission control**: Capture `kubectl describe` events showing rejection reasons (unsigned, missing SBOM, vulnerability threshold).
 - **Repeatability**: Document parameterization so another Go service can plug into same workflow by setting image name + module path.

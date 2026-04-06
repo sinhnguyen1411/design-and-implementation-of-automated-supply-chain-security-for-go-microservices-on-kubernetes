@@ -15,7 +15,7 @@ Pipeline stages:
 3. Run Go vulnerability analysis with `govulncheck` (fail-fast).
 4. Build and push image to GHCR.
 5. Generate SBOM with Syft (`sbom.spdx.json`).
-6. Scan SBOM with Grype and fail on High/Critical findings (`grype-report.json`).
+6. Scan SBOM with Grype and compute the count of fixable High/Critical findings (`grype-report.json`).
 7. Sign image with Cosign (keyless OIDC), attach SBOM, and attest SLSA-style provenance.
 8. Render Kustomize overlay annotations from scan/SBOM outputs for deployment.
 9. Verify Cosign signature in registry and upload evidence artifacts.
@@ -31,7 +31,7 @@ Registry-backed publishing behavior:
   - or dependency graph requires non-readonly module updates.
 - `go mod tidy -diff` is captured as an audit signal (warning) for follow-up cleanup and reproducibility tracking.
 - `govulncheck` is a hard gate. If it reports actionable Go vulnerabilities, the job fails.
-- Grype is a hard gate. If High/Critical findings are detected, the pipeline fails and artifact publication stops.
+- Grype is a hard gate on fixable High/Critical findings. Findings marked `wont-fix`, `not-fixed`, or `unknown` remain in the report for auditability but do not block the pipeline by themselves.
 - Deployment-side admission policies still enforce runtime constraints even if deployment is attempted manually.
 
 ### CI Evidence Artifacts
@@ -50,7 +50,7 @@ Registry-backed publishing behavior:
 ## Admission Policies (Kyverno)
 Resources under `deploy/policies/kyverno/`:
 - `clusterpolicy-verify-images.yaml`: verifies signed images and provenance.
-- `clusterpolicy-cve-threshold.yaml`: requires `security.grype.io/high_critical: "0"`.
+- `clusterpolicy-cve-threshold.yaml`: requires `security.grype.io/high_critical: "0"` where the annotation represents the count of fixable High/Critical findings.
 - `clusterpolicy-require-sbom.yaml`: requires `security.stock-trading.dev/sbom-digest`.
 
 Apply policies:
@@ -66,7 +66,7 @@ Bootstrap a local cluster with Kyverno and policies:
 
 ## Deployment Metadata Requirements
 Required Pod annotations:
-- `security.grype.io/high_critical: "<value from CI>"` (expected `0` for compliant builds)
+- `security.grype.io/high_critical: "<fixable High/Critical count from CI>"` (expected `0` for compliant builds)
 - `security.stock-trading.dev/sbom-digest: "<sbom-sha256-or-oci-ref>"`
 
 When available, apply generated CI overlay:

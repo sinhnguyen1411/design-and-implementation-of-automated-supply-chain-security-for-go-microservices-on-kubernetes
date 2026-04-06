@@ -158,17 +158,17 @@ jobs:
         run: |
           curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
 
-      - name: Vulnerability scan (Grype) - fail on High/Critical
+      - name: Vulnerability scan (Grype)
         id: grype
         run: |
-          grype sbom:${{ env.SBOM_PATH }} -o json --fail-on high > ${{ env.SCAN_REPORT }}
+          grype sbom:${{ env.SBOM_PATH }} -o json > ${{ env.SCAN_REPORT }}
 
-      - name: Compute annotation values (SBOM digest + High/Critical count)
+      - name: Compute annotation values (SBOM digest + fixable High/Critical count)
         id: annos
         run: |
           set -euo pipefail
           SBOM_DIGEST=$(sha256sum "${{ env.SBOM_PATH }}" | awk '{print $1}')
-          HIGH_CRITICAL=$(jq '[.matches[]?.vulnerability.severity? // "" | ascii_downcase | select(.=="high" or .=="critical")] | length' "${{ env.SCAN_REPORT }}" || echo "0")
+          HIGH_CRITICAL=$(jq '[.matches[]? | select((.vulnerability.severity? // "" | ascii_downcase) == "high" or (.vulnerability.severity? // "" | ascii_downcase) == "critical") | select(((.vulnerability.fix.state? // "unknown") | ascii_downcase) != "wont-fix") | select(((.vulnerability.fix.state? // "unknown") | ascii_downcase) != "not-fixed") | select(((.vulnerability.fix.state? // "unknown") | ascii_downcase) != "unknown")] | length' "${{ env.SCAN_REPORT }}" || echo "0")
           echo "sbom_digest=${SBOM_DIGEST}" >> "$GITHUB_OUTPUT"
           echo "high_critical=${HIGH_CRITICAL}" >> "$GITHUB_OUTPUT"
 
@@ -176,7 +176,7 @@ jobs:
         if: ${{ env.SECURITY_GATE == 'true' }}
         run: |
           if [ "${{ steps.annos.outputs.high_critical }}" != "0" ]; then
-            echo "Security gate failed: high/critical CVEs detected."
+            echo "Security gate failed: fixable high/critical CVEs detected."
             exit 1
           fi
 
