@@ -169,9 +169,9 @@ Evaluation scope is intentionally bounded to feasibility and reproducibility of 
 | Dependency transparency and control | Go modules (`go.mod`, `go.sum`), checksum rationale, CI integrity checks (`go mod verify`, readonly graph, `go mod tidy -diff` audit), SBOM generation | `go.mod`, `go.sum`, `dependency-integrity-report.txt`, `sbom.spdx.json`, `docs/devsecops_ci_admission.md`, `docs/go_dependency_integrity_baseline.md` | #3, #12, #14 | Implemented |
 | Go vulnerability and image risk gating | `govulncheck` + Grype fail-fast threshold on fixable High/Critical findings | CI logs, `govulncheck-report.txt`, `grype-report.json`, workflow outputs | #4, #13 | Implemented |
 | Image signing and provenance attestation | Cosign keyless sign + SLSA-style attestation | `.github/workflows/secure-supply-chain.yml`, `provenance.json`, `docs/demo_evidence.md` | #5, #6 | Implemented |
-| Admission enforcement of trust controls | Kyverno verifyImages + CVE/SBOM annotation policies | `deploy/policies/kyverno/*`, admission deny events in `docs/demo_evidence.md` | #7, #8 | Implemented |
-| End-to-end reproducible pipeline | CI pipeline from test/govulncheck to push + deployment annotation overlay | `.github/workflows/secure-supply-chain.yml`, `deploy/kubernetes/overlays/ci` artifact, `docs/devsecops_ci_admission.md` | #3, #4, #9, #13 | Implemented |
-| Reusability and thesis packaging | Traceability matrix, onboarding and reuse guide | `docs/implementation_roadmap.md`, thesis docs, future onboarding doc | #11, #12 | Planned |
+| Admission enforcement of trust controls | Kyverno verifyImages + CVE/SBOM annotation policies + automated deny/allow matrix | `deploy/policies/kyverno/*`, `scripts/admission_matrix_demo.ps1`, `docs/demo_evidence.md` | #7, #8, #10 | Implemented |
+| End-to-end reproducible pipeline | CI pipeline from test/govulncheck to push + deployment annotation overlay + matrix evidence export | `.github/workflows/secure-supply-chain.yml`, `deploy/kubernetes/overlays/ci` artifact, `scripts/admission_matrix_demo.ps1`, `docs/devsecops_ci_admission.md` | #3, #4, #9, #13 | Implemented |
+| Reusability and thesis packaging | Traceability matrix + reusable onboarding playbook for additional Go services | `docs/implementation_roadmap.md`, `docs/go_microservice_onboarding_guide.md`, thesis docs | #11, #12 | Implemented |
 
 ## References
 [1] D. Patel, "Software supply chain security: Implementing SLSA compliance in CI/CD pipelines," International Journal for Research Trends and Innovation, vol. 10, no. 7, Jan. 2025.

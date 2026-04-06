@@ -1,120 +1,106 @@
-# Demo Evidence - Local Signed Demo on Docker Desktop Kubernetes
+﻿# Demo Evidence - Admission Matrix on Docker Desktop
 
-## Environment
+## Scope
+This evidence package validates thesis admission criteria for:
+- invalid artifacts are denied,
+- valid artifacts are admitted,
+- valid admission still works after deny scenarios.
+
+## Environment and Run Metadata
+- Date: 2026-04-06
 - Kubernetes context: `docker-desktop`
-- Kubernetes namespace: `stock-trading`
-- Cluster nodes:
-  - `desktop-control-plane`
-  - `desktop-worker`
-- Demo automation entrypoint: `scripts/local_signed_demo.ps1`
+- Namespace: `stock-trading`
+- Script: `scripts/admission_matrix_demo.ps1`
+- Command:
 
-## Image Digest
-Image:
-`ttl.sh/stock-trading-d4ec05c5f73c@sha256:42e4b1f9ff6e20ec9ec3885614552472b680954f818456caa7aad6b675d36724`
-
-SBOM digest:
-`7C1EB2358B426D9CC031B954A7CC402770A5DA0DB6CB83B507967055AB826A38`
-
-## Deployed Workload Status
-```text
-NAME                           READY   UP-TO-DATE   AVAILABLE   AGE    CONTAINERS     IMAGES                                                                                                      SELECTOR
-deployment.apps/user-service   1/1     1            1           4m9s   user-service   ttl.sh/stock-trading-d4ec05c5f73c@sha256:42e4b1f9ff6e20ec9ec3885614552472b680954f818456caa7aad6b675d36724   app.kubernetes.io/name=user-service
-
-NAME                               READY   STATUS    RESTARTS   AGE    IP            NODE             NOMINATED NODE   READINESS GATES
-pod/user-service-fddcb8687-dzjrh   1/1     Running   0          4m7s   10.244.1.12   desktop-worker   <none>           <none>
-
-NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)               AGE     SELECTOR
-service/user-service   ClusterIP   10.96.158.207   <none>        18080/TCP,19090/TCP   4m11s   app.kubernetes.io/name=user-service
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/admission_matrix_demo.ps1 -Context docker-desktop -Namespace stock-trading -ExportDir .demo/evidence -ResetNamespace
 ```
 
-## Pod Verification Evidence
-Key annotations observed on the running pod:
-- `kyverno.io/verify-images: {"ttl.sh/stock-trading-d4ec05c5f73c@sha256:42e4b1f9ff6e20ec9ec3885614552472b680954f818456caa7aad6b675d36724":"pass"}`
-- `security.grype.io/high_critical: 0`
-- `security.stock-trading.dev/sbom-digest: 7C1EB2358B426D9CC031B954A7CC402770A5DA0DB6CB83B507967055AB826A38`
+- Evidence directory: `.demo/evidence/20260406-154444`
+- Matrix summary file: `.demo/evidence/20260406-154444/matrix-summary.md`
+- Matrix JSON index: `.demo/evidence/20260406-154444/matrix-index.json`
+- Regression JSON result: `.demo/evidence/20260406-154444/regression-valid-allow.json`
+- Signed digest used:
+  - `ttl.sh/stock-trading-matrix-signed-c853c0f8a3b5@sha256:8d87c68bf36634dbcd4d161ac23ac4ec22f81f326f45b820e6564e127493db8f`
+- Unsigned digest used:
+  - `ttl.sh/stock-trading-matrix-unsigned-71b8f514cbd1@sha256:8d87c68bf36634dbcd4d161ac23ac4ec22f81f326f45b820e6564e127493db8f`
+- SBOM digest annotation used:
+  - `E3E11664C6A175D35675B517F9C281E5D1F0FF937F572575042017AC30D6EE08`
+
+## Pre-check Result
+- `go test ./...` passed before matrix execution (captured in script output).
+- Cluster reachability (`kubectl get nodes`) and Kyverno policy application passed.
+
+## Matrix Verdict (case -> expected -> actual -> verdict)
+| Case | Expected | Actual | Verdict |
+|---|---|---|---|
+| `VALID_ALLOW` | Allowed | Allowed | PASS |
+| `NEG_UNSIGNED_DENY` | Denied | Denied | PASS |
+| `NEG_MISSING_SBOM_DENY` | Denied | Denied | PASS |
+| `NEG_CVE_THRESHOLD_DENY` | Denied | Denied | PASS |
+
+Regression check (post-deny):
+
+| Check | Expected | Actual | Verdict |
+|---|---|---|---|
+| `VALID_ALLOW_RECHECK` | Allowed | Allowed | PASS |
+
+## Deny/Allow Reasons (raw evidence)
+1. `VALID_ALLOW` admitted
+   - Evidence: `VALID_ALLOW/kubectl-wait.txt`
+   - Signal: `deployment.apps/user-service condition met`
+
+2. `NEG_UNSIGNED_DENY` denied by signature verification
+   - Evidence: `NEG_UNSIGNED_DENY/kubectl-apply.txt`
+   - Signal excerpt:
 
 ```text
-Name:             user-service-fddcb8687-dzjrh
-Namespace:        stock-trading
-Node:             desktop-worker/172.20.0.5
-Status:           Running
-Ready:            True
-Image:            ttl.sh/stock-trading-d4ec05c5f73c@sha256:42e4b1f9ff6e20ec9ec3885614552472b680954f818456caa7aad6b675d36724
-Events:
-  Normal  Scheduled  Successfully assigned stock-trading/user-service-fddcb8687-dzjrh to desktop-worker
-  Normal  Pulling    Pulling image "ttl.sh/stock-trading-d4ec05c5f73c@sha256:42e4b1f9ff6e20ec9ec3885614552472b680954f818456caa7aad6b675d36724"
-  Normal  Pulled     Successfully pulled image in 2.188s
-  Normal  Created    Created container: user-service
-  Normal  Started    Started container user-service
+verify-local-matrix-images:
+  autogen-verify-local-matrix-signature-and-attestation: 'failed to verify image ...
+    .attestors[0].entries[0].keys: no signatures found'
 ```
 
-## Runtime Logs
-```text
-2026/04/06 05:43:36 INFO SERVER START CONFIG config="{\"env\":\"local\",\"grpc\":{\"host\":\"0.0.0.0\",\"port\":19090},\"http\":{\"host\":\"0.0.0.0\",\"port\":18080},\"db\":{\"host\":\"127.0.0.1\",\"port\":3306,\"user\":\"root\",\"password\":\"\",\"name\":\"stock\"},\"auth\":{\"access_token_secret\":\"***\",\"access_token_ttl_minutes\":15,\"refresh_token_secret\":\"***\",\"refresh_token_ttl_minutes\":4320,\"issuer\":\"stock-trading-be\",\"audience\":\"stock-trading-clients\"},\"notification\":{\"kafka\":{\"brokers\":[\"localhost:29092\"],\"topic\":\"\",\"group_id\":\"email-service\"},\"email\":{\"provider\":\"noop\",\"smtp\":{\"host\":\"localhost\",\"port\":1025,\"username\":\"\",\"password\":\"\",\"from\":\"no-reply@example.com\",\"use_tls\":false},\"verification_url_base\":\"http://127.0.0.1:18080/users/verify?token=\"}},\"verification\":{\"token_ttl_hours\":24,\"resend_cooldown_seconds\":60}}"
-2026/04/06 05:43:36 ERROR MYSQL UNRESPONSIVE error="dial tcp 127.0.0.1:3306: connect: connection refused"
-2026/04/06 05:43:36 INFO NOTIFICATION SERVICE DISABLED reason="missing configuration"
-2026/04/06 05:43:36 INFO SERVER STARTED
-2026/04/06 05:43:36 INFO HTTP GATEWAY RUNNING addr=0.0.0.0:18080
-2026/04/06 05:43:36 INFO GRPC SERVER RUNNING addr=[::]:19090
-```
-
-## Deployment Events
-```text
-LAST SEEN   TYPE     REASON              OBJECT                              MESSAGE
-4m18s       Normal   ScalingReplicaSet   deployment/user-service             Scaled up replica set user-service-fddcb8687 from 0 to 1
-4m16s       Normal   Scheduled           pod/user-service-fddcb8687-dzjrh    Successfully assigned stock-trading/user-service-fddcb8687-dzjrh to desktop-worker
-4m16s       Normal   Pulling             pod/user-service-fddcb8687-dzjrh    Pulling image "ttl.sh/stock-trading-d4ec05c5f73c@sha256:42e4b1f9ff6e20ec9ec3885614552472b680954f818456caa7aad6b675d36724"
-4m16s       Normal   SuccessfulCreate    replicaset/user-service-fddcb8687   Created pod: user-service-fddcb8687-dzjrh
-4m13s       Normal   Pulled              pod/user-service-fddcb8687-dzjrh    Successfully pulled image "ttl.sh/stock-trading-d4ec05c5f73c@sha256:42e4b1f9ff6e20ec9ec3885614552472b680954f818456caa7aad6b675d36724" in 2.188s (2.188s including waiting). Image size: 16639135 bytes.
-4m13s       Normal   Created             pod/user-service-fddcb8687-dzjrh    Created container: user-service
-4m13s       Normal   Started             pod/user-service-fddcb8687-dzjrh    Started container user-service
-```
-
-## Kyverno Local Demo Policy
-The local passing demo used an additional Kyverno policy dedicated to the temporary signed image on `ttl.sh`.
+3. `NEG_MISSING_SBOM_DENY` denied by required SBOM annotation
+   - Evidence: `NEG_MISSING_SBOM_DENY/describe-replicasets.txt`
+   - Signal excerpt:
 
 ```text
-ClusterPolicy: verify-local-demo-image
-Rule: verify-local-demo-signature
-Image reference match: ttl.sh/stock-trading-d4ec05c5f73c*
-Status: Ready
+require-sbom-annotation:
+  require-sbom-digest: 'validation error: Pod rejected: missing SBOM reference annotation
+    (security.stock-trading.dev/sbom-digest) ...'
 ```
 
-## Notes
-- This passing scenario was validated on the `docker-desktop` cluster, not the legacy `kind-devsecops` context.
-- The image is hosted on `ttl.sh`, so it is intentionally temporary.
-- The application starts successfully in local demo mode with Kubernetes admission verification enabled, while database access falls back because no in-cluster MySQL service is provisioned in this demo path.
+4. `NEG_CVE_THRESHOLD_DENY` denied by CVE threshold rule
+   - Evidence: `NEG_CVE_THRESHOLD_DENY/describe-replicasets.txt`
+   - Signal excerpt:
 
-## GitHub Actions CI Evidence (main)
-Workflow run:
-- Workflow: `secure-supply-chain`
-- Run title: `build: refresh distroless runtime base to current debian12 digest`
-- Commit: `fd46aff`
-- Branch: `main`
-- Result: `Success`
-- Total duration: `2m 55s`
-- Build job: `build-sign-verify` succeeded in `2m 53s`
-
-Build summary:
 ```text
-Build ID: TOG2W4
-Status: completed
-Duration: 1m6s
-Build mode: load=true
-Tag: ghcr.io/sinhnguyen1411/stock-trading/user-service:fd46affba6ff
+enforce-cve-threshold:
+  require-high-critical-zero: 'validation error: Pod rejected: fixable High/Critical
+    CVEs not cleared (security.grype.io/high_critical must be ''0'') ...'
 ```
 
-Produced artifacts:
-```text
-cosign-bundle                                            sha256:0db547bd435f6361a947c0739410646730b53f303504e5d5c9cade3bb82e0443
-dependency-integrity-report                              sha256:2b7410f61a812623be4b08e3cc0e5366b11d2bb02565fd2d763562281b5a62f5
-govulncheck-report                                       sha256:6e009238d2381cf59dd61623cb20209387a63e56897fd7a0143e3535aa7b0aec
-grype-report                                             sha256:c8754b78346075ba5a1c71c39990f5a065f5f605919ffd1b514ba8c5cf348d7e
-sbom                                                     sha256:95e958e0611ef8149d21b768ade83d50cd954a61effa4fb2b24e2908e8603be1
-sinhnguyen1411-stock-trading-user-service_fd46affba6ff.spdx.json   sha256:e2e13d0fbaeaa2922bab53eea4952da5be8b6c2575eb88e7b9b6f22aa85a7991
-sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~TOG2W4.dockerbuild   sha256:0286968fa1d83b4543e3942867ef772c0cfce7306a73234bffb6070b8d8b2fba
-```
+5. `VALID_ALLOW_RECHECK` admitted after all deny cases
+   - Evidence: `VALID_ALLOW_RECHECK/kubectl-wait.txt`
+   - Signal: `deployment.apps/user-service condition met`
 
-Non-blocking warning:
-- GitHub-hosted runners emitted a deprecation warning related to Node.js 20 in upstream actions.
-- The run still completed successfully, and this warning did not affect pipeline outcome.
+## Artifact Completeness Checklist
+Each case contains all required artifact groups:
+- `kubectl apply`: `kubectl-apply.txt`
+- `kubectl events`: `events.txt`
+- `describe workload`: `describe-deployment.txt`, `describe-replicasets.txt`, `describe-pods.txt`
+- policy controller logs: `kyverno-logs.txt`
+
+Per-case directories under `.demo/evidence/20260406-154444/`:
+- `VALID_ALLOW/`
+- `NEG_UNSIGNED_DENY/`
+- `NEG_MISSING_SBOM_DENY/`
+- `NEG_CVE_THRESHOLD_DENY/`
+- `VALID_ALLOW_RECHECK/`
+
+## Conclusion
+The run satisfies the minimum appendix-aligned admission validation target on `docker-desktop`:
+- 1 valid workload admitted,
+- 3 negative scenarios denied with explicit policy reasons,
+- valid workload still admitted in post-deny regression re-check.

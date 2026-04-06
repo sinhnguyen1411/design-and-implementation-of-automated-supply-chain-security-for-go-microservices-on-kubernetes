@@ -58,15 +58,21 @@ Apply policies:
 kubectl apply -k deploy/policies/kyverno
 ```
 
-## Local Demo (Kind)
+## Local Bootstrap (Kind)
 Bootstrap a local cluster with Kyverno and policies:
 ```bash
 ./scripts/devsecops_kind_bootstrap.sh
 ```
 
-## Deployment Metadata Requirements
-Required Pod annotations:
-- `security.grype.io/high_critical: "<fixable High/Critical count from CI>"` (expected `0` for compliant builds)
+## Policy Contract (Admission-Time Requirements)
+For workloads labeled `app.kubernetes.io/name=user-service`, admission is expected to enforce:
+- Signature verification for the target image.
+- SLSA-style provenance attestation presence.
+- `security.grype.io/high_critical` annotation must be `"0"`.
+- `security.stock-trading.dev/sbom-digest` annotation must exist and be non-empty.
+
+Required Pod annotations for compliant deployments:
+- `security.grype.io/high_critical: "<fixable High/Critical count from CI>"` (expected `0`)
 - `security.stock-trading.dev/sbom-digest: "<sbom-sha256-or-oci-ref>"`
 
 When available, apply generated CI overlay:
@@ -74,18 +80,42 @@ When available, apply generated CI overlay:
 kubectl apply -k deploy/kubernetes/overlays/ci
 ```
 
-## Verifying Enforcement
-- Deploy unsigned or unannotated images: admission should deny.
-- Deploy signed/scanned image with required annotations: admission should allow.
-- Verify cryptographic evidence manually:
-  ```bash
-  cosign verify --keyless ghcr.io/sinhnguyen1411/stock-trading/user-service:dev
-  cosign verify-attestation --type slsaprovenance --keyless ghcr.io/sinhnguyen1411/stock-trading/user-service:dev
-  ```
+## Automated Admission Matrix (Docker Desktop)
+Run the thesis-aligned matrix on `docker-desktop`:
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/admission_matrix_demo.ps1 -Context docker-desktop -Namespace stock-trading -ExportDir .demo/evidence -ResetNamespace
+```
+
+Fixed matrix cases:
+- `VALID_ALLOW`: signed + attested + required annotations, expect allow.
+- `NEG_UNSIGNED_DENY`: unsigned image, expect deny.
+- `NEG_MISSING_SBOM_DENY`: missing `security.stock-trading.dev/sbom-digest`, expect deny.
+- `NEG_CVE_THRESHOLD_DENY`: `security.grype.io/high_critical != "0"`, expect deny.
+- Regression re-check: rerun valid case after deny cases (`VALID_ALLOW_RECHECK`), expect allow.
+
+Manual cryptographic verification (optional):
+```bash
+cosign verify --key <path-to-cosign.pub> <signed-image-digest>
+cosign verify-attestation --type slsaprovenance --key <path-to-cosign.pub> <signed-image-digest>
+```
 
 ## Evidence Collection Guidance
-Collect:
+The matrix script exports a run directory with:
+- `matrix-summary.md`: pass/fail table for all cases (`case -> expected -> actual -> verdict`).
+- `matrix-index.json`: machine-readable evidence index for CI/manual parsing.
+- `regression-valid-allow.json`: machine-readable result for post-deny valid-admission re-check.
+- Per-case evidence files:
+  - `kubectl-apply.txt`
+  - `kubectl-wait.txt`
+  - `events.txt`
+  - `workloads.txt`
+  - `describe-deployment.txt`
+  - `describe-replicasets.txt`
+  - `describe-pods.txt`
+  - `kyverno-logs.txt`
+
+Complementary CI evidence to collect:
 - CI logs for dependency integrity, test, `govulncheck`, Grype, signing, and attestation steps.
 - Uploaded artifacts listed above.
-- Kubernetes denial/allow events (`kubectl events`, Kyverno policy reports/logs).
+- Kubernetes deny/allow events and policy controller logs.
 

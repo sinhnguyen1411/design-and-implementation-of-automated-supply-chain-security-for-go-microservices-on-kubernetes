@@ -109,6 +109,26 @@ kubectl get deploy,pods,svc -n stock-trading
 kubectl logs -n stock-trading deploy/user-service --tail=40
 ```
 
+## Admission Matrix (1 allow + 3 deny)
+Use [scripts/admission_matrix_demo.ps1](scripts/admission_matrix_demo.ps1) to run the thesis-aligned admission scenarios on `docker-desktop`.
+
+Run:
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/admission_matrix_demo.ps1 -Context docker-desktop -Namespace stock-trading -ExportDir .demo/evidence -ResetNamespace
+```
+
+Expected matrix:
+- `VALID_ALLOW`: signed + attested + SBOM annotation + `high_critical=0` is admitted.
+- `NEG_UNSIGNED_DENY`: unsigned image is denied.
+- `NEG_MISSING_SBOM_DENY`: missing SBOM annotation is denied.
+- `NEG_CVE_THRESHOLD_DENY`: non-zero `security.grype.io/high_critical` is denied.
+
+Outputs:
+- `matrix-summary.md`: case-by-case verdict table.
+- `matrix-index.json`: machine-readable evidence manifest.
+- `regression-valid-allow.json`: post-deny regression re-check result.
+- Per-case files: `kubectl apply/wait`, events, describe outputs, and Kyverno logs.
+
 ## Thesis Documentation
 - [Thesis specification (English)](docs/thesis_spec_en.md)
 - [Interactive architecture diagram (HTML + Mermaid, presentation layout)](docs/scs_architecture_diagram.html)
@@ -116,6 +136,7 @@ kubectl logs -n stock-trading deploy/user-service --tail=40
 - [CI and admission flow](docs/devsecops_ci_admission.md)
 - [Implementation roadmap and milestones](docs/implementation_roadmap.md)
 - [Demo evidence logs](docs/demo_evidence.md)
+- [Go microservice onboarding and reuse guide](docs/go_microservice_onboarding_guide.md)
 
 ## Notes
 - Current enforcement baseline is Kyverno-based.
