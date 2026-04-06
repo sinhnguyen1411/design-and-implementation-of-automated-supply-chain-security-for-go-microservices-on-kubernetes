@@ -33,7 +33,7 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     -trimpath \
     -o /out/user-service .
 
-FROM gcr.io/distroless/base-debian12:nonroot@sha256:0958a776326d5c4db2ec716b6abf26173b7b4a9198cb0b7852dc764ec55a2960 AS runtime
+FROM gcr.io/distroless/base-debian12:nonroot@sha256:8b9f2e503e55aff85b79d6b22c7a63a65170e8698ae80de680e3f5ea600977bf AS runtime
 LABEL org.opencontainers.image.title="stock-trading-user-service" \
       org.opencontainers.image.vendor="stock-trading" \
       org.opencontainers.image.licenses="Apache-2.0" \
