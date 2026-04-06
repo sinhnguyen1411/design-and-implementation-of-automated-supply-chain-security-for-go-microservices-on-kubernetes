@@ -38,6 +38,9 @@ Pipeline stages:
 
 ### Required Permissions/Secrets
 - `GITHUB_TOKEN` with `packages:write` and `id-token:write`.
+- Optional fallback secrets for GHCR pushes when repository package permissions are restricted:
+  - `GHCR_USERNAME`
+  - `GHCR_TOKEN`
 
 ## Admission Policies (Kyverno)
 Resources under `deploy/policies/kyverno/`:
