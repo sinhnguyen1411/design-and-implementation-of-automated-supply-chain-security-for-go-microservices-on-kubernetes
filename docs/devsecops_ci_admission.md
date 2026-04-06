@@ -41,6 +41,7 @@ Pipeline stages:
 - Optional fallback secrets for GHCR pushes when repository package permissions are restricted:
   - `GHCR_USERNAME`
   - `GHCR_TOKEN`
+- If `GHCR_TOKEN` is not configured, push runs fall back to `ttl.sh` for an ephemeral signed image so the pipeline can still complete end-to-end.
 
 ## Admission Policies (Kyverno)
 Resources under `deploy/policies/kyverno/`:

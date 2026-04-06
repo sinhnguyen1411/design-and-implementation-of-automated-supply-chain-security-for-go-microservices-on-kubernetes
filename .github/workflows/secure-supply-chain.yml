@@ -89,11 +89,27 @@ jobs:
         id: meta
         run: |
           TAG=${GITHUB_SHA::12}
-          IMAGE_REPO="${REGISTRY}/${IMAGE_NAME}"
-          IMAGE="${REGISTRY}/${IMAGE_NAME}:${TAG}"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            IMAGE_REPO="${REGISTRY}/${IMAGE_NAME}"
+            IMAGE="${REGISTRY}/${IMAGE_NAME}:${TAG}"
+            REGISTRY_MODE="pr-build-only"
+            REQUIRES_LOGIN="false"
+          elif [ -n "${{ secrets.GHCR_TOKEN }}" ]; then
+            IMAGE_REPO="${REGISTRY}/${IMAGE_NAME}"
+            IMAGE="${REGISTRY}/${IMAGE_NAME}:${TAG}"
+            REGISTRY_MODE="ghcr"
+            REQUIRES_LOGIN="true"
+          else
+            IMAGE_REPO="ttl.sh/stock-trading-${TAG}"
+            IMAGE="${IMAGE_REPO}:24h"
+            REGISTRY_MODE="ttl"
+            REQUIRES_LOGIN="false"
+          fi
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           echo "image_repo=${IMAGE_REPO}" >> "$GITHUB_OUTPUT"
           echo "image=${IMAGE}" >> "$GITHUB_OUTPUT"
+          echo "registry_mode=${REGISTRY_MODE}" >> "$GITHUB_OUTPUT"
+          echo "requires_login=${REQUIRES_LOGIN}" >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -101,20 +117,21 @@ jobs:
       - name: Explain GHCR credential strategy
         if: ${{ github.event_name != 'pull_request' }}
         run: |
-          if [ -n "${{ secrets.GHCR_TOKEN }}" ]; then
-            echo "Using GHCR_TOKEN/GHCR_USERNAME secrets for registry push."
+          if [ "${{ steps.meta.outputs.registry_mode }}" = "ghcr" ]; then
+            echo "Using GHCR_TOKEN/GHCR_USERNAME secrets for GHCR push."
+          elif [ "${{ steps.meta.outputs.registry_mode }}" = "ttl" ]; then
+            echo "GHCR_TOKEN not configured. Falling back to ttl.sh for an ephemeral signed image."
           else
-            echo "Using GitHub Actions token for registry push."
-            echo "If GHCR push fails with permission_denied: write_package, add GHCR_TOKEN and GHCR_USERNAME secrets or enable Actions read/write package access in repository settings."
+            echo "PR build only. Registry push is disabled for pull_request events."
           fi
 
       - name: Log in to GHCR
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' && steps.meta.outputs.requires_login == 'true' }}
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.GHCR_USERNAME != '' && secrets.GHCR_USERNAME || github.actor }}
-          password: ${{ secrets.GHCR_TOKEN != '' && secrets.GHCR_TOKEN || github.token }}
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build and push image
         id: build
@@ -122,6 +139,7 @@ jobs:
         with:
           context: .
           file: Dockerfile
+          load: ${{ github.event_name == 'pull_request' }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.image }}
 
