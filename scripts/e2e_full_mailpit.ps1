@@ -37,7 +37,11 @@ function Find-VerifyLink([string]$content) {
 }
 
 Write-Host "Starting server in background (full diagram E2E)..."
-$job = Start-Job -ScriptBlock { param($cfg) go run main.go server --config $cfg } -ArgumentList $ConfigPath
+$job = Start-Job -ScriptBlock {
+  param($cfg, $wd)
+  Set-Location $wd
+  go run main.go server --config $cfg
+} -ArgumentList $ConfigPath, (Get-Location).Path
 Start-Sleep -Seconds 2
 if (-not (Wait-Port -HostName '127.0.0.1' -Port 18080 -Seconds 60)) {
   try { Receive-Job -Id $job.Id -Keep | Select-Object -Last 50 } catch {}
@@ -136,8 +140,7 @@ $loginBody = @{ username=$username; password=$password } | ConvertTo-Json
 $login = Invoke-RestMethod -Method Post -Uri "$BaseUrl/api/v1/user/login" -ContentType 'application/json' -Body $loginBody -TimeoutSec 20
 Write-Host "Login response: $($login | ConvertTo-Json -Depth 6)"
 
-Write-Host "Full diagram E2E (register→resend→verify→login) succeeded for $username"
+Write-Host "Full diagram E2E (register -> resend -> verify -> login) succeeded for $username"
 
 try { Stop-Job -Id $job.Id | Out-Null } catch {}
 Remove-Job -Id $job.Id -ErrorAction SilentlyContinue | Out-Null
-

@@ -1,95 +1,86 @@
-# Demo Evidence - Supply Chain Security
+# Demo Evidence - Local Signed Demo on Docker Desktop Kubernetes
+
+## Environment
+- Kubernetes context: `docker-desktop`
+- Kubernetes namespace: `stock-trading`
+- Cluster nodes:
+  - `desktop-control-plane`
+  - `desktop-worker`
+- Demo automation entrypoint: `scripts/local_signed_demo.ps1`
 
 ## Image Digest
-Image: ghcr.io/sinhnguyen1411/stock-trading/user-service@sha256:af03df22a9dc5058109fa089dba24eaca145f6d363aa113bb30c2bfd243a770a
+Image:
+`ttl.sh/stock-trading-d4ec05c5f73c@sha256:42e4b1f9ff6e20ec9ec3885614552472b680954f818456caa7aad6b675d36724`
 
-## Cosign Verify (signature)
-```
+SBOM digest:
+`7C1EB2358B426D9CC031B954A7CC402770A5DA0DB6CB83B507967055AB826A38`
 
-Verification for ghcr.io/sinhnguyen1411/stock-trading/user-service@sha256:af03df22a9dc5058109fa089dba24eaca145f6d363aa113bb30c2bfd243a770a --
-The following checks were performed on each of these signatures:
-  - The cosign claims were validated
-  - Existence of the claims in the transparency log was verified offline
-  - The signatures were verified against the specified public key
+## Deployed Workload Status
+```text
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE    CONTAINERS     IMAGES                                                                                                      SELECTOR
+deployment.apps/user-service   1/1     1            1           4m9s   user-service   ttl.sh/stock-trading-d4ec05c5f73c@sha256:42e4b1f9ff6e20ec9ec3885614552472b680954f818456caa7aad6b675d36724   app.kubernetes.io/name=user-service
 
-[{"critical":{"identity":{"docker-reference":"ghcr.io/sinhnguyen1411/stock-trading/user-service"},"image":{"docker-manifest-digest":"sha256:af03df22a9dc5058109fa089dba24eaca145f6d363aa113bb30c2bfd243a770a"},"type":"cosign container image signature"},"optional":{"Bundle":{"SignedEntryTimestamp":"MEQCIHbimnCpdNjfiKJrXfQJKJAsTgq2kSFL4L3Z4Q124owRAiAclExXoo1lHVdoxlG8qO4vqf+3rV6kHqw1BSlV3WidrA==","Payload":{"body":"eyJhcGlWZXJzaW9uIjoiMC4wLjEiLCJraW5kIjoiaGFzaGVkcmVrb3JkIiwic3BlYyI6eyJkYXRhIjp7Imhhc2giOnsiYWxnb3JpdGhtIjoic2hhMjU2IiwidmFsdWUiOiI5MWViN2ZkZWI5NThkMTgzMTJjMGYzZmE4OWU5OWEyNDMwNDllNjM3MTQ5MzE5NjlhYjRkZmI4YmVlZjA2Y2UyIn19LCJzaWduYXR1cmUiOnsiY29udGVudCI6Ik1FUUNJRURhRDJ5QzZwRXpkRUthM1ZHc3lZUGV2SVp6Z2RiQ3dKc0hMNW9Ud2k1aEFpQXo3aTVrbE5BeU4rNnM3QmVab0F3NzQ2QXR0cDRoTTFEYlhuenVhekMvNHc9PSIsInB1YmxpY0tleSI6eyJjb250ZW50IjoiTFMwdExTMUNSVWRKVGlCUVZVSk1TVU1nUzBWWkxTMHRMUzBLVFVacmQwVjNXVWhMYjFwSmVtb3dRMEZSV1VsTGIxcEplbW93UkVGUlkwUlJaMEZGVG1ZeVVrbFdUSGhSYWxoNmNuY3ZOVGhDVWk5ME9YbEdSbGQxTkFvMlEybEdSME5XYUVFNVJtdDVaa05HUnpKS2JFdFRRbmhMTjJGSGExbzNiMmRPWTFsM1JIZEJZbk5YWTNWak0xUkVSVEl4SzBWd1MyZG5QVDBLTFMwdExTMUZUa1FnVUZWQ1RFbERJRXRGV1MwdExTMHRDZz09In19fX0=","integratedTime":1767758551,"logIndex":799068178,"logID":"c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d"}}}}]
-```
+NAME                               READY   STATUS    RESTARTS   AGE    IP            NODE             NOMINATED NODE   READINESS GATES
+pod/user-service-fddcb8687-dzjrh   1/1     Running   0          4m7s   10.244.1.12   desktop-worker   <none>           <none>
 
-## Cosign Verify (attestation/provenance)
-```
-
-Verification for ghcr.io/sinhnguyen1411/stock-trading/user-service@sha256:af03df22a9dc5058109fa089dba24eaca145f6d363aa113bb30c2bfd243a770a --
-The following checks were performed on each of these signatures:
-  - The cosign claims were validated
-  - Existence of the claims in the transparency log was verified offline
-  - The signatures were verified against the specified public key
-{"payloadType":"application/vnd.in-toto+json","payload":"eyJfdHlwZSI6Imh0dHBzOi8vaW4tdG90by5pby9TdGF0ZW1lbnQvdjAuMSIsInByZWRpY2F0ZVR5cGUiOiJodHRwczovL3Nsc2EuZGV2L3Byb3ZlbmFuY2UvdjAuMiIsInN1YmplY3QiOlt7Im5hbWUiOiJnaGNyLmlvL3NpbmhuZ3V5ZW4xNDExL3N0b2NrLXRyYWRpbmcvdXNlci1zZXJ2aWNlIiwiZGlnZXN0Ijp7InNoYTI1NiI6ImFmMDNkZjIyYTlkYzUwNTgxMDlmYTA4OWRiYTI0ZWFjYTE0NWY2ZDM2M2FhMTEzYmIzMGMyYmZkMjQzYTc3MGEifX1dLCJwcmVkaWNhdGUiOnsiYnVpbGRUeXBlIjoiaHR0cHM6Ly9zbHNhLmRldi9wcm92ZW5hbmNlL3YwLjIiLCJidWlsZGVyIjp7ImlkIjoibG9jYWwtZGVtbyJ9LCJpbnZvY2F0aW9uIjp7ImNvbmZpZ1NvdXJjZSI6eyJkaWdlc3QiOnsiZ2l0Q29tbWl0IjoiZGVtbyJ9LCJ1cmkiOiJodHRwczovL2dpdGh1Yi5jb20vc2luaG5ndXllbjE0MTEvc3RvY2stdHJhZGluZy1iZSJ9fX19","signatures":[{"keyid":"","sig":"MEUCID10wvA5ddYrSyUyb0PBzeDrhqbt5akK4UR3j2InzxwZAiEAng60nrLxEK2qEB8Fl3gEbuW6/fcmK3tM2xnYFNw8tmE="}]}
+NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)               AGE     SELECTOR
+service/user-service   ClusterIP   10.96.158.207   <none>        18080/TCP,19090/TCP   4m11s   app.kubernetes.io/name=user-service
 ```
 
-## Kyverno Admission Deny Evidence (CVE gate)
-```
-LAST SEEN   TYPE     REASON              OBJECT                               MESSAGE
-18m         Normal   SandboxChanged      pod/user-service-c9b5df5d9-kk67h     Pod sandbox changed, it will be killed and re-created.
-18m         Normal   Started             pod/user-service-c9b5df5d9-kk67h     Started container user-service
-18m         Normal   Created             pod/user-service-c9b5df5d9-kk67h     Created container user-service
-18m         Normal   Pulled              pod/user-service-c9b5df5d9-kk67h     Container image "ghcr.io/sinhnguyen1411/stock-trading/user-service@sha256:e67b03ed25ed0b7a6c7aa3c8530d997a3396913581128a91083e7b31270bd121" already present on machine
-8m42s       Normal   SuccessfulCreate    replicaset/user-service-6cdb4c544c   Created pod: user-service-6cdb4c544c-4d942
-8m42s       Normal   ScalingReplicaSet   deployment/user-service              Scaled up replica set user-service-6cdb4c544c to 1
-8m41s       Normal   Scheduled           pod/user-service-6cdb4c544c-4d942    Successfully assigned stock-trading/user-service-6cdb4c544c-4d942 to devsecops-control-plane
-8m41s       Normal   SuccessfulCreate    replicaset/user-service-6cdb4c544c   Created pod: user-service-6cdb4c544c-4jzbf
-8m40s       Normal   Scheduled           pod/user-service-6cdb4c544c-4jzbf    Successfully assigned stock-trading/user-service-6cdb4c544c-4jzbf to devsecops-control-plane
-8m41s       Normal   SuccessfulCreate    replicaset/user-service-c9b5df5d9    Created pod: user-service-c9b5df5d9-8jnr5
-8m41s       Normal   Killing             pod/user-service-c9b5df5d9-kk67h     Stopping container user-service
-8m41s       Normal   Pulling             pod/user-service-6cdb4c544c-4d942    Pulling image "ghcr.io/sinhnguyen1411/stock-trading/user-service@sha256:af03df22a9dc5058109fa089dba24eaca145f6d363aa113bb30c2bfd243a770a"
-8m40s       Normal   Scheduled           pod/user-service-c9b5df5d9-8jnr5     Successfully assigned stock-trading/user-service-c9b5df5d9-8jnr5 to devsecops-control-plane
-8m40s       Normal   Pulling             pod/user-service-6cdb4c544c-4jzbf    Pulling image "ghcr.io/sinhnguyen1411/stock-trading/user-service@sha256:af03df22a9dc5058109fa089dba24eaca145f6d363aa113bb30c2bfd243a770a"
-8m40s       Normal   Started             pod/user-service-c9b5df5d9-8jnr5     Started container user-service
-8m40s       Normal   Created             pod/user-service-c9b5df5d9-8jnr5     Created container user-service
-8m40s       Normal   Pulled              pod/user-service-c9b5df5d9-8jnr5     Container image "ghcr.io/sinhnguyen1411/stock-trading/user-service@sha256:e67b03ed25ed0b7a6c7aa3c8530d997a3396913581128a91083e7b31270bd121" already present on machine
-8m36s       Normal   Pulled              pod/user-service-6cdb4c544c-4d942    Successfully pulled image "ghcr.io/sinhnguyen1411/stock-trading/user-service@sha256:af03df22a9dc5058109fa089dba24eaca145f6d363aa113bb30c2bfd243a770a" in 4.79s (4.79s including waiting). Image size: 16525352 bytes.
-8m36s       Normal   Started             pod/user-service-6cdb4c544c-4d942    Started container user-service
-8m36s       Normal   Created             pod/user-service-6cdb4c544c-4d942    Created container user-service
-8m36s       Normal   Killing             pod/user-service-6cdb4c544c-4d942    Stopping container user-service
-8m35s       Normal   Started             pod/user-service-6cdb4c544c-4jzbf    Started container user-service
-8m35s       Normal   Pulled              pod/user-service-6cdb4c544c-4jzbf    Successfully pulled image "ghcr.io/sinhnguyen1411/stock-trading/user-service@sha256:af03df22a9dc5058109fa089dba24eaca145f6d363aa113bb30c2bfd243a770a" in 884ms (4.947s including waiting). Image size: 16525352 bytes.
-8m35s       Normal   Created             pod/user-service-6cdb4c544c-4jzbf    Created container user-service
-8m20s       Normal   ScalingReplicaSet   deployment/user-service              Scaled down replica set user-service-c9b5df5d9 to 0 from 1
-8m20s       Normal   SuccessfulDelete    replicaset/user-service-c9b5df5d9    Deleted pod: user-service-c9b5df5d9-8jnr5
-8m20s       Normal   Killing             pod/user-service-c9b5df5d9-8jnr5     Stopping container user-service
-7m15s       Normal   Pulled              pod/user-service-6cdb4c544c-ctp2n    Container image "ghcr.io/sinhnguyen1411/stock-trading/user-service@sha256:af03df22a9dc5058109fa089dba24eaca145f6d363aa113bb30c2bfd243a770a" already present on machine
-7m15s       Normal   Killing             pod/user-service-6cdb4c544c-4jzbf    Stopping container user-service
-7m14s       Normal   Scheduled           pod/user-service-6cdb4c544c-ctp2n    Successfully assigned stock-trading/user-service-6cdb4c544c-ctp2n to devsecops-control-plane
-7m15s       Normal   SuccessfulCreate    replicaset/user-service-6cdb4c544c   Created pod: user-service-6cdb4c544c-ctp2n
-7m15s       Normal   Created             pod/user-service-6cdb4c544c-ctp2n    Created container user-service
-7m15s       Normal   Started             pod/user-service-6cdb4c544c-ctp2n    Started container user-service
+## Pod Verification Evidence
+Key annotations observed on the running pod:
+- `kyverno.io/verify-images: {"ttl.sh/stock-trading-d4ec05c5f73c@sha256:42e4b1f9ff6e20ec9ec3885614552472b680954f818456caa7aad6b675d36724":"pass"}`
+- `security.grype.io/high_critical: 0`
+- `security.stock-trading.dev/sbom-digest: 7C1EB2358B426D9CC031B954A7CC402770A5DA0DB6CB83B507967055AB826A38`
+
+```text
+Name:             user-service-fddcb8687-dzjrh
+Namespace:        stock-trading
+Node:             desktop-worker/172.20.0.5
+Status:           Running
+Ready:            True
+Image:            ttl.sh/stock-trading-d4ec05c5f73c@sha256:42e4b1f9ff6e20ec9ec3885614552472b680954f818456caa7aad6b675d36724
+Events:
+  Normal  Scheduled  Successfully assigned stock-trading/user-service-fddcb8687-dzjrh to desktop-worker
+  Normal  Pulling    Pulling image "ttl.sh/stock-trading-d4ec05c5f73c@sha256:42e4b1f9ff6e20ec9ec3885614552472b680954f818456caa7aad6b675d36724"
+  Normal  Pulled     Successfully pulled image in 2.188s
+  Normal  Created    Created container: user-service
+  Normal  Started    Started container user-service
 ```
 
-## Current Pod Status
-```
-NAME                            READY   STATUS    RESTARTS   AGE
-user-service-6cdb4c544c-ctp2n   1/1     Running   0          7m16s
+## Runtime Logs
+```text
+2026/04/06 05:43:36 INFO SERVER START CONFIG config="{\"env\":\"local\",\"grpc\":{\"host\":\"0.0.0.0\",\"port\":19090},\"http\":{\"host\":\"0.0.0.0\",\"port\":18080},\"db\":{\"host\":\"127.0.0.1\",\"port\":3306,\"user\":\"root\",\"password\":\"\",\"name\":\"stock\"},\"auth\":{\"access_token_secret\":\"***\",\"access_token_ttl_minutes\":15,\"refresh_token_secret\":\"***\",\"refresh_token_ttl_minutes\":4320,\"issuer\":\"stock-trading-be\",\"audience\":\"stock-trading-clients\"},\"notification\":{\"kafka\":{\"brokers\":[\"localhost:29092\"],\"topic\":\"\",\"group_id\":\"email-service\"},\"email\":{\"provider\":\"noop\",\"smtp\":{\"host\":\"localhost\",\"port\":1025,\"username\":\"\",\"password\":\"\",\"from\":\"no-reply@example.com\",\"use_tls\":false},\"verification_url_base\":\"http://127.0.0.1:18080/users/verify?token=\"}},\"verification\":{\"token_ttl_hours\":24,\"resend_cooldown_seconds\":60}}"
+2026/04/06 05:43:36 ERROR MYSQL UNRESPONSIVE error="dial tcp 127.0.0.1:3306: connect: connection refused"
+2026/04/06 05:43:36 INFO NOTIFICATION SERVICE DISABLED reason="missing configuration"
+2026/04/06 05:43:36 INFO SERVER STARTED
+2026/04/06 05:43:36 INFO HTTP GATEWAY RUNNING addr=0.0.0.0:18080
+2026/04/06 05:43:36 INFO GRPC SERVER RUNNING addr=[::]:19090
 ```
 
-## Kyverno Admission Deny Evidence (latest)
+## Deployment Events
+```text
+LAST SEEN   TYPE     REASON              OBJECT                              MESSAGE
+4m18s       Normal   ScalingReplicaSet   deployment/user-service             Scaled up replica set user-service-fddcb8687 from 0 to 1
+4m16s       Normal   Scheduled           pod/user-service-fddcb8687-dzjrh    Successfully assigned stock-trading/user-service-fddcb8687-dzjrh to desktop-worker
+4m16s       Normal   Pulling             pod/user-service-fddcb8687-dzjrh    Pulling image "ttl.sh/stock-trading-d4ec05c5f73c@sha256:42e4b1f9ff6e20ec9ec3885614552472b680954f818456caa7aad6b675d36724"
+4m16s       Normal   SuccessfulCreate    replicaset/user-service-fddcb8687   Created pod: user-service-fddcb8687-dzjrh
+4m13s       Normal   Pulled              pod/user-service-fddcb8687-dzjrh    Successfully pulled image "ttl.sh/stock-trading-d4ec05c5f73c@sha256:42e4b1f9ff6e20ec9ec3885614552472b680954f818456caa7aad6b675d36724" in 2.188s (2.188s including waiting). Image size: 16639135 bytes.
+4m13s       Normal   Created             pod/user-service-fddcb8687-dzjrh    Created container: user-service
+4m13s       Normal   Started             pod/user-service-fddcb8687-dzjrh    Started container user-service
 ```
-36s         Warning   FailedCreate        replicaset/user-service-87448b5f6    Error creating: admission webhook "validate.kyverno.svc-fail" denied the request: ...
-36s         Warning   FailedCreate        replicaset/user-service-87448b5f6    Error creating: admission webhook "validate.kyverno.svc-fail" denied the request: ...
-36s         Warning   FailedCreate        replicaset/user-service-87448b5f6    Error creating: admission webhook "validate.kyverno.svc-fail" denied the request: ...
-36s         Warning   FailedCreate        replicaset/user-service-87448b5f6    Error creating: admission webhook "validate.kyverno.svc-fail" denied the request: ...
-36s         Warning   FailedCreate        replicaset/user-service-87448b5f6    Error creating: admission webhook "validate.kyverno.svc-fail" denied the request: ...
-36s         Normal    ScalingReplicaSet   deployment/user-service              Scaled up replica set user-service-87448b5f6 to 1
-36s         Normal    Created             pod/user-service-6cdb4c544c-jw287    Created container user-service
-36s         Normal    Pulled              pod/user-service-6cdb4c544c-jw287    Container image "ghcr.io/sinhnguyen1411/stock-trading/user-service@sha256:af03df22a9dc5058109fa089dba24eaca145f6d363aa113bb30c2bfd243a770a" already present on machine
-35s         Normal    Scheduled           pod/user-service-6cdb4c544c-jw287    Successfully assigned stock-trading/user-service-6cdb4c544c-jw287 to devsecops-control-plane
-36s         Normal    SuccessfulCreate    replicaset/user-service-6cdb4c544c   Created pod: user-service-6cdb4c544c-jw287
-35s         Normal    Started             pod/user-service-6cdb4c544c-jw287    Started container user-service
-35s         Warning   FailedCreate        replicaset/user-service-87448b5f6    Error creating: admission webhook "validate.kyverno.svc-fail" denied the request: ...
-26s         Warning   FailedCreate        replicaset/user-service-87448b5f6    (combined from similar events): Error creating: admission webhook "validate.kyverno.svc-fail" denied the request: ...
-33s         Normal    Pulled              pod/user-service-6cdb4c544c-dlngm    Container image "ghcr.io/sinhnguyen1411/stock-trading/user-service@sha256:af03df22a9dc5058109fa089dba24eaca145f6d363aa113bb30c2bfd243a770a" already present on machine
-33s         Normal    Scheduled           pod/user-service-6cdb4c544c-dlngm    Successfully assigned stock-trading/user-service-6cdb4c544c-dlngm to devsecops-control-plane
-33s         Normal    Created             pod/user-service-6cdb4c544c-dlngm    Created container user-service
-33s         Normal    Started             pod/user-service-6cdb4c544c-dlngm    Started container user-service
-33s         Normal    Killing             pod/user-service-6cdb4c544c-jw287    Stopping container user-service
-33s         Normal    SuccessfulCreate    replicaset/user-service-6cdb4c544c   Created pod: user-service-6cdb4c544c-dlngm
-23s         Normal    ScalingReplicaSet   deployment/user-service              Scaled down replica set user-service-87448b5f6 to 0 from 1
+
+## Kyverno Local Demo Policy
+The local passing demo used an additional Kyverno policy dedicated to the temporary signed image on `ttl.sh`.
+
+```text
+ClusterPolicy: verify-local-demo-image
+Rule: verify-local-demo-signature
+Image reference match: ttl.sh/stock-trading-d4ec05c5f73c*
+Status: Ready
 ```
+
+## Notes
+- This passing scenario was validated on the `docker-desktop` cluster, not the legacy `kind-devsecops` context.
+- The image is hosted on `ttl.sh`, so it is intentionally temporary.
+- The application starts successfully in local demo mode with Kubernetes admission verification enabled, while database access falls back because no in-cluster MySQL service is provisioned in this demo path.

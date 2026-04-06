@@ -16,6 +16,15 @@ This roadmap aligns repository execution work with the thesis specification in `
 | IV. Evaluation Method | Valid/invalid artifact experiments | M5 evidence scenarios |
 | V. Limitations | Practical boundaries and constraints | M6 documentation and reproducibility notes |
 
+## Recommended Local Development Stack
+The recommended local environment for this thesis is `Docker Desktop + kind + kubectl + Helm + Lens`.
+
+This combination is appropriate for an implementation-focused supply chain security study because it balances reproducibility, operational realism, and demo efficiency on a single workstation. `Docker Desktop` provides the local container runtime baseline required to build and test Go microservice images. `kind` provisions a lightweight Kubernetes cluster using Docker-backed nodes, which is sufficient for validating admission enforcement, artifact verification behavior, and repeatable cluster bootstrap without requiring external cloud infrastructure.
+
+`kubectl` should remain the primary operator interface for scripted validation, evidence capture, and policy troubleshooting because it exposes the exact control-plane and workload state needed for thesis evaluation. `Helm` is suitable for packaging and repeatedly deploying the microservice, policy components, and supporting security controls with versioned configuration, which improves repeatability across milestones and demo resets. `Lens` is recommended as a secondary observability interface for live inspection of workloads, logs, events, and Helm releases during demonstrations; it improves presentation clarity but does not replace the cluster runtime or CLI-based verification path.
+
+This stack is therefore aligned with the thesis requirement to implement a verifiable and enforceable end-to-end pipeline, while keeping the environment local, reproducible, and practical for controlled experiments.
+
 ## Milestones
 | Milestone | Due date (UTC) | Link | Objective |
 |---|---|---|---|

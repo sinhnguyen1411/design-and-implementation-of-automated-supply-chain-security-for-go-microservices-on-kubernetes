@@ -36,7 +36,11 @@ function Docker-MySQL([string]$sql) {
 }
 
 Write-Host "Starting server in background..."
-$job = Start-Job -ScriptBlock { param($cfg) go run main.go server --config $cfg } -ArgumentList $ConfigPath
+$job = Start-Job -ScriptBlock {
+  param($cfg, $wd)
+  Set-Location $wd
+  go run main.go server --config $cfg
+} -ArgumentList $ConfigPath, (Get-Location).Path
 Start-Sleep -Seconds 2
 
 if (-not (Wait-Port -HostName '127.0.0.1' -Port 18080 -Seconds $TimeoutSeconds)) {

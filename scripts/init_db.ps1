@@ -18,9 +18,9 @@ function Try-LocalMySQL($mysqlArgs, [string]$stdin) {
   if (-not (Get-Command mysql -ErrorAction SilentlyContinue)) { return $false }
   try {
     if ($stdin) {
-      $stdin | & mysql @mysqlArgs
+      $stdin | & mysql @mysqlArgs 2>$null
     } else {
-      & mysql @mysqlArgs
+      & mysql @mysqlArgs 2>$null
     }
     return $LASTEXITCODE -eq 0
   } catch {
@@ -45,8 +45,23 @@ function Normalize-HostForDocker($mysqlArgs) {
 
 function Run-DockerMySQL($mysqlArgs, [string]$stdin) {
   $norm = Normalize-HostForDocker $mysqlArgs
-  $dockerArgs = @('run','--rm','-i','mysql:8','mysql') + $norm
-  $display = $dockerArgs | ForEach-Object { if ($_ -like '--password=*') { '--password=****' } else { $_ } } | Out-String
+  $passwordArg = $null
+  $mysqlCliArgs = @()
+  foreach ($arg in $norm) {
+    if ($arg -like '--password=*') {
+      $passwordArg = $arg.Substring(11)
+      continue
+    }
+    $mysqlCliArgs += $arg
+  }
+  $dockerArgs = @('run','--rm','-i')
+  if ($null -ne $passwordArg) {
+    $dockerArgs += @('-e', "MYSQL_PWD=$passwordArg")
+  }
+  $dockerArgs += @('mysql:8','mysql') + $mysqlCliArgs
+  $display = $dockerArgs | ForEach-Object {
+    if ($_ -like 'MYSQL_PWD=*') { 'MYSQL_PWD=****' } else { $_ }
+  } | Out-String
   Write-Host "Running: docker $display"
   if ($stdin) {
     $stdin | & docker @dockerArgs
@@ -64,7 +79,7 @@ if (!(Test-Path -Path $SchemaPath)) {
 }
 
 Write-Host "Creating database '$Database' if not exists..."
-$createSQL = "CREATE DATABASE IF NOT EXISTS `$Database CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+$createSQL = "CREATE DATABASE IF NOT EXISTS ``$Database`` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 $args = @("--host=$DBHost","--port=$Port","--user=$User","--password=$Password","-e", $createSQL)
 if (-not (Try-LocalMySQL $args $null)) {
   Write-Warning "Local mysql failed; falling back to docker mysql client..."
