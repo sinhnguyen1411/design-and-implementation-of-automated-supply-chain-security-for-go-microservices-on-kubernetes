@@ -83,6 +83,32 @@ go run main.go server --config cmd/server/config/local.yaml
 kubectl get clusterpolicies
 ```
 
+## How to Run the Local Signed Demo
+Use [scripts/local_signed_demo.ps1](scripts/local_signed_demo.ps1) to run the end-to-end local demonstration on the current Kubernetes context.
+
+Prerequisites:
+- Docker Desktop Kubernetes is running.
+- `kubectl`, `docker`, `cosign`, `syft`, and `helm` are available in `PATH`.
+
+Run:
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/local_signed_demo.ps1 -ResetNamespace
+```
+
+What the script does:
+- Builds the local application image.
+- Pushes the image to a temporary registry target.
+- Generates or reuses a local Cosign keypair in `.demo/`.
+- Produces an SBOM and signs the image and provenance.
+- Installs or checks Kyverno, applies the repository policies, and deploys the demo workload.
+- Verifies rollout in the `stock-trading` namespace.
+
+After the script completes, inspect the deployment with:
+```bash
+kubectl get deploy,pods,svc -n stock-trading
+kubectl logs -n stock-trading deploy/user-service --tail=40
+```
+
 ## Thesis Documentation
 - [Thesis specification (English)](docs/thesis_spec_en.md)
 - [Interactive architecture diagram (HTML + Mermaid, presentation layout)](docs/scs_architecture_diagram.html)
