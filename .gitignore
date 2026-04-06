@@ -41,3 +41,6 @@ bin/
 .tmp-*
 Dockerfile.scan-test
 server_run_err.log
+start-antigravity.ps1
+/docs/lens_screenshots
+/.agent

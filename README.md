@@ -129,6 +129,29 @@ Outputs:
 - `regression-valid-allow.json`: post-deny regression re-check result.
 - Per-case files: `kubectl apply/wait`, events, describe outputs, and Kyverno logs.
 
+## Security Admission Dashboard Demo
+Use the static dashboard to present matrix evidence without a live cluster connection.
+
+Prerequisites:
+- Run `scripts/admission_matrix_demo.ps1` at least once to generate `.demo/evidence/<run-id>/...`.
+- Keep local SBOM/scan outputs available (for example `.demo/sbom.spdx.json`, `.tmp-sbom.json`, `.tmp-grype.json`).
+
+Run from the repository root:
+```bash
+python -m http.server 8080
+```
+
+Open:
+- `http://localhost:8080/docs/security-admission-dashboard/`
+- Optional pre-load run id: `http://localhost:8080/docs/security-admission-dashboard/?run=20260406-154444`
+
+Dashboard behavior:
+- Auto-scan run directories from `../../.demo/evidence/` and select run-id via command-palette dropdown (with search).
+- Reads `../../.demo/evidence/<run-id>/matrix-index.json`, `matrix-summary.md`, and `regression-valid-allow.json`.
+- Shows fixed matrix cards for `VALID_ALLOW`, `NEG_UNSIGNED_DENY`, `NEG_MISSING_SBOM_DENY`, `NEG_CVE_THRESHOLD_DENY`.
+- Visualizes SBOM package distribution from `../../.demo/sbom.spdx.json` (fallback `../../.tmp-sbom.json`).
+- Provides quick links to raw scanner/SBOM artifacts.
+
 ## Thesis Documentation
 - [Thesis specification (English)](docs/thesis_spec_en.md)
 - [Interactive architecture diagram (HTML + Mermaid, presentation layout)](docs/scs_architecture_diagram.html)
