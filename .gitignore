@@ -35,3 +35,9 @@ cosign.key
 
 # downloaded tooling binaries
 bin/
+
+# local demo/debug artifacts
+.demo/
+.tmp-*
+Dockerfile.scan-test
+server_run_err.log
