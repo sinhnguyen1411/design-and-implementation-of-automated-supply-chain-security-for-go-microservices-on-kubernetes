@@ -84,3 +84,37 @@ Status: Ready
 - This passing scenario was validated on the `docker-desktop` cluster, not the legacy `kind-devsecops` context.
 - The image is hosted on `ttl.sh`, so it is intentionally temporary.
 - The application starts successfully in local demo mode with Kubernetes admission verification enabled, while database access falls back because no in-cluster MySQL service is provisioned in this demo path.
+
+## GitHub Actions CI Evidence (main)
+Workflow run:
+- Workflow: `secure-supply-chain`
+- Run title: `build: refresh distroless runtime base to current debian12 digest`
+- Commit: `fd46aff`
+- Branch: `main`
+- Result: `Success`
+- Total duration: `2m 55s`
+- Build job: `build-sign-verify` succeeded in `2m 53s`
+
+Build summary:
+```text
+Build ID: TOG2W4
+Status: completed
+Duration: 1m6s
+Build mode: load=true
+Tag: ghcr.io/sinhnguyen1411/stock-trading/user-service:fd46affba6ff
+```
+
+Produced artifacts:
+```text
+cosign-bundle                                            sha256:0db547bd435f6361a947c0739410646730b53f303504e5d5c9cade3bb82e0443
+dependency-integrity-report                              sha256:2b7410f61a812623be4b08e3cc0e5366b11d2bb02565fd2d763562281b5a62f5
+govulncheck-report                                       sha256:6e009238d2381cf59dd61623cb20209387a63e56897fd7a0143e3535aa7b0aec
+grype-report                                             sha256:c8754b78346075ba5a1c71c39990f5a065f5f605919ffd1b514ba8c5cf348d7e
+sbom                                                     sha256:95e958e0611ef8149d21b768ade83d50cd954a61effa4fb2b24e2908e8603be1
+sinhnguyen1411-stock-trading-user-service_fd46affba6ff.spdx.json   sha256:e2e13d0fbaeaa2922bab53eea4952da5be8b6c2575eb88e7b9b6f22aa85a7991
+sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~TOG2W4.dockerbuild   sha256:0286968fa1d83b4543e3942867ef772c0cfce7306a73234bffb6070b8d8b2fba
+```
+
+Non-blocking warning:
+- GitHub-hosted runners emitted a deprecation warning related to Node.js 20 in upstream actions.
+- The run still completed successfully, and this warning did not affect pipeline outcome.
