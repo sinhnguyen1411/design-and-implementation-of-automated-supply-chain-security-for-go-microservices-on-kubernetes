@@ -44,3 +44,11 @@ server_run_err.log
 start-antigravity.ps1
 /docs/lens_screenshots
 /.agent
+
+# local workspace artifacts
+go.sum
+.codex
+.codex/
+.vscode/extensions.json
+evidence.zip
+scripts/install_vscode_extensions.sh
