@@ -1,0 +1,10 @@
+{
+  "buildType": "https://slsa.dev/provenance/v0.2",
+  "builder": { "id": "local-admission-matrix" },
+  "invocation": {
+    "configSource": {
+      "uri": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes",
+      "digest": { "gitCommit": "local-matrix-demo" }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: verify-local-matrix-images
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: verify-local-matrix-signature-and-attestation
+      match:
+        any:
+          - resources:
+              kinds: ["Pod"]
+      verifyImages:
+        - imageReferences:
+            - "ttl.sh/stock-trading-matrix-signed-6ad79074707d*"
+            - "ttl.sh/stock-trading-matrix-unsigned-6b81f8271238*"
+          attestors:
+            - entries:
+                - keys:
+                    publicKeys: |
+                      -----BEGIN PUBLIC KEY-----
+                      MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEglwk1pv5WeAAGSzl4eps0fMitlww
+                      gQr7chDJ3vhZGiBZ5oXbZaqfH5YwHL2zrXhgL0xg8Ie2SnSo5NpnAhHFXQ==
+                      -----END PUBLIC KEY-----
+          attestations:
+            - type: https://slsa.dev/provenance/v0.2
+              attestors:
+                - entries:
+                    - keys:
+                        publicKeys: |
+                          -----BEGIN PUBLIC KEY-----
+                          MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEglwk1pv5WeAAGSzl4eps0fMitlww
+                          gQr7chDJ3vhZGiBZ5oXbZaqfH5YwHL2zrXhgL0xg8Ie2SnSo5NpnAhHFXQ==
+                          -----END PUBLIC KEY-----

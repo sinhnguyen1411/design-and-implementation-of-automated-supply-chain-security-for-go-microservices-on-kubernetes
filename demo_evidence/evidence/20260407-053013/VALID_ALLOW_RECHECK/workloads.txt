@@ -1,0 +1,8 @@
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS     IMAGES                                                                                                                    SELECTOR
+deployment.apps/user-service   1/1     1            1           15s   user-service   ttl.sh/stock-trading-matrix-signed-6ad79074707d@sha256:d720573cef839b9c12ee46e845f24241726b744ee584c67a002ece9866c81ba4   app.kubernetes.io/name=user-service
+
+NAME                                      DESIRED   CURRENT   READY   AGE   CONTAINERS     IMAGES                                                                                                                    SELECTOR
+replicaset.apps/user-service-84474545cc   1         1         1       15s   user-service   ttl.sh/stock-trading-matrix-signed-6ad79074707d@sha256:d720573cef839b9c12ee46e845f24241726b744ee584c67a002ece9866c81ba4   app.kubernetes.io/name=user-service,pod-template-hash=84474545cc
+
+NAME                                READY   STATUS    RESTARTS   AGE   IP            NODE                      NOMINATED NODE   READINESS GATES
+pod/user-service-84474545cc-lcvtz   1/1     Running   0          15s   10.244.0.16   devsecops-control-plane   <none>           <none>
