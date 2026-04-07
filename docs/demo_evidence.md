@@ -14,13 +14,13 @@ This evidence package validates thesis admission criteria for:
 - Command:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/admission_matrix_demo.ps1 -Context docker-desktop -Namespace stock-trading -ExportDir .demo/evidence -ResetNamespace
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/admission_matrix_demo.ps1 -Context docker-desktop -Namespace stock-trading -ExportDir demo/evidence -ResetNamespace
 ```
 
-- Evidence directory: `.demo/evidence/20260406-154444`
-- Matrix summary file: `.demo/evidence/20260406-154444/matrix-summary.md`
-- Matrix JSON index: `.demo/evidence/20260406-154444/matrix-index.json`
-- Regression JSON result: `.demo/evidence/20260406-154444/regression-valid-allow.json`
+- Evidence directory: `demo/evidence/20260406-154444`
+- Matrix summary file: `demo/evidence/20260406-154444/matrix-summary.md`
+- Matrix JSON index: `demo/evidence/20260406-154444/matrix-index.json`
+- Regression JSON result: `demo/evidence/20260406-154444/regression-valid-allow.json`
 - Signed digest used:
   - `ttl.sh/stock-trading-matrix-signed-c853c0f8a3b5@sha256:8d87c68bf36634dbcd4d161ac23ac4ec22f81f326f45b820e6564e127493db8f`
 - Unsigned digest used:
@@ -92,7 +92,7 @@ Each case contains all required artifact groups:
 - `describe workload`: `describe-deployment.txt`, `describe-replicasets.txt`, `describe-pods.txt`
 - policy controller logs: `kyverno-logs.txt`
 
-Per-case directories under `.demo/evidence/20260406-154444/`:
+Per-case directories under `demo/evidence/20260406-154444/`:
 - `VALID_ALLOW/`
 - `NEG_UNSIGNED_DENY/`
 - `NEG_MISSING_SBOM_DENY/`

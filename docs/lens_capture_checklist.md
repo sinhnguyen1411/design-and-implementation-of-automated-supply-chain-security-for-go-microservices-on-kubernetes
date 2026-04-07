@@ -16,25 +16,25 @@ Use Kubernetes context `docker-desktop` and namespace `stock-trading`.
 | 09 | `09_cve_deny_events_reason.png` | `Events` after `NEG_CVE_THRESHOLD_DENY` | `require-high-critical-zero` reason |
 | 10 | `10_cve_deny_policy_report.png` | `Custom Resources > wgpolicyk8s.io > Policy Report` | CVE threshold rule failed |
 | 11 | `11_valid_recheck_available.png` | `Workloads > Deployments` after `VALID_ALLOW_RECHECK` | Available `1/1` |
-| 12 | `12_matrix_summary_all_pass.png` | Open `.demo/evidence/<run-id>/matrix-summary.md` | all cases `PASS` |
+| 12 | `12_matrix_summary_all_pass.png` | Open `demo/evidence/<run-id>/matrix-summary.md` | all cases `PASS` |
 
 ## Apply Commands (run in repo root)
 ```powershell
 kubectl config use-context docker-desktop
 kubectl -n stock-trading delete deploy user-service --ignore-not-found=true
-kubectl -n stock-trading apply -f .demo/evidence/20260406-154444/VALID_ALLOW/deployment.yaml
+kubectl -n stock-trading apply -f demo/evidence/20260406-154444/VALID_ALLOW/deployment.yaml
 
 kubectl -n stock-trading delete deploy user-service --ignore-not-found=true
-kubectl -n stock-trading apply -f .demo/evidence/20260406-154444/NEG_UNSIGNED_DENY/deployment.yaml
+kubectl -n stock-trading apply -f demo/evidence/20260406-154444/NEG_UNSIGNED_DENY/deployment.yaml
 
 kubectl -n stock-trading delete deploy user-service --ignore-not-found=true
-kubectl -n stock-trading apply -f .demo/evidence/20260406-154444/NEG_MISSING_SBOM_DENY/deployment.yaml
+kubectl -n stock-trading apply -f demo/evidence/20260406-154444/NEG_MISSING_SBOM_DENY/deployment.yaml
 
 kubectl -n stock-trading delete deploy user-service --ignore-not-found=true
-kubectl -n stock-trading apply -f .demo/evidence/20260406-154444/NEG_CVE_THRESHOLD_DENY/deployment.yaml
+kubectl -n stock-trading apply -f demo/evidence/20260406-154444/NEG_CVE_THRESHOLD_DENY/deployment.yaml
 
 kubectl -n stock-trading delete deploy user-service --ignore-not-found=true
-kubectl -n stock-trading apply -f .demo/evidence/20260406-154444/VALID_ALLOW_RECHECK/deployment.yaml
+kubectl -n stock-trading apply -f demo/evidence/20260406-154444/VALID_ALLOW_RECHECK/deployment.yaml
 ```
 
 ## Save Location

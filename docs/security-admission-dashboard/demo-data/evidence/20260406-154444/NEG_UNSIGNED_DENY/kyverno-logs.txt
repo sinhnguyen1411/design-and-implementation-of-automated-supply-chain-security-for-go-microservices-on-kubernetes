@@ -1,0 +1,1 @@
+[20260406-154444][NEG_UNSIGNED_DENY] failed to verify image .attestors[0].entries[0].keys: no signatures found

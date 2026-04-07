@@ -1,0 +1,6 @@
+Name:           user-service-abc123
+Namespace:      stock-trading
+Events:
+  Type     Reason        Age   Message
+  Normal   SuccessfulCreate  2s   Created pod: user-service-abc123
+  Warning  FailedCreate  1s   Warning FailedCreate validation error: Pod rejected: missing SBOM reference annotation (security.stock-trading.dev/sbom-digest)

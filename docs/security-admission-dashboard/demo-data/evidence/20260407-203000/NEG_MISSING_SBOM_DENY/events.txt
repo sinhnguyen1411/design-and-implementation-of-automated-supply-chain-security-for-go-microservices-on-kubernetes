@@ -1,0 +1,3 @@
+LAST SEEN   TYPE      REASON         OBJECT                            MESSAGE
+2s          Normal    Scheduled      pod/user-service-abc123           Successfully assigned stock-trading/user-service-abc123
+1s          Warning   FailedCreate   replicaset/user-service-abc123    Warning FailedCreate validation error: Pod rejected: missing SBOM reference annotation (security.stock-trading.dev/sbom-digest)

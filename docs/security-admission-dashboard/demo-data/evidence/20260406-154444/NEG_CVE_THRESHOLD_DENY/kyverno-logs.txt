@@ -1,0 +1,1 @@
+[20260406-154444][NEG_CVE_THRESHOLD_DENY] require-high-critical-zero validation failed for Pod/user-service

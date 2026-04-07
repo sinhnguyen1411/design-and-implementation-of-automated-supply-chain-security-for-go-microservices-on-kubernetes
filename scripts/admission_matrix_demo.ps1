@@ -1,10 +1,10 @@
 param(
   [string]$Context = "docker-desktop",
   [string]$Namespace = "stock-trading",
-  [string]$ExportDir = ".demo/evidence",
+  [string]$ExportDir = "demo/evidence",
   [string]$ImageTtl = "24h",
   [string]$CosignPassword = "local-demo-pass",
-  [string]$DemoDir = ".demo",
+  [string]$DemoDir = "demo",
   [string]$KyvernoVersion = "v1.12.5",
   [switch]$ResetNamespace,
   [switch]$SkipGoTest

@@ -1,0 +1,20 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "demo-sbom",
+  "documentNamespace": "https://example.local/demo-sbom",
+  "creationInfo": {
+    "created": "2026-04-07T20:30:00Z",
+    "creators": ["Tool: syft-1.0.0-demo"]
+  },
+  "packages": [
+    {"name": "github.com/gofiber/fiber/v2", "SPDXID": "SPDXRef-Package-gofiber", "versionInfo": "2.52.6", "externalRefs": [{"referenceType": "purl", "referenceLocator": "pkg:golang/github.com/gofiber/fiber/v2@2.52.6"}]},
+    {"name": "github.com/golang-jwt/jwt/v5", "SPDXID": "SPDXRef-Package-jwt", "versionInfo": "5.2.2", "externalRefs": [{"referenceType": "purl", "referenceLocator": "pkg:golang/github.com/golang-jwt/jwt/v5@5.2.2"}]},
+    {"name": "github.com/google/uuid", "SPDXID": "SPDXRef-Package-uuid", "versionInfo": "1.6.0", "externalRefs": [{"referenceType": "purl", "referenceLocator": "pkg:golang/github.com/google/uuid@1.6.0"}]},
+    {"name": "ca-certificates", "SPDXID": "SPDXRef-Package-ca-certificates", "versionInfo": "20240203-r0", "externalRefs": [{"referenceType": "purl", "referenceLocator": "pkg:deb/alpine/ca-certificates@20240203-r0"}]},
+    {"name": "musl", "SPDXID": "SPDXRef-Package-musl", "versionInfo": "1.2.5-r0", "externalRefs": [{"referenceType": "purl", "referenceLocator": "pkg:deb/alpine/musl@1.2.5-r0"}]},
+    {"name": "busybox", "SPDXID": "SPDXRef-Package-busybox", "versionInfo": "1.36.1-r29", "externalRefs": [{"referenceType": "purl", "referenceLocator": "pkg:deb/alpine/busybox@1.36.1-r29"}]},
+    {"name": "unknown-component", "SPDXID": "SPDXRef-Package-unknown", "versionInfo": "0.0.1", "externalRefs": []}
+  ]
+}

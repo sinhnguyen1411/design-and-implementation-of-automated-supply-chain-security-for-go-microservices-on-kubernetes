@@ -83,7 +83,7 @@ kubectl apply -k deploy/kubernetes/overlays/ci
 ## Automated Admission Matrix (Docker Desktop)
 Run the thesis-aligned matrix on `docker-desktop`:
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/admission_matrix_demo.ps1 -Context docker-desktop -Namespace stock-trading -ExportDir .demo/evidence -ResetNamespace
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/admission_matrix_demo.ps1 -Context docker-desktop -Namespace stock-trading -ExportDir demo/evidence -ResetNamespace
 ```
 
 Fixed matrix cases:

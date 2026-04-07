@@ -14,8 +14,15 @@ const CASE_HINTS = {
   NEG_CVE_THRESHOLD_DENY: "Expected deny due to high_critical greater than 0",
 };
 
-const SBOM_SOURCES = ["../../.demo/sbom.spdx.json", "../../.tmp-sbom.json"];
-const EVIDENCE_INDEX_PATH = "../../.demo/evidence/";
+const SBOM_SOURCES = [
+  "../../demo/sbom.spdx.json",
+  "../../.tmp-sbom.json",
+  "./demo-data/sbom.spdx.json",
+];
+const EVIDENCE_BASE_PATHS = [
+  "../../demo/evidence/",
+  "./demo-data/evidence/",
+];
 
 const dom = {
   runCombo: document.getElementById("run-combo"),
@@ -39,6 +46,7 @@ const dom = {
 
 const state = {
   comboOpen: false,
+  activeEvidenceBasePath: "",
   availableRunIds: [],
   filteredRunIds: [],
   selectedRunId: "",
@@ -440,7 +448,7 @@ async function loadSbom() {
   }
 
   dom.sbomDonut.style.background = "conic-gradient(var(--warn) 0 100%)";
-  dom.sbomLegend.innerHTML = "<p>SBOM not found. Checked ../../.demo/sbom.spdx.json and ../../.tmp-sbom.json.</p>";
+  dom.sbomLegend.innerHTML = "<p>SBOM not found. Checked ../../demo/sbom.spdx.json and ../../.tmp-sbom.json.</p>";
   dom.sbomTopList.innerHTML = "<li>SBOM file is missing.</li>";
   dom.sbomTotal.textContent = "Total packages: -";
   return "";
@@ -452,7 +460,11 @@ async function loadRun(runId) {
     return;
   }
 
-  const basePath = `../../.demo/evidence/${runId}`;
+  if (!state.activeEvidenceBasePath) {
+    setStatus("No evidence source is active. Click Refresh Runs.", "error");
+    return;
+  }
+  const basePath = `${state.activeEvidenceBasePath}${runId}`;
   setStatus(`Loading evidence from ${basePath} ...`, "info");
 
   try {
@@ -496,7 +508,7 @@ async function loadRun(runId) {
     dom.matrixGrid.innerHTML = "";
     dom.artifactList.innerHTML = "";
     dom.summaryPreview.textContent = "No summary loaded.";
-    setStatus(`Unable to load evidence for run ${runId}. Check that files exist under ../../.demo/evidence/${runId}.`, "error");
+    setStatus(`Unable to load evidence for run ${runId}. Check that files exist under ../../demo/evidence/${runId}.`, "error");
   }
 }
 
@@ -531,28 +543,34 @@ async function chooseRun(runId, options) {
 async function discoverAndLoadRuns(preferredRunId) {
   setStatus("Scanning evidence run directories...", "info");
 
-  try {
-    const html = await fetchText(EVIDENCE_INDEX_PATH);
-    const runIds = parseRunIdsFromDirectoryListing(html);
-    renderRunOptions(runIds);
+  for (const evidenceBasePath of EVIDENCE_BASE_PATHS) {
+    try {
+      const html = await fetchText(evidenceBasePath);
+      const runIds = parseRunIdsFromDirectoryListing(html);
+      if (runIds.length === 0) {
+        continue;
+      }
 
-    if (runIds.length === 0) {
-      setStatus("No evidence runs found in ../../.demo/evidence/.", "warning");
+      state.activeEvidenceBasePath = evidenceBasePath;
+      renderRunOptions(runIds);
+
+      let selectedRun = runIds[0];
+      if (preferredRunId && isValidRunId(preferredRunId) && runIds.includes(preferredRunId)) {
+        selectedRun = preferredRunId;
+      } else if (preferredRunId && isValidRunId(preferredRunId) && !runIds.includes(preferredRunId)) {
+        setStatus(`Run ${preferredRunId} not found. Loading latest run ${selectedRun}.`, "warning");
+      }
+
+      await chooseRun(selectedRun, { load: true, close: true, updateQuery: true });
       return;
+    } catch (error) {
+      // Try next source.
     }
-
-    let selectedRun = runIds[0];
-    if (preferredRunId && isValidRunId(preferredRunId) && runIds.includes(preferredRunId)) {
-      selectedRun = preferredRunId;
-    } else if (preferredRunId && isValidRunId(preferredRunId) && !runIds.includes(preferredRunId)) {
-      setStatus(`Run ${preferredRunId} not found. Loading latest run ${selectedRun}.`, "warning");
-    }
-
-    await chooseRun(selectedRun, { load: true, close: true, updateQuery: true });
-  } catch (error) {
-    renderRunOptions([]);
-    setStatus("Cannot scan ../../.demo/evidence/. Ensure you run a static server from repository root.", "error");
   }
+
+  state.activeEvidenceBasePath = "";
+  renderRunOptions([]);
+  setStatus("No evidence runs found. Provide demo/evidence runs or use bundled demo-data.", "error");
 }
 
 function initComboEvents() {
