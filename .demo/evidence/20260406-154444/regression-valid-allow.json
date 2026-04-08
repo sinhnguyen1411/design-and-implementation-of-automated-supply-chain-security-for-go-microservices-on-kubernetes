@@ -1,0 +1,22 @@
+﻿{
+    "case":  "VALID_ALLOW_RECHECK",
+    "expected":  "Allowed",
+    "actual":  "Allowed",
+    "verdict":  "PASS",
+    "reason":  "Deployment became Available.",
+    "image":  "ttl.sh/stock-trading-matrix-signed-c853c0f8a3b5@sha256:8d87c68bf36634dbcd4d161ac23ac4ec22f81f326f45b820e6564e127493db8f",
+    "include_sbom":  true,
+    "high_critical":  "0",
+    "apply_exit_code":  0,
+    "wait_exit_code":  0,
+    "artifacts":  {
+                      "apply":  "VALID_ALLOW_RECHECK/kubectl-apply.txt",
+                      "wait":  "VALID_ALLOW_RECHECK/kubectl-wait.txt",
+                      "events":  "VALID_ALLOW_RECHECK/events.txt",
+                      "workloads":  "VALID_ALLOW_RECHECK/workloads.txt",
+                      "describe_deployment":  "VALID_ALLOW_RECHECK/describe-deployment.txt",
+                      "describe_replicasets":  "VALID_ALLOW_RECHECK/describe-replicasets.txt",
+                      "describe_pods":  "VALID_ALLOW_RECHECK/describe-pods.txt",
+                      "kyverno_logs":  "VALID_ALLOW_RECHECK/kyverno-logs.txt"
+                  }
+}

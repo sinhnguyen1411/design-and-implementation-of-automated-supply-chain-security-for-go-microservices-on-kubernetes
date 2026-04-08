@@ -1,0 +1,5 @@
+Name:                   user-service
+Namespace:              stock-trading
+Conditions:
+  Type           Status  Reason
+  Available      True    MinimumReplicasAvailable

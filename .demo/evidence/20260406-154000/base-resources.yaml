@@ -1,0 +1,101 @@
+﻿apiVersion: v1
+kind: Namespace
+metadata:
+  name: stock-trading
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: user-service
+  namespace: stock-trading
+  labels:
+    app.kubernetes.io/name: user-service
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: stock-trading
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: user-service-secrets
+  namespace: stock-trading
+  labels:
+    app.kubernetes.io/name: user-service
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: stock-trading
+stringData:
+  db-password: "unused"
+  auth-access-token-secret: "local-demo-access-secret-0123456789"
+  auth-refresh-token-secret: "local-demo-refresh-secret-0123456789"
+  smtp-username: ""
+  smtp-password: ""
+type: Opaque
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-service-config
+  namespace: stock-trading
+  labels:
+    app.kubernetes.io/name: user-service
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: stock-trading
+data:
+  config.yaml: |
+    env: local
+    grpc:
+      host: 0.0.0.0
+      port: 19090
+    http:
+      host: 0.0.0.0
+      port: 18080
+    db:
+      host: 127.0.0.1
+      port: 3306
+      user: root
+      password: ""
+      name: stock
+    auth:
+      access_token_secret: "local-demo-access-secret-0123456789"
+      access_token_ttl_minutes: 15
+      refresh_token_secret: "local-demo-refresh-secret-0123456789"
+      refresh_token_ttl_minutes: 4320
+      issuer: stock-trading-be
+      audience: stock-trading-clients
+    notification:
+      kafka:
+        brokers: []
+        topic: ""
+        group_id: email-service
+      email:
+        provider: noop
+        smtp:
+          host: localhost
+          port: 1025
+          username: ""
+          password: ""
+          from: no-reply@example.com
+          use_tls: false
+        verification_url_base: "http://127.0.0.1:18080/users/verify?token="
+    verification:
+      token_ttl_hours: 24
+      resend_cooldown_seconds: 60
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: stock-trading
+  labels:
+    app.kubernetes.io/name: user-service
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: stock-trading
+spec:
+  selector:
+    app.kubernetes.io/name: user-service
+  ports:
+    - name: http
+      port: 18080
+      targetPort: http
+    - name: grpc
+      port: 19090
+      targetPort: grpc

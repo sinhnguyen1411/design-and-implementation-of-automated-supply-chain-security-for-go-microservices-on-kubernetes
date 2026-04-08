@@ -1,0 +1,82 @@
+﻿===== pod/user-service-85694b4487-ffj2g =====
+Name:             user-service-85694b4487-ffj2g
+Namespace:        stock-trading
+Priority:         0
+Service Account:  user-service
+Node:             desktop-worker/172.20.0.5
+Start Time:       Mon, 06 Apr 2026 15:45:53 +0700
+Labels:           app.kubernetes.io/component=backend
+                  app.kubernetes.io/name=user-service
+                  app.kubernetes.io/part-of=stock-trading
+                  pod-template-hash=85694b4487
+Annotations:      kubectl.kubernetes.io/default-container: user-service
+                  kyverno.io/verify-images:
+                    {"ttl.sh/stock-trading-matrix-signed-c853c0f8a3b5@sha256:8d87c68bf36634dbcd4d161ac23ac4ec22f81f326f45b820e6564e127493db8f":"pass"}
+                  security.grype.io/high_critical: 0
+                  security.stock-trading.dev/matrix-case: VALID_ALLOW
+                  security.stock-trading.dev/sbom-digest: E3E11664C6A175D35675B517F9C281E5D1F0FF937F572575042017AC30D6EE08
+Status:           Running
+SeccompProfile:   RuntimeDefault
+IP:               10.244.1.18
+IPs:
+  IP:           10.244.1.18
+Controlled By:  ReplicaSet/user-service-85694b4487
+Containers:
+  user-service:
+    Container ID:  containerd://0dafaceae9b445f65bd601bbd496d3e96d247680bd9d6d4cb22e4bfc04788d0b
+    Image:         ttl.sh/stock-trading-matrix-signed-c853c0f8a3b5@sha256:8d87c68bf36634dbcd4d161ac23ac4ec22f81f326f45b820e6564e127493db8f
+    Image ID:      ttl.sh/stock-trading-matrix-signed-07d903abc430@sha256:fd7838f209c5afc8a1090bb7ba687b7cb6b56716addf97ade8b783558e1235a3
+    Ports:         18080/TCP (http), 19090/TCP (grpc)
+    Host Ports:    0/TCP (http), 0/TCP (grpc)
+    Args:
+      server
+      --config
+      /etc/stock-trading/config/config.yaml
+    State:          Running
+      Started:      Mon, 06 Apr 2026 15:45:56 +0700
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:     500m
+      memory:  512Mi
+    Requests:
+      cpu:      100m
+      memory:   128Mi
+    Liveness:   tcp-socket :http delay=15s timeout=1s period=15s #success=1 #failure=3
+    Readiness:  tcp-socket :http delay=5s timeout=1s period=5s #success=1 #failure=3
+    Startup:    tcp-socket :http delay=0s timeout=1s period=5s #success=1 #failure=18
+    Environment:
+      AUTH__ACCESS_TOKEN_SECRET:   <set to the key 'auth-access-token-secret' in secret 'user-service-secrets'>   Optional: false
+      AUTH__REFRESH_TOKEN_SECRET:  <set to the key 'auth-refresh-token-secret' in secret 'user-service-secrets'>  Optional: false
+    Mounts:
+      /etc/stock-trading/config from config (ro)
+      /tmp from tmp (rw)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  config:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      user-service-config
+    Optional:  false
+  tmp:
+    Type:        EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:      
+    SizeLimit:   <unset>
+QoS Class:       Burstable
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  16s   default-scheduler  Successfully assigned stock-trading/user-service-85694b4487-ffj2g to desktop-worker
+  Normal  Pulling    15s   kubelet            Pulling image "ttl.sh/stock-trading-matrix-signed-c853c0f8a3b5@sha256:8d87c68bf36634dbcd4d161ac23ac4ec22f81f326f45b820e6564e127493db8f"
+  Normal  Pulled     13s   kubelet            Successfully pulled image "ttl.sh/stock-trading-matrix-signed-c853c0f8a3b5@sha256:8d87c68bf36634dbcd4d161ac23ac4ec22f81f326f45b820e6564e127493db8f" in 2.52s (2.52s including waiting). Image size: 15287401 bytes.
+  Normal  Created    13s   kubelet            Created container: user-service
+  Normal  Started    13s   kubelet            Started container user-service
+

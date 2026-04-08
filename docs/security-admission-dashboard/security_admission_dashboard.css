@@ -88,6 +88,13 @@ body {
   padding: 22px;
 }
 
+.hero-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
 .eyebrow {
   margin: 0 0 10px;
   color: #7dd3fc;
@@ -108,6 +115,39 @@ h1 {
   margin: 12px 0 0;
   color: var(--muted);
   max-width: 75ch;
+}
+
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.lang-button {
+  min-width: 48px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #cbd5e1;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.lang-button:hover {
+  filter: none;
+  background: rgba(14, 165, 233, 0.15);
+}
+
+.lang-button.is-active {
+  border-color: rgba(56, 189, 248, 0.45);
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.9), rgba(37, 99, 235, 0.9));
+  color: #eff6ff;
 }
 
 .run-loader {
@@ -279,6 +319,41 @@ button:hover {
 
 .status-banner[data-type="warning"] {
   border-left-color: var(--warn);
+}
+
+.overview-grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.overview-card {
+  padding: 18px;
+  min-height: 150px;
+}
+
+.overview-label {
+  margin: 0;
+  color: #7dd3fc;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.overview-value {
+  margin: 10px 0 8px;
+  font-size: clamp(1.35rem, 2.5vw, 1.95rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.overview-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .panel-grid {
@@ -598,6 +673,7 @@ a:focus-visible {
 }
 
 @media (max-width: 1024px) {
+  .overview-grid,
   .panel-grid-top,
   .panel-grid-bottom,
   .matrix-grid {
@@ -609,6 +685,11 @@ a:focus-visible {
   .page {
     width: calc(100% - 18px);
     margin-top: 10px;
+  }
+
+  .hero-topbar {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .hero,

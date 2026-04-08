@@ -1,0 +1,24 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: verify-local-demo-image
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: verify-local-demo-signature
+      match:
+        any:
+          - resources:
+              kinds: ["Pod"]
+      verifyImages:
+        - imageReferences:
+            - "ttl.sh/stock-trading-d4ec05c5f73c*"
+          attestors:
+            - entries:
+                - keys:
+                    publicKeys: |
+                      -----BEGIN PUBLIC KEY-----
+                      MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEo2So/VrDS8WKbiVK76Ts0Qb8FddT
+                      crt9oULXMsU6Ue+j6JGFUUqYiSvI0E0ekf+VGRza4rO8x5cUDFgYZ6vJxg==
+                      -----END PUBLIC KEY-----

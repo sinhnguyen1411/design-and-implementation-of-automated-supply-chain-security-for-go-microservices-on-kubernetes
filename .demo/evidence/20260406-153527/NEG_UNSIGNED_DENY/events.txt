@@ -1,0 +1,9 @@
+﻿LAST SEEN   TYPE     REASON              OBJECT                               MESSAGE
+29s         Normal   ScalingReplicaSet   deployment/user-service              Scaled up replica set user-service-746d77f878 from 0 to 1
+26s         Normal   Scheduled           pod/user-service-746d77f878-gdglr    Successfully assigned stock-trading/user-service-746d77f878-gdglr to desktop-worker
+26s         Normal   Pulling             pod/user-service-746d77f878-gdglr    Pulling image "ttl.sh/stock-trading-matrix-signed-0d18061e3624@sha256:296d1a9fd84592607802a6d5faef9ab5f7c1be73b87f2f14d725df6f06939e53"
+26s         Normal   SuccessfulCreate    replicaset/user-service-746d77f878   Created pod: user-service-746d77f878-gdglr
+23s         Normal   Pulled              pod/user-service-746d77f878-gdglr    Successfully pulled image "ttl.sh/stock-trading-matrix-signed-0d18061e3624@sha256:296d1a9fd84592607802a6d5faef9ab5f7c1be73b87f2f14d725df6f06939e53" in 2.531s (2.531s including waiting). Image size: 15287401 bytes.
+23s         Normal   Created             pod/user-service-746d77f878-gdglr    Created container: user-service
+23s         Normal   Started             pod/user-service-746d77f878-gdglr    Started container user-service
+9s          Normal   Killing             pod/user-service-746d77f878-gdglr    Stopping container user-service

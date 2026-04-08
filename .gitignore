@@ -37,7 +37,6 @@ cosign.key
 bin/
 
 # local demo/debug artifacts
-.demo/
 .tmp-*
 Dockerfile.scan-test
 server_run_err.log
@@ -50,5 +49,4 @@ go.sum
 .codex
 .codex/
 .vscode/extensions.json
-evidence.zip
 scripts/install_vscode_extensions.sh

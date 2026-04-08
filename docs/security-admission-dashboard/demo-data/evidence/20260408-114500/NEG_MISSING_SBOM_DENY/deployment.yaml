@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: stock-trading
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: user-service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: user-service
+      annotations:
+        security.grype.io/high_critical: "0"
+        security.stock-trading.dev/sbom-digest: "E3E11664C6A175D35675B517F9C281E5D1F0FF937F572575042017AC30D6EE08"
+    spec:
+      containers:
+      - name: user-service
+        image: ttl.sh/stock-trading-matrix-signed-c853c0f8a3b5@sha256:8d87c68bf36634dbcd4d161ac23ac4ec22f81f326f45b820e6564e127493db8f

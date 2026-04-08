@@ -1,0 +1,90 @@
+﻿[
+    {
+        "case":  "VALID_ALLOW",
+        "expected":  "Allowed",
+        "actual":  "Allowed",
+        "verdict":  "PASS",
+        "reason":  "Deployment became Available.",
+        "image":  "ttl.sh/stock-trading-matrix-signed-55c87360239d@sha256:735dce323a6793dfb7f8eb400cdb21ace9b4816195cf14bf1a4cb18540534278",
+        "include_sbom":  true,
+        "high_critical":  "0",
+        "apply_exit_code":  0,
+        "wait_exit_code":  0,
+        "artifacts":  {
+                          "apply":  "VALID_ALLOW/kubectl-apply.txt",
+                          "wait":  "VALID_ALLOW/kubectl-wait.txt",
+                          "events":  "VALID_ALLOW/events.txt",
+                          "workloads":  "VALID_ALLOW/workloads.txt",
+                          "describe_deployment":  "VALID_ALLOW/describe-deployment.txt",
+                          "describe_replicasets":  "VALID_ALLOW/describe-replicasets.txt",
+                          "describe_pods":  "VALID_ALLOW/describe-pods.txt",
+                          "kyverno_logs":  "VALID_ALLOW/kyverno-logs.txt"
+                      }
+    },
+    {
+        "case":  "NEG_UNSIGNED_DENY",
+        "expected":  "Denied",
+        "actual":  "Denied",
+        "verdict":  "PASS",
+        "reason":  "Admission deny evidence detected at apply phase.",
+        "image":  "ttl.sh/stock-trading-matrix-unsigned-efb75666c310@sha256:735dce323a6793dfb7f8eb400cdb21ace9b4816195cf14bf1a4cb18540534278",
+        "include_sbom":  true,
+        "high_critical":  "0",
+        "apply_exit_code":  1,
+        "wait_exit_code":  -1,
+        "artifacts":  {
+                          "apply":  "NEG_UNSIGNED_DENY/kubectl-apply.txt",
+                          "wait":  "NEG_UNSIGNED_DENY/kubectl-wait.txt",
+                          "events":  "NEG_UNSIGNED_DENY/events.txt",
+                          "workloads":  "NEG_UNSIGNED_DENY/workloads.txt",
+                          "describe_deployment":  "NEG_UNSIGNED_DENY/describe-deployment.txt",
+                          "describe_replicasets":  "NEG_UNSIGNED_DENY/describe-replicasets.txt",
+                          "describe_pods":  "NEG_UNSIGNED_DENY/describe-pods.txt",
+                          "kyverno_logs":  "NEG_UNSIGNED_DENY/kyverno-logs.txt"
+                      }
+    },
+    {
+        "case":  "NEG_MISSING_SBOM_DENY",
+        "expected":  "Denied",
+        "actual":  "Denied",
+        "verdict":  "PASS",
+        "reason":  "Admission deny evidence detected in events/ReplicaSet describe.",
+        "image":  "ttl.sh/stock-trading-matrix-signed-55c87360239d@sha256:735dce323a6793dfb7f8eb400cdb21ace9b4816195cf14bf1a4cb18540534278",
+        "include_sbom":  false,
+        "high_critical":  "0",
+        "apply_exit_code":  0,
+        "wait_exit_code":  1,
+        "artifacts":  {
+                          "apply":  "NEG_MISSING_SBOM_DENY/kubectl-apply.txt",
+                          "wait":  "NEG_MISSING_SBOM_DENY/kubectl-wait.txt",
+                          "events":  "NEG_MISSING_SBOM_DENY/events.txt",
+                          "workloads":  "NEG_MISSING_SBOM_DENY/workloads.txt",
+                          "describe_deployment":  "NEG_MISSING_SBOM_DENY/describe-deployment.txt",
+                          "describe_replicasets":  "NEG_MISSING_SBOM_DENY/describe-replicasets.txt",
+                          "describe_pods":  "NEG_MISSING_SBOM_DENY/describe-pods.txt",
+                          "kyverno_logs":  "NEG_MISSING_SBOM_DENY/kyverno-logs.txt"
+                      }
+    },
+    {
+        "case":  "NEG_CVE_THRESHOLD_DENY",
+        "expected":  "Denied",
+        "actual":  "Denied",
+        "verdict":  "PASS",
+        "reason":  "Admission deny evidence detected in events/ReplicaSet describe.",
+        "image":  "ttl.sh/stock-trading-matrix-signed-55c87360239d@sha256:735dce323a6793dfb7f8eb400cdb21ace9b4816195cf14bf1a4cb18540534278",
+        "include_sbom":  true,
+        "high_critical":  "2",
+        "apply_exit_code":  0,
+        "wait_exit_code":  1,
+        "artifacts":  {
+                          "apply":  "NEG_CVE_THRESHOLD_DENY/kubectl-apply.txt",
+                          "wait":  "NEG_CVE_THRESHOLD_DENY/kubectl-wait.txt",
+                          "events":  "NEG_CVE_THRESHOLD_DENY/events.txt",
+                          "workloads":  "NEG_CVE_THRESHOLD_DENY/workloads.txt",
+                          "describe_deployment":  "NEG_CVE_THRESHOLD_DENY/describe-deployment.txt",
+                          "describe_replicasets":  "NEG_CVE_THRESHOLD_DENY/describe-replicasets.txt",
+                          "describe_pods":  "NEG_CVE_THRESHOLD_DENY/describe-pods.txt",
+                          "kyverno_logs":  "NEG_CVE_THRESHOLD_DENY/kyverno-logs.txt"
+                      }
+    }
+]

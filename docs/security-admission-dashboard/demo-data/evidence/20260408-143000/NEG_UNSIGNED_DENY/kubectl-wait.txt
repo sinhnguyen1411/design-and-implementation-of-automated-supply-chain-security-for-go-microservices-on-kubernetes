@@ -1,0 +1,1 @@
+Skipped wait because apply failed with exit code 1.

@@ -1,0 +1,8 @@
+﻿LAST SEEN   TYPE     REASON              OBJECT                               MESSAGE
+20s         Normal   ScalingReplicaSet   deployment/user-service              Scaled up replica set user-service-5b4b9f96f7 from 0 to 1
+17s         Normal   Scheduled           pod/user-service-5b4b9f96f7-qvw6z    Successfully assigned stock-trading/user-service-5b4b9f96f7-qvw6z to desktop-worker
+17s         Normal   SuccessfulCreate    replicaset/user-service-5b4b9f96f7   Created pod: user-service-5b4b9f96f7-qvw6z
+16s         Normal   Pulling             pod/user-service-5b4b9f96f7-qvw6z    Pulling image "ttl.sh/stock-trading-matrix-signed-07d903abc430@sha256:fd7838f209c5afc8a1090bb7ba687b7cb6b56716addf97ade8b783558e1235a3"
+14s         Normal   Pulled              pod/user-service-5b4b9f96f7-qvw6z    Successfully pulled image "ttl.sh/stock-trading-matrix-signed-07d903abc430@sha256:fd7838f209c5afc8a1090bb7ba687b7cb6b56716addf97ade8b783558e1235a3" in 2.464s (2.464s including waiting). Image size: 15287401 bytes.
+14s         Normal   Created             pod/user-service-5b4b9f96f7-qvw6z    Created container: user-service
+14s         Normal   Started             pod/user-service-5b4b9f96f7-qvw6z    Started container user-service

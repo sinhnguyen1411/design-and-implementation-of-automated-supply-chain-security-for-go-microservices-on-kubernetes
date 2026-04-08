@@ -1,0 +1,7 @@
+﻿Error from server: error when creating ".demo\\evidence\\20260406-154000\\NEG_UNSIGNED_DENY\\deployment.yaml": admission webhook "mutate.kyverno.svc-fail" denied the request: 
+System.Management.Automation.RemoteException
+resource Deployment/stock-trading/user-service was blocked due to the following policies 
+System.Management.Automation.RemoteException
+verify-local-matrix-images:
+  autogen-verify-local-matrix-signature-and-attestation: 'failed to verify image ttl.sh/stock-trading-matrix-unsigned-efb75666c310@sha256:735dce323a6793dfb7f8eb400cdb21ace9b4816195cf14bf1a4cb18540534278:
+    .attestors[0].entries[0].keys: no signatures found'

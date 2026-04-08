@@ -1,0 +1,3 @@
+Name:           user-service-abc123
+Namespace:      stock-trading
+Status:         Running

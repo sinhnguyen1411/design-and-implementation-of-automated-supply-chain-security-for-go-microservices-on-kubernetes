@@ -1,0 +1,1 @@
+[20260407-203000][NEG_MISSING_SBOM_DENY] require-sbom-digest validation failed for Pod/user-service

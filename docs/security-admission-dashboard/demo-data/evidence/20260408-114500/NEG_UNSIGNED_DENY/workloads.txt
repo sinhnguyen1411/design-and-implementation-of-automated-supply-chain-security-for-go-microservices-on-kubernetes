@@ -1,0 +1,2 @@
+NAME                            READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/user-service    1/1     1            1           15s

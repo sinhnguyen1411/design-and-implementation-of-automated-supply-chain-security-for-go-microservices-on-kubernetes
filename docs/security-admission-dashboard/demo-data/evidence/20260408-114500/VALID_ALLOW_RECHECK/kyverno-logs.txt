@@ -1,0 +1,1 @@
+[20260406-154444][VALID_ALLOW_RECHECK] policy verify-local-matrix-images passed
