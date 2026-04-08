@@ -10,7 +10,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: sinhnguyen1411/stock-trading/user-service
-  GO_VERSION: "1.25.8"
+  GO_VERSION: "1.25.9"
   GOVULNCHECK_VERSION: "v1.1.4"
   GOVULNCHECK_REPORT: govulncheck-report.txt
   DEPENDENCY_INTEGRITY_REPORT: dependency-integrity-report.txt
@@ -29,10 +29,10 @@ jobs:
       security-events: write  # allow SARIF upload
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: ${{ env.GO_VERSION }}
 
@@ -60,7 +60,7 @@ jobs:
 
       - name: Upload dependency integrity report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: dependency-integrity-report
           path: ${{ env.DEPENDENCY_INTEGRITY_REPORT }}
@@ -79,7 +79,7 @@ jobs:
 
       - name: Upload govulncheck report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: govulncheck-report
           path: ${{ env.GOVULNCHECK_REPORT }}
@@ -182,7 +182,7 @@ jobs:
 
       - name: Upload SBOM artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: sbom
           path: ${{ env.SBOM_PATH }}
@@ -190,7 +190,7 @@ jobs:
 
       - name: Upload scan report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: grype-report
           path: ${{ env.SCAN_REPORT }}
@@ -287,7 +287,7 @@ jobs:
 
       - name: Upload Cosign bundle
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: cosign-bundle
           path: |
@@ -297,3 +297,4 @@ jobs:
             deploy/kubernetes/overlays/ci/patch-annotations.yaml
             deploy/kubernetes/overlays/ci/kustomization.yaml
           if-no-files-found: ignore
+
