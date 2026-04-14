@@ -280,10 +280,21 @@ jobs:
       - name: Verify signature in registry
         if: ${{ steps.meta.outputs.registry_mode == 'ghcr' }}
         run: |
+          set -euo pipefail
           cosign verify \
             --certificate-identity-regexp "https://github.com/${{ github.repository }}/.github/workflows/secure-supply-chain.yml@refs/heads/main" \
             --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
-            ${{ steps.image_ref.outputs.image_digest }}
+            ${{ steps.image_ref.outputs.image_digest }} | tee cosign-verify-signature.txt
+
+      - name: Verify provenance attestation in registry
+        if: ${{ steps.meta.outputs.registry_mode == 'ghcr' }}
+        run: |
+          set -euo pipefail
+          cosign verify-attestation \
+            --type slsaprovenance \
+            --certificate-identity-regexp "https://github.com/${{ github.repository }}/.github/workflows/secure-supply-chain.yml@refs/heads/main" \
+            --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+            ${{ steps.image_ref.outputs.image_digest }} | tee cosign-verify-attestation.txt
 
       - name: Upload Cosign bundle
         if: always()
@@ -294,6 +305,8 @@ jobs:
             provenance.json
             ${{ env.SBOM_PATH }}
             ${{ env.SCAN_REPORT }}
+            cosign-verify-signature.txt
+            cosign-verify-attestation.txt
             deploy/kubernetes/overlays/ci/patch-annotations.yaml
             deploy/kubernetes/overlays/ci/kustomization.yaml
           if-no-files-found: ignore

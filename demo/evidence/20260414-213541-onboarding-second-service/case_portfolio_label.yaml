@@ -1,0 +1,26 @@
+﻿apiVersion: v1
+kind: Namespace
+metadata:
+  name: portfolio-trading
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfolio-service
+  namespace: portfolio-trading
+  labels:
+    app.kubernetes.io/name: portfolio-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: portfolio-service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: portfolio-service
+    spec:
+      containers:
+        - name: portfolio-service
+          image: ttl.sh/unsigned-portfolio-service:24h
+          command: ["sh", "-c", "sleep 300"]

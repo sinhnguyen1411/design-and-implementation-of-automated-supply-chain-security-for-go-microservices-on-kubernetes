@@ -1,0 +1,2 @@
+case_portfolio_label_deploy_only_exit=0
+case_user_service_label_deploy_only_exit=0

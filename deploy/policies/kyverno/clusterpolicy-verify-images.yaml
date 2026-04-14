@@ -3,16 +3,17 @@ kind: ClusterPolicy
 metadata:
   name: verify-user-service-images
   annotations:
-    policies.kyverno.io/title: Verify signed & attested images
+    policies.kyverno.io/title: Verify keyless signed and attested images
     policies.kyverno.io/category: DevSecOps
     policies.kyverno.io/subject: ImageSigning,Provenance
     policies.kyverno.io/description: >
-      Enforce that the user-service image is signed with Cosign and carries a SLSA-style provenance attestation.
+      Enforce keyless Sigstore verification for user-service images signed in GitHub Actions,
+      and require valid SLSA provenance attestations from the same workflow identity.
 spec:
   validationFailureAction: Enforce
   background: true
   rules:
-    - name: verify-signature-and-provenance
+    - name: verify-keyless-signature
       match:
         any:
           - resources:
@@ -21,12 +22,28 @@ spec:
         - imageReferences:
             - "ghcr.io/sinhnguyen1411/stock-trading/user-service:*"
           attestors:
-            - entries:
-                - keys:
-                    publicKeys: |
-                      -----BEGIN PUBLIC KEY-----
-                      MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAENf2RIVLxQjXzrw/58BR/t9yFFWu4
-                      6CiFGCVhA9FkyfCFG2JlKSBxK7aGkZ7ogNcYwDwAbsWcuc3TDE21+EpKgg==
-                      -----END PUBLIC KEY-----
+            - count: 1
+              entries:
+                - keyless:
+                    subject: "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/.github/workflows/secure-supply-chain.yml@refs/heads/main"
+                    issuer: "https://token.actions.githubusercontent.com"
+                    rekor:
+                      url: https://rekor.sigstore.dev
+    - name: verify-keyless-slsa-attestation
+      match:
+        any:
+          - resources:
+              kinds: ["Pod"]
+      verifyImages:
+        - imageReferences:
+            - "ghcr.io/sinhnguyen1411/stock-trading/user-service:*"
           attestations:
             - type: https://slsa.dev/provenance/v0.2
+              attestors:
+                - count: 1
+                  entries:
+                    - keyless:
+                        subject: "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/.github/workflows/secure-supply-chain.yml@refs/heads/main"
+                        issuer: "https://token.actions.githubusercontent.com"
+                        rekor:
+                          url: https://rekor.sigstore.dev

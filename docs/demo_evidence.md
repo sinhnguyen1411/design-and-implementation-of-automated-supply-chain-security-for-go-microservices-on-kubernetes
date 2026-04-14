@@ -6,8 +6,13 @@ This evidence package validates thesis admission criteria for:
 - valid artifacts are admitted,
 - valid admission still works after deny scenarios.
 
+## Canonical Evidence Policy
+- Canonical thesis evidence root: `demo/evidence/`
+- Dashboard fallback-only dataset: `docs/security-admission-dashboard/demo-data/evidence/`
+- Latest canonical matrix run (as of 2026-04-14): `demo/evidence/20260414-210227`
+
 ## Environment and Run Metadata
-- Date: 2026-04-06
+- Date: 2026-04-14
 - Kubernetes context: `docker-desktop`
 - Namespace: `stock-trading`
 - Script: `scripts/admission_matrix_demo.ps1`
@@ -17,16 +22,16 @@ This evidence package validates thesis admission criteria for:
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/admission_matrix_demo.ps1 -Context docker-desktop -Namespace stock-trading -ExportDir demo/evidence -ResetNamespace
 ```
 
-- Evidence directory: `demo/evidence/20260406-154444`
-- Matrix summary file: `demo/evidence/20260406-154444/matrix-summary.md`
-- Matrix JSON index: `demo/evidence/20260406-154444/matrix-index.json`
-- Regression JSON result: `demo/evidence/20260406-154444/regression-valid-allow.json`
+- Evidence directory: `demo/evidence/20260414-210227`
+- Matrix summary file: `demo/evidence/20260414-210227/matrix-summary.md`
+- Matrix JSON index: `demo/evidence/20260414-210227/matrix-index.json`
+- Regression JSON result: `demo/evidence/20260414-210227/regression-valid-allow.json`
 - Signed digest used:
-  - `ttl.sh/stock-trading-matrix-signed-c853c0f8a3b5@sha256:8d87c68bf36634dbcd4d161ac23ac4ec22f81f326f45b820e6564e127493db8f`
+  - `ttl.sh/stock-trading-matrix-signed-2369c9df4111@sha256:430529879d903a9514281956ea05030d56f82dcac8458751e57be0b410c2e8ef`
 - Unsigned digest used:
-  - `ttl.sh/stock-trading-matrix-unsigned-71b8f514cbd1@sha256:8d87c68bf36634dbcd4d161ac23ac4ec22f81f326f45b820e6564e127493db8f`
+  - `ttl.sh/stock-trading-matrix-unsigned-07dbc73a2438@sha256:430529879d903a9514281956ea05030d56f82dcac8458751e57be0b410c2e8ef`
 - SBOM digest annotation used:
-  - `E3E11664C6A175D35675B517F9C281E5D1F0FF937F572575042017AC30D6EE08`
+  - `6705A0D11524755F016E83CD19091668898658A01C356EE8661C7A3BEEAD2AAB`
 
 ## Pre-check Result
 - `go test ./...` passed before matrix execution (captured in script output).
@@ -92,7 +97,7 @@ Each case contains all required artifact groups:
 - `describe workload`: `describe-deployment.txt`, `describe-replicasets.txt`, `describe-pods.txt`
 - policy controller logs: `kyverno-logs.txt`
 
-Per-case directories under `demo/evidence/20260406-154444/`:
+Per-case directories under `demo/evidence/20260414-210227/`:
 - `VALID_ALLOW/`
 - `NEG_UNSIGNED_DENY/`
 - `NEG_MISSING_SBOM_DENY/`

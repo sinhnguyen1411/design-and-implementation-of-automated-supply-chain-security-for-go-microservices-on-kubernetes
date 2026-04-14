@@ -1,0 +1,13 @@
+﻿{
+    "run_id":  "20260414-204808",
+    "context":  "docker-desktop",
+    "fallback_reason":  "kind CLI unavailable",
+    "evidence_dir":  "demo/evidence/20260414-204808-contract-base-overlay",
+    "base_apply_exit_code":  1,
+    "overlay_apply_exit_code":  0,
+    "overlay_wait_exit_code":  1,
+    "base_denied":  true,
+    "overlay_allowed":  true,
+    "overlay_image_digest":  "ttl.sh/stock-trading-contract-b170c22c5cec@sha256:b63294a0359495f94f7db92649a372b9063a1bcfe4b4ed43ece3649be0dca793",
+    "overlay_sbom_digest":  "8F26EFB2ED9689C4A1ED7C49C89F640B0C6175AEF1A0FD96512E15C627457021"
+}

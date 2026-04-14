@@ -5,6 +5,7 @@ This folder contains static evidence datasets for the security admission dashboa
 ## Purpose
 - Provide deterministic demo runs when `demo/evidence` is not available.
 - Keep the dashboard usable in repository-only viewing scenarios.
+- Keep a clear contract: `demo/evidence` is canonical for thesis claims, while this folder is fallback-only for offline UI/demo continuity.
 
 ## Included Run IDs
 - `20260406-154444`

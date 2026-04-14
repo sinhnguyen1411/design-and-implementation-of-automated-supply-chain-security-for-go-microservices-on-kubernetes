@@ -1,0 +1,66 @@
+﻿===== replicaset.apps/user-service-5846b8bdd7 =====
+Name:           user-service-5846b8bdd7
+Namespace:      stock-trading
+Selector:       app.kubernetes.io/name=user-service,pod-template-hash=5846b8bdd7
+Labels:         app.kubernetes.io/component=backend
+                app.kubernetes.io/name=user-service
+                app.kubernetes.io/part-of=stock-trading
+                pod-template-hash=5846b8bdd7
+Annotations:    deployment.kubernetes.io/desired-replicas: 1
+                deployment.kubernetes.io/max-replicas: 2
+                deployment.kubernetes.io/revision: 1
+                kyverno.io/verify-images:
+                  {"ttl.sh/stock-trading-matrix-signed-2369c9df4111@sha256:430529879d903a9514281956ea05030d56f82dcac8458751e57be0b410c2e8ef":"pass"}
+Controlled By:  Deployment/user-service
+Replicas:       1 current / 1 desired
+Pods Status:    1 Running / 0 Waiting / 0 Succeeded / 0 Failed
+Pod Template:
+  Labels:           app.kubernetes.io/component=backend
+                    app.kubernetes.io/name=user-service
+                    app.kubernetes.io/part-of=stock-trading
+                    pod-template-hash=5846b8bdd7
+  Annotations:      kubectl.kubernetes.io/default-container: user-service
+                    security.grype.io/high_critical: 0
+                    security.stock-trading.dev/matrix-case: VALID_ALLOW_RECHECK
+                    security.stock-trading.dev/sbom-digest: 6705A0D11524755F016E83CD19091668898658A01C356EE8661C7A3BEEAD2AAB
+  Service Account:  user-service
+  Containers:
+   user-service:
+    Image:       ttl.sh/stock-trading-matrix-signed-2369c9df4111@sha256:430529879d903a9514281956ea05030d56f82dcac8458751e57be0b410c2e8ef
+    Ports:       18080/TCP (http), 19090/TCP (grpc)
+    Host Ports:  0/TCP (http), 0/TCP (grpc)
+    Args:
+      server
+      --config
+      /etc/stock-trading/config/config.yaml
+    Limits:
+      cpu:     500m
+      memory:  512Mi
+    Requests:
+      cpu:      100m
+      memory:   128Mi
+    Liveness:   tcp-socket :http delay=15s timeout=1s period=15s #success=1 #failure=3
+    Readiness:  tcp-socket :http delay=5s timeout=1s period=5s #success=1 #failure=3
+    Startup:    tcp-socket :http delay=0s timeout=1s period=5s #success=1 #failure=18
+    Environment:
+      AUTH__ACCESS_TOKEN_SECRET:   <set to the key 'auth-access-token-secret' in secret 'user-service-secrets'>   Optional: false
+      AUTH__REFRESH_TOKEN_SECRET:  <set to the key 'auth-refresh-token-secret' in secret 'user-service-secrets'>  Optional: false
+    Mounts:
+      /etc/stock-trading/config from config (ro)
+      /tmp from tmp (rw)
+  Volumes:
+   config:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      user-service-config
+    Optional:  false
+   tmp:
+    Type:          EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:        
+    SizeLimit:     <unset>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Events:
+  Type    Reason            Age   From                   Message
+  ----    ------            ----  ----                   -------
+  Normal  SuccessfulCreate  11s   replicaset-controller  Created pod: user-service-5846b8bdd7-zhqrd
+

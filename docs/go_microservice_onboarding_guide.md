@@ -70,3 +70,37 @@ The onboarding is complete when all statements are true:
 - Valid signed and annotated deployment is admitted.
 - Evidence bundle includes summary table, JSON index, and per-case logs.
 - Traceability document marks reusability as implemented with links to evidence.
+
+## Second-Service Dry-Run Evidence (2026-04-14)
+Dry-run and live validation evidence for a second-service simulation is captured at:
+- `demo/evidence/20260414-213541-onboarding-second-service/`
+
+Simulation parameters:
+- Candidate service name: `portfolio-service`
+- Candidate namespace: `portfolio-trading`
+- Candidate label path: `app.kubernetes.io/name=portfolio-service`
+
+Observed results:
+- Case A (`portfolio-service` label): deployment passed admission and reached ReplicaSet/Pod creation; failure was image pull (`ErrImagePull`) rather than admission deny.
+- Case B (`user-service` label on the same deployment): ReplicaSet create was denied by admission due to missing `security.stock-trading.dev/sbom-digest` and missing `security.grype.io/high_critical`.
+
+Primary evidence files:
+- `10_case1_apply.txt`, `11_case1_workloads.txt`, `12_case1_events.txt`
+- `14_case2_apply.txt`, `16_case2_describe_rs.txt`, `17_case2_events.txt`
+- `18_cleanup_namespace_delete.txt`
+
+## Known Assumptions and Limitations for Reuse
+- Current Kyverno policy scope is still service-specific:
+  - label selector path expects `app.kubernetes.io/name=user-service` for SBOM/CVE checks,
+  - image verification policy targets `ghcr.io/sinhnguyen1411/stock-trading/user-service:*`.
+- `scripts/admission_matrix_demo.ps1` is still hardcoded to `user-service` naming and stock-trading-specific metadata/paths.
+- Server-side `kubectl apply --dry-run=server` for namespaced resources still requires the target namespace to exist.
+
+## Required Patches When Onboarding a New Service
+1. Update policy match scope for the new service:
+   - `deploy/policies/kyverno/clusterpolicy-require-sbom.yaml`
+   - `deploy/policies/kyverno/clusterpolicy-cve-threshold.yaml`
+   - `deploy/policies/kyverno/clusterpolicy-verify-images.yaml`
+2. Update deployment/manifests labels, namespace, image repo, and annotation flow consistently.
+3. Parameterize or clone `scripts/admission_matrix_demo.ps1` for the new service name/namespace and image path.
+4. Re-run deny/allow matrix and append evidence in the same bundle format used by this repository.

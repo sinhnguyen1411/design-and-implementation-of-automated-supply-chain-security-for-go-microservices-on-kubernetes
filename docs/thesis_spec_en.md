@@ -164,14 +164,20 @@ Evaluation scope is intentionally bounded to feasibility and reproducibility of 
    The primary goal is correctness, automation, and enforcement; CI/CD performance optimization and system load benchmarking are outside scope.
 
 ## Thesis-to-Implementation Traceability
-| Objective Item | Control/Mechanism | Evidence Artifact or Log | Related Issue(s) | Status |
-|---|---|---|---|---|
-| Dependency transparency and control | Go modules (`go.mod`, `go.sum`), checksum rationale, CI integrity checks (`go mod verify`, readonly graph, `go mod tidy -diff` audit), SBOM generation | `go.mod`, `go.sum`, `dependency-integrity-report.txt`, `sbom.spdx.json`, `docs/devsecops_ci_admission.md`, `docs/go_dependency_integrity_baseline.md` | #3, #12, #14 | Implemented |
-| Go vulnerability and image risk gating | `govulncheck` + Grype fail-fast threshold on fixable High/Critical findings | CI logs, `govulncheck-report.txt`, `grype-report.json`, workflow outputs | #4, #13 | Implemented |
-| Image signing and provenance attestation | Cosign keyless sign + SLSA-style attestation | `.github/workflows/secure-supply-chain.yml`, `provenance.json`, `docs/demo_evidence.md` | #5, #6 | Implemented |
-| Admission enforcement of trust controls | Kyverno verifyImages + CVE/SBOM annotation policies + automated deny/allow matrix | `deploy/policies/kyverno/*`, `scripts/admission_matrix_demo.ps1`, `docs/demo_evidence.md` | #7, #8, #10 | Implemented |
-| End-to-end reproducible pipeline | CI pipeline from test/govulncheck to push + deployment annotation overlay + matrix evidence export | `.github/workflows/secure-supply-chain.yml`, `deploy/kubernetes/overlays/ci` artifact, `scripts/admission_matrix_demo.ps1`, `docs/devsecops_ci_admission.md` | #3, #4, #9, #13 | Implemented |
-| Reusability and thesis packaging | Traceability matrix + reusable onboarding playbook for additional Go services | `docs/implementation_roadmap.md`, `docs/go_microservice_onboarding_guide.md`, thesis docs | #11, #12 | Implemented |
+As-of `2026-04-14` (GitHub state snapshot: issues `#1` to `#12` open, `#13` and `#14` closed).
+
+Status legend: `Implemented | Partial | Missing`
+
+Detailed objective-to-evidence register: `docs/traceability_evidence_register.md`.
+
+| Objective Item | Control/Mechanism | Evidence Artifact or Log (Current) | Related Issue(s) | Status | Open Gap to Close |
+|---|---|---|---|---|---|
+| Dependency transparency and control | Go modules (`go.mod`, `go.sum`), checksum rationale, CI integrity checks (`go mod verify`, readonly graph, `go mod tidy -diff` audit), SBOM generation | `go.mod`, `go.sum`, `.github/workflows/secure-supply-chain.yml`, `docs/go_dependency_integrity_baseline.md` | #3, #14 | Partial | Add one final CI artifact chain (CI run URL + `sbom.spdx.json` artifact ID + annotation digest mapping) in thesis package. |
+| Go vulnerability and image risk gating | `govulncheck` + Grype fail-fast threshold on fixable High/Critical findings | `.github/workflows/secure-supply-chain.yml`, `docs/devsecops_ci_admission.md` (fail-fast contract), Grype/govulncheck artifact definitions | #4, #13 | Partial | Add explicit pass-case and fail-case evidence references from real CI runs. |
+| Image signing and provenance attestation | Cosign signing + provenance attestation and verification path | `.github/workflows/secure-supply-chain.yml`, `deploy/policies/kyverno/clusterpolicy-verify-images.yaml`, `docs/devsecops_ci_admission.md` | #5, #6, #7 | Partial | Align CI signing trust model with runtime verify policy and enforce `verify-attestation` in the same CI trust path. |
+| Admission enforcement of trust controls | Kyverno verifyImages + CVE/SBOM annotation policies + automated deny/allow matrix | `deploy/policies/kyverno/*`, `scripts/admission_matrix_demo.ps1`, `demo/evidence/20260414-210227/matrix-summary.md`, `docs/lens_capture_checklist.md` | #7, #8, #10 | Partial | Keep deny-message stability validation and finalize issue closure records on GitHub. |
+| End-to-end reproducible pipeline | CI pipeline from test/govulncheck to push + deployment annotation overlay + matrix evidence export | `.github/workflows/secure-supply-chain.yml`, `deploy/kubernetes/overlays/ci`, `docs/devsecops_ci_admission.md`, `demo/evidence/20260414-210227/matrix-index.json` | #3, #4, #9 | Partial | Capture one clean Kind bootstrap rerun log and one final `main` CI run for package sign-off. |
+| Reusability and thesis packaging | Traceability matrix + reusable onboarding playbook for additional Go services | `docs/implementation_roadmap.md`, `docs/go_microservice_onboarding_guide.md`, `docs/final_gap_closing_checklist.md`, `demo/evidence/20260414-213541-onboarding-second-service/onboarding-summary.md` | #11, #12 | Partial | Lock final thesis cross-links and CI run references, then close issue trail. |
 
 ## References
 [1] D. Patel, "Software supply chain security: Implementing SLSA compliance in CI/CD pipelines," International Journal for Research Trends and Innovation, vol. 10, no. 7, Jan. 2025.

@@ -1,0 +1,2 @@
+case1_exit=1
+case2_exit=1

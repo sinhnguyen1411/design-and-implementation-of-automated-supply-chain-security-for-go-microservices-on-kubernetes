@@ -83,6 +83,16 @@ go run main.go server --config cmd/server/config/local.yaml
 kubectl get clusterpolicies
 ```
 
+Clean rerun / teardown:
+```bash
+RESET_CLUSTER=true ./scripts/devsecops_kind_bootstrap.sh
+./scripts/devsecops_kind_reset.sh
+```
+
+Deployment contract note:
+- `deploy/kubernetes/base/deployment.yaml` keeps security annotations empty by design.
+- With Kyverno policies enabled, apply CI-rendered overlay (`deploy/kubernetes/overlays/ci`) for compliant deploys.
+
 ## How to Run the Local Signed Demo
 Use [scripts/local_signed_demo.ps1](scripts/local_signed_demo.ps1) to run the end-to-end local demonstration on the current Kubernetes context.
 
@@ -163,4 +173,5 @@ Dashboard behavior:
 
 ## Notes
 - Current enforcement baseline is Kyverno-based.
+- Runtime trust verification baseline uses keyless Cosign identities from GitHub Actions OIDC (`token.actions.githubusercontent.com`).
 - Sigstore Policy Controller remains an optional future extension.

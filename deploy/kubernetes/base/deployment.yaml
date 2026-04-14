@@ -20,8 +20,8 @@ spec:
         app.kubernetes.io/part-of: stock-trading
       annotations:
         kubectl.kubernetes.io/default-container: user-service
-        security.grype.io/high_critical: "0" # updated by CI to reflect fixable High/Critical findings
-        security.stock-trading.dev/sbom-digest: "TBD" # replace with SBOM digest/OCI ref from CI
+        security.grype.io/high_critical: "" # intentionally empty in base; must be set by CI overlay to pass admission
+        security.stock-trading.dev/sbom-digest: "" # intentionally empty in base; must be set by CI overlay to pass admission
     spec:
       serviceAccountName: user-service
       automountServiceAccountToken: false

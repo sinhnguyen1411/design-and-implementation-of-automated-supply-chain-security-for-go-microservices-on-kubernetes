@@ -18,7 +18,7 @@ Pipeline stages:
 6. Scan SBOM with Grype and compute the count of fixable High/Critical findings (`grype-report.json`).
 7. Sign image with Cosign (keyless OIDC), attach SBOM, and attest SLSA-style provenance.
 8. Render Kustomize overlay annotations from scan/SBOM outputs for deployment.
-9. Verify Cosign signature in registry and upload evidence artifacts.
+9. Verify both Cosign signature and SLSA attestation in registry (same OIDC identity) and upload evidence artifacts.
 
 Registry-backed publishing behavior:
 - On `main`, if `GHCR_TOKEN` is configured, the workflow pushes to GHCR, signs the image, attaches SBOM, and attests provenance.
@@ -39,7 +39,7 @@ Registry-backed publishing behavior:
 - `govulncheck-report`: Go vulnerability scan output.
 - `sbom`: `sbom.spdx.json`.
 - `grype-report`: `grype-report.json`.
-- `cosign-bundle`: provenance file, SBOM, scan report, and generated Kustomize overlay.
+- `cosign-bundle`: provenance file, SBOM, scan report, signature verify log, attestation verify log, and generated Kustomize overlay.
 
 ### Required Permissions/Secrets
 - `GITHUB_TOKEN` with `packages:write` and `id-token:write`.
@@ -49,7 +49,7 @@ Registry-backed publishing behavior:
 
 ## Admission Policies (Kyverno)
 Resources under `deploy/policies/kyverno/`:
-- `clusterpolicy-verify-images.yaml`: verifies signed images and provenance.
+- `clusterpolicy-verify-images.yaml`: verifies keyless image signatures and SLSA provenance attestations from GitHub Actions OIDC identity.
 - `clusterpolicy-cve-threshold.yaml`: requires `security.grype.io/high_critical: "0"` where the annotation represents the count of fixable High/Critical findings.
 - `clusterpolicy-require-sbom.yaml`: requires `security.stock-trading.dev/sbom-digest`.
 
@@ -59,25 +59,56 @@ kubectl apply -k deploy/policies/kyverno
 ```
 
 ## Local Bootstrap (Kind)
-Bootstrap a local cluster with Kyverno and policies:
+Bootstrap or reconcile a local Kind cluster with Kyverno and policies:
 ```bash
 ./scripts/devsecops_kind_bootstrap.sh
 ```
 
+Clean rerun options:
+```bash
+# delete and recreate the Kind cluster first
+RESET_CLUSTER=true ./scripts/devsecops_kind_bootstrap.sh
+
+# teardown only
+./scripts/devsecops_kind_reset.sh
+```
+
+Notes:
+- Bootstrap is idempotent: if cluster already exists, it is reused unless `RESET_CLUSTER=true`.
+- Kyverno readiness check supports both deployment names (`kyverno-admission-controller` and `kyverno`).
+
 ## Policy Contract (Admission-Time Requirements)
 For workloads labeled `app.kubernetes.io/name=user-service`, admission is expected to enforce:
-- Signature verification for the target image.
-- SLSA-style provenance attestation presence.
+- Keyless signature verification for the target image using GitHub Actions OIDC identity (`subject` + `issuer`).
+- SLSA-style provenance attestation presence signed by the same trusted identity.
 - `security.grype.io/high_critical` annotation must be `"0"`.
 - `security.stock-trading.dev/sbom-digest` annotation must exist and be non-empty.
+
+Deterministic base-vs-CI behavior:
+- `deploy/kubernetes/base/deployment.yaml` intentionally keeps both security annotations empty.
+- Base manifest alone is non-compliant by design when admission policies are enabled.
+- Compliant deployment path is `base + CI-rendered overlay` from workflow artifacts.
 
 Required Pod annotations for compliant deployments:
 - `security.grype.io/high_critical: "<fixable High/Critical count from CI>"` (expected `0`)
 - `security.stock-trading.dev/sbom-digest: "<sbom-sha256-or-oci-ref>"`
 
-When available, apply generated CI overlay:
+## Deployment Contract From CI Output
+The workflow publishes overlay files inside the `cosign-bundle` artifact:
+- `deploy/kubernetes/overlays/ci/kustomization.yaml`
+- `deploy/kubernetes/overlays/ci/patch-annotations.yaml`
+
+Apply flow (after downloading artifact):
 ```bash
+# optional sanity check for rendered annotation values
+kubectl kustomize deploy/kubernetes/overlays/ci | rg "security\\.grype\\.io/high_critical|security\\.stock-trading\\.dev/sbom-digest"
+
+# deploy with CI-derived metadata
 kubectl apply -k deploy/kubernetes/overlays/ci
+
+# audit applied values
+kubectl -n stock-trading get deploy user-service \
+  -o jsonpath='{.spec.template.metadata.annotations.security\.grype\.io/high_critical}{"\n"}{.spec.template.metadata.annotations.security\.stock-trading\.dev/sbom-digest}{"\n"}'
 ```
 
 ## Automated Admission Matrix (Docker Desktop)
@@ -95,8 +126,16 @@ Fixed matrix cases:
 
 Manual cryptographic verification (optional):
 ```bash
-cosign verify --key <path-to-cosign.pub> <signed-image-digest>
-cosign verify-attestation --type slsaprovenance --key <path-to-cosign.pub> <signed-image-digest>
+cosign verify \
+  --certificate-identity-regexp "https://github.com/<owner>/<repo>/.github/workflows/secure-supply-chain.yml@refs/heads/main" \
+  --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+  <signed-image-digest>
+
+cosign verify-attestation \
+  --type slsaprovenance \
+  --certificate-identity-regexp "https://github.com/<owner>/<repo>/.github/workflows/secure-supply-chain.yml@refs/heads/main" \
+  --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+  <signed-image-digest>
 ```
 
 ## Evidence Collection Guidance
