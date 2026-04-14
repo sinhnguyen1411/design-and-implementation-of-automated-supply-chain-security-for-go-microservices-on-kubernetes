@@ -2,6 +2,11 @@ name: secure-supply-chain
 
 on:
   workflow_dispatch:
+    inputs:
+      security_gate_mode:
+        description: "Security gate mode: enforced (hard fail) or advisory (warn only)"
+        required: false
+        default: "enforced"
   push:
     branches: [ "main" ]
   pull_request:
@@ -17,6 +22,7 @@ env:
   SBOM_PATH: sbom.spdx.json
   SCAN_REPORT: grype-report.json
   SECURITY_GATE: "true"
+  SECURITY_GATE_MODE: "enforced"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
@@ -172,22 +178,34 @@ jobs:
           echo "sbom_digest=${SBOM_DIGEST}" >> "$GITHUB_OUTPUT"
           echo "high_critical=${HIGH_CRITICAL}" >> "$GITHUB_OUTPUT"
 
-      - name: Security gate (enforced on publish path)
-        if: ${{ env.SECURITY_GATE == 'true' && steps.meta.outputs.registry_mode == 'ghcr' }}
+      - name: Resolve security gate mode
+        id: gate_mode
         run: |
-          if [ "${{ steps.annos.outputs.high_critical }}" != "0" ]; then
-            echo "Security gate failed: fixable high/critical CVEs detected."
-            exit 1
+          MODE="${{ env.SECURITY_GATE_MODE }}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.security_gate_mode }}" ]; then
+            MODE="${{ inputs.security_gate_mode }}"
           fi
+          MODE=$(echo "$MODE" | tr '[:upper:]' '[:lower:]')
+          if [ "$MODE" != "enforced" ] && [ "$MODE" != "advisory" ]; then
+            echo "::warning::Invalid SECURITY_GATE_MODE '$MODE'. Fallback to 'enforced'."
+            MODE="enforced"
+          fi
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "Resolved security gate mode: $MODE"
 
-      - name: Security gate summary (local path)
-        if: ${{ env.SECURITY_GATE == 'true' && steps.meta.outputs.registry_mode != 'ghcr' }}
+      - name: Security gate (hard-fail by default)
+        if: ${{ env.SECURITY_GATE == 'true' }}
         run: |
           if [ "${{ steps.annos.outputs.high_critical }}" != "0" ]; then
-            echo "::warning::Local-only run detected fixable high/critical CVEs (${{ steps.annos.outputs.high_critical }})."
-            echo "::warning::Gate is advisory in local mode and remains enforced on GHCR publish path."
+            if [ "${{ steps.gate_mode.outputs.mode }}" = "advisory" ]; then
+              echo "::warning::Security gate advisory mode enabled: fixable high/critical CVEs detected (${{ steps.annos.outputs.high_critical }})."
+              echo "::warning::Use SECURITY_GATE_MODE=enforced to hard-fail this run."
+            else
+              echo "Security gate failed: fixable high/critical CVEs detected."
+              exit 1
+            fi
           else
-            echo "Local-only run: no fixable high/critical CVEs detected."
+            echo "Security gate passed: no fixable high/critical CVEs detected."
           fi
 
       - name: Upload SBOM artifact
