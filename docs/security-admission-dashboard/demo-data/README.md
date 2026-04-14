@@ -16,6 +16,7 @@ Each run includes:
 - `matrix-summary.md`
 - `matrix-index.json`
 - `regression-valid-allow.json`
+- `security-gate-findings.sample.json` (fallback CVE list for dashboard panel when live files are unavailable)
 - Per-case artifact files under:
   - `VALID_ALLOW/`
   - `NEG_UNSIGNED_DENY/`

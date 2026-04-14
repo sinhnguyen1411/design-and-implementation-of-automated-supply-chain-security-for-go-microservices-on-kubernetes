@@ -21,6 +21,8 @@ env:
   DEPENDENCY_INTEGRITY_REPORT: dependency-integrity-report.txt
   SBOM_PATH: sbom.spdx.json
   SCAN_REPORT: grype-report.json
+  SECURITY_GATE_FINDINGS_JSON: security-gate-findings.json
+  SECURITY_GATE_FINDINGS_MD: security-gate-findings.md
   SECURITY_GATE: "true"
   SECURITY_GATE_MODE: "enforced"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
@@ -193,12 +195,50 @@ jobs:
           echo "mode=$MODE" >> "$GITHUB_OUTPUT"
           echo "Resolved security gate mode: $MODE"
 
+      - name: Build security gate findings list (fixable high/critical CVEs)
+        id: gate_findings
+        run: |
+          set -euo pipefail
+          jq '[
+            .matches[]?
+            | {
+                cve: .vulnerability.id,
+                severity: ((.vulnerability.severity // "" ) | ascii_downcase),
+                package: .artifact.name,
+                installed: .artifact.version,
+                fix_state: ((.vulnerability.fix.state // "unknown") | ascii_downcase),
+                fixed_versions: (.vulnerability.fix.versions // [])
+              }
+            | select((.severity == "high" or .severity == "critical")
+                and .fix_state != "wont-fix"
+                and .fix_state != "not-fixed"
+                and .fix_state != "unknown")
+          ]' "${{ env.SCAN_REPORT }}" > "${{ env.SECURITY_GATE_FINDINGS_JSON }}"
+
+          COUNT=$(jq 'length' "${{ env.SECURITY_GATE_FINDINGS_JSON }}")
+          echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "# Security Gate Findings"
+            echo
+            echo "- Gate mode: \`${{ steps.gate_mode.outputs.mode }}\`"
+            echo "- Fixable high/critical count: \`${COUNT}\`"
+            echo
+            if [ "${COUNT}" -eq 0 ]; then
+              echo "No fixable high/critical CVEs detected."
+            else
+              echo "| CVE | Severity | Package | Installed | Fix State | Fixed Versions |"
+              echo "|---|---|---|---|---|---|"
+              jq -r '.[] | "| \(.cve) | \(.severity) | \(.package) | \(.installed) | \(.fix_state) | \((.fixed_versions | join(", "))) |"' "${{ env.SECURITY_GATE_FINDINGS_JSON }}"
+            fi
+          } | tee "${{ env.SECURITY_GATE_FINDINGS_MD }}" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Security gate (hard-fail by default)
         if: ${{ env.SECURITY_GATE == 'true' }}
         run: |
-          if [ "${{ steps.annos.outputs.high_critical }}" != "0" ]; then
+          if [ "${{ steps.gate_findings.outputs.count }}" != "0" ]; then
             if [ "${{ steps.gate_mode.outputs.mode }}" = "advisory" ]; then
-              echo "::warning::Security gate advisory mode enabled: fixable high/critical CVEs detected (${{ steps.annos.outputs.high_critical }})."
+              echo "::warning::Security gate advisory mode enabled: fixable high/critical CVEs detected (${{ steps.gate_findings.outputs.count }})."
               echo "::warning::Use SECURITY_GATE_MODE=enforced to hard-fail this run."
             else
               echo "Security gate failed: fixable high/critical CVEs detected."
@@ -222,6 +262,16 @@ jobs:
         with:
           name: grype-report
           path: ${{ env.SCAN_REPORT }}
+          if-no-files-found: ignore
+
+      - name: Upload security gate findings
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: security-gate-findings
+          path: |
+            ${{ env.SECURITY_GATE_FINDINGS_JSON }}
+            ${{ env.SECURITY_GATE_FINDINGS_MD }}
           if-no-files-found: ignore
 
       - name: Install Cosign
@@ -333,6 +383,8 @@ jobs:
             provenance.json
             ${{ env.SBOM_PATH }}
             ${{ env.SCAN_REPORT }}
+            ${{ env.SECURITY_GATE_FINDINGS_JSON }}
+            ${{ env.SECURITY_GATE_FINDINGS_MD }}
             cosign-verify-signature.txt
             cosign-verify-attestation.txt
             deploy/kubernetes/overlays/ci/patch-annotations.yaml

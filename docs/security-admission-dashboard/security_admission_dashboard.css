@@ -363,7 +363,7 @@ button:hover {
 }
 
 .panel-grid-top {
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: 1fr 1fr 1.2fr;
 }
 
 .panel-grid-bottom {
@@ -663,6 +663,40 @@ a:hover {
   max-height: 220px;
   overflow: auto;
   white-space: pre-wrap;
+}
+
+.cve-table-wrap {
+  margin-top: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: var(--radius-sm);
+  background: rgba(2, 6, 23, 0.35);
+  overflow: auto;
+}
+
+.cve-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.cve-table th,
+.cve-table td {
+  padding: 8px 9px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.cve-table th {
+  color: #93c5fd;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cve-table td {
+  color: #d5e2fa;
+  font-family: "Fira Code", monospace;
 }
 
 input:focus-visible,

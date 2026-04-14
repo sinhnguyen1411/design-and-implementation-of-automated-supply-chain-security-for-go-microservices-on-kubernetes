@@ -38,10 +38,21 @@ const I18N = {
     quickRawFiles: "Quick Raw Files",
     quickRawFilesNote: "Open scanner and SBOM outputs used for presentation evidence.",
     linkGrype: "Open `../../.tmp-grype.json`",
+    linkGateFindings: "Open `../../security-gate-findings.json`",
     linkTmpSbom: "Open `../../.tmp-sbom.json`",
     linkDemoSbom: "Open `../../demo/sbom.spdx.json`",
     linkBundledSbom: "Open `./demo-data/sbom.spdx.json` (bundled)",
     linkBundledNotes: "Open bundled evidence notes",
+    securityGateFindings: "Security Gate Findings",
+    cveLoading: "Loading CVE findings...",
+    cveId: "CVE",
+    cveSeverity: "Severity",
+    cvePackage: "Package",
+    cveInstalled: "Installed",
+    cveFixed: "Fixed Versions",
+    cveNoFindings: "No fixable high/critical CVEs found in loaded source.",
+    cveSourceSummary: "Source: {source}. Fixable high/critical: {count}.",
+    cveSourceUnavailable: "No CVE findings source found. Expected one of: ../../security-gate-findings.json, ../../.tmp-grype.json, or bundled sample.",
     admissionMatrix: "Admission Matrix",
     admissionMatrixNote: "Fixed scenario order: VALID_ALLOW, NEG_UNSIGNED_DENY, NEG_MISSING_SBOM_DENY, NEG_CVE_THRESHOLD_DENY",
     sbomDependencyView: "SBOM Dependency View",
@@ -240,6 +251,12 @@ const SBOM_SOURCES = [
   "./demo-data/sbom.spdx.json",
 ];
 
+const GATE_FINDINGS_SOURCES = [
+  "../../security-gate-findings.json",
+  "../../.tmp-grype.json",
+  "./demo-data/security-gate-findings.sample.json",
+];
+
 const EVIDENCE_BASE_PATHS = [
   "../../demo/evidence/",
   "./demo-data/evidence/",
@@ -273,6 +290,8 @@ const dom = {
   sbomLegend: document.getElementById("sbom-legend"),
   sbomTopList: document.getElementById("sbom-top-list"),
   sbomTotal: document.getElementById("sbom-total"),
+  cveSummary: document.getElementById("cve-summary"),
+  cveTableBody: document.getElementById("cve-table-body"),
 };
 
 const state = {
@@ -816,6 +835,88 @@ async function loadSbom() {
   return "";
 }
 
+function sortGateFindings(rows) {
+  const rank = { critical: 2, high: 1 };
+  return [...rows].sort((a, b) => {
+    const ra = rank[String(a.severity || "").toLowerCase()] || 0;
+    const rb = rank[String(b.severity || "").toLowerCase()] || 0;
+    if (rb !== ra) return rb - ra;
+    return String(a.cve || "").localeCompare(String(b.cve || ""));
+  });
+}
+
+function renderGateFindings(rows, source) {
+  const ordered = sortGateFindings(rows);
+  dom.cveSummary.textContent = t("cveSourceSummary", { source, count: ordered.length });
+
+  if (!ordered.length) {
+    dom.cveTableBody.innerHTML = `<tr><td colspan="5">${t("cveNoFindings")}</td></tr>`;
+    return;
+  }
+
+  dom.cveTableBody.innerHTML = ordered.map((item) => {
+    const fixed = Array.isArray(item.fixed_versions) ? item.fixed_versions.join(", ") : String(item.fixed_versions || "-");
+    return `<tr>
+      <td>${String(item.cve || "-")}</td>
+      <td>${String(item.severity || "-")}</td>
+      <td>${String(item.package || "-")}</td>
+      <td>${String(item.installed || "-")}</td>
+      <td>${fixed || "-"}</td>
+    </tr>`;
+  }).join("");
+}
+
+function toFixableHighCriticalFromGrype(grypeJson) {
+  const matches = Array.isArray(grypeJson.matches) ? grypeJson.matches : [];
+  return matches.map((m) => {
+    const vulnerability = m && m.vulnerability ? m.vulnerability : {};
+    const artifact = m && m.artifact ? m.artifact : {};
+    const severity = String(vulnerability.severity || "").toLowerCase();
+    const fixState = String((vulnerability.fix && vulnerability.fix.state) || "unknown").toLowerCase();
+    const fixedVersions = vulnerability.fix && Array.isArray(vulnerability.fix.versions)
+      ? vulnerability.fix.versions
+      : [];
+    return {
+      cve: String(vulnerability.id || ""),
+      severity,
+      package: String(artifact.name || ""),
+      installed: String(artifact.version || ""),
+      fix_state: fixState,
+      fixed_versions: fixedVersions,
+    };
+  }).filter((item) =>
+    (item.severity === "high" || item.severity === "critical")
+    && item.fix_state !== "wont-fix"
+    && item.fix_state !== "not-fixed"
+    && item.fix_state !== "unknown"
+  );
+}
+
+async function loadGateFindings() {
+  for (const source of GATE_FINDINGS_SOURCES) {
+    try {
+      const data = await fetchJson(source);
+      if (Array.isArray(data)) {
+        renderGateFindings(data, source);
+        return;
+      }
+      if (Array.isArray(data.findings)) {
+        renderGateFindings(data.findings, source);
+        return;
+      }
+      if (Array.isArray(data.matches)) {
+        renderGateFindings(toFixableHighCriticalFromGrype(data), `${source} (derived)`);
+        return;
+      }
+    } catch (error) {
+      // Continue fallback chain.
+    }
+  }
+
+  dom.cveSummary.textContent = t("cveSourceUnavailable");
+  dom.cveTableBody.innerHTML = "<tr><td colspan=\"5\">-</td></tr>";
+}
+
 async function loadRun(runId) {
   if (!isValidRunId(runId)) {
     setStatus(t("statusInvalidRun"), "error");
@@ -973,6 +1074,7 @@ function rerenderUiForLanguage() {
   }
 
   void loadSbom();
+  void loadGateFindings();
   updateUrlParams();
 }
 
@@ -1063,6 +1165,7 @@ function init() {
 
   void discoverAndLoadRuns(runFromQuery);
   void loadSbom();
+  void loadGateFindings();
 }
 
 init();

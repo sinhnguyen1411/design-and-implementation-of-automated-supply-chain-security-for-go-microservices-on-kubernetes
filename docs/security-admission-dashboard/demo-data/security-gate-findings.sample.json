@@ -1,0 +1,50 @@
+{
+  "source": "sample-from-run-34",
+  "run": {
+    "workflow": "secure-supply-chain",
+    "run_number": 34,
+    "commit": "f8ddd94"
+  },
+  "findings": [
+    {
+      "cve": "CVE-2026-28388",
+      "severity": "high",
+      "package": "libssl3",
+      "installed": "3.0.18-1~deb12u2",
+      "fix_state": "fixed",
+      "fixed_versions": [
+        "3.0.19-1~deb12u2"
+      ]
+    },
+    {
+      "cve": "CVE-2026-28389",
+      "severity": "high",
+      "package": "libssl3",
+      "installed": "3.0.18-1~deb12u2",
+      "fix_state": "fixed",
+      "fixed_versions": [
+        "3.0.19-1~deb12u2"
+      ]
+    },
+    {
+      "cve": "CVE-2026-28390",
+      "severity": "high",
+      "package": "libssl3",
+      "installed": "3.0.18-1~deb12u2",
+      "fix_state": "fixed",
+      "fixed_versions": [
+        "3.0.19-1~deb12u2"
+      ]
+    },
+    {
+      "cve": "CVE-2026-31790",
+      "severity": "high",
+      "package": "libssl3",
+      "installed": "3.0.18-1~deb12u2",
+      "fix_state": "fixed",
+      "fixed_versions": [
+        "3.0.19-1~deb12u2"
+      ]
+    }
+  ]
+}

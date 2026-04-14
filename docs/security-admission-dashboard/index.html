@@ -103,11 +103,33 @@
         <p class="panel-note" data-i18n="quickRawFilesNote">Open scanner and SBOM outputs used for presentation evidence.</p>
         <ul class="quick-links">
           <li><a href="../../.tmp-grype.json" target="_blank" rel="noopener noreferrer" data-i18n="linkGrype">Open `../../.tmp-grype.json`</a></li>
+          <li><a href="../../security-gate-findings.json" target="_blank" rel="noopener noreferrer" data-i18n="linkGateFindings">Open `../../security-gate-findings.json`</a></li>
           <li><a href="../../.tmp-sbom.json" target="_blank" rel="noopener noreferrer" data-i18n="linkTmpSbom">Open `../../.tmp-sbom.json`</a></li>
           <li><a href="../../demo/sbom.spdx.json" target="_blank" rel="noopener noreferrer" data-i18n="linkDemoSbom">Open `../../demo/sbom.spdx.json`</a></li>
           <li><a href="./demo-data/sbom.spdx.json" target="_blank" rel="noopener noreferrer" data-i18n="linkBundledSbom">Open `./demo-data/sbom.spdx.json` (bundled)</a></li>
           <li><a href="./demo-data/README.md" target="_blank" rel="noopener noreferrer" data-i18n="linkBundledNotes">Open bundled evidence notes</a></li>
         </ul>
+      </article>
+
+      <article class="glass panel">
+        <h2 data-i18n="securityGateFindings">Security Gate Findings</h2>
+        <p id="cve-summary" class="panel-note" data-i18n="cveLoading">Loading CVE findings...</p>
+        <div class="cve-table-wrap">
+          <table class="cve-table">
+            <thead>
+              <tr>
+                <th data-i18n="cveId">CVE</th>
+                <th data-i18n="cveSeverity">Severity</th>
+                <th data-i18n="cvePackage">Package</th>
+                <th data-i18n="cveInstalled">Installed</th>
+                <th data-i18n="cveFixed">Fixed Versions</th>
+              </tr>
+            </thead>
+            <tbody id="cve-table-body">
+              <tr><td colspan="5">-</td></tr>
+            </tbody>
+          </table>
+        </div>
       </article>
     </section>
 
