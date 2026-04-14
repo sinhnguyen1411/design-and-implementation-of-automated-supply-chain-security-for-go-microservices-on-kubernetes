@@ -172,12 +172,22 @@ jobs:
           echo "sbom_digest=${SBOM_DIGEST}" >> "$GITHUB_OUTPUT"
           echo "high_critical=${HIGH_CRITICAL}" >> "$GITHUB_OUTPUT"
 
-      - name: Security gate (optional)
-        if: ${{ env.SECURITY_GATE == 'true' }}
+      - name: Security gate (enforced on publish path)
+        if: ${{ env.SECURITY_GATE == 'true' && steps.meta.outputs.registry_mode == 'ghcr' }}
         run: |
           if [ "${{ steps.annos.outputs.high_critical }}" != "0" ]; then
             echo "Security gate failed: fixable high/critical CVEs detected."
             exit 1
+          fi
+
+      - name: Security gate summary (local path)
+        if: ${{ env.SECURITY_GATE == 'true' && steps.meta.outputs.registry_mode != 'ghcr' }}
+        run: |
+          if [ "${{ steps.annos.outputs.high_critical }}" != "0" ]; then
+            echo "::warning::Local-only run detected fixable high/critical CVEs (${{ steps.annos.outputs.high_critical }})."
+            echo "::warning::Gate is advisory in local mode and remains enforced on GHCR publish path."
+          else
+            echo "Local-only run: no fixable high/critical CVEs detected."
           fi
 
       - name: Upload SBOM artifact
