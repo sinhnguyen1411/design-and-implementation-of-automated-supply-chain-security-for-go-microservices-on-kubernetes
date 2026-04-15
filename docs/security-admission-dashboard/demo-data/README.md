@@ -1,11 +1,15 @@
 # Bundled Dashboard Demo Data
 
-This folder contains static evidence datasets for the security admission dashboard.
+This folder contains static fallback datasets for the security admission dashboard.
 
-## Purpose
-- Provide deterministic demo runs when `demo/evidence` is not available.
-- Keep the dashboard usable in repository-only viewing scenarios.
-- Keep a clear contract: `demo/evidence` is canonical for thesis claims, while this folder is fallback-only for offline UI/demo continuity.
+## Source of Truth and Fallback Contract
+- Primary source (thesis live view): `docs/security-admission-dashboard/data/actions-runs.snapshot.json`.
+- Snapshot producer: `.github/workflows/dashboard-data-sync.yml`.
+- Snapshot inputs: workflow runs from:
+- `secure-supply-chain` (build-time CVE/gate/sign data).
+- `admission-matrix-evidence` (runtime admission matrix evidence).
+- This `demo-data/evidence` folder is fallback-only when snapshot is missing/unavailable (offline preview mode).
+- `demo/evidence` remains useful for local script outputs, but dashboard default is Actions snapshot first.
 
 ## Included Run IDs
 - `20260406-154444`

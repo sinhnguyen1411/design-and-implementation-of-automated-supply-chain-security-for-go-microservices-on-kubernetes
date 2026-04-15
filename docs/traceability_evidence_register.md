@@ -12,6 +12,9 @@ Purpose:
 - Separate what is already available from what still depends on the final CI run.
 
 ## Canonical Evidence Sources
+- Dashboard Actions snapshot (source of truth): `docs/security-admission-dashboard/data/actions-runs.snapshot.json`
+- Snapshot sync workflow: `.github/workflows/dashboard-data-sync.yml`
+- Runtime matrix evidence workflow: `.github/workflows/admission-matrix-evidence.yml`
 - Admission evidence root: `demo/evidence/20260414-210227/`
 - Screenshot appendix pack: `docs/lens_screenshots/`
 - Dashboard fallback-only dataset: `docs/security-admission-dashboard/demo-data/evidence/`

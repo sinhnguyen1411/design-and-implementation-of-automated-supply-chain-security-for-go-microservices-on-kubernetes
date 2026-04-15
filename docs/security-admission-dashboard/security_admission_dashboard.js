@@ -15,10 +15,10 @@ const CASE_HINTS = {
 };
 
 const CASE_HINTS_VI = {
-  VALID_ALLOW: "Đã ký + có attestation + có annotation SBOM + high_critical=0",
-  NEG_UNSIGNED_DENY: "Dự kiến bị từ chối do thiếu bằng chứng chữ ký",
-  NEG_MISSING_SBOM_DENY: "Dự kiến bị từ chối do thiếu annotation SBOM digest",
-  NEG_CVE_THRESHOLD_DENY: "Dự kiến bị từ chối do high_critical lớn hơn 0",
+  VALID_ALLOW: "Da ky + co attestation + co annotation SBOM + high_critical=0",
+  NEG_UNSIGNED_DENY: "Du kien bi tu choi do thieu bang chung chu ky",
+  NEG_MISSING_SBOM_DENY: "Du kien bi tu choi do thieu annotation SBOM digest",
+  NEG_CVE_THRESHOLD_DENY: "Du kien bi tu choi do high_critical lon hon 0",
 };
 
 const I18N = {
@@ -42,6 +42,7 @@ const I18N = {
     linkTmpSbom: "Open `../../.tmp-sbom.json`",
     linkDemoSbom: "Open `../../demo/sbom.spdx.json`",
     linkBundledSbom: "Open `./demo-data/sbom.spdx.json` (bundled)",
+    linkActionsSnapshot: "Open `./data/actions-runs.snapshot.json` (Actions snapshot)",
     linkBundledNotes: "Open bundled evidence notes",
     securityGateFindings: "Security Gate Findings",
     cveLoading: "Loading CVE findings...",
@@ -98,152 +99,24 @@ const I18N = {
     sbomNotFound: "SBOM not found. Checked ../../demo/sbom.spdx.json and ../../.tmp-sbom.json.",
     sbomMissing: "SBOM file is missing.",
     statusScanningRuns: "Scanning evidence run directories...",
-    statusInvalidRun: "Invalid run ID. Expected format: YYYYMMDD-HHMMSS",
+    statusInvalidRun: "Invalid run ID. Expected format: YYYYMMDD-HHMMSS or gha:workflow#run_number",
     statusNoSource: "No evidence source is active. Click Refresh Runs.",
     statusLoadingEvidence: "Loading evidence from {basePath} ...",
     statusRunLoaded: "Loaded run {runId}. Regression check: {result}.",
     statusRegressionMissing: "Loaded run {runId}. Regression file is missing or unreadable.",
     statusLoadRunFailed: "Unable to load evidence for run {runId}. Check that files exist under ../../demo/evidence/{runId}.",
     statusRunFallback: "Run {preferredRunId} not found. Loading latest run {selectedRun}.",
+    statusSnapshotRunMissing: "Snapshot run not found: {runId}",
+    statusSnapshotLoading: "Loading GitHub Actions run {runId} ...",
+    statusSnapshotLoaded: "Loaded {runId}. Regression: {result}.",
+    statusSnapshotPartial: "Loaded {runId} with partial or expired artifacts.",
+    statusSnapshotRegressionMissing: "Loaded {runId}. Regression evidence is missing.",
+    statusSnapshotFallback: "Run {preferredRunId} not found in Actions snapshot. Loading {selectedRun}.",
     statusNoRuns: "No evidence runs found. Provide demo/evidence runs or use bundled demo-data."
   },
-  vi: {
-    pageTitle: "Bảng Điều Khiển Admission Security",
-    eyebrow: "Bảng Điều Khiển Admission Security",
-    heroTitle: "Bảng Demo Dựa Trên Dữ Liệu Cho Bằng Chứng Admission Kyverno",
-    heroCopy: "Trang này đọc các tệp bằng chứng tĩnh được tạo từ admission matrix script. Trang không kết nối tới cụm thật.",
-    refreshRuns: "Làm Mới Danh Sách",
-    runHelp: "Bấm để mở hộp chọn, tìm run-id, rồi chọn để tự động tải dữ liệu.",
-    runSearchPlaceholder: "Tìm run id...",
-    overviewAvailableRuns: "Số Run Hiện Có",
-    overviewMatrixVerdict: "Mức Độ Khớp Kỳ Vọng",
-    overviewAdmissionOutcome: "Kết Quả Admission",
-    overviewEvidenceFootprint: "Quy Mô Bằng Chứng",
-    runMetadata: "Siêu Dữ Liệu Run",
-    quickRawFiles: "Tệp Thô Nhanh",
-    quickRawFilesNote: "Mở các đầu ra scanner và SBOM dùng làm bằng chứng trình bày.",
-    linkGrype: "Mở `../../.tmp-grype.json`",
-    linkTmpSbom: "Mở `../../.tmp-sbom.json`",
-    linkDemoSbom: "Mở `../../demo/sbom.spdx.json`",
-    linkBundledSbom: "Mở `./demo-data/sbom.spdx.json` (đính kèm)",
-    linkBundledNotes: "Mở ghi chú evidence đính kèm",
-    admissionMatrix: "Ma Trận Admission",
-    admissionMatrixNote: "Thứ tự kịch bản cố định: VALID_ALLOW, NEG_UNSIGNED_DENY, NEG_MISSING_SBOM_DENY, NEG_CVE_THRESHOLD_DENY",
-    sbomDependencyView: "Góc Nhìn Phụ Thuộc SBOM",
-    sbomDependencyNote: "Nhóm theo loại package: golang, deb, other",
-    topDependencies: "Phụ Thuộc Nổi Bật",
-    artifactExplorer: "Trình Duyệt Artifact",
-    matrixSummary: "Tóm Tắt Matrix (Markdown)",
-    selectRun: "Chọn run",
-    noRunsFound: "Không tìm thấy run",
-    noRunMatched: "Không có run id phù hợp.",
-    runLabel: "Mã Lần Chạy Evidence",
-    latestRuns: "Run mới nhất: {runs}",
-    noRunsDetected: "Không phát hiện evidence run nào.",
-    noRunLoaded: "Chưa tải run nào.",
-    noPolicyDecision: "Chưa có quyết định policy.",
-    waitingArtifacts: "Đang chờ thống kê artifact.",
-    passRate: "{rate}% PASS",
-    caseSummary: "{passCount}/{totalCases} kịch bản khớp với hành vi admission mong đợi.",
-    admissionSummary: "{allowCount} cho phép / {denyCount} từ chối",
-    trackedFiles: "Theo dõi tệp trên {totalCases} kịch bản matrix.",
-    policyDerived: "Suy ra từ kết quả admission thực tế của run đang chọn.",
-    verdictMatched: "KHỚP KỲ VỌNG",
-    verdictMismatch: "KHÔNG KHỚP",
-    metaLabels: ["Run ID", "Context", "Namespace", "Signed Digest", "Unsigned Digest", "SBOM Digest"],
-    expected: "Kỳ vọng",
-    actual: "Thực tế",
-    reason: "Lý do",
-    artifacts: "Số artifact",
-    viewArtifacts: "Xem Artifacts",
-    missing: "THIẾU",
-    missingCaseText: "Dữ liệu case không có trong matrix-index.json của run này.",
-    noArtifactMap: "Không có ánh xạ artifact cho case {caseName}.",
-    showingArtifacts: "Đang hiển thị artifacts cho {caseName}",
-    noArtifactFiles: "Không có tệp artifact nào được liệt kê.",
-    chooseCase: "Chọn một case trong matrix để xem các tệp bằng chứng.",
-    noKnownCases: "Không tìm thấy case matrix quen thuộc trong run này.",
-    noArtifactsAvailable: "Không có artifact khả dụng.",
-    summaryNotLoaded: "Chưa tải summary.",
-    summaryEmpty: "Tệp summary đang rỗng.",
-    totalPackages: "Tổng số packages: {total}",
-    noPackagesFound: "Không tìm thấy package nào trong SBOM.",
-    noDependencies: "Không có dependency nào.",
-    sbomNotFound: "Không tìm thấy SBOM. Đã kiểm tra ../../demo/sbom.spdx.json và ../../.tmp-sbom.json.",
-    sbomMissing: "Thiếu tệp SBOM.",
-    statusScanningRuns: "Đang quét các thư mục evidence run...",
-    statusInvalidRun: "Run ID không hợp lệ. Định dạng đúng là: YYYYMMDD-HHMMSS",
-    statusNoSource: "Chưa có nguồn evidence đang hoạt động. Bấm Làm Mới Danh Sách.",
-    statusLoadingEvidence: "Đang tải evidence từ {basePath} ...",
-    statusRunLoaded: "Đã tải run {runId}. Kiểm tra hồi quy: {result}.",
-    statusRegressionMissing: "Đã tải run {runId}. Thiếu tệp hồi quy hoặc không đọc được.",
-    statusLoadRunFailed: "Không thể tải evidence cho run {runId}. Hãy kiểm tra thư mục ../../demo/evidence/{runId}.",
-    statusRunFallback: "Không tìm thấy run {preferredRunId}. Đang tải run mới nhất {selectedRun}.",
-    statusNoRuns: "Không tìm thấy evidence run. Hãy cung cấp demo/evidence hoặc dùng demo-data đính kèm."
-  }
+  vi: {}
 };
 
-Object.assign(I18N.vi, {
-  pageTitle: "Trung Tâm Quan Sát Admission Security",
-  eyebrow: "Trung Tâm Quan Sát Admission Security",
-  heroTitle: "Trung Tâm Quan Sát Bằng Chứng Admission Kyverno",
-  heroCopy: "Trang này dùng để quan sát các bằng chứng tĩnh do admission matrix script tạo ra và không kết nối trực tiếp tới cụm Kubernetes.",
-  refreshRuns: "Làm Mới",
-  runHelp: "Bấm để mở danh sách, tìm mã lần chạy, rồi chọn để tải tự động.",
-  runSearchPlaceholder: "Tìm mã lần chạy...",
-  overviewAvailableRuns: "Số Lần Chạy",
-  overviewMatrixVerdict: "Mức Độ Khớp Kỳ Vọng",
-  overviewAdmissionOutcome: "Kết Quả Admission",
-  overviewEvidenceFootprint: "Quy Mô Bằng Chứng",
-  runMetadata: "Thông Tin Lần Chạy",
-  quickRawFiles: "Tệp Dữ Liệu Nguồn",
-  quickRawFilesNote: "Mở nhanh các tệp scanner và SBOM dùng làm bằng chứng trình bày.",
-  linkBundledNotes: "Mở ghi chú bằng chứng đính kèm",
-  admissionMatrix: "Ma Trận Admission",
-  sbomDependencyView: "Tổng Quan Thành Phần SBOM",
-  topDependencies: "Thành Phần Nổi Bật",
-  artifactExplorer: "Tra Cứu Artifact",
-  matrixSummary: "Tóm Tắt Ma Trận (Markdown)",
-  selectRun: "Chọn lần chạy",
-  noRunsFound: "Không tìm thấy lần chạy",
-  noRunMatched: "Không có mã lần chạy phù hợp.",
-  runLabel: "Mã Lần Chạy",
-  latestRuns: "Mới nhất: {runs}",
-  noRunsDetected: "Chưa phát hiện dữ liệu lần chạy.",
-  noRunLoaded: "Chưa tải lần chạy nào.",
-  noPolicyDecision: "Chưa có kết quả đánh giá chính sách.",
-  waitingArtifacts: "Đang chờ thống kê artifact.",
-  caseSummary: "{passCount}/{totalCases} kịch bản khớp với kết quả admission mong đợi.",
-  admissionSummary: "{allowCount} cho phép / {denyCount} từ chối",
-  trackedFiles: "Theo dõi tệp trên {totalCases} kịch bản.",
-  policyDerived: "Tổng hợp từ kết quả admission thực tế của lần chạy đang chọn.",
-  expected: "Kỳ vọng",
-  actual: "Thực tế",
-  reason: "Nguyên nhân",
-  viewArtifacts: "Xem Artifact",
-  noArtifactMap: "Không có danh sách artifact cho kịch bản {caseName}.",
-  showingArtifacts: "Đang hiển thị artifact của {caseName}",
-  noArtifactFiles: "Không có tệp artifact được liệt kê.",
-  chooseCase: "Chọn một kịch bản trong ma trận để xem tệp bằng chứng.",
-  noKnownCases: "Không tìm thấy kịch bản chuẩn trong lần chạy này.",
-  noArtifactsAvailable: "Không có artifact khả dụng.",
-  summaryNotLoaded: "Chưa tải tóm tắt.",
-  summaryEmpty: "Tệp tóm tắt đang trống.",
-  totalPackages: "Tổng số gói: {total}",
-  noPackagesFound: "Không có package nào trong SBOM.",
-  noDependencies: "Không có dependency.",
-  sbomNotFound: "Không tìm thấy SBOM. Đã kiểm tra ../../demo/sbom.spdx.json và ../../.tmp-sbom.json.",
-  sbomMissing: "Thiếu tệp SBOM.",
-  statusScanningRuns: "Đang quét các thư mục lần chạy...",
-  statusInvalidRun: "Mã lần chạy không hợp lệ. Định dạng đúng: YYYYMMDD-HHMMSS",
-  statusNoSource: "Chưa có nguồn dữ liệu evidence. Hãy bấm Làm Mới.",
-  statusLoadingEvidence: "Đang tải evidence từ {basePath} ...",
-  statusRunLoaded: "Đã tải lần chạy {runId}. Kết quả kiểm tra hồi quy: {result}.",
-  statusRegressionMissing: "Đã tải lần chạy {runId}, nhưng thiếu tệp hồi quy hoặc không đọc được.",
-  statusLoadRunFailed: "Không thể tải evidence cho lần chạy {runId}. Kiểm tra thư mục ../../demo/evidence/{runId}.",
-  statusRunFallback: "Không tìm thấy lần chạy {preferredRunId}. Đang dùng lần chạy mới nhất {selectedRun}.",
-  statusNoRuns: "Không tìm thấy dữ liệu lần chạy. Hãy cung cấp demo/evidence hoặc dùng demo-data đính kèm."
-});
 
 const SBOM_SOURCES = [
   "../../demo/sbom.spdx.json",
@@ -256,6 +129,8 @@ const GATE_FINDINGS_SOURCES = [
   "../../.tmp-grype.json",
   "./demo-data/security-gate-findings.sample.json",
 ];
+
+const ACTIONS_SNAPSHOT_PATH = "./data/actions-runs.snapshot.json";
 
 const EVIDENCE_BASE_PATHS = [
   "../../demo/evidence/",
@@ -296,17 +171,23 @@ const dom = {
 
 const state = {
   comboOpen: false,
+  dataMode: "legacy",
   activeEvidenceBasePath: "",
   availableRunIds: [],
   filteredRunIds: [],
+  runMetaById: {},
+  snapshotRunById: {},
+  snapshotData: null,
   selectedRunId: "",
   selectedCaseName: "",
   language: "en",
   lastLoadStatus: "",
   lastRegressionVerdict: "",
   latestRunData: {
+    mode: "legacy",
     runId: "",
     basePath: "",
+    runHtmlUrl: "",
     casesByName: {},
     summaryText: "",
   },
@@ -331,8 +212,8 @@ function getCaseHint(caseName) {
 function normalizeAdmissionDecision(value) {
   const raw = String(value || "").trim().toLowerCase();
   if (!raw) return "unknown";
-  if (raw.includes("allow") || raw.includes("cho phép")) return "allow";
-  if (raw.includes("deny") || raw.includes("denied") || raw.includes("từ chối") || raw.includes("tu choi")) return "deny";
+  if (raw.includes("allow")) return "allow";
+  if (raw.includes("deny") || raw.includes("denied")) return "deny";
   return "unknown";
 }
 
@@ -341,8 +222,8 @@ function localizeAdmissionValue(value) {
   if (state.language !== "vi") {
     return value;
   }
-  if (normalized === "allow") return "Cho phép";
-  if (normalized === "deny") return "Từ chối";
+  if (normalized === "allow") return "Cho phep";
+  if (normalized === "deny") return "Tu choi";
   return value;
 }
 
@@ -353,13 +234,13 @@ function localizeReason(reason) {
   }
 
   if (text === "Deployment became Available.") {
-    return "Deployment đã đạt trạng thái Available.";
+    return "Deployment da dat trang thai Available.";
   }
   if (text === "Admission deny evidence detected at apply phase.") {
-    return "Phát hiện bằng chứng bị từ chối ở bước apply.";
+    return "Phat hien bang chung bi tu choi o buoc apply.";
   }
   if (text === "Admission deny evidence detected in events/ReplicaSet describe.") {
-    return "Phát hiện bằng chứng bị từ chối trong events/describe ReplicaSet.";
+    return "Phat hien bang chung bi tu choi trong events/describe ReplicaSet.";
   }
 
   return text;
@@ -370,12 +251,32 @@ function setStatus(message, type) {
   dom.statusBanner.dataset.type = type || "info";
 }
 
-function isValidRunId(value) {
+function isLegacyRunId(value) {
   return /^[0-9]{8}-[0-9]{6}$/.test(value);
+}
+
+function isSnapshotRunId(value) {
+  return /^gha:[A-Za-z0-9._-]+#\d+$/.test(String(value || ""));
+}
+
+function isValidRunId(value) {
+  return isLegacyRunId(value) || isSnapshotRunId(value);
 }
 
 function sortRunsDesc(runIds) {
   return [...runIds].sort((a, b) => b.localeCompare(a));
+}
+
+function formatRunTimestamp(value) {
+  const raw = String(value || "").trim();
+  if (!raw) {
+    return "-";
+  }
+  const parsed = new Date(raw);
+  if (Number.isNaN(parsed.getTime())) {
+    return raw;
+  }
+  return parsed.toISOString().replace("T", " ").replace(".000Z", "Z");
 }
 
 function setComboDisplayValue(value) {
@@ -447,7 +348,18 @@ function renderRunOptionList() {
     return;
   }
 
+  let currentGroup = "";
   for (const runId of state.filteredRunIds) {
+    const meta = state.runMetaById[runId] || {};
+    const workflowLabel = String(meta.workflowLabel || "");
+    if (workflowLabel && workflowLabel !== currentGroup) {
+      const groupLi = document.createElement("li");
+      groupLi.className = "combo-group";
+      groupLi.textContent = workflowLabel;
+      dom.runOptions.appendChild(groupLi);
+      currentGroup = workflowLabel;
+    }
+
     const li = document.createElement("li");
     const button = document.createElement("button");
     button.type = "button";
@@ -455,7 +367,10 @@ function renderRunOptionList() {
     button.setAttribute("role", "option");
     button.setAttribute("aria-selected", String(runId === state.selectedRunId));
     button.dataset.runId = runId;
-    button.textContent = runId;
+    button.textContent = String(meta.label || runId);
+    if (meta.hint) {
+      button.title = String(meta.hint);
+    }
     li.appendChild(button);
     dom.runOptions.appendChild(li);
   }
@@ -466,18 +381,28 @@ function filterRunOptions(keyword) {
   if (!term) {
     state.filteredRunIds = [...state.availableRunIds];
   } else {
-    state.filteredRunIds = state.availableRunIds.filter((runId) => runId.toLowerCase().includes(term));
+    state.filteredRunIds = state.availableRunIds.filter((runId) => {
+      const meta = state.runMetaById[runId] || {};
+      const haystack = `${runId} ${meta.label || ""} ${meta.search || ""}`.toLowerCase();
+      return haystack.includes(term);
+    });
   }
   renderRunOptionList();
 }
 
-function renderRunOptions(runIds) {
+function renderRunOptions(runIds, runMetaById) {
   state.availableRunIds = [...runIds];
   state.filteredRunIds = [...runIds];
+  state.runMetaById = runMetaById || {};
   dom.runSearch.value = "";
   dom.overviewRunCount.textContent = String(runIds.length);
   dom.overviewRunList.textContent = runIds.length > 0
-    ? t("latestRuns", { runs: runIds.slice(0, 4).join(", ") })
+    ? t("latestRuns", {
+      runs: runIds
+        .slice(0, 4)
+        .map((runId) => String((state.runMetaById[runId] || {}).label || runId))
+        .join(", "),
+    })
     : t("noRunsDetected");
 
   if (runIds.length === 0) {
@@ -492,7 +417,7 @@ function renderRunOptions(runIds) {
     state.selectedRunId = "";
     setComboDisplayValue(t("selectRun"));
   } else {
-    setComboDisplayValue(state.selectedRunId);
+    setComboDisplayValue(String((state.runMetaById[state.selectedRunId] || {}).label || state.selectedRunId));
   }
   renderRunOptionList();
 }
@@ -715,7 +640,11 @@ function renderMatrix(basePath, casesByName) {
   for (const button of dom.matrixGrid.querySelectorAll("button[data-action='show-artifacts']")) {
     button.addEventListener("click", () => {
       const caseName = button.getAttribute("data-case") || "";
-      renderArtifacts(basePath, caseName);
+      if (state.latestRunData.mode === "snapshot") {
+        renderSnapshotArtifacts(caseName);
+      } else {
+        renderArtifacts(basePath, caseName);
+      }
     });
   }
 }
@@ -917,7 +846,211 @@ async function loadGateFindings() {
   dom.cveTableBody.innerHTML = "<tr><td colspan=\"5\">-</td></tr>";
 }
 
+function toSnapshotRunKey(run) {
+  return `gha:${String(run.workflow_key || "").trim()}#${String(run.run_number || "").trim()}`;
+}
+
+function toSnapshotRunMeta(run) {
+  const workflowName = String(run.workflow_name || run.workflow_key || "workflow");
+  const workflowKey = String(run.workflow_key || "workflow");
+  const runNumber = String(run.run_number || "-");
+  const conclusion = String(run.conclusion || run.status || "unknown");
+  const createdAt = formatRunTimestamp(run.created_at);
+  return {
+    workflowLabel: workflowName,
+    label: `${workflowName} #${runNumber} | ${conclusion} | ${createdAt}`,
+    hint: `${workflowKey} #${runNumber} | ${conclusion} | run_id=${String(run.run_id || "-")}`,
+    search: `${workflowName} ${workflowKey} #${runNumber} ${conclusion} ${createdAt} ${String(run.run_id || "")}`,
+  };
+}
+
+function parseRunMetaFromSnapshot(run) {
+  const matrixMeta = (run.matrix && run.matrix.metadata) || {};
+  return {
+    runId: `${String(run.workflow_name || run.workflow_key || "-")} #${String(run.run_number || "-")} (run_id: ${String(run.run_id || "-")})`,
+    context: String(matrixMeta.context || run.workflow_key || "-"),
+    namespace: String(matrixMeta.namespace || "-"),
+    signedDigest: String(matrixMeta.signed_image_digest || "-"),
+    unsignedDigest: String(matrixMeta.unsigned_image_digest || "-"),
+    sbomDigest: String(matrixMeta.sbom_digest || "-"),
+  };
+}
+
+function normalizeCasesFromSnapshot(run) {
+  const matrix = run.matrix || {};
+  const cases = Array.isArray(matrix.cases) ? matrix.cases : [];
+  return byCaseName(cases);
+}
+
+function renderSnapshotArtifacts(caseName) {
+  state.selectedCaseName = caseName;
+  const item = state.latestRunData.casesByName[caseName];
+  dom.artifactList.innerHTML = "";
+
+  if (!item || !item.artifacts || typeof item.artifacts !== "object") {
+    dom.artifactContext.textContent = t("noArtifactMap", { caseName });
+    return;
+  }
+
+  dom.artifactContext.textContent = t("showingArtifacts", { caseName });
+  const keys = Object.keys(item.artifacts);
+  if (keys.length === 0) {
+    const li = document.createElement("li");
+    li.textContent = t("noArtifactFiles");
+    dom.artifactList.appendChild(li);
+    return;
+  }
+
+  const runHtmlUrl = state.latestRunData.runHtmlUrl || "#";
+  for (const key of keys) {
+    const relativePath = String(item.artifacts[key]);
+    const li = document.createElement("li");
+    const link = document.createElement("a");
+    link.href = runHtmlUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = `${key}: ${relativePath}`;
+    li.appendChild(link);
+    dom.artifactList.appendChild(li);
+  }
+}
+
+function renderCveFromSnapshotRun(run) {
+  const securityGate = run.security_gate || {};
+  const findings = Array.isArray(securityGate.findings) ? securityGate.findings : [];
+  const source = `snapshot/${String(run.workflow_key || "workflow")}#${String(run.run_number || "-")}`;
+  renderGateFindings(findings, source);
+}
+
+async function loadSnapshotRun(runId) {
+  const run = state.snapshotRunById[runId];
+  if (!run) {
+    setStatus(t("statusSnapshotRunMissing", { runId }), "error");
+    return;
+  }
+
+  const displayRunId = String(run.run_key || runId);
+  setStatus(t("statusSnapshotLoading", { runId: displayRunId }), "info");
+
+  const casesByName = normalizeCasesFromSnapshot(run);
+  const summaryText = String((run.matrix && run.matrix.summary_text) || "");
+  const regression = run.matrix ? run.matrix.regression : null;
+
+  state.latestRunData = {
+    mode: "snapshot",
+    runId,
+    basePath: "",
+    runHtmlUrl: String(run.html_url || ""),
+    casesByName,
+    summaryText,
+  };
+
+  renderOverview(casesByName);
+  renderRunMeta(parseRunMetaFromSnapshot(run));
+  renderMatrix("", casesByName);
+  dom.summaryPreview.textContent = summaryText.trim() || t("summaryEmpty");
+
+  const firstSelectable = state.selectedCaseName && casesByName[state.selectedCaseName]
+    ? state.selectedCaseName
+    : CASE_ORDER.find((caseName) => Boolean(casesByName[caseName]));
+
+  if (firstSelectable) {
+    renderSnapshotArtifacts(firstSelectable);
+  } else {
+    state.selectedCaseName = "";
+    dom.artifactContext.textContent = t("noKnownCases");
+    dom.artifactList.innerHTML = `<li>${t("noArtifactsAvailable")}</li>`;
+  }
+
+  renderCveFromSnapshotRun(run);
+
+  if (regression && regression.verdict) {
+    state.lastLoadStatus = "loaded";
+    state.lastRegressionVerdict = String(regression.verdict);
+    setStatus(t("statusSnapshotLoaded", { runId: displayRunId, result: regression.verdict }), "success");
+  } else {
+    state.lastLoadStatus = "regressionMissing";
+    state.lastRegressionVerdict = "";
+    if (run.evidence_unavailable) {
+      setStatus(t("statusSnapshotPartial", { runId: displayRunId }), "warning");
+    } else {
+      setStatus(t("statusSnapshotRegressionMissing", { runId: displayRunId }), "warning");
+    }
+  }
+}
+
+async function tryLoadActionsSnapshot() {
+  const snapshot = await fetchJson(ACTIONS_SNAPSHOT_PATH);
+  const runs = Array.isArray(snapshot.runs) ? snapshot.runs : [];
+  const workflows = Array.isArray(snapshot.workflows) ? snapshot.workflows : [];
+  if (!runs.length && !workflows.length) {
+    throw new Error("Snapshot has no runs");
+  }
+
+  const runIds = [];
+  const runMetaById = {};
+  const runById = {};
+  const seenRunIds = new Set();
+
+  const pushRun = (rawRun, workflowFallback) => {
+    if (!rawRun || typeof rawRun !== "object") {
+      return;
+    }
+    const run = {
+      ...rawRun,
+      workflow_key: rawRun.workflow_key || workflowFallback.workflow_key || "workflow",
+      workflow_name: rawRun.workflow_name || workflowFallback.workflow_name || workflowFallback.workflow_key || "workflow",
+    };
+    const runId = toSnapshotRunKey(run);
+    if (!isSnapshotRunId(runId) || seenRunIds.has(runId)) {
+      return;
+    }
+    seenRunIds.add(runId);
+    runIds.push(runId);
+    runMetaById[runId] = toSnapshotRunMeta(run);
+    runById[runId] = run;
+  };
+
+  for (const workflow of workflows) {
+    const workflowRuns = Array.isArray(workflow.runs) ? [...workflow.runs] : [];
+    workflowRuns.sort((a, b) => Number(b.run_number || 0) - Number(a.run_number || 0));
+    for (const run of workflowRuns) {
+      pushRun(run, workflow);
+    }
+  }
+
+  if (!runIds.length) {
+    const orderedRuns = [...runs].sort((a, b) => {
+      const ta = Date.parse(String(a.created_at || "")) || 0;
+      const tb = Date.parse(String(b.created_at || "")) || 0;
+      if (tb !== ta) {
+        return tb - ta;
+      }
+      return Number(b.run_number || 0) - Number(a.run_number || 0);
+    });
+    for (const run of orderedRuns) {
+      pushRun(run, {});
+    }
+  }
+
+  if (!runIds.length) {
+    throw new Error("Snapshot has no valid run identifiers");
+  }
+
+  return {
+    snapshot,
+    runIds,
+    runMetaById,
+    runById,
+  };
+}
+
 async function loadRun(runId) {
+  if (state.dataMode === "snapshot" && isSnapshotRunId(runId)) {
+    await loadSnapshotRun(runId);
+    return;
+  }
+
   if (!isValidRunId(runId)) {
     setStatus(t("statusInvalidRun"), "error");
     return;
@@ -945,7 +1078,14 @@ async function loadRun(runId) {
     }
 
     const casesByName = byCaseName(matrixIndex);
-    state.latestRunData = { runId, basePath, casesByName, summaryText };
+    state.latestRunData = {
+      mode: "legacy",
+      runId,
+      basePath,
+      runHtmlUrl: "",
+      casesByName,
+      summaryText,
+    };
 
     renderOverview(casesByName);
     renderRunMeta(parseRunMetadata(summaryText));
@@ -995,7 +1135,7 @@ async function chooseRun(runId, options) {
   }
 
   state.selectedRunId = runId;
-  setComboDisplayValue(runId);
+  setComboDisplayValue(String((state.runMetaById[runId] || {}).label || runId));
   renderRunOptionList();
 
   if (opts.updateQuery) {
@@ -1014,6 +1154,31 @@ async function chooseRun(runId, options) {
 async function discoverAndLoadRuns(preferredRunId) {
   setStatus(t("statusScanningRuns"), "info");
 
+  try {
+    const snapshotBundle = await tryLoadActionsSnapshot();
+    state.dataMode = "snapshot";
+    state.activeEvidenceBasePath = "";
+    state.snapshotData = snapshotBundle.snapshot;
+    state.snapshotRunById = snapshotBundle.runById;
+    renderRunOptions(snapshotBundle.runIds, snapshotBundle.runMetaById);
+
+    let selectedRun = snapshotBundle.runIds[0];
+    if (preferredRunId && snapshotBundle.runIds.includes(preferredRunId)) {
+      selectedRun = preferredRunId;
+    } else if (preferredRunId && !snapshotBundle.runIds.includes(preferredRunId)) {
+      setStatus(t("statusSnapshotFallback", { preferredRunId, selectedRun }), "warning");
+    }
+
+    await chooseRun(selectedRun, { load: true, close: true, updateQuery: true });
+    return;
+  } catch (error) {
+    // Snapshot unavailable; continue with legacy evidence directories.
+  }
+
+  state.dataMode = "legacy";
+  state.snapshotData = null;
+  state.snapshotRunById = {};
+
   for (const evidenceBasePath of EVIDENCE_BASE_PATHS) {
     try {
       const html = await fetchText(evidenceBasePath);
@@ -1026,9 +1191,9 @@ async function discoverAndLoadRuns(preferredRunId) {
       renderRunOptions(runIds);
 
       let selectedRun = runIds[0];
-      if (preferredRunId && isValidRunId(preferredRunId) && runIds.includes(preferredRunId)) {
+      if (preferredRunId && isLegacyRunId(preferredRunId) && runIds.includes(preferredRunId)) {
         selectedRun = preferredRunId;
-      } else if (preferredRunId && isValidRunId(preferredRunId) && !runIds.includes(preferredRunId)) {
+      } else if (preferredRunId && isLegacyRunId(preferredRunId) && !runIds.includes(preferredRunId)) {
         setStatus(t("statusRunFallback", { preferredRunId, selectedRun }), "warning");
       }
 
@@ -1047,19 +1212,32 @@ async function discoverAndLoadRuns(preferredRunId) {
 
 function rerenderUiForLanguage() {
   applyStaticTranslations();
-  renderRunOptions(state.availableRunIds);
+  renderRunOptions(state.availableRunIds, state.runMetaById);
   renderOverview(state.latestRunData.casesByName || {});
 
-  if (state.latestRunData.summaryText) {
+  if (state.dataMode === "snapshot" && isSnapshotRunId(state.selectedRunId) && state.snapshotRunById[state.selectedRunId]) {
+    const run = state.snapshotRunById[state.selectedRunId];
+    renderRunMeta(parseRunMetaFromSnapshot(run));
+    renderMatrix("", state.latestRunData.casesByName || {});
+    if (state.selectedCaseName) {
+      renderSnapshotArtifacts(state.selectedCaseName);
+    }
+    dom.summaryPreview.textContent = state.latestRunData.summaryText.trim() || t("summaryEmpty");
+    renderCveFromSnapshotRun(run);
+  } else if (state.latestRunData.summaryText) {
     renderRunMeta(parseRunMetadata(state.latestRunData.summaryText));
     renderMatrix(state.latestRunData.basePath, state.latestRunData.casesByName || {});
     if (state.selectedCaseName) {
       renderArtifacts(state.latestRunData.basePath, state.selectedCaseName);
     }
     dom.summaryPreview.textContent = state.latestRunData.summaryText.trim() || t("summaryEmpty");
+    void loadGateFindings();
   } else {
     dom.artifactContext.textContent = t("chooseCase");
     dom.summaryPreview.textContent = t("summaryNotLoaded");
+    if (state.dataMode !== "snapshot") {
+      void loadGateFindings();
+    }
   }
 
   if (state.latestRunData.runId && state.lastLoadStatus === "loaded") {
@@ -1074,7 +1252,6 @@ function rerenderUiForLanguage() {
   }
 
   void loadSbom();
-  void loadGateFindings();
   updateUrlParams();
 }
 
@@ -1169,3 +1346,5 @@ function init() {
 }
 
 init();
+
+

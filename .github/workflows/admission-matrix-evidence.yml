@@ -1,0 +1,90 @@
+name: admission-matrix-evidence
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  matrix-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25.9"
+
+      - name: Set up kind
+        uses: helm/kind-action@v1.12.0
+        with:
+          cluster_name: thesis-evidence
+          wait: 180s
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.7.0
+
+      - name: Install Syft
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Run admission matrix demo script
+        shell: pwsh
+        run: |
+          ./scripts/admission_matrix_demo.ps1 `
+            -Context "kind-thesis-evidence" `
+            -Namespace "stock-trading" `
+            -ExportDir "demo/evidence" `
+            -ResetNamespace
+
+      - name: Resolve latest matrix run path
+        id: run_dir
+        shell: pwsh
+        run: |
+          $runDir = Get-ChildItem demo/evidence -Directory `
+            | Where-Object { $_.Name -match '^[0-9]{8}-[0-9]{6}$' } `
+            | Sort-Object Name -Descending `
+            | Select-Object -First 1
+          if (-not $runDir) {
+            throw "No matrix run directory found under demo/evidence/"
+          }
+          "path=$($runDir.FullName)" >> $env:GITHUB_OUTPUT
+          "id=$($runDir.Name)" >> $env:GITHUB_OUTPUT
+
+      - name: Write matrix run metadata
+        shell: pwsh
+        run: |
+          $createdAt = (Get-Date).ToUniversalTime().ToString("o")
+          $meta = [ordered]@{
+            workflow_key = "admission-matrix-evidence"
+            workflow_name = "admission-matrix-evidence"
+            run_number = "${{ github.run_number }}"
+            run_id = "${{ github.run_id }}"
+            head_sha = "${{ github.sha }}"
+            created_at = $createdAt
+            html_url = "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            matrix_run_id = "${{ steps.run_dir.outputs.id }}"
+          }
+          $meta | ConvertTo-Json -Depth 8 | Set-Content -Path "${{ steps.run_dir.outputs.path }}/matrix-run-metadata.json" -Encoding UTF8
+
+      - name: Upload admission matrix evidence artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: admission-matrix-evidence
+          path: |
+            ${{ steps.run_dir.outputs.path }}/matrix-index.json
+            ${{ steps.run_dir.outputs.path }}/matrix-summary.md
+            ${{ steps.run_dir.outputs.path }}/regression-valid-allow.json
+            ${{ steps.run_dir.outputs.path }}/matrix-run-metadata.json
+            ${{ steps.run_dir.outputs.path }}/VALID_ALLOW
+            ${{ steps.run_dir.outputs.path }}/NEG_UNSIGNED_DENY
+            ${{ steps.run_dir.outputs.path }}/NEG_MISSING_SBOM_DENY
+            ${{ steps.run_dir.outputs.path }}/NEG_CVE_THRESHOLD_DENY
+            ${{ steps.run_dir.outputs.path }}/VALID_ALLOW_RECHECK
+          if-no-files-found: error

@@ -1,0 +1,58 @@
+name: dashboard-data-sync
+
+on:
+  workflow_run:
+    workflows:
+      - secure-supply-chain
+      - admission-matrix-evidence
+    types:
+      - completed
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      top_n:
+        description: "Top N runs per workflow to keep in snapshot"
+        required: false
+        default: "100"
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  sync-dashboard-snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Build actions snapshot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOP_N: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.top_n || '100' }}
+        run: |
+          python scripts/sync_actions_snapshot.py \
+            --repo "${{ github.repository }}" \
+            --top-n "${TOP_N}" \
+            --output "docs/security-admission-dashboard/data/actions-runs.snapshot.json"
+
+      - name: Commit snapshot update
+        run: |
+          if git diff --quiet -- docs/security-admission-dashboard/data/actions-runs.snapshot.json; then
+            echo "No snapshot changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/security-admission-dashboard/data/actions-runs.snapshot.json
+          git commit -m "chore(dashboard): sync GitHub Actions snapshot [skip ci]"
+          git push origin HEAD:main

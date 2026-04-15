@@ -245,7 +245,7 @@ Current state:
 - Matrix script and multiple evidence runs exist.
 - Canonical evidence root is `demo/evidence` (real cluster-backed runs).
 - Fresh canonical matrix run captured: `demo/evidence/20260414-210227` with all cases `PASS`.
-- Dashboard supports canonical-first load from `../../demo/evidence/` and fallback bundled datasets under `docs/security-admission-dashboard/demo-data/evidence/`.
+- Dashboard supports Actions snapshot as primary source (`docs/security-admission-dashboard/data/actions-runs.snapshot.json`), with fallback bundled datasets under `docs/security-admission-dashboard/demo-data/evidence/`.
 
 Gap to close:
 - Need GitHub issue closure trail and final cross-doc linkage after appendix pack completion.
