@@ -1,0 +1,111 @@
+name: portfolio-onboarding-evidence
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 2 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  portfolio-onboarding:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up kind
+        uses: helm/kind-action@v1.12.0
+        with:
+          cluster_name: portfolio-evidence
+          wait: 180s
+
+      - name: Bootstrap Kyverno and policies
+        run: |
+          KIND_CLUSTER_NAME=portfolio-evidence RESET_CLUSTER=false ./scripts/devsecops_kind_bootstrap.sh
+
+      - name: Run portfolio onboarding experiment
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          RUN_ID="gha-portfolio-onboarding-${{ github.run_number }}"
+          EXPORT_DIR="demo/evidence/${RUN_ID}"
+          NAMESPACE="portfolio-trading"
+          mkdir -p "${EXPORT_DIR}"
+
+          kubectl create namespace "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f - \
+            > "${EXPORT_DIR}/00_namespace_apply.txt"
+
+          kubectl apply --dry-run=server -f demo/evidence/20260414-213541-onboarding-second-service/case_portfolio_label.yaml \
+            > "${EXPORT_DIR}/01_case_a_dry_run.txt" 2>&1 || true
+          kubectl apply --dry-run=server -f demo/evidence/20260414-213541-onboarding-second-service/case_user_service_label.yaml \
+            > "${EXPORT_DIR}/02_case_b_dry_run.txt" 2>&1 || true
+
+          kubectl delete deployment portfolio-service -n "${NAMESPACE}" --ignore-not-found=true \
+            > "${EXPORT_DIR}/03_case_a_delete_before.txt" 2>&1 || true
+          kubectl apply -f demo/evidence/20260414-213541-onboarding-second-service/case_portfolio_label_deploy_only.yaml \
+            > "${EXPORT_DIR}/04_case_a_apply.txt" 2>&1
+          sleep 15
+          kubectl get deploy,rs,pods -n "${NAMESPACE}" -o wide \
+            > "${EXPORT_DIR}/05_case_a_workloads.txt" 2>&1 || true
+          kubectl get events -n "${NAMESPACE}" --sort-by=.lastTimestamp \
+            > "${EXPORT_DIR}/06_case_a_events.txt" 2>&1 || true
+
+          kubectl delete deployment portfolio-service -n "${NAMESPACE}" --ignore-not-found=true \
+            > "${EXPORT_DIR}/07_case_b_delete_before.txt" 2>&1 || true
+          kubectl apply -f demo/evidence/20260414-213541-onboarding-second-service/case_user_service_label_deploy_only.yaml \
+            > "${EXPORT_DIR}/08_case_b_apply.txt" 2>&1
+          sleep 15
+          kubectl get deploy,rs,pods -n "${NAMESPACE}" -o wide \
+            > "${EXPORT_DIR}/09_case_b_workloads.txt" 2>&1 || true
+          kubectl describe rs -n "${NAMESPACE}" \
+            > "${EXPORT_DIR}/10_case_b_describe_rs.txt" 2>&1 || true
+          kubectl get events -n "${NAMESPACE}" --sort-by=.lastTimestamp \
+            > "${EXPORT_DIR}/11_case_b_events.txt" 2>&1 || true
+
+          kubectl delete namespace "${NAMESPACE}" --ignore-not-found=true \
+            > "${EXPORT_DIR}/12_cleanup_namespace_delete.txt" 2>&1 || true
+
+          CASE_A_ACTUAL="Unknown"
+          CASE_A_VERDICT="CHECK"
+          if grep -qiE "ErrImagePull|ImagePullBackOff|SuccessfulCreate|Scaled up replica set" "${EXPORT_DIR}/06_case_a_events.txt"; then
+            CASE_A_ACTUAL="Admission allowed; workload reached ReplicaSet/Pod creation"
+            CASE_A_VERDICT="PASS"
+          fi
+
+          CASE_B_ACTUAL="Unknown"
+          CASE_B_VERDICT="CHECK"
+          if grep -qiE "FailedCreate|denied the request|require-sbom-digest|require-high-critical-zero" "${EXPORT_DIR}/10_case_b_describe_rs.txt" "${EXPORT_DIR}/11_case_b_events.txt"; then
+            CASE_B_ACTUAL="ReplicaSet create denied by Kyverno due to missing annotations"
+            CASE_B_VERDICT="PASS"
+          fi
+
+          {
+            echo "# Portfolio Onboarding Cloud Summary"
+            echo
+            echo "- Run ID: ${RUN_ID}"
+            echo "- Workflow run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "- Namespace under test: ${NAMESPACE}"
+            echo
+            echo "| Case | Manifest | Expected | Actual | Verdict |"
+            echo "|---|---|---|---|---|"
+            echo "| Case A - portfolio label | \`case_portfolio_label_deploy_only.yaml\` | Admission should currently pass because policy scope is still service-specific | ${CASE_A_ACTUAL} | ${CASE_A_VERDICT} |"
+            echo "| Case B - user-service label control | \`case_user_service_label_deploy_only.yaml\` | Admission should deny because required security annotations are missing | ${CASE_B_ACTUAL} | ${CASE_B_VERDICT} |"
+            echo
+            echo "## Evidence Files"
+            echo "- 05_case_a_workloads.txt"
+            echo "- 06_case_a_events.txt"
+            echo "- 09_case_b_workloads.txt"
+            echo "- 10_case_b_describe_rs.txt"
+            echo "- 11_case_b_events.txt"
+          } > "${EXPORT_DIR}/portfolio-onboarding-summary.md"
+
+      - name: Upload portfolio onboarding evidence
+        uses: actions/upload-artifact@v6
+        with:
+          name: portfolio-onboarding-evidence
+          path: demo/evidence/gha-portfolio-onboarding-${{ github.run_number }}
+          if-no-files-found: error
