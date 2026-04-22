@@ -1,4 +1,4 @@
-name: portfolio-onboarding-evidence
+name: service-scs-matrix-evidence
 
 on:
   push:
@@ -14,31 +14,107 @@ permissions:
   contents: read
 
 jobs:
-  portfolio-onboarding:
+  service-evidence:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service_name: user-service
+            namespace: stock-trading
+            evidence_profile: canonical-matrix
+            cluster_name: thesis-evidence
+          - service_name: portfolio-service
+            namespace: portfolio-trading
+            evidence_profile: onboarding-probe
+            cluster_name: portfolio-evidence
+
+    name: ${{ matrix.service_name }} | ${{ matrix.evidence_profile }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25.9"
+
       - name: Set up kind
         uses: helm/kind-action@v1.12.0
         with:
-          cluster_name: portfolio-evidence
+          cluster_name: ${{ matrix.cluster_name }}
           wait: 180s
 
-      - name: Bootstrap Kyverno and policies
-        run: |
-          KIND_CLUSTER_NAME=portfolio-evidence RESET_CLUSTER=false ./scripts/devsecops_kind_bootstrap.sh
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.7.0
 
-      - name: Run portfolio onboarding experiment
+      - name: Install Syft
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Run canonical admission matrix for user-service
+        if: ${{ matrix.evidence_profile == 'canonical-matrix' }}
+        shell: pwsh
+        run: |
+          ./scripts/admission_matrix_demo.ps1 `
+            -Context "kind-${{ matrix.cluster_name }}" `
+            -Namespace "${{ matrix.namespace }}" `
+            -ExportDir "demo/evidence" `
+            -ResetNamespace
+
+      - name: Resolve latest canonical run path
+        if: ${{ matrix.evidence_profile == 'canonical-matrix' }}
+        id: canonical_run_dir
+        shell: pwsh
+        run: |
+          $runDir = Get-ChildItem demo/evidence -Directory `
+            | Where-Object { $_.Name -match '^[0-9]{8}-[0-9]{6}$' } `
+            | Sort-Object Name -Descending `
+            | Select-Object -First 1
+          if (-not $runDir) {
+            throw "No matrix run directory found under demo/evidence/"
+          }
+          "path=$($runDir.FullName)" >> $env:GITHUB_OUTPUT
+          "id=$($runDir.Name)" >> $env:GITHUB_OUTPUT
+
+      - name: Write canonical run metadata
+        if: ${{ matrix.evidence_profile == 'canonical-matrix' }}
+        shell: pwsh
+        run: |
+          $createdAt = (Get-Date).ToUniversalTime().ToString("o")
+          $meta = [ordered]@{
+            workflow_key = "service-scs-matrix-evidence"
+            workflow_name = "service-scs-matrix-evidence"
+            evidence_profile = "${{ matrix.evidence_profile }}"
+            service_name = "${{ matrix.service_name }}"
+            namespace = "${{ matrix.namespace }}"
+            run_number = "${{ github.run_number }}"
+            run_id = "${{ github.run_id }}"
+            head_sha = "${{ github.sha }}"
+            created_at = $createdAt
+            html_url = "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            matrix_run_id = "${{ steps.canonical_run_dir.outputs.id }}"
+          }
+          $meta | ConvertTo-Json -Depth 8 | Set-Content -Path "${{ steps.canonical_run_dir.outputs.path }}/matrix-run-metadata.json" -Encoding UTF8
+
+      - name: Bootstrap Kyverno and policies for onboarding probe
+        if: ${{ matrix.evidence_profile == 'onboarding-probe' }}
+        run: |
+          chmod +x ./scripts/devsecops_kind_bootstrap.sh
+          KIND_CLUSTER_NAME=${{ matrix.cluster_name }} RESET_CLUSTER=false ./scripts/devsecops_kind_bootstrap.sh
+
+      - name: Run onboarding probe for portfolio-service
+        if: ${{ matrix.evidence_profile == 'onboarding-probe' }}
+        id: onboarding_probe
         shell: bash
         run: |
           set -euo pipefail
 
-          RUN_ID="gha-portfolio-onboarding-${{ github.run_number }}"
+          RUN_ID="gha-${{ matrix.service_name }}-${{ github.run_number }}"
           EXPORT_DIR="demo/evidence/${RUN_ID}"
-          NAMESPACE="portfolio-trading"
+          NAMESPACE="${{ matrix.namespace }}"
           mkdir -p "${EXPORT_DIR}"
 
           kubectl create namespace "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f - \
@@ -89,28 +165,59 @@ jobs:
           fi
 
           {
-            echo "# Portfolio Onboarding Cloud Summary"
+            echo "# Service Onboarding Probe Summary"
             echo
+            echo "- Service: ${{ matrix.service_name }}"
+            echo "- Evidence profile: ${{ matrix.evidence_profile }}"
             echo "- Run ID: ${RUN_ID}"
             echo "- Workflow run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             echo "- Namespace under test: ${NAMESPACE}"
             echo
             echo "| Case | Manifest | Expected | Actual | Verdict |"
             echo "|---|---|---|---|---|"
-            echo "| Case A - portfolio label | \`case_portfolio_label_deploy_only.yaml\` | Admission should currently pass because policy scope is still service-specific | ${CASE_A_ACTUAL} | ${CASE_A_VERDICT} |"
+            echo "| Case A - service label | \`case_portfolio_label_deploy_only.yaml\` | Admission should currently pass because policy scope is still service-specific | ${CASE_A_ACTUAL} | ${CASE_A_VERDICT} |"
             echo "| Case B - user-service label control | \`case_user_service_label_deploy_only.yaml\` | Admission should deny because required security annotations are missing | ${CASE_B_ACTUAL} | ${CASE_B_VERDICT} |"
-            echo
-            echo "## Evidence Files"
-            echo "- 05_case_a_workloads.txt"
-            echo "- 06_case_a_events.txt"
-            echo "- 09_case_b_workloads.txt"
-            echo "- 10_case_b_describe_rs.txt"
-            echo "- 11_case_b_events.txt"
-          } > "${EXPORT_DIR}/portfolio-onboarding-summary.md"
+          } > "${EXPORT_DIR}/service-onboarding-summary.md"
 
-      - name: Upload portfolio onboarding evidence
+          cat > "${EXPORT_DIR}/matrix-run-metadata.json" <<EOF
+          {
+            "workflow_key": "service-scs-matrix-evidence",
+            "workflow_name": "service-scs-matrix-evidence",
+            "evidence_profile": "${{ matrix.evidence_profile }}",
+            "service_name": "${{ matrix.service_name }}",
+            "namespace": "${NAMESPACE}",
+            "run_number": "${{ github.run_number }}",
+            "run_id": "${{ github.run_id }}",
+            "head_sha": "${{ github.sha }}",
+            "html_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "matrix_run_id": "${RUN_ID}"
+          }
+          EOF
+
+          echo "path=${EXPORT_DIR}" >> "$GITHUB_OUTPUT"
+          echo "id=${RUN_ID}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload canonical evidence artifact
+        if: ${{ matrix.evidence_profile == 'canonical-matrix' }}
         uses: actions/upload-artifact@v6
         with:
-          name: portfolio-onboarding-evidence
-          path: demo/evidence/gha-portfolio-onboarding-${{ github.run_number }}
+          name: service-scs-matrix-evidence-${{ matrix.service_name }}
+          path: |
+            ${{ steps.canonical_run_dir.outputs.path }}/matrix-index.json
+            ${{ steps.canonical_run_dir.outputs.path }}/matrix-summary.md
+            ${{ steps.canonical_run_dir.outputs.path }}/regression-valid-allow.json
+            ${{ steps.canonical_run_dir.outputs.path }}/matrix-run-metadata.json
+            ${{ steps.canonical_run_dir.outputs.path }}/VALID_ALLOW
+            ${{ steps.canonical_run_dir.outputs.path }}/NEG_UNSIGNED_DENY
+            ${{ steps.canonical_run_dir.outputs.path }}/NEG_MISSING_SBOM_DENY
+            ${{ steps.canonical_run_dir.outputs.path }}/NEG_CVE_THRESHOLD_DENY
+            ${{ steps.canonical_run_dir.outputs.path }}/VALID_ALLOW_RECHECK
+          if-no-files-found: error
+
+      - name: Upload onboarding probe artifact
+        if: ${{ matrix.evidence_profile == 'onboarding-probe' }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: service-scs-matrix-evidence-${{ matrix.service_name }}
+          path: ${{ steps.onboarding_probe.outputs.path }}
           if-no-files-found: error
