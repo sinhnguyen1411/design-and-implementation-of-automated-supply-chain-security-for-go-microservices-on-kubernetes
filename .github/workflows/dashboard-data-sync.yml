@@ -5,6 +5,7 @@ on:
     workflows:
       - secure-supply-chain
       - admission-matrix-evidence
+      - service-scs-matrix-evidence
     types:
       - completed
     branches:

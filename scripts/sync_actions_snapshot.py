@@ -21,6 +21,7 @@ from typing import Any
 WORKFLOW_PATHS = {
     "secure-supply-chain": ".github/workflows/secure-supply-chain.yml",
     "admission-matrix-evidence": ".github/workflows/admission-matrix-evidence.yml",
+    "service-scs-matrix-evidence": ".github/workflows/service-scs-matrix-evidence.yml",
 }
 
 SECURITY_FINDINGS_ARTIFACT = "security-gate-findings"
@@ -266,7 +267,7 @@ def build_snapshot(repo: str, token: str, top_n: int) -> dict[str, Any]:
     workflows_payload: list[dict[str, Any]] = []
     flat_runs: list[dict[str, Any]] = []
 
-    for workflow_key in ("secure-supply-chain", "admission-matrix-evidence"):
+    for workflow_key in ("secure-supply-chain", "admission-matrix-evidence", "service-scs-matrix-evidence"):
         meta = workflow_meta.get(workflow_key)
         if not meta:
             workflows_payload.append(
@@ -299,7 +300,7 @@ def build_snapshot(repo: str, token: str, top_n: int) -> dict[str, Any]:
             if workflow_key == "secure-supply-chain":
                 security_gate, unavailable = parse_security_gate(gh, artifacts)
                 evidence_unavailable = evidence_unavailable or unavailable
-            elif workflow_key == "admission-matrix-evidence":
+            elif workflow_key in ("admission-matrix-evidence", "service-scs-matrix-evidence"):
                 matrix, unavailable = parse_matrix(gh, artifacts)
                 evidence_unavailable = evidence_unavailable or unavailable
 

@@ -15,6 +15,7 @@ Purpose:
 - Dashboard Actions snapshot (source of truth): `docs/security-admission-dashboard/data/actions-runs.snapshot.json`
 - Snapshot sync workflow: `.github/workflows/dashboard-data-sync.yml`
 - Runtime matrix evidence workflow: `.github/workflows/admission-matrix-evidence.yml`
+- Multi-service matrix evidence workflow: `.github/workflows/service-scs-matrix-evidence.yml`
 - Admission evidence root: `demo/evidence/20260414-210227/`
 - Screenshot appendix pack: `docs/lens_screenshots/`
 - Dashboard fallback-only dataset: `docs/security-admission-dashboard/demo-data/evidence/`

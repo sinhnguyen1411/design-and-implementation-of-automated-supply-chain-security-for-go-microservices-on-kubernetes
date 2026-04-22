@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - .github/workflows/portfolio-onboarding-evidence.yml
+      - .github/workflows/service-scs-matrix-evidence.yml
   workflow_dispatch:
   schedule:
     - cron: "30 2 * * *"
