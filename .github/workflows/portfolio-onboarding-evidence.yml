@@ -1,6 +1,11 @@
 name: portfolio-onboarding-evidence
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/portfolio-onboarding-evidence.yml
   workflow_dispatch:
   schedule:
     - cron: "30 2 * * *"
