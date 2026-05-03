@@ -12,7 +12,7 @@ For a new service, define and version these values first:
 
 | Parameter | Example in current repo | New service value |
 |---|---|---|
-| Go module path | `github.com/sinhnguyen1411/stock-trading-be` | `<your-module-path>` |
+| Go module path | `github.com/sinhnguyen1411/stock-trading-be/services/user-service` | `<your-module-path>` |
 | Image repository | `ghcr.io/sinhnguyen1411/stock-trading/user-service` | `<registry>/<org>/<service>` |
 | Kubernetes app label | `app.kubernetes.io/name=user-service` | `<service-app-label>` |
 | Namespace | `stock-trading` | `<service-namespace>` |
@@ -90,17 +90,17 @@ Primary evidence files:
 - `18_cleanup_namespace_delete.txt`
 
 ## Known Assumptions and Limitations for Reuse
-- Current Kyverno policy scope is still service-specific:
-  - label selector path expects `app.kubernetes.io/name=user-service` for SBOM/CVE checks,
-  - image verification policy targets `ghcr.io/sinhnguyen1411/stock-trading/user-service:*`.
-- `scripts/admission_matrix_demo.ps1` is still hardcoded to `user-service` naming and stock-trading-specific metadata/paths.
+- Kyverno image verification policy (`infra/policies/kyverno/clusterpolicy-verify-images.yaml`) now uses a wildcard pattern `ghcr.io/sinhnguyen1411/stock-trading/*` that covers all services under the registry path — no per-service policy change is needed for image signing verification.
+- SBOM and CVE annotation policies still use label selectors that may need updating for new service names.
+- `infra/scripts/admission_matrix_demo.ps1` is still hardcoded to `user-service` naming and stock-trading-specific metadata/paths.
+- New services are registered in `services.yaml` at the repo root — the CI pipeline (`secure-supply-chain.yml`) automatically discovers and builds registered services via matrix strategy.
 - Server-side `kubectl apply --dry-run=server` for namespaced resources still requires the target namespace to exist.
 
 ## Required Patches When Onboarding a New Service
 1. Update policy match scope for the new service:
-   - `deploy/policies/kyverno/clusterpolicy-require-sbom.yaml`
-   - `deploy/policies/kyverno/clusterpolicy-cve-threshold.yaml`
-   - `deploy/policies/kyverno/clusterpolicy-verify-images.yaml`
+   - `infra/policies/kyverno/clusterpolicy-require-sbom.yaml`
+   - `infra/policies/kyverno/clusterpolicy-cve-threshold.yaml`
+   - `infra/policies/kyverno/clusterpolicy-verify-images.yaml`
 2. Update deployment/manifests labels, namespace, image repo, and annotation flow consistently.
-3. Parameterize or clone `scripts/admission_matrix_demo.ps1` for the new service name/namespace and image path.
+3. Parameterize or clone `infra/scripts/admission_matrix_demo.ps1` for the new service name/namespace and image path.
 4. Re-run deny/allow matrix and append evidence in the same bundle format used by this repository.

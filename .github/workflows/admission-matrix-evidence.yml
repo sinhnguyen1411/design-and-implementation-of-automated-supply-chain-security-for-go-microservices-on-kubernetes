@@ -37,7 +37,7 @@ jobs:
       - name: Run admission matrix demo script
         shell: pwsh
         run: |
-          ./scripts/admission_matrix_demo.ps1 `
+          ./infra/scripts/admission_matrix_demo.ps1 `
             -Context "kind-thesis-evidence" `
             -Namespace "stock-trading" `
             -ExportDir "demo/evidence" `

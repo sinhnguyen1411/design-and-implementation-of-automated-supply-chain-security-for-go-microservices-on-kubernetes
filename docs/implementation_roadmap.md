@@ -67,5 +67,5 @@ This stack is therefore aligned with the thesis requirement to implement a verif
 - New issues are additive and scoped to missing objectives from the thesis (Go vulnerability gate and dependency integrity controls).
 
 ## Current Completion Snapshot
-- Admission negative/positive validation is now automated via `scripts/admission_matrix_demo.ps1` with evidence bundle export (`matrix-summary.md`, `matrix-index.json`, per-case logs).
+- Admission negative/positive validation is now automated via `infra/scripts/admission_matrix_demo.ps1` with evidence bundle export (`matrix-summary.md`, `matrix-index.json`, per-case logs).
 - Reusability packaging is now documented in `docs/go_microservice_onboarding_guide.md`.

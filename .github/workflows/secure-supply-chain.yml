@@ -1,40 +1,136 @@
 name: secure-supply-chain
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'services/**'
+      - 'services.yaml'
+      - '.github/workflows/secure-supply-chain.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'services/**'
+      - 'services.yaml'
+      - '.github/workflows/secure-supply-chain.yml'
   workflow_dispatch:
     inputs:
       security_gate_mode:
         description: "Security gate mode: enforced (hard fail) or advisory (warn only)"
         required: false
         default: "enforced"
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+      service:
+        description: "Service to build (blank = changed only, 'all' = everything)"
+        required: false
+        default: ""
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: sinhnguyen1411/stock-trading/user-service
-  GO_VERSION: "1.25.9"
   GOVULNCHECK_VERSION: "v1.1.4"
-  GOVULNCHECK_REPORT: govulncheck-report.txt
-  DEPENDENCY_INTEGRITY_REPORT: dependency-integrity-report.txt
-  SBOM_PATH: sbom.spdx.json
-  SCAN_REPORT: grype-report.json
-  SECURITY_GATE_FINDINGS_JSON: security-gate-findings.json
-  SECURITY_GATE_FINDINGS_MD: security-gate-findings.md
   SECURITY_GATE: "true"
-  SECURITY_GATE_MODE: "enforced"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
-  build-sign-verify:
+  # ---------------------------------------------------------------------------
+  # 1. Discover which services need building from services.yaml
+  # ---------------------------------------------------------------------------
+  discover:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.result }}
+      has_services: ${{ steps.matrix.outputs.has_services }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Build service matrix from registry
+        id: matrix
+        shell: python
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_SERVICE: ${{ inputs.service }}
+          BEFORE_SHA: ${{ github.event.before }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          import yaml, json, subprocess, os
+
+          with open("services.yaml") as f:
+              config = yaml.safe_load(f)
+
+          services = config["services"]
+          event = os.environ["EVENT_NAME"]
+          input_service = os.environ.get("INPUT_SERVICE", "").strip()
+
+          if event == "workflow_dispatch" and input_service == "all":
+              selected = services
+          elif event == "workflow_dispatch" and input_service:
+              selected = [s for s in services if s["name"] == input_service]
+          else:
+              before = os.environ.get("BEFORE_SHA", "").strip()
+              base = os.environ.get("BASE_SHA", "").strip()
+              compare_ref = base or before or "HEAD~1"
+
+              result = subprocess.run(
+                  ["git", "diff", "--name-only", compare_ref, "HEAD"],
+                  capture_output=True, text=True
+              )
+              changed = [f for f in result.stdout.strip().split("\n") if f]
+
+              infra_changed = any(
+                  f.startswith(".github/workflows/") or f == "services.yaml"
+                  for f in changed
+              )
+
+              if infra_changed:
+                  selected = services
+              else:
+                  selected = [
+                      s for s in services
+                      if any(f.startswith(s["path"] + "/") for f in changed)
+                  ]
+
+          matrix = {"include": selected} if selected else {"include": []}
+          has = "true" if selected else "false"
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"result={json.dumps(matrix)}\n")
+              out.write(f"has_services={has}\n")
+
+          print(f"Selected {len(selected)} service(s): {[s['name'] for s in selected]}")
+
+  # ---------------------------------------------------------------------------
+  # 2. Build, scan, sign, and verify each selected service
+  # ---------------------------------------------------------------------------
+  build-sign-verify:
+    needs: discover
+    if: needs.discover.outputs.has_services == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.discover.outputs.matrix) }}
     permissions:
       contents: read
-      packages: write         # needed for GHCR push
-      id-token: write         # needed for keyless cosign
-      security-events: write  # allow SARIF upload
+      packages: write
+      id-token: write
+      security-events: write
+
+    env:
+      IMAGE_NAME: ${{ matrix.image }}
+      GO_VERSION: ${{ matrix.go_version || '1.25.9' }}
+      SERVICE_PATH: ${{ matrix.path }}
+      SERVICE_NAME: ${{ matrix.name }}
+      GOVULNCHECK_REPORT: govulncheck-report.txt
+      DEPENDENCY_INTEGRITY_REPORT: dependency-integrity-report.txt
+      SBOM_PATH: sbom.spdx.json
+      SCAN_REPORT: grype-report.json
+      SECURITY_GATE_FINDINGS_JSON: security-gate-findings.json
+      SECURITY_GATE_FINDINGS_MD: security-gate-findings.md
+      SECURITY_GATE_MODE: ${{ inputs.security_gate_mode || 'enforced' }}
+
+    name: ${{ matrix.name }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -45,6 +141,7 @@ jobs:
           go-version: ${{ env.GO_VERSION }}
 
       - name: Dependency integrity checks (Go modules) - fail fast
+        working-directory: ${{ env.SERVICE_PATH }}
         run: |
           set -euo pipefail
           {
@@ -70,17 +167,19 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: dependency-integrity-report
-          path: ${{ env.DEPENDENCY_INTEGRITY_REPORT }}
+          name: ${{ env.SERVICE_NAME }}-dependency-integrity-report
+          path: ${{ env.SERVICE_PATH }}/${{ env.DEPENDENCY_INTEGRITY_REPORT }}
           if-no-files-found: warn
 
       - name: Run unit tests
+        working-directory: ${{ env.SERVICE_PATH }}
         run: go test ./...
 
       - name: Install govulncheck
         run: go install golang.org/x/vuln/cmd/govulncheck@${{ env.GOVULNCHECK_VERSION }}
 
       - name: Go vulnerability scan (govulncheck) - fail fast
+        working-directory: ${{ env.SERVICE_PATH }}
         run: |
           set -euo pipefail
           govulncheck ./... 2>&1 | tee "${{ env.GOVULNCHECK_REPORT }}"
@@ -89,8 +188,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: govulncheck-report
-          path: ${{ env.GOVULNCHECK_REPORT }}
+          name: ${{ env.SERVICE_NAME }}-govulncheck-report
+          path: ${{ env.SERVICE_PATH }}/${{ env.GOVULNCHECK_REPORT }}
           if-no-files-found: warn
 
       - name: Derive metadata
@@ -143,8 +242,8 @@ jobs:
         id: build
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: Dockerfile
+          context: ${{ env.SERVICE_PATH }}
+          file: ${{ env.SERVICE_PATH }}/Dockerfile
           load: ${{ steps.meta.outputs.registry_mode == 'local' }}
           push: ${{ steps.meta.outputs.registry_mode == 'ghcr' }}
           tags: ${{ steps.meta.outputs.image }}
@@ -184,9 +283,6 @@ jobs:
         id: gate_mode
         run: |
           MODE="${{ env.SECURITY_GATE_MODE }}"
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.security_gate_mode }}" ]; then
-            MODE="${{ inputs.security_gate_mode }}"
-          fi
           MODE=$(echo "$MODE" | tr '[:upper:]' '[:lower:]')
           if [ "$MODE" != "enforced" ] && [ "$MODE" != "advisory" ]; then
             echo "::warning::Invalid SECURITY_GATE_MODE '$MODE'. Fallback to 'enforced'."
@@ -219,7 +315,7 @@ jobs:
           echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
 
           {
-            echo "# Security Gate Findings"
+            echo "# Security Gate Findings (${{ env.SERVICE_NAME }})"
             echo
             echo "- Gate mode: \`${{ steps.gate_mode.outputs.mode }}\`"
             echo "- Fixable high/critical count: \`${COUNT}\`"
@@ -252,7 +348,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: sbom
+          name: ${{ env.SERVICE_NAME }}-sbom
           path: ${{ env.SBOM_PATH }}
           if-no-files-found: ignore
 
@@ -260,7 +356,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: grype-report
+          name: ${{ env.SERVICE_NAME }}-grype-report
           path: ${{ env.SCAN_REPORT }}
           if-no-files-found: ignore
 
@@ -268,7 +364,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: security-gate-findings
+          name: ${{ env.SERVICE_NAME }}-security-gate-findings
           path: |
             ${{ env.SECURITY_GATE_FINDINGS_JSON }}
             ${{ env.SECURITY_GATE_FINDINGS_MD }}
@@ -331,12 +427,12 @@ jobs:
       - name: Render Kustomize annotations overlay (with scan/SBOM values)
         run: |
           set -euo pipefail
-          mkdir -p deploy/kubernetes/overlays/ci
-          cat > deploy/kubernetes/overlays/ci/patch-annotations.yaml <<'EOF'
+          mkdir -p ${{ env.SERVICE_PATH }}/deploy/kubernetes/overlays/ci
+          cat > ${{ env.SERVICE_PATH }}/deploy/kubernetes/overlays/ci/patch-annotations.yaml <<'EOF'
           apiVersion: apps/v1
           kind: Deployment
           metadata:
-            name: user-service
+            name: ${{ env.SERVICE_NAME }}
             namespace: stock-trading
           spec:
             template:
@@ -345,7 +441,7 @@ jobs:
                   security.grype.io/high_critical: "${{ steps.annos.outputs.high_critical }}"
                   security.stock-trading.dev/sbom-digest: "${{ steps.annos.outputs.sbom_digest }}"
           EOF
-          cat > deploy/kubernetes/overlays/ci/kustomization.yaml <<'EOF'
+          cat > ${{ env.SERVICE_PATH }}/deploy/kubernetes/overlays/ci/kustomization.yaml <<'EOF'
           apiVersion: kustomize.config.k8s.io/v1beta1
           kind: Kustomization
           namespace: stock-trading
@@ -378,7 +474,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: cosign-bundle
+          name: ${{ env.SERVICE_NAME }}-cosign-bundle
           path: |
             provenance.json
             ${{ env.SBOM_PATH }}
@@ -387,7 +483,6 @@ jobs:
             ${{ env.SECURITY_GATE_FINDINGS_MD }}
             cosign-verify-signature.txt
             cosign-verify-attestation.txt
-            deploy/kubernetes/overlays/ci/patch-annotations.yaml
-            deploy/kubernetes/overlays/ci/kustomization.yaml
+            ${{ env.SERVICE_PATH }}/deploy/kubernetes/overlays/ci/patch-annotations.yaml
+            ${{ env.SERVICE_PATH }}/deploy/kubernetes/overlays/ci/kustomization.yaml
           if-no-files-found: ignore
-
