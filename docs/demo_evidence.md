@@ -15,11 +15,11 @@ This evidence package validates thesis admission criteria for:
 - Date: 2026-04-14
 - Kubernetes context: `docker-desktop`
 - Namespace: `stock-trading`
-- Script: `scripts/admission_matrix_demo.ps1`
+- Script: `infra/scripts/admission_matrix_demo.ps1`
 - Command:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/admission_matrix_demo.ps1 -Context docker-desktop -Namespace stock-trading -ExportDir demo/evidence -ResetNamespace
+powershell -NoProfile -ExecutionPolicy Bypass -File infra/scripts/admission_matrix_demo.ps1 -Context docker-desktop -Namespace stock-trading -ExportDir demo/evidence -ResetNamespace
 ```
 
 - Evidence directory: `demo/evidence/20260414-210227`

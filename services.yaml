@@ -1,0 +1,5 @@
+services:
+  - name: user-service
+    path: services/user-service
+    image: sinhnguyen1411/stock-trading/user-service
+    go_version: "1.25.9"
