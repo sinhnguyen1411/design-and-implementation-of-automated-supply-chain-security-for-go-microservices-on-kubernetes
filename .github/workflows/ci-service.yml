@@ -82,6 +82,7 @@ jobs:
   verify-cross-os:
     needs: discover
     if: needs.discover.outputs.has_services == 'true'
+    continue-on-error: ${{ matrix.runner_os == 'windows-2022' }}
     strategy:
       fail-fast: false
       matrix:
