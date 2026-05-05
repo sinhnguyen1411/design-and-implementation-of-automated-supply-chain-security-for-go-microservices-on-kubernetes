@@ -1,4 +1,4 @@
-# Design and Implementation of Automated Supply Chain Security for Go Microservices on Kubernetes
+﻿# Design and Implementation of Automated Supply Chain Security for Go Microservices on Kubernetes
 
 This repository provides a practical DevSecOps baseline for implementing and validating software supply chain security controls for a Go microservice deployed on Kubernetes.
 
@@ -75,7 +75,7 @@ go run main.go server --config cmd/server/config/local.yaml
 ```
 
 ### 2) Trigger secure supply-chain workflow
-- Push to branch `main` or manually run `.github/workflows/secure-supply-chain.yml`.
+- Push to branch `main` or manually run `.github/workflows/ci-service.yml`.
 
 ### 3) Bootstrap local admission demo
 ```bash
@@ -175,3 +175,4 @@ Dashboard behavior:
 - Current enforcement baseline is Kyverno-based.
 - Runtime trust verification baseline uses keyless Cosign identities from GitHub Actions OIDC (`token.actions.githubusercontent.com`).
 - Sigstore Policy Controller remains an optional future extension.
+

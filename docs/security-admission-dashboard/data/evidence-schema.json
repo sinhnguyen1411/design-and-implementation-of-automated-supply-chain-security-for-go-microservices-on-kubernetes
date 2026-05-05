@@ -1,0 +1,30 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DevSecOps Evidence Metadata",
+  "type": "object",
+  "required": [
+    "workflow_key",
+    "service_name",
+    "scenario",
+    "runner_os",
+    "run_id",
+    "sha",
+    "verdict",
+    "evidence_paths"
+  ],
+  "properties": {
+    "workflow_key": { "type": "string" },
+    "service_name": { "type": "string" },
+    "scenario": { "type": "string" },
+    "runner_os": { "type": "string" },
+    "run_id": { "type": "string" },
+    "sha": { "type": "string" },
+    "verdict": { "type": "string" },
+    "evidence_paths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": true
+}

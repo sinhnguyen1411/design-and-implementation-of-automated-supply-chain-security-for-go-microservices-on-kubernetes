@@ -1,1 +1,0 @@
-deployment.apps/user-service condition met
