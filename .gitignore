@@ -49,7 +49,6 @@ demo_evidence/
 cosign.pub
 
 # local workspace artifacts
-go.sum
 .codex
 .codex/
 .vscode/extensions.json

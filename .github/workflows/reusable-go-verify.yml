@@ -24,15 +24,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          path: r
 
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
           go-version: ${{ inputs.go_version }}
+          cache-dependency-path: r/${{ inputs.service_path }}/go.sum
 
       - name: Dependency integrity checks
         shell: bash
-        working-directory: ${{ inputs.service_path }}
+        working-directory: r/${{ inputs.service_path }}
         run: |
           set -euo pipefail
           go mod download
@@ -42,7 +45,7 @@ jobs:
 
       - name: Unit tests
         shell: bash
-        working-directory: ${{ inputs.service_path }}
+        working-directory: r/${{ inputs.service_path }}
         run: go test ./...
 
       - name: Install govulncheck
@@ -51,7 +54,7 @@ jobs:
 
       - name: Run govulncheck
         shell: bash
-        working-directory: ${{ inputs.service_path }}
+        working-directory: r/${{ inputs.service_path }}
         run: govulncheck ./... | tee govulncheck-report.txt
 
       - name: Upload verification artifacts
@@ -60,6 +63,6 @@ jobs:
         with:
           name: ${{ inputs.service_name }}-${{ inputs.runner_os }}-verify
           path: |
-            ${{ inputs.service_path }}/dependency-drift.diff
-            ${{ inputs.service_path }}/govulncheck-report.txt
+            r/${{ inputs.service_path }}/dependency-drift.diff
+            r/${{ inputs.service_path }}/govulncheck-report.txt
           if-no-files-found: warn
