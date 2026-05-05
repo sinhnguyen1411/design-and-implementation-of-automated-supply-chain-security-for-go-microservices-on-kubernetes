@@ -41,7 +41,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TOP_N: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.top_n || '100' }}
         run: |
-          python scripts/sync_actions_snapshot.py \
+          python infra/scripts/sync_actions_snapshot.py \
             --repo "${{ github.repository }}" \
             --top-n "${TOP_N}" \
             --output "docs/security-admission-dashboard/data/actions-runs.snapshot.json"

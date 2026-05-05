@@ -58,7 +58,7 @@ jobs:
         if: ${{ matrix.evidence_profile == 'canonical-matrix' }}
         shell: pwsh
         run: |
-          ./scripts/admission_matrix_demo.ps1 `
+          ./infra/scripts/admission_matrix_demo.ps1 `
             -Context "kind-${{ matrix.cluster_name }}" `
             -Namespace "${{ matrix.namespace }}" `
             -ExportDir "demo/evidence" `
@@ -102,8 +102,8 @@ jobs:
       - name: Bootstrap Kyverno and policies for onboarding probe
         if: ${{ matrix.evidence_profile == 'onboarding-probe' }}
         run: |
-          chmod +x ./scripts/devsecops_kind_bootstrap.sh
-          KIND_CLUSTER_NAME=${{ matrix.cluster_name }} RESET_CLUSTER=false ./scripts/devsecops_kind_bootstrap.sh
+          chmod +x ./infra/scripts/devsecops_kind_bootstrap.sh
+          KIND_CLUSTER_NAME=${{ matrix.cluster_name }} RESET_CLUSTER=false ./infra/scripts/devsecops_kind_bootstrap.sh
 
       - name: Run onboarding probe for portfolio-service
         if: ${{ matrix.evidence_profile == 'onboarding-probe' }}

@@ -34,7 +34,7 @@ Mục tiêu là chứng minh nhất quán mô hình:
 ### 2.1. Chạy matrix để tạo/gia hạn evidence (khuyến nghị)
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/admission_matrix_demo.ps1 -Context docker-desktop -Namespace stock-trading -ExportDir demo/evidence -ResetNamespace
+powershell -NoProfile -ExecutionPolicy Bypass -File infra/scripts/admission_matrix_demo.ps1 -Context docker-desktop -Namespace stock-trading -ExportDir demo/evidence -ResetNamespace
 ```
 
 ### 2.2. Chọn run-id mặc định (latest)
@@ -96,7 +96,7 @@ Command:
 kubectl config use-context docker-desktop
 kubectl -n stock-trading get ns stock-trading
 kubectl get nodes
-kubectl get clusterpolicy verify-user-service-images require-sbom-annotation enforce-cve-threshold
+kubectl get clusterpolicy verify-stock-trading-images require-sbom-annotation enforce-cve-threshold
 kubectl -n kyverno get deploy
 ```
 

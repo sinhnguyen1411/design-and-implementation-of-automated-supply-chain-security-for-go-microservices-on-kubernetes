@@ -29,4 +29,4 @@ Each run includes:
   - `NEG_CVE_THRESHOLD_DENY/`
   - `VALID_ALLOW_RECHECK/`
 
-The JSON structure mirrors the output of `scripts/admission_matrix_demo.ps1`.
+The JSON structure mirrors the output of `infra/scripts/admission_matrix_demo.ps1`.

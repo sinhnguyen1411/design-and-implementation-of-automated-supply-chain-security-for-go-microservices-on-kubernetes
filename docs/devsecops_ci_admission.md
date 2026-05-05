@@ -48,29 +48,29 @@ Registry-backed publishing behavior:
   - `GHCR_TOKEN`
 
 ## Admission Policies (Kyverno)
-Resources under `deploy/policies/kyverno/`:
+Resources under `infra/policies/kyverno/`:
 - `clusterpolicy-verify-images.yaml`: verifies keyless image signatures and SLSA provenance attestations from GitHub Actions OIDC identity.
 - `clusterpolicy-cve-threshold.yaml`: requires `security.grype.io/high_critical: "0"` where the annotation represents the count of fixable High/Critical findings.
 - `clusterpolicy-require-sbom.yaml`: requires `security.stock-trading.dev/sbom-digest`.
 
 Apply policies:
 ```bash
-kubectl apply -k deploy/policies/kyverno
+kubectl apply -k infra/policies/kyverno
 ```
 
 ## Local Bootstrap (Kind)
 Bootstrap or reconcile a local Kind cluster with Kyverno and policies:
 ```bash
-./scripts/devsecops_kind_bootstrap.sh
+./infra/scripts/devsecops_kind_bootstrap.sh
 ```
 
 Clean rerun options:
 ```bash
 # delete and recreate the Kind cluster first
-RESET_CLUSTER=true ./scripts/devsecops_kind_bootstrap.sh
+RESET_CLUSTER=true ./infra/scripts/devsecops_kind_bootstrap.sh
 
 # teardown only
-./scripts/devsecops_kind_reset.sh
+./infra/scripts/devsecops_kind_reset.sh
 ```
 
 Notes:
@@ -85,7 +85,7 @@ For workloads labeled `app.kubernetes.io/name=user-service`, admission is expect
 - `security.stock-trading.dev/sbom-digest` annotation must exist and be non-empty.
 
 Deterministic base-vs-CI behavior:
-- `deploy/kubernetes/base/deployment.yaml` intentionally keeps both security annotations empty.
+- `services/user-service/deploy/kubernetes/base/deployment.yaml` intentionally keeps both security annotations empty.
 - Base manifest alone is non-compliant by design when admission policies are enabled.
 - Compliant deployment path is `base + CI-rendered overlay` from workflow artifacts.
 
@@ -95,16 +95,16 @@ Required Pod annotations for compliant deployments:
 
 ## Deployment Contract From CI Output
 The workflow publishes overlay files inside the `cosign-bundle` artifact:
-- `deploy/kubernetes/overlays/ci/kustomization.yaml`
-- `deploy/kubernetes/overlays/ci/patch-annotations.yaml`
+- `services/user-service/services/user-service/deploy/kubernetes/overlays/ci/kustomization.yaml`
+- `services/user-service/services/user-service/deploy/kubernetes/overlays/ci/patch-annotations.yaml`
 
 Apply flow (after downloading artifact):
 ```bash
 # optional sanity check for rendered annotation values
-kubectl kustomize deploy/kubernetes/overlays/ci | rg "security\\.grype\\.io/high_critical|security\\.stock-trading\\.dev/sbom-digest"
+kubectl kustomize services/user-service/deploy/kubernetes/overlays/ci | rg "security\\.grype\\.io/high_critical|security\\.stock-trading\\.dev/sbom-digest"
 
 # deploy with CI-derived metadata
-kubectl apply -k deploy/kubernetes/overlays/ci
+kubectl apply -k services/user-service/deploy/kubernetes/overlays/ci
 
 # audit applied values
 kubectl -n stock-trading get deploy user-service \
@@ -114,7 +114,7 @@ kubectl -n stock-trading get deploy user-service \
 ## Automated Admission Matrix (Docker Desktop)
 Run the thesis-aligned matrix on `docker-desktop`:
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/admission_matrix_demo.ps1 -Context docker-desktop -Namespace stock-trading -ExportDir demo/evidence -ResetNamespace
+powershell -NoProfile -ExecutionPolicy Bypass -File infra/scripts/admission_matrix_demo.ps1 -Context docker-desktop -Namespace stock-trading -ExportDir demo/evidence -ResetNamespace
 ```
 
 Fixed matrix cases:

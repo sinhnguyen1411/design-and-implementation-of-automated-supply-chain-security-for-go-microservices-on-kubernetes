@@ -78,7 +78,7 @@ Key components:
      3. Block deployment if vulnerability report annotation indicates fixable High/Critical > 0.
      4. (Optional) Validate SBOM digest label matches `cosign attach sbom`.
 6. **Demo & Evaluation Assets**
-   - Write scripts (`scripts/devsecops_demo.sh|ps1`) to:
+   - Write scripts (`infra/scripts/devsecops_demo.sh|ps1`) to:
      1. Build "clean" image through pipeline, deploy successfully.
      2. Attempt to deploy tampered/unsigned image -> Admission denied.
      3. Attempt to deploy image with forced fake CVE annotation -> denied.
@@ -96,8 +96,8 @@ Key components:
 ## 7. Next Steps Checklist
 1. Author hardened Dockerfile + Helm/kustomize manifests.
 2. Commit CI workflow skeleton with placeholder secrets (SBOM + scan + sign steps).
-3. Automate Kind/Kyverno bootstrap via `scripts/devsecops_cluster_up.sh`.
-4. Draft Kyverno policy set and commit under `deploy/policies/`.
+3. Automate Kind/Kyverno bootstrap via `infra/scripts/devsecops_cluster_up.sh`.
+4. Draft Kyverno policy set and commit under `infra/policies/`.
 5. Extend README with quick demo instructions referencing this plan.
 
 Deliverables from these steps will satisfy the thesis objectives: automated SBOM, proactive vulnerability gating, signed artifacts with provenance, Kubernetes-level enforcement, and reproducible documentation for future services.
