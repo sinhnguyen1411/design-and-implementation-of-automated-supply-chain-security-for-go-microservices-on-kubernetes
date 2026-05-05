@@ -1,4 +1,4 @@
-name: dashboard-data-sync
+﻿name: dashboard-data-sync
 
 on:
   workflow_run:
@@ -27,7 +27,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -57,3 +57,4 @@ jobs:
           git add docs/security-admission-dashboard/data/actions-runs.snapshot.json
           git commit -m "chore(dashboard): sync GitHub Actions snapshot [skip ci]"
           git push origin HEAD:main
+

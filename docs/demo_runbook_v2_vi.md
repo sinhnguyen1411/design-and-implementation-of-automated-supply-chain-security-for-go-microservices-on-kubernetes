@@ -246,3 +246,21 @@ Fallback:
 - Thesis objective và traceability: `docs/thesis_spec_en.md`
 - Speaker notes 1 trang: `docs/demo_speaker_notes_v2_vi.md`
 - Bundled dashboard data: `docs/security-admission-dashboard/demo-data/`
+
+## 7) Van hanh CI hau-merge (on main)
+
+- Thu tu trigger khuyen nghi:
+  1. `ci-service` (service=`all`)
+  2. `admission-lab`
+  3. `onboarding-lab`
+  4. `dashboard-data-sync`
+- Artifact can kiem:
+  - `ci-service`: `<service>-sbom`, `<service>-grype-report`, `<service>-security-gate-findings`
+  - `admission-lab`: `admission-lab-evidence` (co `matrix-index.json`, `matrix-summary.md`, `regression-valid-allow.json`, `evidence-metadata.json`)
+  - `onboarding-lab`: `onboarding-lab-<service>` (co `evidence-metadata.json`)
+- Known-good baseline run (main):
+  - `ci-service`: run `25388639210` (success)
+  - `dashboard-data-sync`: run `25390155109` (success)
+- Luu y runner Windows:
+  - Verify lane Windows duoc tach thanh `windows-parity-smoke` de tranh loi checkout path-length.
+  - Security gate chinh van duoc khoa xanh tren Ubuntu/macOS; Windows parity duoc theo doi rieng.

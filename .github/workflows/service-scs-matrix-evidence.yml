@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Set up kind
         uses: helm/kind-action@v1.12.0
@@ -77,8 +77,9 @@ jobs:
           echo "path=${EXPORT_DIR}" >> "$GITHUB_OUTPUT"
 
       - name: Upload onboarding artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: onboarding-lab-${{ matrix.service_name }}
           path: ${{ steps.probe.outputs.path }}
           if-no-files-found: error
+

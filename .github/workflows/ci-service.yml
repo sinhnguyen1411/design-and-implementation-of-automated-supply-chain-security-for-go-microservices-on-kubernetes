@@ -33,7 +33,7 @@ jobs:
       has_services: ${{ steps.matrix.outputs.has_services }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -101,7 +101,7 @@ jobs:
     continue-on-error: true
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v5
         with:
           go-version: "1.25.9"
       - name: Report Windows toolchain
@@ -124,10 +124,10 @@ jobs:
       security-events: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Set up Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go_version || '1.25.9' }}
 
@@ -206,7 +206,7 @@ jobs:
 
       - name: Upload SBOM artifact
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }}-sbom
           path: ${{ matrix.path }}/sbom.spdx.json
@@ -214,7 +214,7 @@ jobs:
 
       - name: Upload Grype report artifact
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }}-grype-report
           path: ${{ matrix.path }}/grype-report.json
@@ -222,7 +222,7 @@ jobs:
 
       - name: Upload security gate findings artifact
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }}-security-gate-findings
           path: ${{ matrix.path }}/security-gate-findings.json
@@ -230,7 +230,7 @@ jobs:
 
       - name: Upload combined supply-chain artifacts
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }}-supply-chain-artifacts
           path: |
@@ -238,3 +238,4 @@ jobs:
             ${{ matrix.path }}/grype-report.json
             ${{ matrix.path }}/security-gate-findings.json
           if-no-files-found: warn
+
