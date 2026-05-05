@@ -5,8 +5,8 @@ Last updated: 2026-04-14
 Repository: `sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes`
 
 GitHub issue snapshot:
-- Open: `#1` to `#12`
-- Closed: `#13`, `#14`
+- Open: `#1` to `#9`, `#11`
+- Closed: `#10`, `#12`, `#13`, `#14`
 
 This checklist is the execution contract to close the thesis package with auditable evidence.
 
@@ -57,7 +57,7 @@ Status legend (allowed values only): `Implemented | Partial | Missing`
 | IV.1 Pipeline effectiveness (detect/block in build-scan-sign path) | Partial | Workflow enforces fail-fast logic and exports security artifacts. | Final package still needs explicit both-direction gate evidence references (fail and pass) in one canonical thesis section. | [.github/workflows/secure-supply-chain.yml](.github/workflows/secure-supply-chain.yml), [docs/devsecops_ci_admission.md](docs/devsecops_ci_admission.md#fail-fast-behavior), [docs/final_gap_closing_checklist.md](docs/final_gap_closing_checklist.md#4-add-grype-scan-with-threshold-based-security-gate-open) | #4 |
 | IV.2 Integrity and origin verification | Partial | CI has keyless signature verification and attestation verification; admission has keyless trust policy. | Need final evidence package linkage from a canonical CI run to thesis evaluation section. | [.github/workflows/secure-supply-chain.yml](.github/workflows/secure-supply-chain.yml), [deploy/policies/kyverno/clusterpolicy-verify-images.yaml](deploy/policies/kyverno/clusterpolicy-verify-images.yaml), [docs/devsecops_ci_admission.md](docs/devsecops_ci_admission.md#manual-cryptographic-verification-optional) | #5, #6 |
 | IV.3 Admission enforcement effectiveness | Partial | Deny/allow evidence exists for unsigned, missing SBOM, and CVE threshold cases, plus recheck allow in canonical run bundle with screenshot index. | Need final trust-model/policy closure consistency and issue board synchronization. | [demo/evidence/20260414-210227/matrix-summary.md](demo/evidence/20260414-210227/matrix-summary.md), [docs/lens_capture_checklist.md](docs/lens_capture_checklist.md), [docs/lens_screenshots/README.md](docs/lens_screenshots/README.md) | #7, #11 |
-| IV.4 Repeatability for other Go microservices | Partial | Reuse guide and second-service dry-run evidence now exist with captured deviations and remediation notes. | Need final issue closure trace on GitHub and final thesis cross-link lock. | [docs/go_microservice_onboarding_guide.md](docs/go_microservice_onboarding_guide.md), [demo/evidence/20260414-213541-onboarding-second-service/onboarding-summary.md](demo/evidence/20260414-213541-onboarding-second-service/onboarding-summary.md), [docs/final_gap_closing_checklist.md](docs/final_gap_closing_checklist.md#12-publish-reusable-onboarding-guide-for-additional-go-microservices-ready-to-close) | #12, #11 |
+| IV.4 Repeatability for other Go microservices | Partial | Reuse guide and second-service dry-run evidence now exist with captured deviations and remediation notes. | Need final thesis cross-link lock after closure. | [docs/go_microservice_onboarding_guide.md](docs/go_microservice_onboarding_guide.md), [demo/evidence/20260414-213541-onboarding-second-service/onboarding-summary.md](demo/evidence/20260414-213541-onboarding-second-service/onboarding-summary.md), [docs/final_gap_closing_checklist.md](docs/final_gap_closing_checklist.md#12-publish-reusable-onboarding-guide-for-additional-go-microservices-closed) | #11 |
 
 ### Section V - Study Limitations
 | Proposal Item | Status | What Exists | What Is Missing | Evidence Links | Blocking Issue(s) |
@@ -240,7 +240,7 @@ Checklist:
 Close when:
 - [ ] Clean bootstrap + rerun works without manual patching.
 
-### #10 Add adversarial deployment scenarios and evidence checklist (Ready to close)
+### #10 Add adversarial deployment scenarios and evidence checklist (Closed)
 Current state:
 - Matrix script and multiple evidence runs exist.
 - Canonical evidence root is `demo/evidence` (real cluster-backed runs).
@@ -248,7 +248,7 @@ Current state:
 - Dashboard supports Actions snapshot as primary source (`docs/security-admission-dashboard/data/actions-runs.snapshot.json`), with fallback bundled datasets under `docs/security-admission-dashboard/demo-data/evidence/`.
 
 Gap to close:
-- Need GitHub issue closure trail and final cross-doc linkage after appendix pack completion.
+- None. Issue is closed; keep links stable.
 
 Checklist:
 - [x] Declare one canonical evidence root path and update scripts/docs/dashboard accordingly.
@@ -281,13 +281,13 @@ Checklist:
 Close when:
 - [ ] Traceability table is synchronized with issue tracker and evidence links.
 
-### #12 Publish reusable onboarding guide for additional Go microservices (Ready to close)
+### #12 Publish reusable onboarding guide for additional Go microservices (Closed)
 Current state:
 - Reuse guide is present and detailed.
 - Second-service simulation evidence is captured in `demo/evidence/20260414-213541-onboarding-second-service/`.
 
 Gap to close:
-- Need final GitHub closure trail tying simulation evidence to thesis package references.
+- None. Issue is closed; keep guidance and evidence links stable.
 
 Checklist:
 - [x] Run a dry-run onboarding simulation using a second sample service namespace/image naming convention.
@@ -323,4 +323,4 @@ Keep-closed checklist:
 - [ ] One final CI run on `main` captured with full artifact set.
 - [ ] One final admission matrix run-id captured from real cluster.
 - [ ] Docs cross-links updated (`README`, `thesis_spec_en`, runbook, evidence docs).
-- [ ] GitHub issues `#1` to `#12` closed with evidence links.
+- [ ] Remaining open GitHub issues (`#1` to `#9`, `#11`) closed with evidence links.
