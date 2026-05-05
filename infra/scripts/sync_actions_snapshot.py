@@ -121,6 +121,11 @@ def parse_security_gate(
     evidence_unavailable = False
 
     findings_art = artifacts.get(SECURITY_FINDINGS_ARTIFACT)
+    if findings_art is None:
+        findings_art = next(
+            (art for name, art in artifacts.items() if str(name).endswith(f"-{SECURITY_FINDINGS_ARTIFACT}")),
+            None,
+        )
     if findings_art:
         if findings_art.get("expired"):
             return None, True
@@ -141,6 +146,11 @@ def parse_security_gate(
             evidence_unavailable = True
 
     grype_art = artifacts.get(GRYPE_ARTIFACT)
+    if grype_art is None:
+        grype_art = next(
+            (art for name, art in artifacts.items() if str(name).endswith(f"-{GRYPE_ARTIFACT}")),
+            None,
+        )
     if grype_art:
         if grype_art.get("expired"):
             return None, True

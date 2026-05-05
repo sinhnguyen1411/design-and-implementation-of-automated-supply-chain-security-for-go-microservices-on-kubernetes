@@ -148,12 +148,77 @@ jobs:
           fail-build: false
           severity-cutoff: high
 
-      - name: Upload SBOM + scan artifacts
+      - name: Normalize grype report path
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f "${GITHUB_WORKSPACE}/results.json" ]; then
+            cp "${GITHUB_WORKSPACE}/results.json" "${{ matrix.path }}/grype-report.json"
+          fi
+
+      - name: Build security gate findings from grype report
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+
+          report = Path("${{ matrix.path }}/grype-report.json")
+          out = Path("${{ matrix.path }}/security-gate-findings.json")
+          findings = []
+
+          if report.exists():
+              data = json.loads(report.read_text(encoding="utf-8"))
+              for m in data.get("matches", []):
+                  v = m.get("vulnerability", {}) or {}
+                  a = m.get("artifact", {}) or {}
+                  sev = str(v.get("severity", "")).lower()
+                  fix = (v.get("fix", {}) or {})
+                  state = str(fix.get("state", "unknown")).lower()
+                  if sev not in ("high", "critical"):
+                      continue
+                  if state in ("wont-fix", "not-fixed", "unknown"):
+                      continue
+                  findings.append({
+                      "cve": v.get("id", ""),
+                      "severity": sev,
+                      "package": a.get("name", ""),
+                      "installed": a.get("version", ""),
+                      "fix_state": state,
+                      "fixed_versions": fix.get("versions", []) or [],
+                  })
+          out.write_text(json.dumps({"findings": findings}, indent=2), encoding="utf-8")
+
+      - name: Upload SBOM artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: ${{ matrix.name }}-sbom
+          path: ${{ matrix.path }}/sbom.spdx.json
+          if-no-files-found: warn
+
+      - name: Upload Grype report artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: ${{ matrix.name }}-grype-report
+          path: ${{ matrix.path }}/grype-report.json
+          if-no-files-found: warn
+
+      - name: Upload security gate findings artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: ${{ matrix.name }}-security-gate-findings
+          path: ${{ matrix.path }}/security-gate-findings.json
+          if-no-files-found: warn
+
+      - name: Upload combined supply-chain artifacts
         if: always()
         uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.name }}-supply-chain-artifacts
           path: |
             ${{ matrix.path }}/sbom.spdx.json
-            ${{ github.workspace }}/results.json
+            ${{ matrix.path }}/grype-report.json
+            ${{ matrix.path }}/security-gate-findings.json
           if-no-files-found: warn
