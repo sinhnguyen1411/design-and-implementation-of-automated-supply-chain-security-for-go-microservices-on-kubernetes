@@ -1,4 +1,4 @@
-﻿# Demo Evidence - Admission Matrix on Docker Desktop
+# Demo Evidence - Admission Matrix on Docker Desktop
 
 ## Scope
 This evidence package validates thesis admission criteria for:

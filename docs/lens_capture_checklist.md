@@ -1,4 +1,4 @@
-﻿# Lens Capture Checklist (Canonical Run)
+# Lens Capture Checklist (Canonical Run)
 
 As-of: `2026-04-14`  
 Context: `docker-desktop`  
