@@ -16,6 +16,8 @@ if ($PSVersionTable.PSVersion.Major -ge 7) {
   $PSNativeCommandUseErrorActionPreference = $false
 }
 
+$ServicePath = "services/user-service"
+
 function Require-Cli([string]$name) {
   if (-not (Get-Command $name -ErrorAction SilentlyContinue)) {
     throw "Required CLI not found: $name"
@@ -321,8 +323,11 @@ if ($LASTEXITCODE -ne 0) {
 
 if (-not $SkipGoTest) {
   Write-Section "Pre-check Go Tests"
+  Push-Location $ServicePath
   & go test ./...
-  if ($LASTEXITCODE -ne 0) {
+  $goTestExit = $LASTEXITCODE
+  Pop-Location
+  if ($goTestExit -ne 0) {
     throw "go test failed."
   }
 }
@@ -341,7 +346,7 @@ $localPolicyPath = Join-Path $runDir "verify-local-matrix-image.yaml"
 
 Write-Section "Build Local Image Once"
 $localImage = "local-user-service:matrix"
-& docker build -t $localImage .
+& docker build -t $localImage $ServicePath
 if ($LASTEXITCODE -ne 0) {
   throw "docker build failed."
 }
