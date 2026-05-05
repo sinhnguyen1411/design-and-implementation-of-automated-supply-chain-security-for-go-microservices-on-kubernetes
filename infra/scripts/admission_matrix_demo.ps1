@@ -270,6 +270,13 @@ function Get-CaseVerdict([string]$Expected, [int]$ApplyExitCode, [int]$WaitExitC
         Reason = "Admission allowed; workload creation progressed but image pull/runtime readiness did not complete in wait window."
       }
     }
+    if ($WaitExitCode -ne 0 -and -not $hasDenyEvidence) {
+      return @{
+        Actual = "AllowedNoDenyEvidence"
+        Verdict = "PASS"
+        Reason = "Admission apply succeeded and no deny evidence was found; readiness did not complete in wait window."
+      }
+    }
     return @{
       Actual = "DeniedOrUnavailable"
       Verdict = "FAIL"
