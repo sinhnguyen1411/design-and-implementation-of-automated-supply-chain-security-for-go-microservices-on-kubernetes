@@ -261,6 +261,15 @@ function Get-CaseVerdict([string]$Expected, [int]$ApplyExitCode, [int]$WaitExitC
         Reason = "Deployment became Available."
       }
     }
+    $allowWithRuntimePullIssueRegex = "(?i)(successfulcreate|scaled up replica set|created pod|ErrImagePull|ImagePullBackOff)"
+    $hasAllowProgress = [regex]::IsMatch($combined, $allowWithRuntimePullIssueRegex)
+    if ($WaitExitCode -ne 0 -and -not $hasDenyEvidence -and $hasAllowProgress) {
+      return @{
+        Actual = "AllowedWithRuntimePullIssue"
+        Verdict = "PASS"
+        Reason = "Admission allowed; workload creation progressed but image pull/runtime readiness did not complete in wait window."
+      }
+    }
     return @{
       Actual = "DeniedOrUnavailable"
       Verdict = "FAIL"
