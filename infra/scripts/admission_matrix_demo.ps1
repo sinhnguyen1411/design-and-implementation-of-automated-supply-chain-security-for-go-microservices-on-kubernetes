@@ -420,7 +420,7 @@ if (-not $hasClusterPolicyApi) {
 }
 
 Write-Section "Apply Repository Policies"
-& kubectl apply -k deploy/policies/kyverno
+& kubectl apply -k infra/policies/kyverno
 if ($LASTEXITCODE -ne 0) { throw "Applying repository Kyverno policies failed." }
 
 Write-Section "Apply Local Matrix Signature + Attestation Policy"

@@ -147,7 +147,7 @@ if (-not $hasKyverno) {
 }
 
 Write-Section "Apply Repo Policies"
-kubectl apply -k deploy/policies/kyverno
+kubectl apply -k infra/policies/kyverno
 if ($LASTEXITCODE -ne 0) {
   throw "Applying repository Kyverno policies failed"
 }

@@ -93,10 +93,10 @@ kubectl apply -f "$KYVERNO_INSTALL_URL"
 wait_for_kyverno
 
 echo "[3/4] Applying supply-chain policies"
-kubectl apply -k deploy/policies/kyverno
+kubectl apply -k infra/policies/kyverno
 
 echo "[4/4] Verifying applied policies"
 kubectl get clusterpolicies
 echo "Done."
-echo "Tip: use RESET_CLUSTER=true ./scripts/devsecops_kind_bootstrap.sh for clean rerun."
-echo "Tip: use ./scripts/devsecops_kind_reset.sh to delete the Kind cluster."
+echo "Tip: use RESET_CLUSTER=true ./infra/scripts/devsecops_kind_bootstrap.sh for clean rerun."
+echo "Tip: use ./infra/scripts/devsecops_kind_reset.sh to delete the Kind cluster."
