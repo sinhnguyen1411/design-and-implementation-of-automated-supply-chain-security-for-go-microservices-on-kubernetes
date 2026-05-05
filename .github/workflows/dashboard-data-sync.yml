@@ -3,9 +3,9 @@ name: dashboard-data-sync
 on:
   workflow_run:
     workflows:
-      - secure-supply-chain
-      - admission-matrix-evidence
-      - service-scs-matrix-evidence
+      - ci-service
+      - admission-lab
+      - onboarding-lab
     types:
       - completed
     branches:

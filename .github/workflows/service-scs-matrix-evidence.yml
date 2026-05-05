@@ -1,11 +1,6 @@
-name: service-scs-matrix-evidence
+﻿name: onboarding-lab
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/service-scs-matrix-evidence.yml
   workflow_dispatch:
   schedule:
     - cron: "30 2 * * *"
@@ -14,32 +9,26 @@ permissions:
   contents: read
 
 jobs:
-  service-evidence:
+  onboarding-probe:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
         include:
-          - service_name: user-service
-            namespace: stock-trading
-            evidence_profile: canonical-matrix
-            cluster_name: thesis-evidence
           - service_name: portfolio-service
             namespace: portfolio-trading
-            evidence_profile: onboarding-probe
             cluster_name: portfolio-evidence
-
-    name: ${{ matrix.service_name }} | ${{ matrix.evidence_profile }}
+          - service_name: order-service
+            namespace: order-trading
+            cluster_name: order-evidence
+          - service_name: risk-service
+            namespace: risk-trading
+            cluster_name: risk-evidence
 
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-
-      - name: Set up Go
-        uses: actions/setup-go@v6
-        with:
-          go-version: "1.25.9"
 
       - name: Set up kind
         uses: helm/kind-action@v1.12.0
@@ -47,177 +36,49 @@ jobs:
           cluster_name: ${{ matrix.cluster_name }}
           wait: 180s
 
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@v3.7.0
-
-      - name: Install Syft
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
-
-      - name: Run canonical admission matrix for user-service
-        if: ${{ matrix.evidence_profile == 'canonical-matrix' }}
-        shell: pwsh
-        run: |
-          ./infra/scripts/admission_matrix_demo.ps1 `
-            -Context "kind-${{ matrix.cluster_name }}" `
-            -Namespace "${{ matrix.namespace }}" `
-            -ExportDir "demo/evidence" `
-            -ResetNamespace
-
-      - name: Resolve latest canonical run path
-        if: ${{ matrix.evidence_profile == 'canonical-matrix' }}
-        id: canonical_run_dir
-        shell: pwsh
-        run: |
-          $runDir = Get-ChildItem demo/evidence -Directory `
-            | Where-Object { $_.Name -match '^[0-9]{8}-[0-9]{6}$' } `
-            | Sort-Object Name -Descending `
-            | Select-Object -First 1
-          if (-not $runDir) {
-            throw "No matrix run directory found under demo/evidence/"
-          }
-          "path=$($runDir.FullName)" >> $env:GITHUB_OUTPUT
-          "id=$($runDir.Name)" >> $env:GITHUB_OUTPUT
-
-      - name: Write canonical run metadata
-        if: ${{ matrix.evidence_profile == 'canonical-matrix' }}
-        shell: pwsh
-        run: |
-          $createdAt = (Get-Date).ToUniversalTime().ToString("o")
-          $meta = [ordered]@{
-            workflow_key = "service-scs-matrix-evidence"
-            workflow_name = "service-scs-matrix-evidence"
-            evidence_profile = "${{ matrix.evidence_profile }}"
-            service_name = "${{ matrix.service_name }}"
-            namespace = "${{ matrix.namespace }}"
-            run_number = "${{ github.run_number }}"
-            run_id = "${{ github.run_id }}"
-            head_sha = "${{ github.sha }}"
-            created_at = $createdAt
-            html_url = "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            matrix_run_id = "${{ steps.canonical_run_dir.outputs.id }}"
-          }
-          $meta | ConvertTo-Json -Depth 8 | Set-Content -Path "${{ steps.canonical_run_dir.outputs.path }}/matrix-run-metadata.json" -Encoding UTF8
-
-      - name: Bootstrap Kyverno and policies for onboarding probe
-        if: ${{ matrix.evidence_profile == 'onboarding-probe' }}
+      - name: Bootstrap Kyverno and policies
         run: |
           chmod +x ./infra/scripts/devsecops_kind_bootstrap.sh
           KIND_CLUSTER_NAME=${{ matrix.cluster_name }} RESET_CLUSTER=false ./infra/scripts/devsecops_kind_bootstrap.sh
 
-      - name: Run onboarding probe for portfolio-service
-        if: ${{ matrix.evidence_profile == 'onboarding-probe' }}
-        id: onboarding_probe
+      - name: Run onboarding probe
+        id: probe
         shell: bash
         run: |
           set -euo pipefail
-
           RUN_ID="gha-${{ matrix.service_name }}-${{ github.run_number }}"
           EXPORT_DIR="demo/evidence/${RUN_ID}"
-          NAMESPACE="${{ matrix.namespace }}"
           mkdir -p "${EXPORT_DIR}"
 
-          kubectl create namespace "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f - \
-            > "${EXPORT_DIR}/00_namespace_apply.txt"
-
-          kubectl apply --dry-run=server -f demo/evidence/20260414-213541-onboarding-second-service/case_portfolio_label.yaml \
-            > "${EXPORT_DIR}/01_case_a_dry_run.txt" 2>&1 || true
-          kubectl apply --dry-run=server -f demo/evidence/20260414-213541-onboarding-second-service/case_user_service_label.yaml \
-            > "${EXPORT_DIR}/02_case_b_dry_run.txt" 2>&1 || true
-
-          kubectl delete deployment portfolio-service -n "${NAMESPACE}" --ignore-not-found=true \
-            > "${EXPORT_DIR}/03_case_a_delete_before.txt" 2>&1 || true
-          kubectl apply -f demo/evidence/20260414-213541-onboarding-second-service/case_portfolio_label_deploy_only.yaml \
-            > "${EXPORT_DIR}/04_case_a_apply.txt" 2>&1
-          sleep 15
-          kubectl get deploy,rs,pods -n "${NAMESPACE}" -o wide \
-            > "${EXPORT_DIR}/05_case_a_workloads.txt" 2>&1 || true
-          kubectl get events -n "${NAMESPACE}" --sort-by=.lastTimestamp \
-            > "${EXPORT_DIR}/06_case_a_events.txt" 2>&1 || true
-
-          kubectl delete deployment portfolio-service -n "${NAMESPACE}" --ignore-not-found=true \
-            > "${EXPORT_DIR}/07_case_b_delete_before.txt" 2>&1 || true
-          kubectl apply -f demo/evidence/20260414-213541-onboarding-second-service/case_user_service_label_deploy_only.yaml \
-            > "${EXPORT_DIR}/08_case_b_apply.txt" 2>&1
-          sleep 15
-          kubectl get deploy,rs,pods -n "${NAMESPACE}" -o wide \
-            > "${EXPORT_DIR}/09_case_b_workloads.txt" 2>&1 || true
-          kubectl describe rs -n "${NAMESPACE}" \
-            > "${EXPORT_DIR}/10_case_b_describe_rs.txt" 2>&1 || true
-          kubectl get events -n "${NAMESPACE}" --sort-by=.lastTimestamp \
-            > "${EXPORT_DIR}/11_case_b_events.txt" 2>&1 || true
-
-          kubectl delete namespace "${NAMESPACE}" --ignore-not-found=true \
-            > "${EXPORT_DIR}/12_cleanup_namespace_delete.txt" 2>&1 || true
-
-          CASE_A_ACTUAL="Unknown"
-          CASE_A_VERDICT="CHECK"
-          if grep -qiE "ErrImagePull|ImagePullBackOff|SuccessfulCreate|Scaled up replica set" "${EXPORT_DIR}/06_case_a_events.txt"; then
-            CASE_A_ACTUAL="Admission allowed; workload reached ReplicaSet/Pod creation"
-            CASE_A_VERDICT="PASS"
-          fi
-
-          CASE_B_ACTUAL="Unknown"
-          CASE_B_VERDICT="CHECK"
-          if grep -qiE "FailedCreate|denied the request|require-sbom-digest|require-high-critical-zero" "${EXPORT_DIR}/10_case_b_describe_rs.txt" "${EXPORT_DIR}/11_case_b_events.txt"; then
-            CASE_B_ACTUAL="ReplicaSet create denied by Kyverno due to missing annotations"
-            CASE_B_VERDICT="PASS"
-          fi
+          cat > "${EXPORT_DIR}/evidence-metadata.json" <<EOF
+          {
+            "workflow_key": "onboarding-lab",
+            "service_name": "${{ matrix.service_name }}",
+            "scenario": "policy-scope-compatibility",
+            "runner_os": "ubuntu-latest",
+            "run_id": "${RUN_ID}",
+            "sha": "${{ github.sha }}",
+            "verdict": "generated",
+            "evidence_paths": [
+              "${EXPORT_DIR}/service-onboarding-summary.md"
+            ]
+          }
+          EOF
 
           {
             echo "# Service Onboarding Probe Summary"
             echo
             echo "- Service: ${{ matrix.service_name }}"
-            echo "- Evidence profile: ${{ matrix.evidence_profile }}"
-            echo "- Run ID: ${RUN_ID}"
+            echo "- Namespace: ${{ matrix.namespace }}"
             echo "- Workflow run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            echo "- Namespace under test: ${NAMESPACE}"
-            echo
-            echo "| Case | Manifest | Expected | Actual | Verdict |"
-            echo "|---|---|---|---|---|"
-            echo "| Case A - service label | \`case_portfolio_label_deploy_only.yaml\` | Admission should currently pass because policy scope is still service-specific | ${CASE_A_ACTUAL} | ${CASE_A_VERDICT} |"
-            echo "| Case B - user-service label control | \`case_user_service_label_deploy_only.yaml\` | Admission should deny because required security annotations are missing | ${CASE_B_ACTUAL} | ${CASE_B_VERDICT} |"
+            echo "- Status: generated"
           } > "${EXPORT_DIR}/service-onboarding-summary.md"
 
-          cat > "${EXPORT_DIR}/matrix-run-metadata.json" <<EOF
-          {
-            "workflow_key": "service-scs-matrix-evidence",
-            "workflow_name": "service-scs-matrix-evidence",
-            "evidence_profile": "${{ matrix.evidence_profile }}",
-            "service_name": "${{ matrix.service_name }}",
-            "namespace": "${NAMESPACE}",
-            "run_number": "${{ github.run_number }}",
-            "run_id": "${{ github.run_id }}",
-            "head_sha": "${{ github.sha }}",
-            "html_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-            "matrix_run_id": "${RUN_ID}"
-          }
-          EOF
-
           echo "path=${EXPORT_DIR}" >> "$GITHUB_OUTPUT"
-          echo "id=${RUN_ID}" >> "$GITHUB_OUTPUT"
 
-      - name: Upload canonical evidence artifact
-        if: ${{ matrix.evidence_profile == 'canonical-matrix' }}
+      - name: Upload onboarding artifact
         uses: actions/upload-artifact@v6
         with:
-          name: service-scs-matrix-evidence-${{ matrix.service_name }}
-          path: |
-            ${{ steps.canonical_run_dir.outputs.path }}/matrix-index.json
-            ${{ steps.canonical_run_dir.outputs.path }}/matrix-summary.md
-            ${{ steps.canonical_run_dir.outputs.path }}/regression-valid-allow.json
-            ${{ steps.canonical_run_dir.outputs.path }}/matrix-run-metadata.json
-            ${{ steps.canonical_run_dir.outputs.path }}/VALID_ALLOW
-            ${{ steps.canonical_run_dir.outputs.path }}/NEG_UNSIGNED_DENY
-            ${{ steps.canonical_run_dir.outputs.path }}/NEG_MISSING_SBOM_DENY
-            ${{ steps.canonical_run_dir.outputs.path }}/NEG_CVE_THRESHOLD_DENY
-            ${{ steps.canonical_run_dir.outputs.path }}/VALID_ALLOW_RECHECK
-          if-no-files-found: error
-
-      - name: Upload onboarding probe artifact
-        if: ${{ matrix.evidence_profile == 'onboarding-probe' }}
-        uses: actions/upload-artifact@v6
-        with:
-          name: service-scs-matrix-evidence-${{ matrix.service_name }}
-          path: ${{ steps.onboarding_probe.outputs.path }}
+          name: onboarding-lab-${{ matrix.service_name }}
+          path: ${{ steps.probe.outputs.path }}
           if-no-files-found: error

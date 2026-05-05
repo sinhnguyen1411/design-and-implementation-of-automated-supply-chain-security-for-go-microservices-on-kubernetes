@@ -1,8 +1,8 @@
-# DevSecOps CI + Admission Flow
+﻿# DevSecOps CI + Admission Flow
 
 This document describes the secure supply-chain pipeline (`dependency-integrity -> test -> govulncheck -> build -> SBOM -> scan -> sign -> attest -> push`) and Kyverno-based admission enforcement.
 
-## CI Workflow (`.github/workflows/secure-supply-chain.yml`)
+## CI Workflow (`.github/workflows/ci-service.yml`)
 The workflow runs on pushes/PRs to `main` and on manual dispatch.
 
 Pipeline stages:
@@ -127,13 +127,13 @@ Fixed matrix cases:
 Manual cryptographic verification (optional):
 ```bash
 cosign verify \
-  --certificate-identity-regexp "https://github.com/<owner>/<repo>/.github/workflows/secure-supply-chain.yml@refs/heads/main" \
+  --certificate-identity-regexp "https://github.com/<owner>/<repo>/.github/workflows/ci-service.yml@refs/heads/main" \
   --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
   <signed-image-digest>
 
 cosign verify-attestation \
   --type slsaprovenance \
-  --certificate-identity-regexp "https://github.com/<owner>/<repo>/.github/workflows/secure-supply-chain.yml@refs/heads/main" \
+  --certificate-identity-regexp "https://github.com/<owner>/<repo>/.github/workflows/ci-service.yml@refs/heads/main" \
   --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
   <signed-image-digest>
 ```
@@ -157,4 +157,5 @@ Complementary CI evidence to collect:
 - CI logs for dependency integrity, test, `govulncheck`, Grype, signing, and attestation steps.
 - Uploaded artifacts listed above.
 - Kubernetes deny/allow events and policy controller logs.
+
 

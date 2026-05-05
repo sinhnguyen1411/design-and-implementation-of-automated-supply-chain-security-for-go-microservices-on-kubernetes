@@ -19,15 +19,15 @@ from typing import Any
 
 
 WORKFLOW_PATHS = {
-    "secure-supply-chain": ".github/workflows/secure-supply-chain.yml",
-    "admission-matrix-evidence": ".github/workflows/admission-matrix-evidence.yml",
-    "service-scs-matrix-evidence": ".github/workflows/service-scs-matrix-evidence.yml",
+    "ci-service": ".github/workflows/ci-service.yml",
+    "admission-lab": ".github/workflows/admission-matrix-evidence.yml",
+    "onboarding-lab": ".github/workflows/service-scs-matrix-evidence.yml",
 }
 
 SECURITY_FINDINGS_ARTIFACT = "security-gate-findings"
 GRYPE_ARTIFACT = "grype-report"
 MATRIX_ARTIFACT_CANDIDATES = (
-    "admission-matrix-evidence",
+    "admission-lab-evidence",
     "matrix-evidence",
 )
 
@@ -267,7 +267,7 @@ def build_snapshot(repo: str, token: str, top_n: int) -> dict[str, Any]:
     workflows_payload: list[dict[str, Any]] = []
     flat_runs: list[dict[str, Any]] = []
 
-    for workflow_key in ("secure-supply-chain", "admission-matrix-evidence", "service-scs-matrix-evidence"):
+    for workflow_key in ("ci-service", "admission-lab", "onboarding-lab"):
         meta = workflow_meta.get(workflow_key)
         if not meta:
             workflows_payload.append(
@@ -297,10 +297,10 @@ def build_snapshot(repo: str, token: str, top_n: int) -> dict[str, Any]:
             matrix = None
             evidence_unavailable = False
 
-            if workflow_key == "secure-supply-chain":
+            if workflow_key == "ci-service":
                 security_gate, unavailable = parse_security_gate(gh, artifacts)
                 evidence_unavailable = evidence_unavailable or unavailable
-            elif workflow_key in ("admission-matrix-evidence", "service-scs-matrix-evidence"):
+            elif workflow_key in ("admission-lab", "onboarding-lab"):
                 matrix, unavailable = parse_matrix(gh, artifacts)
                 evidence_unavailable = evidence_unavailable or unavailable
 

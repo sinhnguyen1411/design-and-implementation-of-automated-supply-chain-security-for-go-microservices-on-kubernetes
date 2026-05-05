@@ -1,0 +1,159 @@
+﻿name: ci-service
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'services/**'
+      - 'services.yaml'
+      - '.github/workflows/ci-service.yml'
+      - '.github/workflows/reusable-go-verify.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'services/**'
+      - 'services.yaml'
+      - '.github/workflows/ci-service.yml'
+      - '.github/workflows/reusable-go-verify.yml'
+  workflow_dispatch:
+    inputs:
+      service:
+        description: "Service to run (blank = changed only, 'all' = all services)"
+        required: false
+        default: ""
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.result }}
+      has_services: ${{ steps.matrix.outputs.has_services }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Build service matrix
+        id: matrix
+        shell: python
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_SERVICE: ${{ inputs.service }}
+          BEFORE_SHA: ${{ github.event.before }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          import json, os, subprocess, yaml
+          with open('services.yaml', 'r', encoding='utf-8') as f:
+              services = yaml.safe_load(f)['services']
+
+          event = os.environ.get('EVENT_NAME', '')
+          selected = []
+          request = (os.environ.get('INPUT_SERVICE') or '').strip()
+
+          if event == 'workflow_dispatch' and request == 'all':
+              selected = services
+          elif event == 'workflow_dispatch' and request:
+              selected = [s for s in services if s['name'] == request]
+          else:
+              before = (os.environ.get('BEFORE_SHA') or '').strip()
+              base = (os.environ.get('BASE_SHA') or '').strip()
+              compare_ref = base or before or 'HEAD~1'
+              out = subprocess.run(['git', 'diff', '--name-only', compare_ref, 'HEAD'], capture_output=True, text=True)
+              changed = [x for x in out.stdout.splitlines() if x.strip()]
+              infra_changed = any(p.startswith('.github/workflows/') or p == 'services.yaml' for p in changed)
+              if infra_changed:
+                  selected = services
+              else:
+                  for s in services:
+                      prefix = s['path'].rstrip('/') + '/'
+                      if any(c.startswith(prefix) for c in changed):
+                          selected.append(s)
+
+          result = {'include': selected}
+          has_services = 'true' if selected else 'false'
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
+              f.write(f"result={json.dumps(result)}\n")
+              f.write(f"has_services={has_services}\n")
+
+  verify-cross-os:
+    needs: discover
+    if: needs.discover.outputs.has_services == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        runner_os: [ubuntu-latest, windows-latest, macos-latest]
+        service: ${{ fromJson(needs.discover.outputs.matrix).include }}
+    uses: ./.github/workflows/reusable-go-verify.yml
+    with:
+      service_name: ${{ matrix.service.name }}
+      service_path: ${{ matrix.service.path }}
+      go_version: ${{ matrix.service.go_version || '1.25.9' }}
+      runner_os: ${{ matrix.runner_os }}
+
+  supply-chain-ubuntu:
+    needs: discover
+    if: needs.discover.outputs.has_services == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.discover.outputs.matrix) }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go_version || '1.25.9' }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Derive metadata
+        id: meta
+        run: |
+          echo "tag=${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
+          echo "image=${{ env.REGISTRY }}/${{ matrix.image }}:${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
+
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.path }}
+          file: ${{ matrix.path }}/Dockerfile
+          load: true
+          push: false
+          tags: ${{ steps.meta.outputs.image }}
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0.17.7
+        with:
+          image: ${{ steps.meta.outputs.image }}
+          format: spdx-json
+          output-file: ${{ matrix.path }}/sbom.spdx.json
+
+      - name: Scan image with Grype
+        uses: anchore/scan-action@v6
+        with:
+          image: ${{ steps.meta.outputs.image }}
+          output-format: json
+          fail-build: false
+          severity-cutoff: high
+
+      - name: Upload SBOM + scan artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: ${{ matrix.name }}-supply-chain-artifacts
+          path: |
+            ${{ matrix.path }}/sbom.spdx.json
+            ${{ github.workspace }}/results.json
+          if-no-files-found: warn

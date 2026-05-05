@@ -1,4 +1,4 @@
-# Go Microservice Onboarding and Reuse Guide
+﻿# Go Microservice Onboarding and Reuse Guide
 
 This guide describes how to reuse the current supply-chain security baseline for another Go microservice with minimal redesign.
 
@@ -90,10 +90,10 @@ Primary evidence files:
 - `18_cleanup_namespace_delete.txt`
 
 ## Known Assumptions and Limitations for Reuse
-- Kyverno image verification policy (`infra/policies/kyverno/clusterpolicy-verify-images.yaml`) now uses a wildcard pattern `ghcr.io/sinhnguyen1411/stock-trading/*` that covers all services under the registry path — no per-service policy change is needed for image signing verification.
+- Kyverno image verification policy (`infra/policies/kyverno/clusterpolicy-verify-images.yaml`) now uses a wildcard pattern `ghcr.io/sinhnguyen1411/stock-trading/*` that covers all services under the registry path â€” no per-service policy change is needed for image signing verification.
 - SBOM and CVE annotation policies still use label selectors that may need updating for new service names.
 - `infra/scripts/admission_matrix_demo.ps1` is still hardcoded to `user-service` naming and stock-trading-specific metadata/paths.
-- New services are registered in `services.yaml` at the repo root — the CI pipeline (`secure-supply-chain.yml`) automatically discovers and builds registered services via matrix strategy.
+- New services are registered in `services.yaml` at the repo root â€” the CI pipeline (`ci-service.yml`) automatically discovers and builds registered services via matrix strategy.
 - Server-side `kubectl apply --dry-run=server` for namespaced resources still requires the target namespace to exist.
 
 ## Required Patches When Onboarding a New Service
@@ -104,3 +104,4 @@ Primary evidence files:
 2. Update deployment/manifests labels, namespace, image repo, and annotation flow consistently.
 3. Parameterize or clone `infra/scripts/admission_matrix_demo.ps1` for the new service name/namespace and image path.
 4. Re-run deny/allow matrix and append evidence in the same bundle format used by this repository.
+

@@ -1,4 +1,4 @@
-name: admission-matrix-evidence
+﻿name: admission-lab
 
 on:
   workflow_dispatch:
@@ -57,31 +57,35 @@ jobs:
           "path=$($runDir.FullName)" >> $env:GITHUB_OUTPUT
           "id=$($runDir.Name)" >> $env:GITHUB_OUTPUT
 
-      - name: Write matrix run metadata
+      - name: Write evidence metadata schema payload
         shell: pwsh
         run: |
           $createdAt = (Get-Date).ToUniversalTime().ToString("o")
           $meta = [ordered]@{
-            workflow_key = "admission-matrix-evidence"
-            workflow_name = "admission-matrix-evidence"
-            run_number = "${{ github.run_number }}"
-            run_id = "${{ github.run_id }}"
-            head_sha = "${{ github.sha }}"
-            created_at = $createdAt
-            html_url = "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            matrix_run_id = "${{ steps.run_dir.outputs.id }}"
+            workflow_key = "admission-lab"
+            service_name = "user-service"
+            scenario = "canonical-matrix"
+            runner_os = "ubuntu-latest"
+            run_id = "${{ steps.run_dir.outputs.id }}"
+            sha = "${{ github.sha }}"
+            verdict = "generated"
+            evidence_paths = @(
+              "${{ steps.run_dir.outputs.path }}/matrix-index.json",
+              "${{ steps.run_dir.outputs.path }}/matrix-summary.md",
+              "${{ steps.run_dir.outputs.path }}/regression-valid-allow.json"
+            )
           }
-          $meta | ConvertTo-Json -Depth 8 | Set-Content -Path "${{ steps.run_dir.outputs.path }}/matrix-run-metadata.json" -Encoding UTF8
+          $meta | ConvertTo-Json -Depth 8 | Set-Content -Path "${{ steps.run_dir.outputs.path }}/evidence-metadata.json" -Encoding UTF8
 
       - name: Upload admission matrix evidence artifact
         uses: actions/upload-artifact@v6
         with:
-          name: admission-matrix-evidence
+          name: admission-lab-evidence
           path: |
             ${{ steps.run_dir.outputs.path }}/matrix-index.json
             ${{ steps.run_dir.outputs.path }}/matrix-summary.md
             ${{ steps.run_dir.outputs.path }}/regression-valid-allow.json
-            ${{ steps.run_dir.outputs.path }}/matrix-run-metadata.json
+            ${{ steps.run_dir.outputs.path }}/evidence-metadata.json
             ${{ steps.run_dir.outputs.path }}/VALID_ALLOW
             ${{ steps.run_dir.outputs.path }}/NEG_UNSIGNED_DENY
             ${{ steps.run_dir.outputs.path }}/NEG_MISSING_SBOM_DENY

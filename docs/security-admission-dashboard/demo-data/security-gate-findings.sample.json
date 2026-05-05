@@ -1,7 +1,7 @@
-{
+﻿{
   "source": "sample-from-run-34",
   "run": {
-    "workflow": "secure-supply-chain",
+    "workflow": "ci-service",
     "run_number": 34,
     "commit": "f8ddd94"
   },
@@ -48,3 +48,4 @@
     }
   ]
 }
+
