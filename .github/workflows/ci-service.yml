@@ -21,6 +21,10 @@ on:
         description: "Service to run (blank = changed only, 'all' = all services)"
         required: false
         default: ""
+      mode:
+        description: "Execution mode: normal or benchmark"
+        required: false
+        default: "normal"
 
 env:
   REGISTRY: ghcr.io
@@ -81,7 +85,7 @@ jobs:
 
   verify-cross-os:
     needs: discover
-    if: needs.discover.outputs.has_services == 'true'
+    if: needs.discover.outputs.has_services == 'true' && (inputs.mode || 'normal') != 'benchmark'
     strategy:
       fail-fast: false
       matrix:
@@ -112,9 +116,27 @@ jobs:
           go version
           Write-Output "Windows runner parity smoke completed."
 
+  windows-gh-hosted-smoke:
+    needs: discover
+    if: needs.discover.outputs.has_services == 'true' && (inputs.mode || 'normal') == 'benchmark'
+    runs-on: windows-2022
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.9"
+      - name: Report Windows toolchain
+        shell: powershell
+        run: |
+          go version
+          Write-Output "GitHub-hosted Windows smoke completed."
+
   supply-chain-ubuntu:
     needs: discover
-    if: needs.discover.outputs.has_services == 'true'
+    if: needs.discover.outputs.has_services == 'true' && (inputs.mode || 'normal') != 'benchmark'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
