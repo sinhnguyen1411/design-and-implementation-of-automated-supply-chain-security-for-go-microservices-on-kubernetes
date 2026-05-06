@@ -119,54 +119,94 @@ def parse_security_gate(
     gh: GitHubApi, artifacts: dict[str, dict[str, Any]]
 ) -> tuple[dict[str, Any] | None, bool]:
     evidence_unavailable = False
+    diagnostics: list[str] = []
 
-    findings_art = artifacts.get(SECURITY_FINDINGS_ARTIFACT)
-    if findings_art is None:
-        findings_art = next(
-            (art for name, art in artifacts.items() if str(name).endswith(f"-{SECURITY_FINDINGS_ARTIFACT}")),
-            None,
-        )
-    if findings_art:
-        if findings_art.get("expired"):
-            return None, True
+    def with_service_name(rows: list[dict[str, Any]], artifact_name: str) -> list[dict[str, Any]]:
+        service_name = ""
+        if artifact_name.endswith(f"-{SECURITY_FINDINGS_ARTIFACT}"):
+            service_name = artifact_name[: -len(f"-{SECURITY_FINDINGS_ARTIFACT}")]
+        elif artifact_name.endswith(f"-{GRYPE_ARTIFACT}"):
+            service_name = artifact_name[: -len(f"-{GRYPE_ARTIFACT}")]
+        if not service_name:
+            return rows
+        enriched: list[dict[str, Any]] = []
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            merged = dict(row)
+            merged.setdefault("service", service_name)
+            enriched.append(merged)
+        return enriched
+
+    def candidate_artifacts(suffix: str) -> list[tuple[str, dict[str, Any]]]:
+        exact = artifacts.get(suffix)
+        scoped = [
+            (str(name), art)
+            for name, art in artifacts.items()
+            if str(name).endswith(f"-{suffix}")
+        ]
+        if exact is not None:
+            return [(suffix, exact)] + scoped
+        return scoped
+
+    findings_all: list[dict[str, Any]] = []
+    findings_candidates = candidate_artifacts(SECURITY_FINDINGS_ARTIFACT)
+    for art_name, art in findings_candidates:
+        if art.get("expired"):
+            evidence_unavailable = True
+            diagnostics.append(f"{art_name}: expired")
+            continue
         try:
-            blob = gh.download_bytes(findings_art["archive_download_url"])
+            blob = gh.download_bytes(art["archive_download_url"])
             findings_json_raw = read_zip_file_by_basename(blob, "security-gate-findings.json")
-            if findings_json_raw:
-                parsed = json.loads(str(findings_json_raw))
-                findings = parsed if isinstance(parsed, list) else parsed.get("findings", [])
-                if not isinstance(findings, list):
-                    findings = []
-                return {
-                    "count": len(findings),
-                    "findings": findings,
-                    "source": SECURITY_FINDINGS_ARTIFACT,
-                }, False
-        except Exception:
+            if not findings_json_raw:
+                diagnostics.append(f"{art_name}: security-gate-findings.json missing in artifact zip")
+                continue
+            parsed = json.loads(str(findings_json_raw))
+            findings = parsed if isinstance(parsed, list) else parsed.get("findings", [])
+            if not isinstance(findings, list):
+                diagnostics.append(f"{art_name}: findings payload is not a list")
+                continue
+            findings_all.extend(with_service_name(findings, art_name))
+        except Exception as exc:
             evidence_unavailable = True
+            diagnostics.append(f"{art_name}: {exc}")
 
-    grype_art = artifacts.get(GRYPE_ARTIFACT)
-    if grype_art is None:
-        grype_art = next(
-            (art for name, art in artifacts.items() if str(name).endswith(f"-{GRYPE_ARTIFACT}")),
-            None,
-        )
-    if grype_art:
-        if grype_art.get("expired"):
-            return None, True
-        try:
-            blob = gh.download_bytes(grype_art["archive_download_url"])
-            grype_raw = read_zip_file_by_basename(blob, "grype-report.json")
-            if grype_raw:
-                parsed = json.loads(str(grype_raw))
-                findings = normalize_fixable_findings_from_grype(parsed)
-                return {
-                    "count": len(findings),
-                    "findings": findings,
-                    "source": f"{GRYPE_ARTIFACT} (derived)",
-                }, False
-        except Exception:
+    if findings_all:
+        return {
+            "count": len(findings_all),
+            "findings": findings_all,
+            "source": f"{SECURITY_FINDINGS_ARTIFACT} (aggregated)",
+            "diagnostics": diagnostics,
+        }, evidence_unavailable
+
+    grype_candidates = candidate_artifacts(GRYPE_ARTIFACT)
+    grype_all: list[dict[str, Any]] = []
+    for art_name, art in grype_candidates:
+        if art.get("expired"):
             evidence_unavailable = True
+            diagnostics.append(f"{art_name}: expired")
+            continue
+        try:
+            blob = gh.download_bytes(art["archive_download_url"])
+            grype_raw = read_zip_file_by_basename(blob, "grype-report.json")
+            if not grype_raw:
+                diagnostics.append(f"{art_name}: grype-report.json missing in artifact zip")
+                continue
+            parsed = json.loads(str(grype_raw))
+            findings = normalize_fixable_findings_from_grype(parsed)
+            grype_all.extend(with_service_name(findings, art_name))
+        except Exception as exc:
+            evidence_unavailable = True
+            diagnostics.append(f"{art_name}: {exc}")
+
+    if grype_all:
+        return {
+            "count": len(grype_all),
+            "findings": grype_all,
+            "source": f"{GRYPE_ARTIFACT} (derived, aggregated)",
+            "diagnostics": diagnostics,
+        }, evidence_unavailable
 
     return None, evidence_unavailable
 

@@ -919,7 +919,11 @@ function renderCveFromSnapshotRun(run) {
   const securityGate = run.security_gate || {};
   const findings = Array.isArray(securityGate.findings) ? securityGate.findings : [];
   const source = `snapshot/${String(run.workflow_key || "workflow")}#${String(run.run_number || "-")}`;
-  renderGateFindings(findings, source);
+  if (findings.length > 0) {
+    renderGateFindings(findings, source);
+    return true;
+  }
+  return false;
 }
 
 async function loadSnapshotRun(runId) {
@@ -962,7 +966,11 @@ async function loadSnapshotRun(runId) {
     dom.artifactList.innerHTML = `<li>${t("noArtifactsAvailable")}</li>`;
   }
 
-  renderCveFromSnapshotRun(run);
+  const renderedFromSnapshot = renderCveFromSnapshotRun(run);
+  if (!renderedFromSnapshot) {
+    // Fallback for runs where snapshot couldn't ingest artifact findings.
+    void loadGateFindings();
+  }
 
   if (regression && regression.verdict) {
     state.lastLoadStatus = "loaded";
