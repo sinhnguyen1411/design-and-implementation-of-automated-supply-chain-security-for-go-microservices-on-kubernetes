@@ -1,0 +1,52 @@
+name: runner-ab-benchmark
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_service:
+        description: "Service path to benchmark"
+        required: false
+        default: "services/user-service"
+      go_version:
+        description: "Go version"
+        required: false
+        default: "1.25.9"
+
+jobs:
+  gh-hosted-windows:
+    name: gh-hosted-windows
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: powershell
+        working-directory: ${{ inputs.target_service || 'services/user-service' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.go_version || '1.25.9' }}
+      - name: Workload (go test)
+        run: |
+          go version
+          go test ./...
+
+  self-hosted-windows-parity:
+    name: self-hosted-windows-parity
+    runs-on: [self-hosted, Windows, X64, parity]
+    defaults:
+      run:
+        shell: powershell
+        working-directory: ${{ inputs.target_service || 'services/user-service' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.go_version || '1.25.9' }}
+      - name: Workload (go test)
+        run: |
+          go version
+          go test ./...

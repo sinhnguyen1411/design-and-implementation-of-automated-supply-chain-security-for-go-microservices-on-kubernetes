@@ -93,6 +93,45 @@ Deployment contract note:
 - `deploy/kubernetes/base/deployment.yaml` keeps security annotations empty by design.
 - With Kyverno policies enabled, apply CI-rendered overlay (`deploy/kubernetes/overlays/ci`) for compliant deploys.
 
+## Minimum Requirements
+To run this repository reliably (local + CI), use the following baseline:
+
+1. OS
+- Windows 10/11 x64, or Ubuntu 22.04+ for Linux local development.
+
+2. Required tools
+- `git` (with Git Credential Manager)
+- `go` `1.25.9`
+- `docker` with Buildx
+- `gh` (GitHub CLI), authenticated via `gh auth login`
+- `python` 3.10+
+- `kubectl` and `kind` (required for admission lab flows)
+
+3. GitHub access and permissions
+- GitHub token scopes: `repo`, `workflow`
+- Add `write:packages` if pushing images to GHCR.
+- GitHub Actions must be enabled for the repository.
+
+4. Runner baseline
+- GitHub-hosted runners: `ubuntu-latest`, `windows-2022`, `macos-latest`
+- Optional self-hosted parity runner labels: `self-hosted`, `Windows`, `X64`, `parity`
+
+5. Repository structure baseline
+- `services.yaml` must be valid and mapped to all services.
+- Each service should include: `go.mod`, `go.sum`, `Dockerfile`, and runnable `go test ./...`.
+
+## Minimum Hardware
+- CPU: `4 cores`
+- RAM: `16 GB`
+- GPU: not required
+- Storage: at least `50 GB` free SSD
+- Network: stable internet connection for container/image and artifact downloads
+
+Self-hosted Windows runner minimum:
+- CPU: `4 vCPU`
+- RAM: `16 GB`
+- Free disk for Docker/cache: `20-30 GB`
+
 ## How to Run the Local Signed Demo
 Use [scripts/local_signed_demo.ps1](scripts/local_signed_demo.ps1) to run the end-to-end local demonstration on the current Kubernetes context.
 

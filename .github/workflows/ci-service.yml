@@ -21,6 +21,10 @@ on:
         description: "Service to run (blank = changed only, 'all' = all services)"
         required: false
         default: ""
+      mode:
+        description: "Execution mode: normal or benchmark"
+        required: false
+        default: "normal"
 
 env:
   REGISTRY: ghcr.io
@@ -81,7 +85,7 @@ jobs:
 
   verify-cross-os:
     needs: discover
-    if: needs.discover.outputs.has_services == 'true'
+    if: needs.discover.outputs.has_services == 'true' && (inputs.mode || 'normal') != 'benchmark'
     strategy:
       fail-fast: false
       matrix:
@@ -97,6 +101,23 @@ jobs:
   windows-parity-smoke:
     needs: discover
     if: needs.discover.outputs.has_services == 'true'
+    runs-on: [self-hosted, Windows, X64, parity]
+    continue-on-error: true
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.9"
+      - name: Report Windows toolchain
+        shell: powershell
+        run: |
+          go version
+          go env GOOS GOARCH GOROOT
+          Write-Output "Windows runner parity smoke completed."
+
+  windows-gh-hosted-smoke:
+    needs: discover
+    if: needs.discover.outputs.has_services == 'true' && (inputs.mode || 'normal') == 'benchmark'
     runs-on: windows-2022
     continue-on-error: true
     steps:
@@ -105,14 +126,15 @@ jobs:
         with:
           go-version: "1.25.9"
       - name: Report Windows toolchain
-        shell: pwsh
+        shell: powershell
         run: |
           go version
-          Write-Output "Windows runner parity smoke completed."
+          go env GOOS GOARCH GOROOT
+          Write-Output "GitHub-hosted Windows smoke completed."
 
   supply-chain-ubuntu:
     needs: discover
-    if: needs.discover.outputs.has_services == 'true'
+    if: needs.discover.outputs.has_services == 'true' && (inputs.mode || 'normal') != 'benchmark'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -161,6 +183,7 @@ jobs:
         with:
           image: ${{ steps.meta.outputs.image }}
           output-format: json
+          output-file: ${{ matrix.path }}/grype-report.json
           fail-build: false
           severity-cutoff: high
 
@@ -168,7 +191,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ -f "${GITHUB_WORKSPACE}/results.json" ]; then
+          if [ -f "${{ matrix.path }}/grype-report.json" ]; then
+            echo "grype-report.json already written by scan-action"
+          elif [ -f "${GITHUB_WORKSPACE}/results.json" ]; then
             cp "${GITHUB_WORKSPACE}/results.json" "${{ matrix.path }}/grype-report.json"
           fi
 
@@ -203,6 +228,78 @@ jobs:
                       "fixed_versions": fix.get("versions", []) or [],
                   })
           out.write_text(json.dumps({"findings": findings}, indent=2), encoding="utf-8")
+
+      - name: Render security gate summary (job summary)
+        shell: python
+        env:
+          MATRIX_NAME: ${{ matrix.name }}
+        run: |
+          import json
+          from pathlib import Path
+          import os
+
+          gate = Path("${{ matrix.path }}/security-gate-findings.json")
+          findings = []
+          if gate.exists():
+            payload = json.loads(gate.read_text(encoding="utf-8"))
+            findings = payload if isinstance(payload, list) else payload.get("findings", [])
+            if not isinstance(findings, list):
+              findings = []
+
+          count = len(findings)
+          summary_path = Path(os.environ["GITHUB_STEP_SUMMARY"])
+          matrix_name = os.environ.get("MATRIX_NAME", "service")
+          lines = [
+              f"## Security Gate Findings ({matrix_name})",
+              "",
+              "- Gate mode: `enforced`",
+              f"- Fixable high/critical count: `{count}`",
+              "",
+          ]
+
+          if count == 0:
+              lines.extend([
+                  "No fixable high/critical vulnerabilities found.",
+                  "",
+              ])
+          else:
+              lines.extend([
+                  "| CVE | Severity | Package | Installed | Fix State | Fixed Versions |",
+                  "|---|---|---|---|---|---|",
+              ])
+              for item in findings:
+                  cve = str(item.get("cve", "-")).replace("|", "\\|")
+                  sev = str(item.get("severity", "-")).replace("|", "\\|")
+                  pkg = str(item.get("package", "-")).replace("|", "\\|")
+                  installed = str(item.get("installed", "-")).replace("|", "\\|")
+                  fix_state = str(item.get("fix_state", "-")).replace("|", "\\|")
+                  fixed_versions = item.get("fixed_versions", [])
+                  if isinstance(fixed_versions, list):
+                      fixed = ", ".join(str(v) for v in fixed_versions) if fixed_versions else "-"
+                  else:
+                      fixed = str(fixed_versions or "-")
+                  fixed = fixed.replace("|", "\\|")
+                  lines.append(f"| {cve} | {sev} | {pkg} | {installed} | {fix_state} | {fixed} |")
+              lines.append("")
+
+          summary_path.write_text("\n".join(lines), encoding="utf-8")
+
+      - name: Enforce security gate
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+
+          gate = Path("${{ matrix.path }}/security-gate-findings.json")
+          findings = []
+          if gate.exists():
+            payload = json.loads(gate.read_text(encoding="utf-8"))
+            findings = payload if isinstance(payload, list) else payload.get("findings", [])
+            if not isinstance(findings, list):
+              findings = []
+
+          if findings:
+            raise SystemExit("Security gate failed: fixable high/critical vulnerabilities detected.")
 
       - name: Upload SBOM artifact
         if: always()
