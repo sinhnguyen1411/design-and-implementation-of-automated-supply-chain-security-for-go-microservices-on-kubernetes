@@ -120,6 +120,18 @@ To run this repository reliably (local + CI), use the following baseline:
 - `services.yaml` must be valid and mapped to all services.
 - Each service should include: `go.mod`, `go.sum`, `Dockerfile`, and runnable `go test ./...`.
 
+## Minimum Hardware
+- CPU: `4 cores`
+- RAM: `16 GB`
+- GPU: not required
+- Storage: at least `50 GB` free SSD
+- Network: stable internet connection for container/image and artifact downloads
+
+Self-hosted Windows runner minimum:
+- CPU: `4 vCPU`
+- RAM: `16 GB`
+- Free disk for Docker/cache: `20-30 GB`
+
 ## How to Run the Local Signed Demo
 Use [scripts/local_signed_demo.ps1](scripts/local_signed_demo.ps1) to run the end-to-end local demonstration on the current Kubernetes context.
 
