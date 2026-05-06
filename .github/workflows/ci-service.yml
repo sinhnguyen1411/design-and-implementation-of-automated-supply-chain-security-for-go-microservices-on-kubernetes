@@ -25,6 +25,10 @@ on:
         description: "Execution mode: normal or benchmark"
         required: false
         default: "normal"
+      gate_mode:
+        description: "Security gate mode: enforced or warn"
+        required: false
+        default: "enforced"
 
 env:
   REGISTRY: ghcr.io
@@ -286,20 +290,29 @@ jobs:
 
       - name: Enforce security gate
         shell: python
+        env:
+          GATE_MODE: ${{ inputs.gate_mode || 'enforced' }}
         run: |
           import json
+          import os
           from pathlib import Path
 
           gate = Path("${{ matrix.path }}/security-gate-findings.json")
           findings = []
+          gate_mode = (os.environ.get("GATE_MODE", "enforced") or "enforced").strip().lower()
+          if gate_mode not in ("enforced", "warn"):
+            gate_mode = "enforced"
+
           if gate.exists():
             payload = json.loads(gate.read_text(encoding="utf-8"))
             findings = payload if isinstance(payload, list) else payload.get("findings", [])
             if not isinstance(findings, list):
               findings = []
 
-          if findings:
+          if findings and gate_mode == "enforced":
             raise SystemExit("Security gate failed: fixable high/critical vulnerabilities detected.")
+          if findings and gate_mode == "warn":
+            print("Security gate warning mode: findings detected but pipeline not failed.")
 
       - name: Upload SBOM artifact
         if: always()
