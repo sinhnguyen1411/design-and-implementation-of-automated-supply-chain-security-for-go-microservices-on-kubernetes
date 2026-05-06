@@ -161,6 +161,7 @@ jobs:
         with:
           image: ${{ steps.meta.outputs.image }}
           output-format: json
+          output-file: ${{ matrix.path }}/grype-report.json
           fail-build: false
           severity-cutoff: high
 
@@ -168,7 +169,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ -f "${GITHUB_WORKSPACE}/results.json" ]; then
+          if [ -f "${{ matrix.path }}/grype-report.json" ]; then
+            echo "grype-report.json already written by scan-action"
+          elif [ -f "${GITHUB_WORKSPACE}/results.json" ]; then
             cp "${GITHUB_WORKSPACE}/results.json" "${{ matrix.path }}/grype-report.json"
           fi
 
