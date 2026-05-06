@@ -16,6 +16,7 @@ import urllib.parse
 import urllib.request
 import zipfile
 from typing import Any
+from urllib.error import HTTPError
 
 
 WORKFLOW_PATHS = {
@@ -70,9 +71,26 @@ class GitHubApi:
         return items
 
     def download_bytes(self, url: str) -> bytes:
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, req, fp, code, msg, hdrs, newurl):  # type: ignore[override]
+                return None
+
         req = urllib.request.Request(url=url, headers=self.default_headers, method="GET")
-        with urllib.request.urlopen(req, timeout=120) as resp:
-            return resp.read()
+        opener = urllib.request.build_opener(NoRedirect)
+        try:
+            with opener.open(req, timeout=120) as resp:
+                return resp.read()
+        except HTTPError as exc:
+            redirect_target = exc.headers.get("Location", "")
+            if exc.code in (301, 302, 303, 307, 308) and redirect_target:
+                public_req = urllib.request.Request(
+                    url=redirect_target,
+                    headers={"User-Agent": self.default_headers.get("User-Agent", "dashboard-data-sync")},
+                    method="GET",
+                )
+                with urllib.request.urlopen(public_req, timeout=120) as resp:
+                    return resp.read()
+            raise
 
 
 def normalize_fixable_findings_from_grype(grype_report: dict[str, Any]) -> list[dict[str, Any]]:
@@ -86,9 +104,6 @@ def normalize_fixable_findings_from_grype(grype_report: dict[str, Any]) -> list[
 
         if severity not in ("high", "critical"):
             continue
-        if fix_state in ("wont-fix", "not-fixed", "unknown"):
-            continue
-
         findings.append(
             {
                 "cve": vulnerability.get("id", ""),
@@ -150,6 +165,7 @@ def parse_security_gate(
         return scoped
 
     findings_all: list[dict[str, Any]] = []
+    parsed_findings_artifact = False
     findings_candidates = candidate_artifacts(SECURITY_FINDINGS_ARTIFACT)
     for art_name, art in findings_candidates:
         if art.get("expired"):
@@ -167,12 +183,13 @@ def parse_security_gate(
             if not isinstance(findings, list):
                 diagnostics.append(f"{art_name}: findings payload is not a list")
                 continue
+            parsed_findings_artifact = True
             findings_all.extend(with_service_name(findings, art_name))
         except Exception as exc:
             evidence_unavailable = True
             diagnostics.append(f"{art_name}: {exc}")
 
-    if findings_all:
+    if findings_all or parsed_findings_artifact:
         return {
             "count": len(findings_all),
             "findings": findings_all,
