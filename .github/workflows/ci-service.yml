@@ -29,6 +29,10 @@ on:
         description: "Security gate mode: enforced or warn"
         required: false
         default: "enforced"
+      runner_target:
+        description: "Windows smoke runner target: auto | self-hosted | gh-hosted"
+        required: false
+        default: "auto"
 
 env:
   REGISTRY: ghcr.io
@@ -104,7 +108,7 @@ jobs:
 
   windows-parity-smoke:
     needs: discover
-    if: needs.discover.outputs.has_services == 'true'
+    if: needs.discover.outputs.has_services == 'true' && ((inputs.runner_target || 'auto') == 'self-hosted' || github.event_name != 'workflow_dispatch')
     runs-on: [self-hosted, Windows, X64, parity]
     continue-on-error: true
     steps:
@@ -121,7 +125,7 @@ jobs:
 
   windows-gh-hosted-smoke:
     needs: discover
-    if: needs.discover.outputs.has_services == 'true' && (inputs.mode || 'normal') == 'benchmark'
+    if: needs.discover.outputs.has_services == 'true' && (((inputs.mode || 'normal') == 'benchmark') || ((inputs.runner_target || 'auto') == 'gh-hosted') || ((inputs.runner_target || 'auto') == 'auto' && github.event_name == 'workflow_dispatch'))
     runs-on: windows-2022
     continue-on-error: true
     steps:
