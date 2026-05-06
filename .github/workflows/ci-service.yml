@@ -209,6 +209,8 @@ jobs:
 
       - name: Render security gate summary (job summary)
         shell: python
+        env:
+          MATRIX_NAME: ${{ matrix.name }}
         run: |
           import json
           from pathlib import Path
@@ -224,8 +226,9 @@ jobs:
 
           count = len(findings)
           summary_path = Path(os.environ["GITHUB_STEP_SUMMARY"])
+          matrix_name = os.environ.get("MATRIX_NAME", "service")
           lines = [
-              f"## Security Gate Findings (${{{{ matrix.name }}}})",
+              f"## Security Gate Findings ({matrix_name})",
               "",
               "- Gate mode: `enforced`",
               f"- Fixable high/critical count: `{count}`",
