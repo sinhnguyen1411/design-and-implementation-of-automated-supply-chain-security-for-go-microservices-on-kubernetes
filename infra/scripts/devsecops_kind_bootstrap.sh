@@ -9,7 +9,7 @@ KYVERNO_VERSION="${KYVERNO_VERSION:-v1.12.5}"
 KYVERNO_ROLLOUT_TIMEOUT="${KYVERNO_ROLLOUT_TIMEOUT:-240s}"
 RESET_CLUSTER="${RESET_CLUSTER:-false}"
 KIND_CONTEXT="kind-${KIND_CLUSTER_NAME}"
-KYVERNO_INSTALL_URL="https://raw.githubusercontent.com/kyverno/kyverno/${KYVERNO_VERSION}/config/release/install.yaml"
+KYVERNO_INSTALL_URL="https://github.com/kyverno/kyverno/releases/download/${KYVERNO_VERSION}/install.yaml"
 
 if ! command -v kind >/dev/null 2>&1; then
   echo "kind is required" >&2
