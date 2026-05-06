@@ -29,9 +29,21 @@ $runIds = @()
 for ($i = 1; $i -le $Iterations; $i++) {
   Write-Host "Dispatch iteration $i/$Iterations ..."
   gh workflow run ci-service.yml --repo $Repo --ref $Branch -f service=all -f mode=benchmark | Out-Null
-  Start-Sleep -Seconds 2
-  $run = gh run list --repo $Repo --workflow ci-service.yml --branch $Branch --limit 1 --json databaseId | ConvertFrom-Json
-  $runId = $run[0].databaseId
+  $runId = $null
+  for ($retry = 0; $retry -lt 20; $retry++) {
+    Start-Sleep -Seconds 2
+    $candidates = gh run list --repo $Repo --workflow ci-service.yml --branch $Branch --limit 20 --json databaseId | ConvertFrom-Json
+    foreach ($c in $candidates) {
+      if ($runIds -notcontains $c.databaseId) {
+        $runId = $c.databaseId
+        break
+      }
+    }
+    if ($runId) { break }
+  }
+  if (-not $runId) {
+    throw "Unable to detect unique run id after dispatch."
+  }
   $runIds += $runId
   Write-Host "Run: $runId"
 }
