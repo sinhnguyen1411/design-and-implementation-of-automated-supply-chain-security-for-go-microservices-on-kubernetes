@@ -23,14 +23,27 @@ on:
         default: ""
       mode:
         description: "Execution mode: normal or benchmark"
+        type: choice
+        options:
+          - normal
+          - benchmark
         required: false
         default: "normal"
       gate_mode:
         description: "Security gate mode: enforced or warn"
+        type: choice
+        options:
+          - enforced
+          - warn
         required: false
         default: "enforced"
       runner_target:
         description: "Windows smoke runner target: auto | self-hosted | gh-hosted"
+        type: choice
+        options:
+          - auto
+          - self-hosted
+          - gh-hosted
         required: false
         default: "auto"
 
