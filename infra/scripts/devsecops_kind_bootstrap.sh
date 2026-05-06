@@ -60,6 +60,20 @@ wait_for_kyverno() {
   return 1
 }
 
+wait_for_kyverno_webhook() {
+  for _ in $(seq 1 30); do
+    if kubectl -n kyverno get endpoints kyverno-svc -o jsonpath='{.subsets[0].addresses[0].ip}' 2>/dev/null | grep -Eq '^[0-9]'; then
+      echo "Kyverno webhook endpoint is ready."
+      return 0
+    fi
+    sleep 2
+  done
+
+  echo "Kyverno webhook endpoint did not become ready in time." >&2
+  kubectl -n kyverno get svc,endpoints || true
+  return 1
+}
+
 echo "[1/4] Preparing Kind cluster: $KIND_CLUSTER_NAME"
 if [[ "${RESET_CLUSTER}" == "true" ]] && cluster_exists; then
   echo "RESET_CLUSTER=true -> deleting existing cluster ${KIND_CLUSTER_NAME}"
@@ -92,6 +106,8 @@ kubectl create namespace kyverno || true
 # Use server-side apply to avoid oversized last-applied annotations on large CRDs.
 kubectl apply --server-side -f "$KYVERNO_INSTALL_URL"
 wait_for_kyverno
+kubectl -n kyverno wait --for=condition=Available deploy --all --timeout="${KYVERNO_ROLLOUT_TIMEOUT}"
+wait_for_kyverno_webhook
 
 echo "[3/4] Applying supply-chain policies"
 kubectl apply -k infra/policies/kyverno
