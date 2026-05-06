@@ -89,7 +89,8 @@ fi
 
 echo "[2/4] Installing or reconciling Kyverno (${KYVERNO_VERSION})"
 kubectl create namespace kyverno || true
-kubectl apply -f "$KYVERNO_INSTALL_URL"
+# Use server-side apply to avoid oversized last-applied annotations on large CRDs.
+kubectl apply --server-side -f "$KYVERNO_INSTALL_URL"
 wait_for_kyverno
 
 echo "[3/4] Applying supply-chain policies"
