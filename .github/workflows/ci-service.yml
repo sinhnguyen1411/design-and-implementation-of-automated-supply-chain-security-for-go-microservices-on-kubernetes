@@ -104,10 +104,6 @@ jobs:
     runs-on: [self-hosted, Windows, X64, parity]
     continue-on-error: true
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          path: s
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
@@ -116,6 +112,7 @@ jobs:
         shell: powershell
         run: |
           go version
+          go env GOOS GOARCH GOROOT
           Write-Output "Windows runner parity smoke completed."
 
   windows-gh-hosted-smoke:
@@ -124,10 +121,6 @@ jobs:
     runs-on: windows-2022
     continue-on-error: true
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          path: s
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
@@ -136,6 +129,7 @@ jobs:
         shell: powershell
         run: |
           go version
+          go env GOOS GOARCH GOROOT
           Write-Output "GitHub-hosted Windows smoke completed."
 
   supply-chain-ubuntu:
