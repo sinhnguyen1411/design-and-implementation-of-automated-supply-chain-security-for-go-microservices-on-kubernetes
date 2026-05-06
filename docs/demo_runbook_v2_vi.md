@@ -267,6 +267,14 @@ Fallback:
 
 ## 8) Local GitHub automation bootstrap
 
+- Neu PowerShell hien thi tieng Viet bi loi (`phÃºt`, `ká»‹ch báº£n`...), doi console sang UTF-8 truoc:
+
+```powershell
+chcp 65001
+[Console]::InputEncoding  = [System.Text.UTF8Encoding]::new($false)
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+```
+
 - Luu y quan trong:
   - Dang nhap GitHub Desktop khong dong nghia `gh` da duoc auth.
   - De tu dong hoa workflow dispatch + theo doi run, can bootstrap `gh` mot lan.
