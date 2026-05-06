@@ -264,3 +264,27 @@ Fallback:
 - Luu y runner Windows:
   - Verify lane Windows duoc tach thanh `windows-parity-smoke` de tranh loi checkout path-length.
   - Security gate chinh van duoc khoa xanh tren Ubuntu/macOS; Windows parity duoc theo doi rieng.
+
+## 8) Local GitHub automation bootstrap
+
+- Luu y quan trong:
+  - Dang nhap GitHub Desktop khong dong nghia `gh` da duoc auth.
+  - De tu dong hoa workflow dispatch + theo doi run, can bootstrap `gh` mot lan.
+- One-click bootstrap:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File infra/scripts/bootstrap_github_automation.ps1
+```
+
+- Non-interactive mode (CI/local secret env):
+
+```powershell
+$env:GH_TOKEN="<your-pat>"
+powershell -NoProfile -ExecutionPolicy Bypass -File infra/scripts/bootstrap_github_automation.ps1 -NonInteractive $true
+```
+
+- Run lane sequence sau bootstrap:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File infra/scripts/run_ci_lanes.ps1 -Branch main -Wait $true -StopOnFail $true
+```
