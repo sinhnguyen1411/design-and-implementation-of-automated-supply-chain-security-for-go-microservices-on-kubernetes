@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.7
+﻿# syntax=docker/dockerfile:1.7
 
 ARG GO_VERSION=1.25.9
 
@@ -33,7 +33,7 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     -trimpath \
     -o /out/user-service .
 
-FROM gcr.io/distroless/base-debian12:nonroot@sha256:8b9f2e503e55aff85b79d6b22c7a63a65170e8698ae80de680e3f5ea600977bf AS runtime
+FROM gcr.io/distroless/base-debian11:nonroot AS runtime
 LABEL org.opencontainers.image.title="stock-trading-user-service" \
       org.opencontainers.image.vendor="stock-trading" \
       org.opencontainers.image.licenses="Apache-2.0" \
@@ -51,3 +51,4 @@ USER nonroot:nonroot
 
 ENTRYPOINT ["/usr/local/bin/user-service"]
 CMD ["server", "--config", "/etc/stock-trading/config.yaml"]
+
