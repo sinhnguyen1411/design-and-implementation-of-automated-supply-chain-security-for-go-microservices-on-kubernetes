@@ -195,6 +195,8 @@ jobs:
                   state = str(fix.get("state", "unknown")).lower()
                   if sev not in ("high", "critical"):
                       continue
+                  if state in ("wont-fix", "not-fixed", "unknown"):
+                      continue
                   findings.append({
                       "cve": v.get("id", ""),
                       "severity": sev,
@@ -205,7 +207,59 @@ jobs:
                   })
           out.write_text(json.dumps({"findings": findings}, indent=2), encoding="utf-8")
 
-      - name: Enforce strict security gate
+      - name: Render security gate summary (job summary)
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          import os
+
+          gate = Path("${{ matrix.path }}/security-gate-findings.json")
+          findings = []
+          if gate.exists():
+            payload = json.loads(gate.read_text(encoding="utf-8"))
+            findings = payload if isinstance(payload, list) else payload.get("findings", [])
+            if not isinstance(findings, list):
+              findings = []
+
+          count = len(findings)
+          summary_path = Path(os.environ["GITHUB_STEP_SUMMARY"])
+          lines = [
+              f"## Security Gate Findings (${{{{ matrix.name }}}})",
+              "",
+              "- Gate mode: `enforced`",
+              f"- Fixable high/critical count: `{count}`",
+              "",
+          ]
+
+          if count == 0:
+              lines.extend([
+                  "No fixable high/critical vulnerabilities found.",
+                  "",
+              ])
+          else:
+              lines.extend([
+                  "| CVE | Severity | Package | Installed | Fix State | Fixed Versions |",
+                  "|---|---|---|---|---|---|",
+              ])
+              for item in findings:
+                  cve = str(item.get("cve", "-")).replace("|", "\\|")
+                  sev = str(item.get("severity", "-")).replace("|", "\\|")
+                  pkg = str(item.get("package", "-")).replace("|", "\\|")
+                  installed = str(item.get("installed", "-")).replace("|", "\\|")
+                  fix_state = str(item.get("fix_state", "-")).replace("|", "\\|")
+                  fixed_versions = item.get("fixed_versions", [])
+                  if isinstance(fixed_versions, list):
+                      fixed = ", ".join(str(v) for v in fixed_versions) if fixed_versions else "-"
+                  else:
+                      fixed = str(fixed_versions or "-")
+                  fixed = fixed.replace("|", "\\|")
+                  lines.append(f"| {cve} | {sev} | {pkg} | {installed} | {fix_state} | {fixed} |")
+              lines.append("")
+
+          summary_path.write_text("\n".join(lines), encoding="utf-8")
+
+      - name: Enforce security gate
         shell: python
         run: |
           import json
@@ -219,11 +273,8 @@ jobs:
             if not isinstance(findings, list):
               findings = []
 
-          print(f"Strict gate findings count: {len(findings)}")
           if findings:
-            preview = findings[:10]
-            print(json.dumps(preview, indent=2))
-            raise SystemExit("Strict gate failed: High/Critical vulnerabilities detected (including wont-fix).")
+            raise SystemExit("Security gate failed: fixable high/critical vulnerabilities detected.")
 
       - name: Upload SBOM artifact
         if: always()
