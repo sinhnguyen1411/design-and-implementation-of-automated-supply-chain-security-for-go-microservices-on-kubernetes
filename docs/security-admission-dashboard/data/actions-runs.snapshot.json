@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-07T05:49:20.655335+00:00",
+  "generated_at": "2026-05-07T13:57:51.836312+00:00",
   "repository": "sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes",
   "top_n_per_workflow": 100,
   "workflows": [
@@ -642,10 +642,10 @@
           "run_number": 43,
           "run_id": 25439717235,
           "head_sha": "c2df7b96bda6d5a96db0386313019984e7055bb5",
-          "status": "queued",
-          "conclusion": null,
+          "status": "completed",
+          "conclusion": "cancelled",
           "created_at": "2026-05-06T13:55:32Z",
-          "updated_at": "2026-05-06T13:55:48Z",
+          "updated_at": "2026-05-07T13:55:49Z",
           "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25439717235",
           "artifacts": {
             "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~EXIU1T.dockerbuild": {
@@ -11179,10 +11179,10 @@
       "run_number": 43,
       "run_id": 25439717235,
       "head_sha": "c2df7b96bda6d5a96db0386313019984e7055bb5",
-      "status": "queued",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "cancelled",
       "created_at": "2026-05-06T13:55:32Z",
-      "updated_at": "2026-05-06T13:55:48Z",
+      "updated_at": "2026-05-07T13:55:49Z",
       "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25439717235",
       "artifacts": {
         "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~EXIU1T.dockerbuild": {
