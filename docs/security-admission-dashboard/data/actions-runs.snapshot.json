@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-10T05:52:13.791356+00:00",
+  "generated_at": "2026-05-11T06:06:26.710584+00:00",
   "repository": "sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes",
   "top_n_per_workflow": 100,
   "workflows": [
@@ -5738,6 +5738,150 @@
       "workflow_path": ".github/workflows/admission-matrix-evidence.yml",
       "runs": [
         {
+          "run_key": "admission-lab#33",
+          "workflow_key": "admission-lab",
+          "workflow_name": "admission-lab",
+          "workflow_path": ".github/workflows/admission-matrix-evidence.yml",
+          "run_number": 33,
+          "run_id": 25653004441,
+          "head_sha": "f9982bcf3aca6ab73f3a1a6bbf32eb47754721d0",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-05-11T05:57:10Z",
+          "updated_at": "2026-05-11T06:04:43Z",
+          "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25653004441",
+          "artifacts": {
+            "admission-lab-evidence": {
+              "id": 6911372032,
+              "name": "admission-lab-evidence",
+              "size": 69254,
+              "expired": false,
+              "created_at": "2026-05-11T06:04:39Z",
+              "updated_at": "2026-05-11T06:04:39Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6911372032/zip"
+            }
+          },
+          "security_gate": null,
+          "matrix": {
+            "cases": [
+              {
+                "case": "VALID_ALLOW",
+                "expected": "Allowed",
+                "actual": "AllowedWithRuntimePullIssue",
+                "verdict": "PASS",
+                "reason": "Admission allowed; workload creation progressed but image pull/runtime readiness did not complete in wait window.",
+                "image": "ttl.sh/stock-trading-matrix-signed-69ad7f6f35cb@sha256:99baccdf3773f67f3e26916bacb12dcfbcb8cc40f1c41453d247868a05c40a7e",
+                "include_sbom": true,
+                "high_critical": "0",
+                "apply_exit_code": 0,
+                "wait_exit_code": 1,
+                "artifacts": {
+                  "apply": "VALID_ALLOW/kubectl-apply.txt",
+                  "wait": "VALID_ALLOW/kubectl-wait.txt",
+                  "events": "VALID_ALLOW/events.txt",
+                  "workloads": "VALID_ALLOW/workloads.txt",
+                  "describe_deployment": "VALID_ALLOW/describe-deployment.txt",
+                  "describe_replicasets": "VALID_ALLOW/describe-replicasets.txt",
+                  "describe_pods": "VALID_ALLOW/describe-pods.txt",
+                  "kyverno_logs": "VALID_ALLOW/kyverno-logs.txt"
+                }
+              },
+              {
+                "case": "NEG_UNSIGNED_DENY",
+                "expected": "Denied",
+                "actual": "Denied",
+                "verdict": "PASS",
+                "reason": "Admission deny evidence detected at apply phase.",
+                "image": "ttl.sh/stock-trading-matrix-unsigned-6f353512af76@sha256:99baccdf3773f67f3e26916bacb12dcfbcb8cc40f1c41453d247868a05c40a7e",
+                "include_sbom": true,
+                "high_critical": "0",
+                "apply_exit_code": 1,
+                "wait_exit_code": -1,
+                "artifacts": {
+                  "apply": "NEG_UNSIGNED_DENY/kubectl-apply.txt",
+                  "wait": "NEG_UNSIGNED_DENY/kubectl-wait.txt",
+                  "events": "NEG_UNSIGNED_DENY/events.txt",
+                  "workloads": "NEG_UNSIGNED_DENY/workloads.txt",
+                  "describe_deployment": "NEG_UNSIGNED_DENY/describe-deployment.txt",
+                  "describe_replicasets": "NEG_UNSIGNED_DENY/describe-replicasets.txt",
+                  "describe_pods": "NEG_UNSIGNED_DENY/describe-pods.txt",
+                  "kyverno_logs": "NEG_UNSIGNED_DENY/kyverno-logs.txt"
+                }
+              },
+              {
+                "case": "NEG_MISSING_SBOM_DENY",
+                "expected": "Denied",
+                "actual": "Denied",
+                "verdict": "PASS",
+                "reason": "Admission deny evidence detected in events/ReplicaSet describe.",
+                "image": "ttl.sh/stock-trading-matrix-signed-69ad7f6f35cb@sha256:99baccdf3773f67f3e26916bacb12dcfbcb8cc40f1c41453d247868a05c40a7e",
+                "include_sbom": false,
+                "high_critical": "0",
+                "apply_exit_code": 0,
+                "wait_exit_code": 1,
+                "artifacts": {
+                  "apply": "NEG_MISSING_SBOM_DENY/kubectl-apply.txt",
+                  "wait": "NEG_MISSING_SBOM_DENY/kubectl-wait.txt",
+                  "events": "NEG_MISSING_SBOM_DENY/events.txt",
+                  "workloads": "NEG_MISSING_SBOM_DENY/workloads.txt",
+                  "describe_deployment": "NEG_MISSING_SBOM_DENY/describe-deployment.txt",
+                  "describe_replicasets": "NEG_MISSING_SBOM_DENY/describe-replicasets.txt",
+                  "describe_pods": "NEG_MISSING_SBOM_DENY/describe-pods.txt",
+                  "kyverno_logs": "NEG_MISSING_SBOM_DENY/kyverno-logs.txt"
+                }
+              },
+              {
+                "case": "NEG_CVE_THRESHOLD_DENY",
+                "expected": "Denied",
+                "actual": "Denied",
+                "verdict": "PASS",
+                "reason": "Admission deny evidence detected in events/ReplicaSet describe.",
+                "image": "ttl.sh/stock-trading-matrix-signed-69ad7f6f35cb@sha256:99baccdf3773f67f3e26916bacb12dcfbcb8cc40f1c41453d247868a05c40a7e",
+                "include_sbom": true,
+                "high_critical": "2",
+                "apply_exit_code": 0,
+                "wait_exit_code": 1,
+                "artifacts": {
+                  "apply": "NEG_CVE_THRESHOLD_DENY/kubectl-apply.txt",
+                  "wait": "NEG_CVE_THRESHOLD_DENY/kubectl-wait.txt",
+                  "events": "NEG_CVE_THRESHOLD_DENY/events.txt",
+                  "workloads": "NEG_CVE_THRESHOLD_DENY/workloads.txt",
+                  "describe_deployment": "NEG_CVE_THRESHOLD_DENY/describe-deployment.txt",
+                  "describe_replicasets": "NEG_CVE_THRESHOLD_DENY/describe-replicasets.txt",
+                  "describe_pods": "NEG_CVE_THRESHOLD_DENY/describe-pods.txt",
+                  "kyverno_logs": "NEG_CVE_THRESHOLD_DENY/kyverno-logs.txt"
+                }
+              }
+            ],
+            "summary_text": "# Admission Matrix Summary\n\n- Run ID: 20260511-055841\n- Kubernetes context: kind-thesis-evidence\n- Namespace: stock-trading\n- Signed image digest: ttl.sh/stock-trading-matrix-signed-69ad7f6f35cb@sha256:99baccdf3773f67f3e26916bacb12dcfbcb8cc40f1c41453d247868a05c40a7e\n- Unsigned image digest: ttl.sh/stock-trading-matrix-unsigned-6f353512af76@sha256:99baccdf3773f67f3e26916bacb12dcfbcb8cc40f1c41453d247868a05c40a7e\n- SBOM digest: C1BFD7D3AEEBA679E4F0CEAF11C83DBF76199091D2D8444AD6628C5B1603F102\n\n| Case | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW | Allowed | AllowedWithRuntimePullIssue | PASS | Admission allowed; workload creation progressed but image pull/runtime readiness did not complete in wait window. |\n| NEG_UNSIGNED_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n| NEG_MISSING_SBOM_DENY | Denied | Denied | PASS | Admission deny evidence detected in events/ReplicaSet describe. |\n| NEG_CVE_THRESHOLD_DENY | Denied | Denied | PASS | Admission deny evidence detected in events/ReplicaSet describe. |\n\n## Regression Re-check\n\n| Check | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW_RECHECK | Allowed | AllowedNoDenyEvidence | PASS | Regression apply succeeded; in CI this run treats post-apply readiness delay as non-blocking when no apply-time deny occurred. |\n",
+            "regression": {
+              "case": "VALID_ALLOW_RECHECK",
+              "expected": "Allowed",
+              "actual": "AllowedNoDenyEvidence",
+              "verdict": "PASS",
+              "reason": "Regression apply succeeded; in CI this run treats post-apply readiness delay as non-blocking when no apply-time deny occurred.",
+              "image": "ttl.sh/stock-trading-matrix-signed-69ad7f6f35cb@sha256:99baccdf3773f67f3e26916bacb12dcfbcb8cc40f1c41453d247868a05c40a7e",
+              "include_sbom": true,
+              "high_critical": "0",
+              "apply_exit_code": 0,
+              "wait_exit_code": 1,
+              "artifacts": {
+                "apply": "VALID_ALLOW_RECHECK/kubectl-apply.txt",
+                "wait": "VALID_ALLOW_RECHECK/kubectl-wait.txt",
+                "events": "VALID_ALLOW_RECHECK/events.txt",
+                "workloads": "VALID_ALLOW_RECHECK/workloads.txt",
+                "describe_deployment": "VALID_ALLOW_RECHECK/describe-deployment.txt",
+                "describe_replicasets": "VALID_ALLOW_RECHECK/describe-replicasets.txt",
+                "describe_pods": "VALID_ALLOW_RECHECK/describe-pods.txt",
+                "kyverno_logs": "VALID_ALLOW_RECHECK/kyverno-logs.txt"
+              }
+            },
+            "metadata": {},
+            "source_artifact": "admission-lab-evidence"
+          },
+          "evidence_unavailable": false
+        },
+        {
           "run_key": "admission-lab#32",
           "workflow_key": "admission-lab",
           "workflow_name": "admission-lab",
@@ -10810,6 +10954,150 @@
     }
   ],
   "runs": [
+    {
+      "run_key": "admission-lab#33",
+      "workflow_key": "admission-lab",
+      "workflow_name": "admission-lab",
+      "workflow_path": ".github/workflows/admission-matrix-evidence.yml",
+      "run_number": 33,
+      "run_id": 25653004441,
+      "head_sha": "f9982bcf3aca6ab73f3a1a6bbf32eb47754721d0",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-05-11T05:57:10Z",
+      "updated_at": "2026-05-11T06:04:43Z",
+      "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25653004441",
+      "artifacts": {
+        "admission-lab-evidence": {
+          "id": 6911372032,
+          "name": "admission-lab-evidence",
+          "size": 69254,
+          "expired": false,
+          "created_at": "2026-05-11T06:04:39Z",
+          "updated_at": "2026-05-11T06:04:39Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6911372032/zip"
+        }
+      },
+      "security_gate": null,
+      "matrix": {
+        "cases": [
+          {
+            "case": "VALID_ALLOW",
+            "expected": "Allowed",
+            "actual": "AllowedWithRuntimePullIssue",
+            "verdict": "PASS",
+            "reason": "Admission allowed; workload creation progressed but image pull/runtime readiness did not complete in wait window.",
+            "image": "ttl.sh/stock-trading-matrix-signed-69ad7f6f35cb@sha256:99baccdf3773f67f3e26916bacb12dcfbcb8cc40f1c41453d247868a05c40a7e",
+            "include_sbom": true,
+            "high_critical": "0",
+            "apply_exit_code": 0,
+            "wait_exit_code": 1,
+            "artifacts": {
+              "apply": "VALID_ALLOW/kubectl-apply.txt",
+              "wait": "VALID_ALLOW/kubectl-wait.txt",
+              "events": "VALID_ALLOW/events.txt",
+              "workloads": "VALID_ALLOW/workloads.txt",
+              "describe_deployment": "VALID_ALLOW/describe-deployment.txt",
+              "describe_replicasets": "VALID_ALLOW/describe-replicasets.txt",
+              "describe_pods": "VALID_ALLOW/describe-pods.txt",
+              "kyverno_logs": "VALID_ALLOW/kyverno-logs.txt"
+            }
+          },
+          {
+            "case": "NEG_UNSIGNED_DENY",
+            "expected": "Denied",
+            "actual": "Denied",
+            "verdict": "PASS",
+            "reason": "Admission deny evidence detected at apply phase.",
+            "image": "ttl.sh/stock-trading-matrix-unsigned-6f353512af76@sha256:99baccdf3773f67f3e26916bacb12dcfbcb8cc40f1c41453d247868a05c40a7e",
+            "include_sbom": true,
+            "high_critical": "0",
+            "apply_exit_code": 1,
+            "wait_exit_code": -1,
+            "artifacts": {
+              "apply": "NEG_UNSIGNED_DENY/kubectl-apply.txt",
+              "wait": "NEG_UNSIGNED_DENY/kubectl-wait.txt",
+              "events": "NEG_UNSIGNED_DENY/events.txt",
+              "workloads": "NEG_UNSIGNED_DENY/workloads.txt",
+              "describe_deployment": "NEG_UNSIGNED_DENY/describe-deployment.txt",
+              "describe_replicasets": "NEG_UNSIGNED_DENY/describe-replicasets.txt",
+              "describe_pods": "NEG_UNSIGNED_DENY/describe-pods.txt",
+              "kyverno_logs": "NEG_UNSIGNED_DENY/kyverno-logs.txt"
+            }
+          },
+          {
+            "case": "NEG_MISSING_SBOM_DENY",
+            "expected": "Denied",
+            "actual": "Denied",
+            "verdict": "PASS",
+            "reason": "Admission deny evidence detected in events/ReplicaSet describe.",
+            "image": "ttl.sh/stock-trading-matrix-signed-69ad7f6f35cb@sha256:99baccdf3773f67f3e26916bacb12dcfbcb8cc40f1c41453d247868a05c40a7e",
+            "include_sbom": false,
+            "high_critical": "0",
+            "apply_exit_code": 0,
+            "wait_exit_code": 1,
+            "artifacts": {
+              "apply": "NEG_MISSING_SBOM_DENY/kubectl-apply.txt",
+              "wait": "NEG_MISSING_SBOM_DENY/kubectl-wait.txt",
+              "events": "NEG_MISSING_SBOM_DENY/events.txt",
+              "workloads": "NEG_MISSING_SBOM_DENY/workloads.txt",
+              "describe_deployment": "NEG_MISSING_SBOM_DENY/describe-deployment.txt",
+              "describe_replicasets": "NEG_MISSING_SBOM_DENY/describe-replicasets.txt",
+              "describe_pods": "NEG_MISSING_SBOM_DENY/describe-pods.txt",
+              "kyverno_logs": "NEG_MISSING_SBOM_DENY/kyverno-logs.txt"
+            }
+          },
+          {
+            "case": "NEG_CVE_THRESHOLD_DENY",
+            "expected": "Denied",
+            "actual": "Denied",
+            "verdict": "PASS",
+            "reason": "Admission deny evidence detected in events/ReplicaSet describe.",
+            "image": "ttl.sh/stock-trading-matrix-signed-69ad7f6f35cb@sha256:99baccdf3773f67f3e26916bacb12dcfbcb8cc40f1c41453d247868a05c40a7e",
+            "include_sbom": true,
+            "high_critical": "2",
+            "apply_exit_code": 0,
+            "wait_exit_code": 1,
+            "artifacts": {
+              "apply": "NEG_CVE_THRESHOLD_DENY/kubectl-apply.txt",
+              "wait": "NEG_CVE_THRESHOLD_DENY/kubectl-wait.txt",
+              "events": "NEG_CVE_THRESHOLD_DENY/events.txt",
+              "workloads": "NEG_CVE_THRESHOLD_DENY/workloads.txt",
+              "describe_deployment": "NEG_CVE_THRESHOLD_DENY/describe-deployment.txt",
+              "describe_replicasets": "NEG_CVE_THRESHOLD_DENY/describe-replicasets.txt",
+              "describe_pods": "NEG_CVE_THRESHOLD_DENY/describe-pods.txt",
+              "kyverno_logs": "NEG_CVE_THRESHOLD_DENY/kyverno-logs.txt"
+            }
+          }
+        ],
+        "summary_text": "# Admission Matrix Summary\n\n- Run ID: 20260511-055841\n- Kubernetes context: kind-thesis-evidence\n- Namespace: stock-trading\n- Signed image digest: ttl.sh/stock-trading-matrix-signed-69ad7f6f35cb@sha256:99baccdf3773f67f3e26916bacb12dcfbcb8cc40f1c41453d247868a05c40a7e\n- Unsigned image digest: ttl.sh/stock-trading-matrix-unsigned-6f353512af76@sha256:99baccdf3773f67f3e26916bacb12dcfbcb8cc40f1c41453d247868a05c40a7e\n- SBOM digest: C1BFD7D3AEEBA679E4F0CEAF11C83DBF76199091D2D8444AD6628C5B1603F102\n\n| Case | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW | Allowed | AllowedWithRuntimePullIssue | PASS | Admission allowed; workload creation progressed but image pull/runtime readiness did not complete in wait window. |\n| NEG_UNSIGNED_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n| NEG_MISSING_SBOM_DENY | Denied | Denied | PASS | Admission deny evidence detected in events/ReplicaSet describe. |\n| NEG_CVE_THRESHOLD_DENY | Denied | Denied | PASS | Admission deny evidence detected in events/ReplicaSet describe. |\n\n## Regression Re-check\n\n| Check | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW_RECHECK | Allowed | AllowedNoDenyEvidence | PASS | Regression apply succeeded; in CI this run treats post-apply readiness delay as non-blocking when no apply-time deny occurred. |\n",
+        "regression": {
+          "case": "VALID_ALLOW_RECHECK",
+          "expected": "Allowed",
+          "actual": "AllowedNoDenyEvidence",
+          "verdict": "PASS",
+          "reason": "Regression apply succeeded; in CI this run treats post-apply readiness delay as non-blocking when no apply-time deny occurred.",
+          "image": "ttl.sh/stock-trading-matrix-signed-69ad7f6f35cb@sha256:99baccdf3773f67f3e26916bacb12dcfbcb8cc40f1c41453d247868a05c40a7e",
+          "include_sbom": true,
+          "high_critical": "0",
+          "apply_exit_code": 0,
+          "wait_exit_code": 1,
+          "artifacts": {
+            "apply": "VALID_ALLOW_RECHECK/kubectl-apply.txt",
+            "wait": "VALID_ALLOW_RECHECK/kubectl-wait.txt",
+            "events": "VALID_ALLOW_RECHECK/events.txt",
+            "workloads": "VALID_ALLOW_RECHECK/workloads.txt",
+            "describe_deployment": "VALID_ALLOW_RECHECK/describe-deployment.txt",
+            "describe_replicasets": "VALID_ALLOW_RECHECK/describe-replicasets.txt",
+            "describe_pods": "VALID_ALLOW_RECHECK/describe-pods.txt",
+            "kyverno_logs": "VALID_ALLOW_RECHECK/kyverno-logs.txt"
+          }
+        },
+        "metadata": {},
+        "source_artifact": "admission-lab-evidence"
+      },
+      "evidence_unavailable": false
+    },
     {
       "run_key": "onboarding-lab#24",
       "workflow_key": "onboarding-lab",
