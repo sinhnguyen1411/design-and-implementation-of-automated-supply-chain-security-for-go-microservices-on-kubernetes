@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-11T06:06:26.710584+00:00",
+  "generated_at": "2026-05-11T06:25:06.587071+00:00",
   "repository": "sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes",
   "top_n_per_workflow": 100,
   "workflows": [
@@ -8869,6 +8869,43 @@
       "workflow_path": ".github/workflows/service-scs-matrix-evidence.yml",
       "runs": [
         {
+          "run_key": "onboarding-lab#25",
+          "workflow_key": "onboarding-lab",
+          "workflow_name": "onboarding-lab",
+          "workflow_path": ".github/workflows/service-scs-matrix-evidence.yml",
+          "run_number": 25,
+          "run_id": 25653879121,
+          "head_sha": "f238cf44888763be8b1c58bf079f68001082ba78",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-05-11T06:22:57Z",
+          "updated_at": "2026-05-11T06:24:15Z",
+          "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25653879121",
+          "artifacts": {
+            "onboarding-lab-portfolio-service": {
+              "id": 6911617977,
+              "name": "onboarding-lab-portfolio-service",
+              "size": 740,
+              "expired": false,
+              "created_at": "2026-05-11T06:24:12Z",
+              "updated_at": "2026-05-11T06:24:12Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6911617977/zip"
+            },
+            "onboarding-lab-order-service": {
+              "id": 6911616044,
+              "name": "onboarding-lab-order-service",
+              "size": 735,
+              "expired": false,
+              "created_at": "2026-05-11T06:24:03Z",
+              "updated_at": "2026-05-11T06:24:03Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6911616044/zip"
+            }
+          },
+          "security_gate": null,
+          "matrix": null,
+          "evidence_unavailable": false
+        },
+        {
           "run_key": "onboarding-lab#24",
           "workflow_key": "onboarding-lab",
           "workflow_name": "onboarding-lab",
@@ -10954,6 +10991,43 @@
     }
   ],
   "runs": [
+    {
+      "run_key": "onboarding-lab#25",
+      "workflow_key": "onboarding-lab",
+      "workflow_name": "onboarding-lab",
+      "workflow_path": ".github/workflows/service-scs-matrix-evidence.yml",
+      "run_number": 25,
+      "run_id": 25653879121,
+      "head_sha": "f238cf44888763be8b1c58bf079f68001082ba78",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-05-11T06:22:57Z",
+      "updated_at": "2026-05-11T06:24:15Z",
+      "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25653879121",
+      "artifacts": {
+        "onboarding-lab-portfolio-service": {
+          "id": 6911617977,
+          "name": "onboarding-lab-portfolio-service",
+          "size": 740,
+          "expired": false,
+          "created_at": "2026-05-11T06:24:12Z",
+          "updated_at": "2026-05-11T06:24:12Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6911617977/zip"
+        },
+        "onboarding-lab-order-service": {
+          "id": 6911616044,
+          "name": "onboarding-lab-order-service",
+          "size": 735,
+          "expired": false,
+          "created_at": "2026-05-11T06:24:03Z",
+          "updated_at": "2026-05-11T06:24:03Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6911616044/zip"
+        }
+      },
+      "security_gate": null,
+      "matrix": null,
+      "evidence_unavailable": false
+    },
     {
       "run_key": "admission-lab#33",
       "workflow_key": "admission-lab",
