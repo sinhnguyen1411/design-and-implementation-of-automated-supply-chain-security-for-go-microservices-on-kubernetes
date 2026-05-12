@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-11T06:25:06.587071+00:00",
+  "generated_at": "2026-05-12T05:42:31.556878+00:00",
   "repository": "sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes",
   "top_n_per_workflow": 100,
   "workflows": [
@@ -5738,6 +5738,24 @@
       "workflow_path": ".github/workflows/admission-matrix-evidence.yml",
       "runs": [
         {
+          "run_key": "admission-lab#34",
+          "workflow_key": "admission-lab",
+          "workflow_name": "admission-lab",
+          "workflow_path": ".github/workflows/admission-matrix-evidence.yml",
+          "run_number": 34,
+          "run_id": 25715651952,
+          "head_sha": "550c41fdfb8b33945acbd2a481585fc4292d39f9",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-05-12T05:36:53Z",
+          "updated_at": "2026-05-12T05:40:44Z",
+          "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25715651952",
+          "artifacts": {},
+          "security_gate": null,
+          "matrix": null,
+          "evidence_unavailable": false
+        },
+        {
           "run_key": "admission-lab#33",
           "workflow_key": "admission-lab",
           "workflow_name": "admission-lab",
@@ -10991,6 +11009,24 @@
     }
   ],
   "runs": [
+    {
+      "run_key": "admission-lab#34",
+      "workflow_key": "admission-lab",
+      "workflow_name": "admission-lab",
+      "workflow_path": ".github/workflows/admission-matrix-evidence.yml",
+      "run_number": 34,
+      "run_id": 25715651952,
+      "head_sha": "550c41fdfb8b33945acbd2a481585fc4292d39f9",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-05-12T05:36:53Z",
+      "updated_at": "2026-05-12T05:40:44Z",
+      "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25715651952",
+      "artifacts": {},
+      "security_gate": null,
+      "matrix": null,
+      "evidence_unavailable": false
+    },
     {
       "run_key": "onboarding-lab#25",
       "workflow_key": "onboarding-lab",
