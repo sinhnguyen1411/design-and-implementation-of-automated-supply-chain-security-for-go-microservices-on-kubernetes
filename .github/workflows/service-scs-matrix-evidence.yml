@@ -9,22 +9,45 @@ permissions:
   contents: read
 
 jobs:
+  discover-services:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.result }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build onboarding matrix from services.yaml
+        id: matrix
+        shell: python
+        run: |
+          import json
+          import re
+          import yaml
+
+          with open("services.yaml", "r", encoding="utf-8") as f:
+              services = yaml.safe_load(f)["services"]
+
+          include = []
+          for service in services:
+              name = service["name"]
+              short = re.sub(r"-service$", "", name)
+              include.append({
+                  "service_name": name,
+                  "namespace": f"{short}-trading",
+                  "cluster_name": f"{short}-evidence",
+              })
+
+          result = {"include": include}
+          with open(__import__("os").environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"result={json.dumps(result)}\n")
+
   onboarding-probe:
+    needs: discover-services
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - service_name: portfolio-service
-            namespace: portfolio-trading
-            cluster_name: portfolio-evidence
-          - service_name: order-service
-            namespace: order-trading
-            cluster_name: order-evidence
-          - service_name: risk-service
-            namespace: risk-trading
-            cluster_name: risk-evidence
+      matrix: ${{ fromJson(needs.discover-services.outputs.matrix) }}
 
     steps:
       - name: Checkout

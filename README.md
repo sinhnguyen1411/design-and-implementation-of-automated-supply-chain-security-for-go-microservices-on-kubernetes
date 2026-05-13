@@ -8,6 +8,22 @@ This repository provides a practical DevSecOps baseline for implementing and val
 - Reproducible local validation workflow using Kind + Kyverno.
 - Thesis-aligned documentation, traceability, and evidence artifacts.
 
+## Service Landscape (10 Services)
+The monorepo currently includes 10 services for scalability experiments:
+
+- Core baseline:
+  - `user-service`: user/auth lifecycle with token flows and notification integration
+  - `portfolio-service`: portfolio summary and concentration logic
+  - `order-service`: order validation rules (cash/holding/notional checks)
+  - `risk-service`: risk scoring and trading block decision
+- Trading-core expansion:
+  - `market-data-service`: quote snapshot normalization (`POST /market-data/snapshot`)
+  - `pricing-service`: quote computation (`POST /pricing/quote`)
+  - `execution-service`: fill simulation (`POST /execution/simulate`)
+  - `settlement-service`: T+N settlement preview (`POST /settlement/preview`)
+  - `compliance-service`: policy/rule checks (`POST /compliance/check`)
+  - `notification-service`: channel/message rendering (`POST /notification/render`)
+
 ## Architecture Overview
 For the thesis-facing presentation version with visual legend and explanatory notes, open [docs/scs_architecture_diagram.html](docs/scs_architecture_diagram.html).
 
@@ -131,6 +147,17 @@ Self-hosted Windows runner minimum:
 - CPU: `4 vCPU`
 - RAM: `16 GB`
 - Free disk for Docker/cache: `20-30 GB`
+
+## CI Scalability Strategy
+- Push/PR: changed-only discovery from `services.yaml` (only touched services run full verify + supply-chain checks).
+- Nightly: full matrix run for all registered services via `schedule` in `ci-service`.
+- Onboarding lab: nightly matrix now reads all services from `services.yaml` to continuously prove compatibility and evidence consistency at scale.
+
+## Scale Evidence
+To demonstrate high-scalable behavior:
+- Compare changed-only run durations against nightly full-matrix runs.
+- Verify each service produces `*-sbom`, `*-grype-report`, and `*-security-gate-findings` artifacts.
+- Use dashboard snapshot data (`dashboard-data-sync`) to track run volume and service coverage over time.
 
 ## How to Run the Local Signed Demo
 Use [scripts/local_signed_demo.ps1](scripts/local_signed_demo.ps1) to run the end-to-end local demonstration on the current Kubernetes context.

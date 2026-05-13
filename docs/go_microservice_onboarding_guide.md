@@ -27,6 +27,15 @@ Set the following before enabling secure releases:
 - Cosign keyless flow in CI for signing and attestation.
 - CI artifact retention suitable for thesis/demo evidence review.
 
+## CI Execution Modes for Scale
+This repository uses two CI execution modes to balance speed and coverage:
+- Changed-only mode (push/PR): service discovery is path-based from `services.yaml`, so only modified services run full checks.
+- Nightly full mode (schedule): all services in `services.yaml` are executed in matrix for full coverage evidence.
+
+Operational implication:
+- Keep `services.yaml` as the single source of truth for service registration.
+- Any new service must be added there to be included in nightly supply-chain and onboarding evidence.
+
 ## Admission Policy Contract
 Your deployment must satisfy this contract:
 - Image is signed by the expected key identity.
@@ -93,7 +102,7 @@ Primary evidence files:
 - Kyverno image verification policy (`infra/policies/kyverno/clusterpolicy-verify-images.yaml`) now uses a wildcard pattern `ghcr.io/sinhnguyen1411/stock-trading/*` that covers all services under the registry path â€” no per-service policy change is needed for image signing verification.
 - SBOM and CVE annotation policies still use label selectors that may need updating for new service names.
 - `infra/scripts/admission_matrix_demo.ps1` is still hardcoded to `user-service` naming and stock-trading-specific metadata/paths.
-- New services are registered in `services.yaml` at the repo root â€” the CI pipeline (`ci-service.yml`) automatically discovers and builds registered services via matrix strategy.
+- New services are registered in `services.yaml` at the repo root; `ci-service.yml` and `onboarding-lab` both derive matrix coverage from this registry.
 - Server-side `kubectl apply --dry-run=server` for namespaced resources still requires the target namespace to exist.
 
 ## Required Patches When Onboarding a New Service
