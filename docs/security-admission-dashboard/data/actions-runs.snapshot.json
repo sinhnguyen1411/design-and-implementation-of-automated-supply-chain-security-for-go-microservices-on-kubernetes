@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-13T15:51:20.507697+00:00",
+  "generated_at": "2026-05-13T15:57:15.057324+00:00",
   "repository": "sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes",
   "top_n_per_workflow": 100,
   "workflows": [
@@ -10,6 +10,823 @@
       "workflow_id": 271482672,
       "workflow_path": ".github/workflows/ci-service.yml",
       "runs": [
+        {
+          "run_key": "ci-service#47",
+          "workflow_key": "ci-service",
+          "workflow_name": "ci-service",
+          "workflow_path": ".github/workflows/ci-service.yml",
+          "run_number": 47,
+          "run_id": 25810406393,
+          "head_sha": "64e01986455c1a751bc1340bdc6bc0c07dfc7357",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-05-13T15:53:23Z",
+          "updated_at": "2026-05-13T15:55:56Z",
+          "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25810406393",
+          "artifacts": {
+            "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~RLTZ92.dockerbuild": {
+              "id": 6975026746,
+              "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~RLTZ92.dockerbuild",
+              "size": 44181,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:48Z",
+              "updated_at": "2026-05-13T15:55:48Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975026746/zip"
+            },
+            "user-service-supply-chain-artifacts": {
+              "id": 6975026070,
+              "name": "user-service-supply-chain-artifacts",
+              "size": 331793,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:46Z",
+              "updated_at": "2026-05-13T15:55:46Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975026070/zip"
+            },
+            "user-service-security-gate-findings": {
+              "id": 6975025472,
+              "name": "user-service-security-gate-findings",
+              "size": 354,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:44Z",
+              "updated_at": "2026-05-13T15:55:44Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975025472/zip"
+            },
+            "user-service-grype-report": {
+              "id": 6975024999,
+              "name": "user-service-grype-report",
+              "size": 56467,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:43Z",
+              "updated_at": "2026-05-13T15:55:43Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975024999/zip"
+            },
+            "user-service-sbom": {
+              "id": 6975024493,
+              "name": "user-service-sbom",
+              "size": 275016,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:42Z",
+              "updated_at": "2026-05-13T15:55:42Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975024493/zip"
+            },
+            "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~1VZU64.dockerbuild": {
+              "id": 6975013587,
+              "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~1VZU64.dockerbuild",
+              "size": 44374,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:15Z",
+              "updated_at": "2026-05-13T15:55:15Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975013587/zip"
+            },
+            "order-service-supply-chain-artifacts": {
+              "id": 6975013210,
+              "name": "order-service-supply-chain-artifacts",
+              "size": 111914,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:14Z",
+              "updated_at": "2026-05-13T15:55:14Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975013210/zip"
+            },
+            "order-service-security-gate-findings": {
+              "id": 6975012971,
+              "name": "order-service-security-gate-findings",
+              "size": 190,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:13Z",
+              "updated_at": "2026-05-13T15:55:13Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975012971/zip"
+            },
+            "order-service-grype-report": {
+              "id": 6975012740,
+              "name": "order-service-grype-report",
+              "size": 6025,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:13Z",
+              "updated_at": "2026-05-13T15:55:13Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975012740/zip"
+            },
+            "order-service-sbom": {
+              "id": 6975012553,
+              "name": "order-service-sbom",
+              "size": 105743,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:12Z",
+              "updated_at": "2026-05-13T15:55:12Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975012553/zip"
+            },
+            "sinhnguyen1411-stock-trading-user-service_64e01986455c.spdx.json": {
+              "id": 6975010755,
+              "name": "sinhnguyen1411-stock-trading-user-service_64e01986455c.spdx.json",
+              "size": 275116,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:07Z",
+              "updated_at": "2026-05-13T15:55:07Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975010755/zip"
+            },
+            "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~VR2IMG.dockerbuild": {
+              "id": 6975010443,
+              "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~VR2IMG.dockerbuild",
+              "size": 44208,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:07Z",
+              "updated_at": "2026-05-13T15:55:07Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975010443/zip"
+            },
+            "market-data-service-supply-chain-artifacts": {
+              "id": 6975010050,
+              "name": "market-data-service-supply-chain-artifacts",
+              "size": 112099,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:06Z",
+              "updated_at": "2026-05-13T15:55:06Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975010050/zip"
+            },
+            "market-data-service-security-gate-findings": {
+              "id": 6975009852,
+              "name": "market-data-service-security-gate-findings",
+              "size": 190,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:05Z",
+              "updated_at": "2026-05-13T15:55:05Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975009852/zip"
+            },
+            "market-data-service-grype-report": {
+              "id": 6975009637,
+              "name": "market-data-service-grype-report",
+              "size": 6037,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:05Z",
+              "updated_at": "2026-05-13T15:55:05Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975009637/zip"
+            },
+            "market-data-service-sbom": {
+              "id": 6975009402,
+              "name": "market-data-service-sbom",
+              "size": 105916,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:04Z",
+              "updated_at": "2026-05-13T15:55:04Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975009402/zip"
+            },
+            "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~AARUE3.dockerbuild": {
+              "id": 6975009117,
+              "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~AARUE3.dockerbuild",
+              "size": 45434,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:03Z",
+              "updated_at": "2026-05-13T15:55:03Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975009117/zip"
+            },
+            "notification-service-supply-chain-artifacts": {
+              "id": 6975008436,
+              "name": "notification-service-supply-chain-artifacts",
+              "size": 112080,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:02Z",
+              "updated_at": "2026-05-13T15:55:02Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975008436/zip"
+            },
+            "notification-service-security-gate-findings": {
+              "id": 6975007925,
+              "name": "notification-service-security-gate-findings",
+              "size": 190,
+              "expired": false,
+              "created_at": "2026-05-13T15:55:00Z",
+              "updated_at": "2026-05-13T15:55:00Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975007925/zip"
+            },
+            "notification-service-grype-report": {
+              "id": 6975007495,
+              "name": "notification-service-grype-report",
+              "size": 6029,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:59Z",
+              "updated_at": "2026-05-13T15:54:59Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975007495/zip"
+            },
+            "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~M9QZD5.dockerbuild": {
+              "id": 6975007413,
+              "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~M9QZD5.dockerbuild",
+              "size": 44621,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:59Z",
+              "updated_at": "2026-05-13T15:54:59Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975007413/zip"
+            },
+            "notification-service-sbom": {
+              "id": 6975007060,
+              "name": "notification-service-sbom",
+              "size": 105905,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:58Z",
+              "updated_at": "2026-05-13T15:54:58Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975007060/zip"
+            },
+            "risk-service-supply-chain-artifacts": {
+              "id": 6975006732,
+              "name": "risk-service-supply-chain-artifacts",
+              "size": 111918,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:58Z",
+              "updated_at": "2026-05-13T15:54:58Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975006732/zip"
+            },
+            "risk-service-security-gate-findings": {
+              "id": 6975006149,
+              "name": "risk-service-security-gate-findings",
+              "size": 190,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:56Z",
+              "updated_at": "2026-05-13T15:54:56Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975006149/zip"
+            },
+            "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~8LENUF.dockerbuild": {
+              "id": 6975006064,
+              "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~8LENUF.dockerbuild",
+              "size": 44029,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:56Z",
+              "updated_at": "2026-05-13T15:54:56Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975006064/zip"
+            },
+            "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~JNSPR5.dockerbuild": {
+              "id": 6975005944,
+              "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~JNSPR5.dockerbuild",
+              "size": 44804,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:56Z",
+              "updated_at": "2026-05-13T15:54:56Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005944/zip"
+            },
+            "risk-service-grype-report": {
+              "id": 6975005662,
+              "name": "risk-service-grype-report",
+              "size": 6027,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:55Z",
+              "updated_at": "2026-05-13T15:54:55Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005662/zip"
+            },
+            "pricing-service-supply-chain-artifacts": {
+              "id": 6975005628,
+              "name": "pricing-service-supply-chain-artifacts",
+              "size": 112082,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:55Z",
+              "updated_at": "2026-05-13T15:54:55Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005628/zip"
+            },
+            "settlement-service-supply-chain-artifacts": {
+              "id": 6975005495,
+              "name": "settlement-service-supply-chain-artifacts",
+              "size": 111732,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:55Z",
+              "updated_at": "2026-05-13T15:54:55Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005495/zip"
+            },
+            "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~VMZOB9.dockerbuild": {
+              "id": 6975005405,
+              "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~VMZOB9.dockerbuild",
+              "size": 44687,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:54Z",
+              "updated_at": "2026-05-13T15:54:54Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005405/zip"
+            },
+            "pricing-service-security-gate-findings": {
+              "id": 6975005388,
+              "name": "pricing-service-security-gate-findings",
+              "size": 190,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:54Z",
+              "updated_at": "2026-05-13T15:54:54Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005388/zip"
+            },
+            "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~RWYF4S.dockerbuild": {
+              "id": 6975005338,
+              "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~RWYF4S.dockerbuild",
+              "size": 43806,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:54Z",
+              "updated_at": "2026-05-13T15:54:54Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005338/zip"
+            },
+            "risk-service-sbom": {
+              "id": 6975005238,
+              "name": "risk-service-sbom",
+              "size": 105745,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:54Z",
+              "updated_at": "2026-05-13T15:54:54Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005238/zip"
+            },
+            "settlement-service-security-gate-findings": {
+              "id": 6975005203,
+              "name": "settlement-service-security-gate-findings",
+              "size": 190,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:54Z",
+              "updated_at": "2026-05-13T15:54:54Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005203/zip"
+            },
+            "pricing-service-grype-report": {
+              "id": 6975005119,
+              "name": "pricing-service-grype-report",
+              "size": 6029,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:54Z",
+              "updated_at": "2026-05-13T15:54:54Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005119/zip"
+            },
+            "portfolio-service-supply-chain-artifacts": {
+              "id": 6975005018,
+              "name": "portfolio-service-supply-chain-artifacts",
+              "size": 112096,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:53Z",
+              "updated_at": "2026-05-13T15:54:53Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005018/zip"
+            },
+            "market-data-service-macos-latest-verify": {
+              "id": 6975004987,
+              "name": "market-data-service-macos-latest-verify",
+              "size": 692,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:53Z",
+              "updated_at": "2026-05-13T15:54:53Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004987/zip"
+            },
+            "compliance-service-supply-chain-artifacts": {
+              "id": 6975004964,
+              "name": "compliance-service-supply-chain-artifacts",
+              "size": 112087,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:53Z",
+              "updated_at": "2026-05-13T15:54:53Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004964/zip"
+            },
+            "settlement-service-grype-report": {
+              "id": 6975004932,
+              "name": "settlement-service-grype-report",
+              "size": 5675,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:53Z",
+              "updated_at": "2026-05-13T15:54:53Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004932/zip"
+            },
+            "pricing-service-sbom": {
+              "id": 6975004828,
+              "name": "pricing-service-sbom",
+              "size": 105907,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:53Z",
+              "updated_at": "2026-05-13T15:54:53Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004828/zip"
+            },
+            "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~4EMYNN.dockerbuild": {
+              "id": 6975004787,
+              "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~4EMYNN.dockerbuild",
+              "size": 44375,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:53Z",
+              "updated_at": "2026-05-13T15:54:53Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004787/zip"
+            },
+            "portfolio-service-security-gate-findings": {
+              "id": 6975004743,
+              "name": "portfolio-service-security-gate-findings",
+              "size": 190,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:53Z",
+              "updated_at": "2026-05-13T15:54:53Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004743/zip"
+            },
+            "compliance-service-security-gate-findings": {
+              "id": 6975004735,
+              "name": "compliance-service-security-gate-findings",
+              "size": 190,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:53Z",
+              "updated_at": "2026-05-13T15:54:53Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004735/zip"
+            },
+            "settlement-service-sbom": {
+              "id": 6975004643,
+              "name": "settlement-service-sbom",
+              "size": 105911,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:52Z",
+              "updated_at": "2026-05-13T15:54:52Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004643/zip"
+            },
+            "compliance-service-grype-report": {
+              "id": 6975004518,
+              "name": "compliance-service-grype-report",
+              "size": 6029,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:52Z",
+              "updated_at": "2026-05-13T15:54:52Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004518/zip"
+            },
+            "portfolio-service-grype-report": {
+              "id": 6975004467,
+              "name": "portfolio-service-grype-report",
+              "size": 6035,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:52Z",
+              "updated_at": "2026-05-13T15:54:52Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004467/zip"
+            },
+            "execution-service-supply-chain-artifacts": {
+              "id": 6975004413,
+              "name": "execution-service-supply-chain-artifacts",
+              "size": 112084,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:52Z",
+              "updated_at": "2026-05-13T15:54:52Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004413/zip"
+            },
+            "compliance-service-sbom": {
+              "id": 6975004291,
+              "name": "compliance-service-sbom",
+              "size": 105912,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:51Z",
+              "updated_at": "2026-05-13T15:54:51Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004291/zip"
+            },
+            "portfolio-service-sbom": {
+              "id": 6975004194,
+              "name": "portfolio-service-sbom",
+              "size": 105915,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:51Z",
+              "updated_at": "2026-05-13T15:54:51Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004194/zip"
+            },
+            "execution-service-security-gate-findings": {
+              "id": 6975004132,
+              "name": "execution-service-security-gate-findings",
+              "size": 190,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:51Z",
+              "updated_at": "2026-05-13T15:54:51Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004132/zip"
+            },
+            "execution-service-grype-report": {
+              "id": 6975003926,
+              "name": "execution-service-grype-report",
+              "size": 6038,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:51Z",
+              "updated_at": "2026-05-13T15:54:51Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975003926/zip"
+            },
+            "execution-service-sbom": {
+              "id": 6975003726,
+              "name": "execution-service-sbom",
+              "size": 105900,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:50Z",
+              "updated_at": "2026-05-13T15:54:50Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975003726/zip"
+            },
+            "risk-service-macos-latest-verify": {
+              "id": 6975000495,
+              "name": "risk-service-macos-latest-verify",
+              "size": 693,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:42Z",
+              "updated_at": "2026-05-13T15:54:42Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975000495/zip"
+            },
+            "sinhnguyen1411-stock-trading-order-service_64e01986455c.spdx.json": {
+              "id": 6974999253,
+              "name": "sinhnguyen1411-stock-trading-order-service_64e01986455c.spdx.json",
+              "size": 105845,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:39Z",
+              "updated_at": "2026-05-13T15:54:39Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974999253/zip"
+            },
+            "sinhnguyen1411-stock-trading-market-data-service_64e01986455c.spdx.json": {
+              "id": 6974996126,
+              "name": "sinhnguyen1411-stock-trading-market-data-service_64e01986455c.spdx.json",
+              "size": 106030,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:31Z",
+              "updated_at": "2026-05-13T15:54:31Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974996126/zip"
+            },
+            "user-service-ubuntu-latest-verify": {
+              "id": 6974994911,
+              "name": "user-service-ubuntu-latest-verify",
+              "size": 1055,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:28Z",
+              "updated_at": "2026-05-13T15:54:28Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974994911/zip"
+            },
+            "user-service-macos-latest-verify": {
+              "id": 6974994388,
+              "name": "user-service-macos-latest-verify",
+              "size": 1055,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:27Z",
+              "updated_at": "2026-05-13T15:54:27Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974994388/zip"
+            },
+            "risk-service-ubuntu-latest-verify": {
+              "id": 6974993847,
+              "name": "risk-service-ubuntu-latest-verify",
+              "size": 693,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:25Z",
+              "updated_at": "2026-05-13T15:54:25Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974993847/zip"
+            },
+            "pricing-service-ubuntu-latest-verify": {
+              "id": 6974993592,
+              "name": "pricing-service-ubuntu-latest-verify",
+              "size": 693,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:25Z",
+              "updated_at": "2026-05-13T15:54:25Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974993592/zip"
+            },
+            "sinhnguyen1411-stock-trading-notification-service_64e01986455c.spdx.json": {
+              "id": 6974993590,
+              "name": "sinhnguyen1411-stock-trading-notification-service_64e01986455c.spdx.json",
+              "size": 106021,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:25Z",
+              "updated_at": "2026-05-13T15:54:25Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974993590/zip"
+            },
+            "execution-service-macos-latest-verify": {
+              "id": 6974992792,
+              "name": "execution-service-macos-latest-verify",
+              "size": 693,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:23Z",
+              "updated_at": "2026-05-13T15:54:23Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974992792/zip"
+            },
+            "execution-service-ubuntu-latest-verify": {
+              "id": 6974992067,
+              "name": "execution-service-ubuntu-latest-verify",
+              "size": 693,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:21Z",
+              "updated_at": "2026-05-13T15:54:21Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974992067/zip"
+            },
+            "order-service-macos-latest-verify": {
+              "id": 6974992003,
+              "name": "order-service-macos-latest-verify",
+              "size": 693,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:21Z",
+              "updated_at": "2026-05-13T15:54:21Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974992003/zip"
+            },
+            "sinhnguyen1411-stock-trading-risk-service_64e01986455c.spdx.json": {
+              "id": 6974991837,
+              "name": "sinhnguyen1411-stock-trading-risk-service_64e01986455c.spdx.json",
+              "size": 105845,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:20Z",
+              "updated_at": "2026-05-13T15:54:20Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974991837/zip"
+            },
+            "sinhnguyen1411-stock-trading-settlement-service_64e01986455c.spdx.json": {
+              "id": 6974991463,
+              "name": "sinhnguyen1411-stock-trading-settlement-service_64e01986455c.spdx.json",
+              "size": 106023,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:20Z",
+              "updated_at": "2026-05-13T15:54:20Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974991463/zip"
+            },
+            "compliance-service-macos-latest-verify": {
+              "id": 6974991357,
+              "name": "compliance-service-macos-latest-verify",
+              "size": 693,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:19Z",
+              "updated_at": "2026-05-13T15:54:19Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974991357/zip"
+            },
+            "sinhnguyen1411-stock-trading-compliance-service_64e01986455c.spdx.json": {
+              "id": 6974991309,
+              "name": "sinhnguyen1411-stock-trading-compliance-service_64e01986455c.spdx.json",
+              "size": 106024,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:19Z",
+              "updated_at": "2026-05-13T15:54:19Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974991309/zip"
+            },
+            "sinhnguyen1411-stock-trading-execution-service_64e01986455c.spdx.json": {
+              "id": 6974990795,
+              "name": "sinhnguyen1411-stock-trading-execution-service_64e01986455c.spdx.json",
+              "size": 106010,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:18Z",
+              "updated_at": "2026-05-13T15:54:18Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974990795/zip"
+            },
+            "sinhnguyen1411-stock-trading-portfolio-service_64e01986455c.spdx.json": {
+              "id": 6974988199,
+              "name": "sinhnguyen1411-stock-trading-portfolio-service_64e01986455c.spdx.json",
+              "size": 106025,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:11Z",
+              "updated_at": "2026-05-13T15:54:11Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974988199/zip"
+            },
+            "sinhnguyen1411-stock-trading-pricing-service_64e01986455c.spdx.json": {
+              "id": 6974988167,
+              "name": "sinhnguyen1411-stock-trading-pricing-service_64e01986455c.spdx.json",
+              "size": 106013,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:11Z",
+              "updated_at": "2026-05-13T15:54:11Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974988167/zip"
+            },
+            "order-service-ubuntu-latest-verify": {
+              "id": 6974986364,
+              "name": "order-service-ubuntu-latest-verify",
+              "size": 693,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:07Z",
+              "updated_at": "2026-05-13T15:54:07Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974986364/zip"
+            },
+            "market-data-service-ubuntu-latest-verify": {
+              "id": 6974983650,
+              "name": "market-data-service-ubuntu-latest-verify",
+              "size": 692,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:00Z",
+              "updated_at": "2026-05-13T15:54:00Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974983650/zip"
+            },
+            "settlement-service-ubuntu-latest-verify": {
+              "id": 6974983643,
+              "name": "settlement-service-ubuntu-latest-verify",
+              "size": 693,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:00Z",
+              "updated_at": "2026-05-13T15:54:00Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974983643/zip"
+            },
+            "pricing-service-macos-latest-verify": {
+              "id": 6974983520,
+              "name": "pricing-service-macos-latest-verify",
+              "size": 693,
+              "expired": false,
+              "created_at": "2026-05-13T15:54:00Z",
+              "updated_at": "2026-05-13T15:54:00Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974983520/zip"
+            },
+            "compliance-service-ubuntu-latest-verify": {
+              "id": 6974982539,
+              "name": "compliance-service-ubuntu-latest-verify",
+              "size": 693,
+              "expired": false,
+              "created_at": "2026-05-13T15:53:57Z",
+              "updated_at": "2026-05-13T15:53:57Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974982539/zip"
+            },
+            "notification-service-ubuntu-latest-verify": {
+              "id": 6974981542,
+              "name": "notification-service-ubuntu-latest-verify",
+              "size": 693,
+              "expired": false,
+              "created_at": "2026-05-13T15:53:55Z",
+              "updated_at": "2026-05-13T15:53:55Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974981542/zip"
+            },
+            "settlement-service-macos-latest-verify": {
+              "id": 6974980173,
+              "name": "settlement-service-macos-latest-verify",
+              "size": 693,
+              "expired": false,
+              "created_at": "2026-05-13T15:53:51Z",
+              "updated_at": "2026-05-13T15:53:51Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974980173/zip"
+            },
+            "portfolio-service-macos-latest-verify": {
+              "id": 6974980119,
+              "name": "portfolio-service-macos-latest-verify",
+              "size": 692,
+              "expired": false,
+              "created_at": "2026-05-13T15:53:51Z",
+              "updated_at": "2026-05-13T15:53:51Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974980119/zip"
+            },
+            "notification-service-macos-latest-verify": {
+              "id": 6974980005,
+              "name": "notification-service-macos-latest-verify",
+              "size": 693,
+              "expired": false,
+              "created_at": "2026-05-13T15:53:51Z",
+              "updated_at": "2026-05-13T15:53:51Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974980005/zip"
+            },
+            "portfolio-service-ubuntu-latest-verify": {
+              "id": 6974979511,
+              "name": "portfolio-service-ubuntu-latest-verify",
+              "size": 692,
+              "expired": false,
+              "created_at": "2026-05-13T15:53:50Z",
+              "updated_at": "2026-05-13T15:53:50Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974979511/zip"
+            }
+          },
+          "security_gate": {
+            "count": 6,
+            "findings": [
+              {
+                "cve": "CVE-2026-39820",
+                "severity": "high",
+                "package": "stdlib",
+                "installed": "go1.25.9",
+                "fix_state": "fixed",
+                "fixed_versions": [
+                  "1.25.10",
+                  "1.26.3"
+                ],
+                "service": "user-service"
+              },
+              {
+                "cve": "CVE-2026-42499",
+                "severity": "high",
+                "package": "stdlib",
+                "installed": "go1.25.9",
+                "fix_state": "fixed",
+                "fixed_versions": [
+                  "1.25.10",
+                  "1.26.3"
+                ],
+                "service": "user-service"
+              },
+              {
+                "cve": "CVE-2026-33814",
+                "severity": "high",
+                "package": "stdlib",
+                "installed": "go1.25.9",
+                "fix_state": "fixed",
+                "fixed_versions": [
+                  "1.25.10",
+                  "1.26.3"
+                ],
+                "service": "user-service"
+              },
+              {
+                "cve": "CVE-2026-33811",
+                "severity": "high",
+                "package": "stdlib",
+                "installed": "go1.25.9",
+                "fix_state": "fixed",
+                "fixed_versions": [
+                  "1.25.10",
+                  "1.26.3"
+                ],
+                "service": "user-service"
+              },
+              {
+                "cve": "CVE-2026-39836",
+                "severity": "high",
+                "package": "stdlib",
+                "installed": "go1.25.9",
+                "fix_state": "fixed",
+                "fixed_versions": [
+                  "1.25.10",
+                  "1.26.3"
+                ],
+                "service": "user-service"
+              },
+              {
+                "cve": "CVE-2026-42501",
+                "severity": "high",
+                "package": "stdlib",
+                "installed": "go1.25.9",
+                "fix_state": "fixed",
+                "fixed_versions": [
+                  "1.25.10",
+                  "1.26.3"
+                ],
+                "service": "user-service"
+              }
+            ],
+            "source": "security-gate-findings (aggregated)",
+            "diagnostics": []
+          },
+          "matrix": null,
+          "evidence_unavailable": false
+        },
         {
           "run_key": "ci-service#46",
           "workflow_key": "ci-service",
@@ -12062,6 +12879,823 @@
     }
   ],
   "runs": [
+    {
+      "run_key": "ci-service#47",
+      "workflow_key": "ci-service",
+      "workflow_name": "ci-service",
+      "workflow_path": ".github/workflows/ci-service.yml",
+      "run_number": 47,
+      "run_id": 25810406393,
+      "head_sha": "64e01986455c1a751bc1340bdc6bc0c07dfc7357",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-05-13T15:53:23Z",
+      "updated_at": "2026-05-13T15:55:56Z",
+      "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25810406393",
+      "artifacts": {
+        "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~RLTZ92.dockerbuild": {
+          "id": 6975026746,
+          "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~RLTZ92.dockerbuild",
+          "size": 44181,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:48Z",
+          "updated_at": "2026-05-13T15:55:48Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975026746/zip"
+        },
+        "user-service-supply-chain-artifacts": {
+          "id": 6975026070,
+          "name": "user-service-supply-chain-artifacts",
+          "size": 331793,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:46Z",
+          "updated_at": "2026-05-13T15:55:46Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975026070/zip"
+        },
+        "user-service-security-gate-findings": {
+          "id": 6975025472,
+          "name": "user-service-security-gate-findings",
+          "size": 354,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:44Z",
+          "updated_at": "2026-05-13T15:55:44Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975025472/zip"
+        },
+        "user-service-grype-report": {
+          "id": 6975024999,
+          "name": "user-service-grype-report",
+          "size": 56467,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:43Z",
+          "updated_at": "2026-05-13T15:55:43Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975024999/zip"
+        },
+        "user-service-sbom": {
+          "id": 6975024493,
+          "name": "user-service-sbom",
+          "size": 275016,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:42Z",
+          "updated_at": "2026-05-13T15:55:42Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975024493/zip"
+        },
+        "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~1VZU64.dockerbuild": {
+          "id": 6975013587,
+          "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~1VZU64.dockerbuild",
+          "size": 44374,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:15Z",
+          "updated_at": "2026-05-13T15:55:15Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975013587/zip"
+        },
+        "order-service-supply-chain-artifacts": {
+          "id": 6975013210,
+          "name": "order-service-supply-chain-artifacts",
+          "size": 111914,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:14Z",
+          "updated_at": "2026-05-13T15:55:14Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975013210/zip"
+        },
+        "order-service-security-gate-findings": {
+          "id": 6975012971,
+          "name": "order-service-security-gate-findings",
+          "size": 190,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:13Z",
+          "updated_at": "2026-05-13T15:55:13Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975012971/zip"
+        },
+        "order-service-grype-report": {
+          "id": 6975012740,
+          "name": "order-service-grype-report",
+          "size": 6025,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:13Z",
+          "updated_at": "2026-05-13T15:55:13Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975012740/zip"
+        },
+        "order-service-sbom": {
+          "id": 6975012553,
+          "name": "order-service-sbom",
+          "size": 105743,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:12Z",
+          "updated_at": "2026-05-13T15:55:12Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975012553/zip"
+        },
+        "sinhnguyen1411-stock-trading-user-service_64e01986455c.spdx.json": {
+          "id": 6975010755,
+          "name": "sinhnguyen1411-stock-trading-user-service_64e01986455c.spdx.json",
+          "size": 275116,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:07Z",
+          "updated_at": "2026-05-13T15:55:07Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975010755/zip"
+        },
+        "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~VR2IMG.dockerbuild": {
+          "id": 6975010443,
+          "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~VR2IMG.dockerbuild",
+          "size": 44208,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:07Z",
+          "updated_at": "2026-05-13T15:55:07Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975010443/zip"
+        },
+        "market-data-service-supply-chain-artifacts": {
+          "id": 6975010050,
+          "name": "market-data-service-supply-chain-artifacts",
+          "size": 112099,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:06Z",
+          "updated_at": "2026-05-13T15:55:06Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975010050/zip"
+        },
+        "market-data-service-security-gate-findings": {
+          "id": 6975009852,
+          "name": "market-data-service-security-gate-findings",
+          "size": 190,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:05Z",
+          "updated_at": "2026-05-13T15:55:05Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975009852/zip"
+        },
+        "market-data-service-grype-report": {
+          "id": 6975009637,
+          "name": "market-data-service-grype-report",
+          "size": 6037,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:05Z",
+          "updated_at": "2026-05-13T15:55:05Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975009637/zip"
+        },
+        "market-data-service-sbom": {
+          "id": 6975009402,
+          "name": "market-data-service-sbom",
+          "size": 105916,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:04Z",
+          "updated_at": "2026-05-13T15:55:04Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975009402/zip"
+        },
+        "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~AARUE3.dockerbuild": {
+          "id": 6975009117,
+          "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~AARUE3.dockerbuild",
+          "size": 45434,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:03Z",
+          "updated_at": "2026-05-13T15:55:03Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975009117/zip"
+        },
+        "notification-service-supply-chain-artifacts": {
+          "id": 6975008436,
+          "name": "notification-service-supply-chain-artifacts",
+          "size": 112080,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:02Z",
+          "updated_at": "2026-05-13T15:55:02Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975008436/zip"
+        },
+        "notification-service-security-gate-findings": {
+          "id": 6975007925,
+          "name": "notification-service-security-gate-findings",
+          "size": 190,
+          "expired": false,
+          "created_at": "2026-05-13T15:55:00Z",
+          "updated_at": "2026-05-13T15:55:00Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975007925/zip"
+        },
+        "notification-service-grype-report": {
+          "id": 6975007495,
+          "name": "notification-service-grype-report",
+          "size": 6029,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:59Z",
+          "updated_at": "2026-05-13T15:54:59Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975007495/zip"
+        },
+        "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~M9QZD5.dockerbuild": {
+          "id": 6975007413,
+          "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~M9QZD5.dockerbuild",
+          "size": 44621,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:59Z",
+          "updated_at": "2026-05-13T15:54:59Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975007413/zip"
+        },
+        "notification-service-sbom": {
+          "id": 6975007060,
+          "name": "notification-service-sbom",
+          "size": 105905,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:58Z",
+          "updated_at": "2026-05-13T15:54:58Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975007060/zip"
+        },
+        "risk-service-supply-chain-artifacts": {
+          "id": 6975006732,
+          "name": "risk-service-supply-chain-artifacts",
+          "size": 111918,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:58Z",
+          "updated_at": "2026-05-13T15:54:58Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975006732/zip"
+        },
+        "risk-service-security-gate-findings": {
+          "id": 6975006149,
+          "name": "risk-service-security-gate-findings",
+          "size": 190,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:56Z",
+          "updated_at": "2026-05-13T15:54:56Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975006149/zip"
+        },
+        "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~8LENUF.dockerbuild": {
+          "id": 6975006064,
+          "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~8LENUF.dockerbuild",
+          "size": 44029,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:56Z",
+          "updated_at": "2026-05-13T15:54:56Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975006064/zip"
+        },
+        "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~JNSPR5.dockerbuild": {
+          "id": 6975005944,
+          "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~JNSPR5.dockerbuild",
+          "size": 44804,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:56Z",
+          "updated_at": "2026-05-13T15:54:56Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005944/zip"
+        },
+        "risk-service-grype-report": {
+          "id": 6975005662,
+          "name": "risk-service-grype-report",
+          "size": 6027,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:55Z",
+          "updated_at": "2026-05-13T15:54:55Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005662/zip"
+        },
+        "pricing-service-supply-chain-artifacts": {
+          "id": 6975005628,
+          "name": "pricing-service-supply-chain-artifacts",
+          "size": 112082,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:55Z",
+          "updated_at": "2026-05-13T15:54:55Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005628/zip"
+        },
+        "settlement-service-supply-chain-artifacts": {
+          "id": 6975005495,
+          "name": "settlement-service-supply-chain-artifacts",
+          "size": 111732,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:55Z",
+          "updated_at": "2026-05-13T15:54:55Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005495/zip"
+        },
+        "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~VMZOB9.dockerbuild": {
+          "id": 6975005405,
+          "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~VMZOB9.dockerbuild",
+          "size": 44687,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:54Z",
+          "updated_at": "2026-05-13T15:54:54Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005405/zip"
+        },
+        "pricing-service-security-gate-findings": {
+          "id": 6975005388,
+          "name": "pricing-service-security-gate-findings",
+          "size": 190,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:54Z",
+          "updated_at": "2026-05-13T15:54:54Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005388/zip"
+        },
+        "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~RWYF4S.dockerbuild": {
+          "id": 6975005338,
+          "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~RWYF4S.dockerbuild",
+          "size": 43806,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:54Z",
+          "updated_at": "2026-05-13T15:54:54Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005338/zip"
+        },
+        "risk-service-sbom": {
+          "id": 6975005238,
+          "name": "risk-service-sbom",
+          "size": 105745,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:54Z",
+          "updated_at": "2026-05-13T15:54:54Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005238/zip"
+        },
+        "settlement-service-security-gate-findings": {
+          "id": 6975005203,
+          "name": "settlement-service-security-gate-findings",
+          "size": 190,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:54Z",
+          "updated_at": "2026-05-13T15:54:54Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005203/zip"
+        },
+        "pricing-service-grype-report": {
+          "id": 6975005119,
+          "name": "pricing-service-grype-report",
+          "size": 6029,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:54Z",
+          "updated_at": "2026-05-13T15:54:54Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005119/zip"
+        },
+        "portfolio-service-supply-chain-artifacts": {
+          "id": 6975005018,
+          "name": "portfolio-service-supply-chain-artifacts",
+          "size": 112096,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:53Z",
+          "updated_at": "2026-05-13T15:54:53Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975005018/zip"
+        },
+        "market-data-service-macos-latest-verify": {
+          "id": 6975004987,
+          "name": "market-data-service-macos-latest-verify",
+          "size": 692,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:53Z",
+          "updated_at": "2026-05-13T15:54:53Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004987/zip"
+        },
+        "compliance-service-supply-chain-artifacts": {
+          "id": 6975004964,
+          "name": "compliance-service-supply-chain-artifacts",
+          "size": 112087,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:53Z",
+          "updated_at": "2026-05-13T15:54:53Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004964/zip"
+        },
+        "settlement-service-grype-report": {
+          "id": 6975004932,
+          "name": "settlement-service-grype-report",
+          "size": 5675,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:53Z",
+          "updated_at": "2026-05-13T15:54:53Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004932/zip"
+        },
+        "pricing-service-sbom": {
+          "id": 6975004828,
+          "name": "pricing-service-sbom",
+          "size": 105907,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:53Z",
+          "updated_at": "2026-05-13T15:54:53Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004828/zip"
+        },
+        "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~4EMYNN.dockerbuild": {
+          "id": 6975004787,
+          "name": "sinhnguyen1411~design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes~4EMYNN.dockerbuild",
+          "size": 44375,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:53Z",
+          "updated_at": "2026-05-13T15:54:53Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004787/zip"
+        },
+        "portfolio-service-security-gate-findings": {
+          "id": 6975004743,
+          "name": "portfolio-service-security-gate-findings",
+          "size": 190,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:53Z",
+          "updated_at": "2026-05-13T15:54:53Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004743/zip"
+        },
+        "compliance-service-security-gate-findings": {
+          "id": 6975004735,
+          "name": "compliance-service-security-gate-findings",
+          "size": 190,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:53Z",
+          "updated_at": "2026-05-13T15:54:53Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004735/zip"
+        },
+        "settlement-service-sbom": {
+          "id": 6975004643,
+          "name": "settlement-service-sbom",
+          "size": 105911,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:52Z",
+          "updated_at": "2026-05-13T15:54:52Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004643/zip"
+        },
+        "compliance-service-grype-report": {
+          "id": 6975004518,
+          "name": "compliance-service-grype-report",
+          "size": 6029,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:52Z",
+          "updated_at": "2026-05-13T15:54:52Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004518/zip"
+        },
+        "portfolio-service-grype-report": {
+          "id": 6975004467,
+          "name": "portfolio-service-grype-report",
+          "size": 6035,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:52Z",
+          "updated_at": "2026-05-13T15:54:52Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004467/zip"
+        },
+        "execution-service-supply-chain-artifacts": {
+          "id": 6975004413,
+          "name": "execution-service-supply-chain-artifacts",
+          "size": 112084,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:52Z",
+          "updated_at": "2026-05-13T15:54:52Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004413/zip"
+        },
+        "compliance-service-sbom": {
+          "id": 6975004291,
+          "name": "compliance-service-sbom",
+          "size": 105912,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:51Z",
+          "updated_at": "2026-05-13T15:54:51Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004291/zip"
+        },
+        "portfolio-service-sbom": {
+          "id": 6975004194,
+          "name": "portfolio-service-sbom",
+          "size": 105915,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:51Z",
+          "updated_at": "2026-05-13T15:54:51Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004194/zip"
+        },
+        "execution-service-security-gate-findings": {
+          "id": 6975004132,
+          "name": "execution-service-security-gate-findings",
+          "size": 190,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:51Z",
+          "updated_at": "2026-05-13T15:54:51Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975004132/zip"
+        },
+        "execution-service-grype-report": {
+          "id": 6975003926,
+          "name": "execution-service-grype-report",
+          "size": 6038,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:51Z",
+          "updated_at": "2026-05-13T15:54:51Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975003926/zip"
+        },
+        "execution-service-sbom": {
+          "id": 6975003726,
+          "name": "execution-service-sbom",
+          "size": 105900,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:50Z",
+          "updated_at": "2026-05-13T15:54:50Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975003726/zip"
+        },
+        "risk-service-macos-latest-verify": {
+          "id": 6975000495,
+          "name": "risk-service-macos-latest-verify",
+          "size": 693,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:42Z",
+          "updated_at": "2026-05-13T15:54:42Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6975000495/zip"
+        },
+        "sinhnguyen1411-stock-trading-order-service_64e01986455c.spdx.json": {
+          "id": 6974999253,
+          "name": "sinhnguyen1411-stock-trading-order-service_64e01986455c.spdx.json",
+          "size": 105845,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:39Z",
+          "updated_at": "2026-05-13T15:54:39Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974999253/zip"
+        },
+        "sinhnguyen1411-stock-trading-market-data-service_64e01986455c.spdx.json": {
+          "id": 6974996126,
+          "name": "sinhnguyen1411-stock-trading-market-data-service_64e01986455c.spdx.json",
+          "size": 106030,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:31Z",
+          "updated_at": "2026-05-13T15:54:31Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974996126/zip"
+        },
+        "user-service-ubuntu-latest-verify": {
+          "id": 6974994911,
+          "name": "user-service-ubuntu-latest-verify",
+          "size": 1055,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:28Z",
+          "updated_at": "2026-05-13T15:54:28Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974994911/zip"
+        },
+        "user-service-macos-latest-verify": {
+          "id": 6974994388,
+          "name": "user-service-macos-latest-verify",
+          "size": 1055,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:27Z",
+          "updated_at": "2026-05-13T15:54:27Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974994388/zip"
+        },
+        "risk-service-ubuntu-latest-verify": {
+          "id": 6974993847,
+          "name": "risk-service-ubuntu-latest-verify",
+          "size": 693,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:25Z",
+          "updated_at": "2026-05-13T15:54:25Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974993847/zip"
+        },
+        "pricing-service-ubuntu-latest-verify": {
+          "id": 6974993592,
+          "name": "pricing-service-ubuntu-latest-verify",
+          "size": 693,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:25Z",
+          "updated_at": "2026-05-13T15:54:25Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974993592/zip"
+        },
+        "sinhnguyen1411-stock-trading-notification-service_64e01986455c.spdx.json": {
+          "id": 6974993590,
+          "name": "sinhnguyen1411-stock-trading-notification-service_64e01986455c.spdx.json",
+          "size": 106021,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:25Z",
+          "updated_at": "2026-05-13T15:54:25Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974993590/zip"
+        },
+        "execution-service-macos-latest-verify": {
+          "id": 6974992792,
+          "name": "execution-service-macos-latest-verify",
+          "size": 693,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:23Z",
+          "updated_at": "2026-05-13T15:54:23Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974992792/zip"
+        },
+        "execution-service-ubuntu-latest-verify": {
+          "id": 6974992067,
+          "name": "execution-service-ubuntu-latest-verify",
+          "size": 693,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:21Z",
+          "updated_at": "2026-05-13T15:54:21Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974992067/zip"
+        },
+        "order-service-macos-latest-verify": {
+          "id": 6974992003,
+          "name": "order-service-macos-latest-verify",
+          "size": 693,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:21Z",
+          "updated_at": "2026-05-13T15:54:21Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974992003/zip"
+        },
+        "sinhnguyen1411-stock-trading-risk-service_64e01986455c.spdx.json": {
+          "id": 6974991837,
+          "name": "sinhnguyen1411-stock-trading-risk-service_64e01986455c.spdx.json",
+          "size": 105845,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:20Z",
+          "updated_at": "2026-05-13T15:54:20Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974991837/zip"
+        },
+        "sinhnguyen1411-stock-trading-settlement-service_64e01986455c.spdx.json": {
+          "id": 6974991463,
+          "name": "sinhnguyen1411-stock-trading-settlement-service_64e01986455c.spdx.json",
+          "size": 106023,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:20Z",
+          "updated_at": "2026-05-13T15:54:20Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974991463/zip"
+        },
+        "compliance-service-macos-latest-verify": {
+          "id": 6974991357,
+          "name": "compliance-service-macos-latest-verify",
+          "size": 693,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:19Z",
+          "updated_at": "2026-05-13T15:54:19Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974991357/zip"
+        },
+        "sinhnguyen1411-stock-trading-compliance-service_64e01986455c.spdx.json": {
+          "id": 6974991309,
+          "name": "sinhnguyen1411-stock-trading-compliance-service_64e01986455c.spdx.json",
+          "size": 106024,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:19Z",
+          "updated_at": "2026-05-13T15:54:19Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974991309/zip"
+        },
+        "sinhnguyen1411-stock-trading-execution-service_64e01986455c.spdx.json": {
+          "id": 6974990795,
+          "name": "sinhnguyen1411-stock-trading-execution-service_64e01986455c.spdx.json",
+          "size": 106010,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:18Z",
+          "updated_at": "2026-05-13T15:54:18Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974990795/zip"
+        },
+        "sinhnguyen1411-stock-trading-portfolio-service_64e01986455c.spdx.json": {
+          "id": 6974988199,
+          "name": "sinhnguyen1411-stock-trading-portfolio-service_64e01986455c.spdx.json",
+          "size": 106025,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:11Z",
+          "updated_at": "2026-05-13T15:54:11Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974988199/zip"
+        },
+        "sinhnguyen1411-stock-trading-pricing-service_64e01986455c.spdx.json": {
+          "id": 6974988167,
+          "name": "sinhnguyen1411-stock-trading-pricing-service_64e01986455c.spdx.json",
+          "size": 106013,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:11Z",
+          "updated_at": "2026-05-13T15:54:11Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974988167/zip"
+        },
+        "order-service-ubuntu-latest-verify": {
+          "id": 6974986364,
+          "name": "order-service-ubuntu-latest-verify",
+          "size": 693,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:07Z",
+          "updated_at": "2026-05-13T15:54:07Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974986364/zip"
+        },
+        "market-data-service-ubuntu-latest-verify": {
+          "id": 6974983650,
+          "name": "market-data-service-ubuntu-latest-verify",
+          "size": 692,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:00Z",
+          "updated_at": "2026-05-13T15:54:00Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974983650/zip"
+        },
+        "settlement-service-ubuntu-latest-verify": {
+          "id": 6974983643,
+          "name": "settlement-service-ubuntu-latest-verify",
+          "size": 693,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:00Z",
+          "updated_at": "2026-05-13T15:54:00Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974983643/zip"
+        },
+        "pricing-service-macos-latest-verify": {
+          "id": 6974983520,
+          "name": "pricing-service-macos-latest-verify",
+          "size": 693,
+          "expired": false,
+          "created_at": "2026-05-13T15:54:00Z",
+          "updated_at": "2026-05-13T15:54:00Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974983520/zip"
+        },
+        "compliance-service-ubuntu-latest-verify": {
+          "id": 6974982539,
+          "name": "compliance-service-ubuntu-latest-verify",
+          "size": 693,
+          "expired": false,
+          "created_at": "2026-05-13T15:53:57Z",
+          "updated_at": "2026-05-13T15:53:57Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974982539/zip"
+        },
+        "notification-service-ubuntu-latest-verify": {
+          "id": 6974981542,
+          "name": "notification-service-ubuntu-latest-verify",
+          "size": 693,
+          "expired": false,
+          "created_at": "2026-05-13T15:53:55Z",
+          "updated_at": "2026-05-13T15:53:55Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974981542/zip"
+        },
+        "settlement-service-macos-latest-verify": {
+          "id": 6974980173,
+          "name": "settlement-service-macos-latest-verify",
+          "size": 693,
+          "expired": false,
+          "created_at": "2026-05-13T15:53:51Z",
+          "updated_at": "2026-05-13T15:53:51Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974980173/zip"
+        },
+        "portfolio-service-macos-latest-verify": {
+          "id": 6974980119,
+          "name": "portfolio-service-macos-latest-verify",
+          "size": 692,
+          "expired": false,
+          "created_at": "2026-05-13T15:53:51Z",
+          "updated_at": "2026-05-13T15:53:51Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974980119/zip"
+        },
+        "notification-service-macos-latest-verify": {
+          "id": 6974980005,
+          "name": "notification-service-macos-latest-verify",
+          "size": 693,
+          "expired": false,
+          "created_at": "2026-05-13T15:53:51Z",
+          "updated_at": "2026-05-13T15:53:51Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974980005/zip"
+        },
+        "portfolio-service-ubuntu-latest-verify": {
+          "id": 6974979511,
+          "name": "portfolio-service-ubuntu-latest-verify",
+          "size": 692,
+          "expired": false,
+          "created_at": "2026-05-13T15:53:50Z",
+          "updated_at": "2026-05-13T15:53:50Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6974979511/zip"
+        }
+      },
+      "security_gate": {
+        "count": 6,
+        "findings": [
+          {
+            "cve": "CVE-2026-39820",
+            "severity": "high",
+            "package": "stdlib",
+            "installed": "go1.25.9",
+            "fix_state": "fixed",
+            "fixed_versions": [
+              "1.25.10",
+              "1.26.3"
+            ],
+            "service": "user-service"
+          },
+          {
+            "cve": "CVE-2026-42499",
+            "severity": "high",
+            "package": "stdlib",
+            "installed": "go1.25.9",
+            "fix_state": "fixed",
+            "fixed_versions": [
+              "1.25.10",
+              "1.26.3"
+            ],
+            "service": "user-service"
+          },
+          {
+            "cve": "CVE-2026-33814",
+            "severity": "high",
+            "package": "stdlib",
+            "installed": "go1.25.9",
+            "fix_state": "fixed",
+            "fixed_versions": [
+              "1.25.10",
+              "1.26.3"
+            ],
+            "service": "user-service"
+          },
+          {
+            "cve": "CVE-2026-33811",
+            "severity": "high",
+            "package": "stdlib",
+            "installed": "go1.25.9",
+            "fix_state": "fixed",
+            "fixed_versions": [
+              "1.25.10",
+              "1.26.3"
+            ],
+            "service": "user-service"
+          },
+          {
+            "cve": "CVE-2026-39836",
+            "severity": "high",
+            "package": "stdlib",
+            "installed": "go1.25.9",
+            "fix_state": "fixed",
+            "fixed_versions": [
+              "1.25.10",
+              "1.26.3"
+            ],
+            "service": "user-service"
+          },
+          {
+            "cve": "CVE-2026-42501",
+            "severity": "high",
+            "package": "stdlib",
+            "installed": "go1.25.9",
+            "fix_state": "fixed",
+            "fixed_versions": [
+              "1.25.10",
+              "1.26.3"
+            ],
+            "service": "user-service"
+          }
+        ],
+        "source": "security-gate-findings (aggregated)",
+        "diagnostics": []
+      },
+      "matrix": null,
+      "evidence_unavailable": false
+    },
     {
       "run_key": "ci-service#46",
       "workflow_key": "ci-service",
