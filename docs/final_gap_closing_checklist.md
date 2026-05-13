@@ -1,4 +1,4 @@
-﻿# Final Gap-Closing Checklist (Issue-by-Issue)
+# Final Gap-Closing Checklist (Issue-by-Issue)
 
 Last updated: 2026-04-14
 
@@ -45,7 +45,7 @@ Status legend (allowed values only): `Implemented | Partial | Missing`
 |---|---|---|---|---|---|
 | III.1 Requirement analysis and model definition | Implemented | End-to-end risk/control model is specified across Dev -> CI/CD -> Registry -> Admission. | None for this item. | [docs/thesis_spec_en.md](docs/thesis_spec_en.md#1-requirement-analysis-and-model-definition), [docs/scs_architecture_diagram.html](docs/scs_architecture_diagram.html) | - |
 | III.2 Security architecture design | Implemented | Architecture sequence Build -> SBOM -> Scan -> Sign/Attest -> Push -> Verify/Enforce is documented. | None for this item. | [docs/thesis_spec_en.md](docs/thesis_spec_en.md#2-security-architecture-design), [README.md](README.md#architecture-overview) | - |
-| III.3 Go sample microservice construction | Partial | `user-service` implementation, Docker packaging, and least-privilege runtime are present; Go toolchain baseline is aligned (`1.25.9`). | Need final hardening rationale and runtime-evidence packaging for thesis closure. | [services/user-service/Dockerfile](services/user-service/Dockerfile), [services/user-service/deploy/kubernetes/base/deployment.yaml](services/user-service/deploy/kubernetes/base/deployment.yaml), [docs/final_gap_closing_checklist.md](docs/final_gap_closing_checklist.md#1-harden-dockerfile-and-runtime-defaults-for-least-privilege-open) | #1 |
+| III.3 Go sample microservice construction | Partial | `user-service` implementation, Docker packaging, and least-privilege runtime are present; Go toolchain baseline is aligned (`1.25.10`). | Need final hardening rationale and runtime-evidence packaging for thesis closure. | [services/user-service/Dockerfile](services/user-service/Dockerfile), [services/user-service/deploy/kubernetes/base/deployment.yaml](services/user-service/deploy/kubernetes/base/deployment.yaml), [docs/final_gap_closing_checklist.md](docs/final_gap_closing_checklist.md#1-harden-dockerfile-and-runtime-defaults-for-least-privilege-open) | #1 |
 | III.4 Secure CI/CD pipeline integration | Partial | CI stages and fail-fast controls are implemented end-to-end. | Final thesis packaging still needs explicit reproducible artifact mapping in docs for SBOM/scan gates. | [.github/workflows/ci-service.yml](.github/workflows/ci-service.yml), [docs/devsecops_ci_admission.md](docs/devsecops_ci_admission.md#ci-evidence-artifacts) | #3, #4 |
 | III.5 Kubernetes enforcement setup | Partial | Kyverno bootstrap and policy set are implemented. | Base-manifest contract plus policy/enforcement alignment and reproducible bootstrap behavior are not fully closed. | [infra/scripts/devsecops_kind_bootstrap.sh](infra/scripts/devsecops_kind_bootstrap.sh), [infra/policies/kyverno/kustomization.yaml](infra/policies/kyverno/kustomization.yaml), [docs/final_gap_closing_checklist.md](docs/final_gap_closing_checklist.md#2-align-kubernetes-base-manifests-with-production-safe-defaults-open) | #2, #7, #8, #9 |
 | III.6 Validation testing | Partial | Admission matrix script exports structured per-case evidence and regression re-check; canonical real run and screenshot appendix are available. | Need clean Kind bootstrap evidence and final thesis cross-reference locking. | [infra/scripts/admission_matrix_demo.ps1](infra/scripts/admission_matrix_demo.ps1), [demo/evidence/20260414-210227/matrix-index.json](demo/evidence/20260414-210227/matrix-index.json), [docs/lens_screenshots/README.md](docs/lens_screenshots/README.md) | #9, #11 |
@@ -324,4 +324,5 @@ Keep-closed checklist:
 - [ ] One final admission matrix run-id captured from real cluster.
 - [ ] Docs cross-links updated (`README`, `thesis_spec_en`, runbook, evidence docs).
 - [ ] Remaining open GitHub issues (`#1` to `#9`, `#11`) closed with evidence links.
+
 

@@ -2,50 +2,51 @@ services:
   - name: user-service
     path: services/user-service
     image: sinhnguyen1411/stock-trading/user-service
-    go_version: "1.25.9"
+    go_version: "1.25.10"
     profile_tags: ["http-api", "db-migration"]
   - name: portfolio-service
     path: services/portfolio-service
     image: sinhnguyen1411/stock-trading/portfolio-service
-    go_version: "1.25.9"
+    go_version: "1.25.10"
     profile_tags: ["http-api", "security-crypto"]
   - name: order-service
     path: services/order-service
     image: sinhnguyen1411/stock-trading/order-service
-    go_version: "1.25.9"
+    go_version: "1.25.10"
     profile_tags: ["async-message", "security-crypto"]
   - name: risk-service
     path: services/risk-service
     image: sinhnguyen1411/stock-trading/risk-service
-    go_version: "1.25.9"
+    go_version: "1.25.10"
     profile_tags: ["rule-engine", "security-crypto"]
   - name: market-data-service
     path: services/market-data-service
     image: sinhnguyen1411/stock-trading/market-data-service
-    go_version: "1.25.9"
+    go_version: "1.25.10"
     profile_tags: ["http-api", "async-message"]
   - name: pricing-service
     path: services/pricing-service
     image: sinhnguyen1411/stock-trading/pricing-service
-    go_version: "1.25.9"
+    go_version: "1.25.10"
     profile_tags: ["http-api", "security-crypto"]
   - name: execution-service
     path: services/execution-service
     image: sinhnguyen1411/stock-trading/execution-service
-    go_version: "1.25.9"
+    go_version: "1.25.10"
     profile_tags: ["http-api", "rule-engine"]
   - name: settlement-service
     path: services/settlement-service
     image: sinhnguyen1411/stock-trading/settlement-service
-    go_version: "1.25.9"
+    go_version: "1.25.10"
     profile_tags: ["http-api", "db-migration"]
   - name: compliance-service
     path: services/compliance-service
     image: sinhnguyen1411/stock-trading/compliance-service
-    go_version: "1.25.9"
+    go_version: "1.25.10"
     profile_tags: ["rule-engine", "security-crypto"]
   - name: notification-service
     path: services/notification-service
     image: sinhnguyen1411/stock-trading/notification-service
-    go_version: "1.25.9"
+    go_version: "1.25.10"
     profile_tags: ["async-message", "http-api"]
+

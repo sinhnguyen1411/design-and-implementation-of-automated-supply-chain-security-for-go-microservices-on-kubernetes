@@ -1,4 +1,4 @@
-FROM golang:1.25 AS builder
+FROM golang:1.25.10 AS builder
 WORKDIR /src
 COPY go.mod ./
 RUN go mod download
@@ -9,3 +9,4 @@ FROM gcr.io/distroless/static-debian12
 COPY --from=builder /out/service /service
 EXPOSE 8080
 ENTRYPOINT ["/service"]
+

@@ -3,7 +3,7 @@ param(
   [string]$Branch = "test/ci-cve-signal",
   [int]$Iterations = 5,
   [string]$TargetService = "services/user-service",
-  [string]$GoVersion = "1.25.9"
+  [string]$GoVersion = "1.25.10"
 )
 
 $ErrorActionPreference = "Stop"
@@ -96,3 +96,4 @@ $records | Sort-Object run_id, job_name | Format-Table -AutoSize
 Write-Host ""
 Write-Host "=== Summary (Median/P95) ==="
 $summary | Sort-Object job_name | Format-Table -AutoSize
+

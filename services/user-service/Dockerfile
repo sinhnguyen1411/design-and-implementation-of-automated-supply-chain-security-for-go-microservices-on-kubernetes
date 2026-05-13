@@ -1,6 +1,6 @@
-﻿# syntax=docker/dockerfile:1.7
+# syntax=docker/dockerfile:1.7
 
-ARG GO_VERSION=1.25.9
+ARG GO_VERSION=1.25.10
 
 FROM --platform=$BUILDPLATFORM golang:${GO_VERSION}-bookworm AS builder
 LABEL org.opencontainers.image.source="https://github.com/sinhnguyen1411/stock-trading-be"
@@ -51,3 +51,4 @@ USER 65532:0
 
 ENTRYPOINT ["/usr/local/bin/user-service"]
 CMD ["server", "--config", "/etc/stock-trading/config.yaml"]
+
