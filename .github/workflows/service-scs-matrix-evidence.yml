@@ -47,6 +47,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       fail-fast: false
+      max-parallel: 3
       matrix: ${{ fromJson(needs.discover-services.outputs.matrix) }}
 
     steps:
