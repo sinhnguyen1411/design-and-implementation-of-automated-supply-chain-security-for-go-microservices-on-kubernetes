@@ -3,7 +3,17 @@
 This document describes the secure supply-chain pipeline (`dependency-integrity -> test -> govulncheck -> build -> SBOM -> scan -> sign -> attest -> push`) and Kyverno-based admission enforcement.
 
 ## CI Workflow (`.github/workflows/ci-service.yml`)
-The workflow runs on pushes/PRs to `main` and on manual dispatch.
+The workflow runs on pushes/PRs to `main`, on a nightly schedule (`15 1 * * *`), and on manual dispatch.
+
+**Scope**: 10 Go microservices — user-service, portfolio-service, order-service, risk-service, market-data-service, pricing-service, execution-service, settlement-service, compliance-service, notification-service. All services use Go `1.25.10` baseline.
+
+**Matrix strategy**: On push/PR, only services with changed files are included (changed-only). On schedule or `workflow_dispatch` with `service=all`, the full matrix runs.
+
+**`workflow_dispatch` inputs**:
+- `service`: service name or blank (changed-only) / `all`.
+- `mode`: `normal` (default) or `benchmark` for runner A/B experiments.
+- `gate_mode`: `enforced` (default, hard fail on security gates) or `warn` (audit-only).
+- `runner_target`: `auto` (default) / `self-hosted` / `gh-hosted`. When `gh-hosted`, `windows-parity-smoke` is skipped by design.
 
 Pipeline stages:
 1. Run dependency-integrity checks for Go modules:

@@ -54,8 +54,8 @@ The thesis targets a verifiable, enforceable, and repeatable model through the f
    7) Verify and enforce at deployment,
    with reuse potential for other Go microservices [1][2][4][6][8][9][10].
 
-6. **Demonstration on a real Go microservice sample**
-   Validate feasibility using a Kubernetes-deployed user-service and demonstrate the full commit-to-deploy trust flow.
+6. **Demonstration on a real Go microservice sample at scale**
+   Validate feasibility using a Kubernetes-deployed user-service as the canonical demo target and demonstrate the full commit-to-deploy trust flow. Scalability is validated across 10 Go microservices with a shared CI matrix, confirming the pipeline is reusable beyond the primary demo service.
 
 **Novelty claim**: the thesis integrates commonly isolated controls into a single continuous control chain from dependency management through deployment admission. This shifts security posture from "scan and alert" to "verify and enforce" with reproducible artifacts and operating procedure outputs [1][2][4][6][8][9][10].
 
@@ -97,7 +97,7 @@ Design an integrated artifact lifecycle with the sequence:
 Use open-source tooling to keep verification semantics consistent between CI/CD and Kubernetes admission [1][4][6][8][9][10].
 
 ### 3. Go Microservice Sample Construction
-Use a practical Go user-service (registration, verification, login baseline) as the experiment target. Package with a multi-stage Dockerfile and least-privilege runtime hardening suitable for security-focused validation [1][6][7].
+Use a practical Go user-service (registration, verification, login baseline) as the primary experiment target. Package with a multi-stage Dockerfile and least-privilege runtime hardening suitable for security-focused validation [1][6][7]. The monorepo has been scaled to 10 Go microservices (user-service, portfolio-service, order-service, risk-service, market-data-service, pricing-service, execution-service, settlement-service, compliance-service, notification-service) to validate repeatability of the supply-chain pipeline at scale; all services share the same Go `1.25.10` toolchain baseline.
 
 ### 4. Secure CI/CD Pipeline Integration
 Implement an automated pipeline executing:
@@ -164,7 +164,7 @@ Evaluation scope is intentionally bounded to feasibility and reproducibility of 
    The primary goal is correctness, automation, and enforcement; CI/CD performance optimization and system load benchmarking are outside scope.
 
 ## Thesis-to-Implementation Traceability
-As-of `2026-04-14` (GitHub state snapshot: issues `#1` to `#12` open, `#13` and `#14` closed).
+As-of `2026-05-19` (GitHub state snapshot: issues `#1` to `#9`, `#11` open; `#10`, `#12`, `#13`, `#14` closed). Scale: 10 services, Go `1.25.10` baseline, CI green on `main` (runs/25811075803, runs/25811079788).
 
 Status legend: `Implemented | Partial | Missing`
 

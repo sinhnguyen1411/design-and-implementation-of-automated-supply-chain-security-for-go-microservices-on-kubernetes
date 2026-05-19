@@ -1,10 +1,12 @@
 ﻿# Traceability Evidence Register
 
-As-of: `2026-04-14`
+As-of: `2026-05-19`
 
 Issue snapshot at this date:
 - Open: `#1` to `#9`, `#11`
 - Closed: `#10`, `#12`, `#13`, `#14`
+
+Scale context: Repository now contains **10 Go microservices** (user-service, portfolio-service, order-service, risk-service, market-data-service, pricing-service, execution-service, settlement-service, compliance-service, notification-service). All services aligned to Go `1.25.10` baseline as of commit `2821617`.
 
 Purpose:
 - Provide a direct objective-to-evidence map for thesis packaging.
@@ -14,13 +16,15 @@ Purpose:
 ## Canonical Evidence Sources
 - Dashboard Actions snapshot (source of truth): `docs/security-admission-dashboard/data/actions-runs.snapshot.json`
 - Snapshot sync workflow: `.github/workflows/dashboard-data-sync.yml`
-- Runtime matrix evidence workflow: `.github/workflows/admission-lab.yml`
-- Multi-service matrix evidence workflow: `.github/workflows/onboarding-lab.yml`
+- Runtime matrix evidence workflow: `.github/workflows/admission-matrix-evidence.yml`
+- Multi-service SCS matrix workflow: `.github/workflows/service-scs-matrix-evidence.yml`
 - Admission evidence root: `demo/evidence/20260414-210227/`
 - Screenshot appendix pack: `docs/lens_screenshots/`
 - Dashboard fallback-only dataset: `docs/security-admission-dashboard/demo-data/evidence/`
-- Final CI run URL: `https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/24406893294`
-- Final CI artifact IDs: `dependency-integrity-report=6431038166`, `govulncheck-report=6431053554`, `sbom=6431094849`, `grype-report=6431095016`, `cosign-bundle=6431095189`
+- Baseline CI run URL (2026-04-14): `https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/24406893294`
+- Baseline CI artifact IDs: `dependency-integrity-report=6431038166`, `govulncheck-report=6431053554`, `sbom=6431094849`, `grype-report=6431095016`, `cosign-bundle=6431095189`
+- Latest green CI run URL (push, 2026-05-19): `https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25811075803`
+- Latest green CI run URL (workflow_dispatch, 2026-05-19): `https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25811079788`
 
 ## Objective-to-Evidence Matrix
 | Objective Item | Related Issue(s) | CI Run URL (Final) | CI Artifact / Path Evidence (Repo-Local) | Admission Run-ID Evidence | Status |
@@ -34,5 +38,7 @@ Purpose:
 
 ## Remaining Fill-Ins Before Final Submission
 - Close Issue `#11` after final reviewer check of this register and linked evidence bundle.
-- Optionally mirror the same CI run URL + artifact IDs into `docs/thesis_spec_en.md` for one-click examiner navigation.
+- Mirror the latest CI run URLs (runs/25811075803, runs/25811079788) into `docs/thesis_spec_en.md` traceability table for examiner navigation.
+- Capture artifact IDs from the 2026-05-19 green runs to replace the baseline artifact IDs above.
+- Note: `windows-parity-smoke` is intentionally skipped when `runner_target=gh-hosted` — this is by design and does not affect supply-chain gate status.
 

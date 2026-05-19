@@ -1,12 +1,14 @@
 # Final Gap-Closing Checklist (Issue-by-Issue)
 
-Last updated: 2026-04-14
+Last updated: 2026-05-19
 
 Repository: `sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes`
 
 GitHub issue snapshot:
 - Open: `#1` to `#9`, `#11`
 - Closed: `#10`, `#12`, `#13`, `#14`
+
+Scale context (as of 2026-05-19): Repository expanded to 10 Go microservices; Go toolchain baseline raised to `1.25.10` across all services (commit `2821617`). CI pipeline (ci-service #48 push, #49 workflow_dispatch) green on `main` with this baseline.
 
 This checklist is the execution contract to close the thesis package with auditable evidence.
 
@@ -140,13 +142,14 @@ Close when:
 Current state:
 - Grype JSON report and security gate are implemented.
 - `govulncheck` gate is integrated.
+- Go `1.25.10` baseline enforced as of commit `2821617`; govulncheck gate now passes green across all 10 services on the latest `main` CI runs (runs/25811075803, runs/25811079788).
 
 Gap to close:
 - Need explicit fail-case evidence in final package, not only pass-case logic.
 
 Checklist:
 - [ ] Capture one CI run (or controlled local simulation) where threshold gate fails.
-- [ ] Capture one run where gate passes and shows `high_critical=0`.
+- [x] Latest passing run available: `https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25811075803` (push) and `runs/25811079788` (workflow_dispatch).
 - [ ] Add both run references to docs (`pass` and `fail`) with concise explanation.
 
 Close when:
@@ -320,7 +323,9 @@ Keep-closed checklist:
 4. `#1` + `#3` + `#4` polishing (consistency, fail/pass evidence completeness)
 
 ## Final Sign-off Checklist
-- [ ] One final CI run on `main` captured with full artifact set.
+- [x] Latest CI runs on `main` green (ci-service #48 push runs/25811075803, #49 workflow_dispatch runs/25811079788).
+- [x] Go `1.25.10` baseline aligned across all 10 services (commit `2821617`).
+- [ ] Artifact IDs from 2026-05-19 runs captured and inserted into traceability register.
 - [ ] One final admission matrix run-id captured from real cluster.
 - [ ] Docs cross-links updated (`README`, `thesis_spec_en`, runbook, evidence docs).
 - [ ] Remaining open GitHub issues (`#1` to `#9`, `#11`) closed with evidence links.
