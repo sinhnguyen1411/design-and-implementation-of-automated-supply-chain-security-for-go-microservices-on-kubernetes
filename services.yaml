@@ -49,4 +49,69 @@ services:
     image: sinhnguyen1411/stock-trading/notification-service
     go_version: "1.25.10"
     profile_tags: ["async-message", "http-api"]
+  - name: auth-service
+    path: services/auth-service
+    image: sinhnguyen1411/stock-trading/auth-service
+    go_version: "1.25.10"
+    profile_tags: ["http-api", "security-crypto"]
+  - name: account-service
+    path: services/account-service
+    image: sinhnguyen1411/stock-trading/account-service
+    go_version: "1.25.10"
+    profile_tags: ["http-api", "db-migration"]
+  - name: watchlist-service
+    path: services/watchlist-service
+    image: sinhnguyen1411/stock-trading/watchlist-service
+    go_version: "1.25.10"
+    profile_tags: ["http-api", "db-migration"]
+  - name: analytics-service
+    path: services/analytics-service
+    image: sinhnguyen1411/stock-trading/analytics-service
+    go_version: "1.25.10"
+    profile_tags: ["http-api", "rule-engine"]
+  - name: audit-service
+    path: services/audit-service
+    image: sinhnguyen1411/stock-trading/audit-service
+    go_version: "1.25.10"
+    profile_tags: ["async-message", "db-migration"]
+  - name: fees-service
+    path: services/fees-service
+    image: sinhnguyen1411/stock-trading/fees-service
+    go_version: "1.25.10"
+    profile_tags: ["http-api", "rule-engine"]
+  - name: reporting-service
+    path: services/reporting-service
+    image: sinhnguyen1411/stock-trading/reporting-service
+    go_version: "1.25.10"
+    profile_tags: ["http-api", "db-migration"]
+  - name: gateway-service
+    path: services/gateway-service
+    image: sinhnguyen1411/stock-trading/gateway-service
+    go_version: "1.25.10"
+    profile_tags: ["http-api", "security-crypto"]
+  - name: search-service
+    path: services/search-service
+    image: sinhnguyen1411/stock-trading/search-service
+    go_version: "1.25.10"
+    profile_tags: ["http-api", "async-message"]
+  - name: alert-service
+    path: services/alert-service
+    image: sinhnguyen1411/stock-trading/alert-service
+    go_version: "1.25.10"
+    profile_tags: ["async-message", "rule-engine"]
+  - name: data-feed-service
+    path: services/data-feed-service
+    image: sinhnguyen1411/stock-trading/data-feed-service
+    go_version: "1.25.10"
+    profile_tags: ["async-message", "http-api"]
+  - name: backtest-service
+    path: services/backtest-service
+    image: sinhnguyen1411/stock-trading/backtest-service
+    go_version: "1.25.10"
+    profile_tags: ["http-api", "rule-engine"]
+  - name: margin-service
+    path: services/margin-service
+    image: sinhnguyen1411/stock-trading/margin-service
+    go_version: "1.25.10"
+    profile_tags: ["http-api", "security-crypto"]
 

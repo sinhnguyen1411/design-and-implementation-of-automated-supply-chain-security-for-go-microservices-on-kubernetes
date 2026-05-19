@@ -1,0 +1,12 @@
+piVersion: v1
+kind: Service
+metadata:
+  name: alert-service
+  namespace: stock-trading
+spec:
+  selector:
+    app.kubernetes.io/name: alert-service
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
