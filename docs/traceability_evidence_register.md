@@ -22,9 +22,17 @@ Purpose:
 - Screenshot appendix pack: `docs/lens_screenshots/`
 - Dashboard fallback-only dataset: `docs/security-admission-dashboard/demo-data/evidence/`
 - Baseline CI run URL (2026-04-14): `https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/24406893294`
-- Baseline CI artifact IDs: `dependency-integrity-report=6431038166`, `govulncheck-report=6431053554`, `sbom=6431094849`, `grype-report=6431095016`, `cosign-bundle=6431095189`
+- Baseline CI artifact IDs (aggregated, single-service era): `dependency-integrity-report=6431038166`, `govulncheck-report=6431053554`, `sbom=6431094849`, `grype-report=6431095016`, `cosign-bundle=6431095189`
 - Latest green CI run URL (push, 2026-05-19): `https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25811075803`
 - Latest green CI run URL (workflow_dispatch, 2026-05-19): `https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25811079788`
+- Latest CI artifact IDs — **user-service canonical** (run 25811075803, per-service structure):
+  - `user-service-sbom=6975304852`
+  - `user-service-grype-report=6975305135`
+  - `user-service-security-gate-findings=6975305453`
+  - `user-service-supply-chain-artifacts=6975305801` (cosign bundle, SLSA attestation, Kustomize overlay)
+  - `user-service-ubuntu-latest-verify=6975283688`
+  - `user-service-macos-latest-verify=6975281971`
+- Note: CI v2 (10-service era) exports per-service artifacts; `{service}-supply-chain-artifacts` replaces the old `cosign-bundle` bundle.
 
 ## Objective-to-Evidence Matrix
 | Objective Item | Related Issue(s) | CI Run URL (Final) | CI Artifact / Path Evidence (Repo-Local) | Admission Run-ID Evidence | Status |
@@ -39,6 +47,6 @@ Purpose:
 ## Remaining Fill-Ins Before Final Submission
 - Close Issue `#11` after final reviewer check of this register and linked evidence bundle.
 - Mirror the latest CI run URLs (runs/25811075803, runs/25811079788) into `docs/thesis_spec_en.md` traceability table for examiner navigation.
-- Capture artifact IDs from the 2026-05-19 green runs to replace the baseline artifact IDs above.
 - Note: `windows-parity-smoke` is intentionally skipped when `runner_target=gh-hosted` — this is by design and does not affect supply-chain gate status.
+- Capture one clean Kind bootstrap + admission matrix run-id from a host with `kind` CLI installed (issue #9).
 

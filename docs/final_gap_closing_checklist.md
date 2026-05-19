@@ -325,8 +325,8 @@ Keep-closed checklist:
 ## Final Sign-off Checklist
 - [x] Latest CI runs on `main` green (ci-service #48 push runs/25811075803, #49 workflow_dispatch runs/25811079788).
 - [x] Go `1.25.10` baseline aligned across all 10 services (commit `2821617`).
-- [ ] Artifact IDs from 2026-05-19 runs captured and inserted into traceability register.
-- [ ] One final admission matrix run-id captured from real cluster.
+- [x] Artifact IDs from 2026-05-19 runs captured in traceability register (`user-service-sbom=6975304852`, `user-service-supply-chain-artifacts=6975305801`).
+- [ ] One final admission matrix run-id captured from real cluster (requires host with `kind` CLI).
 - [ ] Docs cross-links updated (`README`, `thesis_spec_en`, runbook, evidence docs).
 - [ ] Remaining open GitHub issues (`#1` to `#9`, `#11`) closed with evidence links.
 
