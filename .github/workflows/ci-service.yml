@@ -1,4 +1,4 @@
-﻿name: ci-service
+name: ci-service
 
 on:
   push:
@@ -48,6 +48,18 @@ on:
           - gh-hosted
         required: false
         default: "auto"
+      os_coverage:
+        description: "OS coverage for verify: linux-only | full (linux+macos)"
+        type: choice
+        options:
+          - linux-only
+          - full
+        required: false
+        default: "linux-only"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   REGISTRY: ghcr.io
@@ -58,6 +70,7 @@ jobs:
     outputs:
       matrix: ${{ steps.matrix.outputs.result }}
       has_services: ${{ steps.matrix.outputs.has_services }}
+      os_list: ${{ steps.matrix.outputs.os_list }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -72,6 +85,7 @@ jobs:
           INPUT_SERVICE: ${{ inputs.service }}
           BEFORE_SHA: ${{ github.event.before }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          INPUT_OS_COVERAGE: ${{ inputs.os_coverage || '' }}
         run: |
           import json, os, subprocess, yaml
           with open('services.yaml', 'r', encoding='utf-8') as f:
@@ -104,17 +118,26 @@ jobs:
 
           result = {'include': selected}
           has_services = 'true' if selected else 'false'
+
+          os_coverage = (os.environ.get('INPUT_OS_COVERAGE') or '').strip()
+          if event == 'schedule' or os_coverage == 'full':
+              os_list = ["ubuntu-latest", "macos-latest"]
+          else:
+              os_list = ["ubuntu-latest"]
+
           with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
               f.write(f"result={json.dumps(result)}\n")
               f.write(f"has_services={has_services}\n")
+              f.write(f"os_list={json.dumps(os_list)}\n")
 
   verify-cross-os:
     needs: discover
     if: needs.discover.outputs.has_services == 'true' && (inputs.mode || 'normal') != 'benchmark'
     strategy:
       fail-fast: false
+      max-parallel: 8
       matrix:
-        runner_os: [ubuntu-latest, macos-latest]
+        runner_os: ${{ fromJson(needs.discover.outputs.os_list) }}
         service: ${{ fromJson(needs.discover.outputs.matrix).include }}
     uses: ./.github/workflows/reusable-go-verify.yml
     with:
@@ -163,6 +186,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+      max-parallel: 6
       matrix: ${{ fromJson(needs.discover.outputs.matrix) }}
     permissions:
       contents: read
@@ -195,6 +219,8 @@ jobs:
           load: true
           push: false
           tags: ${{ steps.meta.outputs.image }}
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=min,scope=${{ matrix.name }}
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0.17.7
@@ -335,14 +361,6 @@ jobs:
           if findings and gate_mode == "warn":
             print("Security gate warning mode: findings detected but pipeline not failed.")
 
-      - name: Upload SBOM artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.name }}-sbom
-          path: ${{ matrix.path }}/sbom.spdx.json
-          if-no-files-found: warn
-
       - name: Upload Grype report artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -358,15 +376,3 @@ jobs:
           name: ${{ matrix.name }}-security-gate-findings
           path: ${{ matrix.path }}/security-gate-findings.json
           if-no-files-found: warn
-
-      - name: Upload combined supply-chain artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.name }}-supply-chain-artifacts
-          path: |
-            ${{ matrix.path }}/sbom.spdx.json
-            ${{ matrix.path }}/grype-report.json
-            ${{ matrix.path }}/security-gate-findings.json
-          if-no-files-found: warn
-

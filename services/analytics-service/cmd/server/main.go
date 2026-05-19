@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 
@@ -12,16 +11,26 @@ import (
 
 func main() {
 	port := os.Getenv("PORT")
-	if port == "" { port = "8080" }
+	if port == "" {
+		port = "8080"
+	}
 	http.HandleFunc("/healthz", func(w http.ResponseWriter, _ *http.Request) {
-		_, _ = w.Write([]byte(health.Status()))
+		w.Write([]byte(health.Status()))
 	})
-	http.HandleFunc("/analytics/pnl", func(w http.ResponseWriter, r *http.Request) {
-		trades := []analytics.Trade{{Symbol: "AAPL", Qty: 10, BuyPrice: 150, SellPrice: 160}}
-		result := analytics.ComputePnL(trades, 0.001)
+	http.HandleFunc("/analytics/metrics", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		var req struct {
+			Returns []analytics.DailyReturn `json:"returns"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
 		w.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(w).Encode(result)
+		json.NewEncoder(w).Encode(analytics.ComputeMetrics(req.Returns))
 	})
-	fmt.Printf("analytics-service listening on :%s\n", port)
-	_ = http.ListenAndServe(":"+port, nil)
+	http.ListenAndServe(":"+port, nil)
 }

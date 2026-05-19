@@ -17,6 +17,10 @@ on:
         required: false
         default: "100"
 
+concurrency:
+  group: dashboard-data-sync
+  cancel-in-progress: true
+
 permissions:
   contents: write
   actions: read
