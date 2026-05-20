@@ -101,14 +101,12 @@ jobs:
           SIGNED_IMAGE="ghcr.io/${IMAGE_PATH}:${SHA_TAG}"
           UNSIGNED_IMAGE="ghcr.io/sinhnguyen1411/stock-trading/unsigned-canary:latest"
 
-          # Helper: render a Deployment YAML
+          # Helper: render a Deployment YAML. SBOM annotation is always rendered
+          # with a marker; if anno_sbom is empty we strip the line via sed.
           render_deploy() {
             local name="$1" image="$2" anno_cve="$3" anno_sbom="$4"
-            local sbom_line=""
-            if [ -n "$anno_sbom" ]; then
-              sbom_line="                  security.stock-trading.dev/sbom-digest: \"${anno_sbom}\""
-            fi
-            cat <<EOF
+            local sbom_value="${anno_sbom:-__SBOM_OMIT__}"
+            cat <<EOF | { if [ "$sbom_value" = "__SBOM_OMIT__" ]; then sed '/security.stock-trading.dev\/sbom-digest/d'; else cat; fi; }
           apiVersion: apps/v1
           kind: Deployment
           metadata:
@@ -127,7 +125,7 @@ jobs:
                   app.kubernetes.io/name: ${name}
                 annotations:
                   security.grype.io/high_critical: "${anno_cve}"
-          ${sbom_line}
+                  security.stock-trading.dev/sbom-digest: "${sbom_value}"
               spec:
                 imagePullSecrets:
                   - name: ghcr-pull
