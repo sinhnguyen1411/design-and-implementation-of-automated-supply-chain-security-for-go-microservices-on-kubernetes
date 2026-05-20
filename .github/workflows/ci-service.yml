@@ -365,11 +365,11 @@ jobs:
           verify   = os.environ.get('VERIFY_RESULT', 'skipped')
           supply   = os.environ.get('SUPPLY_RESULT', 'skipped')
 
-          def icon(r):
-              return {'success': '✅', 'failure': '❌', 'cancelled': '🚫'}.get(r, '⏭️')
+          def status(r):
+              return {'success': 'pass', 'failure': 'fail', 'cancelled': 'cancelled'}.get(r, 'skip')
 
           overall_ok = verify == 'success' and supply == 'success'
-          overall    = '✅ PASS' if overall_ok else '❌ FAIL'
+          overall    = 'PASS' if overall_ok else 'FAIL'
 
           run_url   = f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}"
           sha_short = os.environ.get('GITHUB_SHA', '')[:7]
@@ -393,19 +393,18 @@ jobs:
               else:
                   svc_data[name] = None
 
-          total_cves   = sum(len(v) for v in svc_data.values() if v is not None)
-          clean_count  = sum(1 for v in svc_data.values() if v is not None and len(v) == 0)
-          flagged      = [(k, v) for k, v in svc_data.items() if v]
+          total_cves = sum(len(v) for v in svc_data.values() if v is not None)
+          flagged    = [(k, v) for k, v in svc_data.items() if v]
 
           lines = [
               f"## {overall} — CI Pipeline · {n}/{n} services",
               "",
               f"| Job | Result | Coverage |",
-              f"|-----|:------:|:--------:|",
-              f"| `verify-cross-os` (tests · govulncheck) | {icon(verify)} `{verify}` | {n}/{n} |",
-              f"| `supply-chain-ubuntu` (Docker · SBOM · Grype CVE) | {icon(supply)} `{supply}` | {n}/{n} |",
+              f"|-----|--------|----------|",
+              f"| `verify-cross-os` (tests · govulncheck) | {status(verify)} | {n}/{n} |",
+              f"| `supply-chain-ubuntu` (Docker · SBOM · Grype CVE) | {status(supply)} | {n}/{n} |",
               "",
-              f"---",
+              "---",
               "",
               f"### Security Gate — {total_cves} fixable high/critical CVEs across {n} services",
               "",
@@ -414,28 +413,26 @@ jobs:
           if flagged:
               lines += [
                   "| Service | CVE | Severity | Package | Fixed Versions |",
-                  "|---------|-----|:--------:|---------|----------------|",
+                  "|---------|-----|----------|---------|----------------|",
               ]
               for svc_name, items in flagged:
                   for item in items:
-                      cve  = str(item.get('cve', '-')).replace('|', '\\|')
-                      sev  = str(item.get('severity', '-')).replace('|', '\\|')
-                      pkg  = str(item.get('package', '-')).replace('|', '\\|')
-                      fxv  = item.get('fixed_versions', [])
+                      cve   = str(item.get('cve', '-')).replace('|', '\\|')
+                      sev   = str(item.get('severity', '-')).replace('|', '\\|')
+                      pkg   = str(item.get('package', '-')).replace('|', '\\|')
+                      fxv   = item.get('fixed_versions', [])
                       fixed = ', '.join(str(v) for v in fxv) if fxv else '-'
                       lines.append(f"| `{svc_name}` | {cve} | {sev} | {pkg} | {fixed} |")
           else:
               lines += [
                   "| Service | Gate | CVEs |",
-                  "|---------|:----:|:----:|",
+                  "|---------|------|------|",
               ]
               for svc in services:
                   name = svc['name']
                   d    = svc_data.get(name)
-                  if d is None:
-                      gate, count = '⚠️', '?'
-                  else:
-                      gate, count = '✅', str(len(d))
+                  gate = 'no data' if d is None else 'pass'
+                  count = '?' if d is None else str(len(d))
                   lines.append(f"| `{name}` | {gate} | {count} |")
 
           lines += [
@@ -444,9 +441,9 @@ jobs:
               "",
               f"| | |",
               f"|---|---|",
-              f"| **Ref** | `{ref}` (`{event}`) |",
-              f"| **Commit** | [`{sha_short}`]({run_url}) |",
-              f"| **Timestamp** | {now} |",
+              f"| Ref | `{ref}` ({event}) |",
+              f"| Commit | [{sha_short}]({run_url}) |",
+              f"| Timestamp | {now} |",
           ]
 
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'w', encoding='utf-8') as f:
