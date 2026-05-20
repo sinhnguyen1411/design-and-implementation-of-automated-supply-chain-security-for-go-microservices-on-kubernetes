@@ -397,6 +397,36 @@ if (-not $unsignedDigest) { throw "Unable to resolve unsigned image digest." }
 Write-Host "Signed digest  : $signedDigest"
 Write-Host "Unsigned digest: $unsignedDigest"
 
+Write-Section "Prepare Wrong-Key And No-Provenance Image Variants (Layer 3 advanced)"
+$wrongKeyImage = New-DemoImageRef -namePrefix "stock-trading-matrix-wrong-key" -ttl $ImageTtl
+$noProvImage = New-DemoImageRef -namePrefix "stock-trading-matrix-no-prov" -ttl $ImageTtl
+
+& docker tag $localImage $wrongKeyImage
+if ($LASTEXITCODE -ne 0) { throw "docker tag wrong-key image failed." }
+& docker push $wrongKeyImage
+if ($LASTEXITCODE -ne 0) { throw "docker push wrong-key image failed." }
+
+& docker tag $localImage $noProvImage
+if ($LASTEXITCODE -ne 0) { throw "docker tag no-provenance image failed." }
+& docker push $noProvImage
+if ($LASTEXITCODE -ne 0) { throw "docker push no-provenance image failed." }
+
+$wrongKeyRepo = $wrongKeyImage.Split(":")[0]
+$noProvRepo = $noProvImage.Split(":")[0]
+
+$wrongKeyRepoDigests = & docker inspect --format='{{range .RepoDigests}}{{println .}}{{end}}' $wrongKeyImage
+if ($LASTEXITCODE -ne 0) { throw "docker inspect wrong-key image failed." }
+$wrongKeyDigest = (($wrongKeyRepoDigests -split "`r?`n") | Where-Object { $_ -like "$wrongKeyRepo@*" } | Select-Object -First 1).Trim()
+if (-not $wrongKeyDigest) { throw "Unable to resolve wrong-key image digest." }
+
+$noProvRepoDigests = & docker inspect --format='{{range .RepoDigests}}{{println .}}{{end}}' $noProvImage
+if ($LASTEXITCODE -ne 0) { throw "docker inspect no-provenance image failed." }
+$noProvDigest = (($noProvRepoDigests -split "`r?`n") | Where-Object { $_ -like "$noProvRepo@*" } | Select-Object -First 1).Trim()
+if (-not $noProvDigest) { throw "Unable to resolve no-provenance image digest." }
+
+Write-Host "Wrong-key digest    : $wrongKeyDigest"
+Write-Host "No-provenance digest: $noProvDigest"
+
 Write-Section "Generate SBOM + Sign + Attest (Signed Image Only)"
 $env:COSIGN_PASSWORD = $CosignPassword
 if (!(Test-Path $cosignKeyPath) -or !(Test-Path $cosignPubPath)) {
@@ -430,6 +460,29 @@ if ($LASTEXITCODE -ne 0) { throw "cosign attest failed." }
 if ($LASTEXITCODE -ne 0) { throw "cosign verify failed." }
 & cosign verify-attestation --key $cosignPubPath --type slsaprovenance $signedDigest | Out-Null
 if ($LASTEXITCODE -ne 0) { throw "cosign verify-attestation failed." }
+
+Write-Section "Sign Advanced-Attack Image Variants (Layer 3)"
+# (a) NEG_WRONG_KEY_DENY: sign the wrong-key image with an ephemeral KEY B (different
+#     from the trusted key A). The policy verifies with key A's public key, so the
+#     signature from key B fails verification.
+$wrongKeyDir = Join-Path $DemoArtifactsDir "wrong-key"
+Ensure-Directory $wrongKeyDir
+$wrongKeyPath = Join-Path $wrongKeyDir "cosign.key"
+$wrongPubPath = Join-Path $wrongKeyDir "cosign.pub"
+if (!(Test-Path $wrongKeyPath) -or !(Test-Path $wrongPubPath)) {
+  & cosign generate-key-pair --output-key-prefix ($wrongKeyPath -replace '\.key$', '')
+  if ($LASTEXITCODE -ne 0) { throw "wrong-key cosign key generation failed." }
+}
+& cosign sign --yes --key $wrongKeyPath $wrongKeyDigest
+if ($LASTEXITCODE -ne 0) { throw "cosign sign (wrong-key image) failed." }
+& cosign attest --yes --key $wrongKeyPath --predicate $provenancePath --type slsaprovenance $wrongKeyDigest
+if ($LASTEXITCODE -ne 0) { throw "cosign attest (wrong-key image) failed." }
+
+# (b) NEG_MISSING_PROVENANCE_DENY: sign the no-provenance image with the TRUSTED key A
+#     so the image-signature check passes, but skip the SLSA attestation. The policy
+#     requires a slsaprovenance attestation, so verification fails on attestation lookup.
+& cosign sign --yes --key $cosignKeyPath $noProvDigest
+if ($LASTEXITCODE -ne 0) { throw "cosign sign (no-provenance image) failed." }
 
 Write-Section "Ensure Kyverno"
 $hasClusterPolicyApi = & kubectl api-resources | Select-String -Pattern "^clusterpolicies\s"
@@ -487,6 +540,8 @@ spec:
         - imageReferences:
             - "$signedRepo*"
             - "$unsignedRepo*"
+            - "$wrongKeyRepo*"
+            - "$noProvRepo*"
           attestors:
             - entries:
                 - keys:
@@ -647,6 +702,20 @@ $cases = @(
     Image = $signedDigest
     IncludeSbom = $true
     HighCritical = "2"
+  },
+  [ordered]@{
+    Name = "NEG_WRONG_KEY_DENY"
+    Expected = "Denied"
+    Image = $wrongKeyDigest
+    IncludeSbom = $true
+    HighCritical = "0"
+  },
+  [ordered]@{
+    Name = "NEG_MISSING_PROVENANCE_DENY"
+    Expected = "Denied"
+    Image = $noProvDigest
+    IncludeSbom = $true
+    HighCritical = "0"
   }
 )
 

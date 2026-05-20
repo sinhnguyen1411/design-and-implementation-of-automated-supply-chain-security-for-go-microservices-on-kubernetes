@@ -94,6 +94,8 @@ jobs:
             ${{ steps.run_dir.outputs.path }}/NEG_UNSIGNED_DENY
             ${{ steps.run_dir.outputs.path }}/NEG_MISSING_SBOM_DENY
             ${{ steps.run_dir.outputs.path }}/NEG_CVE_THRESHOLD_DENY
+            ${{ steps.run_dir.outputs.path }}/NEG_WRONG_KEY_DENY
+            ${{ steps.run_dir.outputs.path }}/NEG_MISSING_PROVENANCE_DENY
             ${{ steps.run_dir.outputs.path }}/VALID_ALLOW_RECHECK
           if-no-files-found: error
 
