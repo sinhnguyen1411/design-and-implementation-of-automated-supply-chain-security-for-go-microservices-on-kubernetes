@@ -437,6 +437,87 @@ jobs:
           PROV_PATH: ${{ matrix.path }}/provenance.json
         run: cosign attest --yes --predicate "${PROV_PATH}" --type slsaprovenance1 "${IMAGE}@${DIGEST}"
 
+      # --- SLSA Build L3 attestation (flagship: user-service only) ---
+      # Save image + digest as artifact so a downstream job can pipe them
+      # into the official slsa-github-generator reusable workflow.
+      - name: Save user-service digest for SLSA L3 attestation
+        if: matrix.short_name == 'user' && (github.event_name == 'push' || github.event_name == 'schedule')
+        env:
+          IMAGE: ${{ steps.meta.outputs.image }}
+          DIGEST: ${{ steps.digest.outputs.value }}
+        run: |
+          mkdir -p /tmp/slsa-l3
+          # Strip :tag from image, keep only the repository path
+          echo "${IMAGE%%:*}" > /tmp/slsa-l3/image.txt
+          echo "${DIGEST}" > /tmp/slsa-l3/digest.txt
+
+      - name: Upload digest artifact for SLSA L3 job
+        if: matrix.short_name == 'user' && (github.event_name == 'push' || github.event_name == 'schedule')
+        uses: actions/upload-artifact@v4
+        with:
+          name: user-service-slsa-l3-digest
+          path: /tmp/slsa-l3/
+          retention-days: 1
+
+  # Read user-service digest from artifact and expose as job output so the
+  # slsa-github-generator reusable workflow (called below) can consume it.
+  read-user-slsa-digest:
+    needs: [discover, supply-chain-ubuntu]
+    if: |
+      always()
+      && needs.discover.outputs.has_services == 'true'
+      && (github.event_name == 'push' || github.event_name == 'schedule')
+      && needs.supply-chain-ubuntu.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      image: ${{ steps.read.outputs.image }}
+      digest: ${{ steps.read.outputs.digest }}
+      has_value: ${{ steps.read.outputs.has_value }}
+    steps:
+      - name: Download digest artifact
+        id: download
+        uses: actions/download-artifact@v4
+        with:
+          name: user-service-slsa-l3-digest
+          path: /tmp/slsa-l3
+        continue-on-error: true
+      - name: Read image + digest
+        id: read
+        shell: bash
+        run: |
+          if [[ -f /tmp/slsa-l3/digest.txt && -f /tmp/slsa-l3/image.txt ]]; then
+            IMAGE="$(cat /tmp/slsa-l3/image.txt | tr -d '[:space:]')"
+            DIGEST="$(cat /tmp/slsa-l3/digest.txt | tr -d '[:space:]')"
+            if [[ -n "${IMAGE}" && -n "${DIGEST}" ]]; then
+              echo "image=${IMAGE}" >> "$GITHUB_OUTPUT"
+              echo "digest=${DIGEST}" >> "$GITHUB_OUTPUT"
+              echo "has_value=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+          echo "has_value=false" >> "$GITHUB_OUTPUT"
+
+  # Official SLSA Build L3 attestation for user-service (flagship).
+  # Uses the OpenSSF reusable workflow which generates provenance inside an
+  # isolated builder job that the caller cannot tamper with -- this is the
+  # core property that distinguishes L3 from the custom L1+ attestation
+  # produced by `supply-chain-ubuntu` for all 23 services.
+  provenance-l3-user-service:
+    needs: [read-user-slsa-digest]
+    if: needs.read-user-slsa-digest.outputs.has_value == 'true'
+    permissions:
+      actions: read
+      id-token: write
+      packages: write
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.0.0
+    with:
+      image: ${{ needs.read-user-slsa-digest.outputs.image }}
+      digest: ${{ needs.read-user-slsa-digest.outputs.digest }}
+      registry-username: ${{ github.actor }}
+    secrets:
+      registry-password: ${{ secrets.GITHUB_TOKEN }}
+
   push-unsigned-canary:
     needs: [discover, supply-chain-ubuntu]
     if: always() && needs.discover.outputs.has_services == 'true' && (github.event_name == 'push' || github.event_name == 'schedule') && needs.supply-chain-ubuntu.result != 'cancelled'
