@@ -54,3 +54,4 @@ cosign.pub
 .vscode/extensions.json
 scripts/install_vscode_extensions.sh
 tmp/actions-runs.snapshot.test.json
+tmp/run*
