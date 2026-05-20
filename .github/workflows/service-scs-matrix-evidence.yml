@@ -54,7 +54,7 @@ jobs:
   onboarding-probe:
     needs: discover-services
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       max-parallel: 3
@@ -86,100 +86,148 @@ jobs:
             --docker-password=${{ secrets.GITHUB_TOKEN }} \
             -n "${NAMESPACE}"
 
-      - name: VALID_ALLOW probe
-        id: probe
+      - name: Run 4-scenario admission matrix
+        id: matrix_test
+        shell: bash
         env:
           SERVICE_NAME: ${{ matrix.service_name }}
           IMAGE_PATH: ${{ matrix.image_path }}
           NAMESPACE: ${{ matrix.namespace }}
           SHA_TAG: ${{ needs.discover-services.outputs.sha_tag }}
-        shell: bash
         run: |
           set +e
-          IMAGE="ghcr.io/${IMAGE_PATH}:${SHA_TAG}"
+          mkdir -p evidence
 
-          cat > deploy-valid.yaml <<EOF
+          SIGNED_IMAGE="ghcr.io/${IMAGE_PATH}:${SHA_TAG}"
+          UNSIGNED_IMAGE="ghcr.io/sinhnguyen1411/stock-trading/unsigned-canary:latest"
+
+          # Helper: render a Deployment YAML
+          render_deploy() {
+            local name="$1" image="$2" anno_cve="$3" anno_sbom="$4"
+            local sbom_line=""
+            if [ -n "$anno_sbom" ]; then
+              sbom_line="                  security.stock-trading.dev/sbom-digest: \"${anno_sbom}\""
+            fi
+            cat <<EOF
           apiVersion: apps/v1
           kind: Deployment
           metadata:
-            name: ${SERVICE_NAME}
+            name: ${name}
             namespace: ${NAMESPACE}
             labels:
-              app.kubernetes.io/name: ${SERVICE_NAME}
+              app.kubernetes.io/name: ${name}
           spec:
             replicas: 1
             selector:
               matchLabels:
-                app.kubernetes.io/name: ${SERVICE_NAME}
+                app.kubernetes.io/name: ${name}
             template:
               metadata:
                 labels:
-                  app.kubernetes.io/name: ${SERVICE_NAME}
+                  app.kubernetes.io/name: ${name}
                 annotations:
-                  security.grype.io/high_critical: "0"
-                  security.stock-trading.dev/sbom-digest: "sha256:placeholder-onboarding"
+                  security.grype.io/high_critical: "${anno_cve}"
+          ${sbom_line}
               spec:
                 imagePullSecrets:
                   - name: ghcr-pull
                 containers:
-                  - name: ${SERVICE_NAME}
-                    image: ${IMAGE}
+                  - name: app
+                    image: ${image}
                     ports:
                       - containerPort: 8080
           EOF
-
-          APPLY_OUTPUT=$(kubectl apply -f deploy-valid.yaml 2>&1)
-          APPLY_EXIT=$?
-          echo "===== kubectl apply output ====="
-          echo "$APPLY_OUTPUT"
-          echo "===== exit code: $APPLY_EXIT ====="
-
-          # Give the cluster a moment to surface admission events
-          sleep 8
-          EVENTS=$(kubectl -n "${NAMESPACE}" get events --field-selector type=Warning -o yaml 2>&1 || true)
-
-          if [ $APPLY_EXIT -eq 0 ] && ! echo "$EVENTS" | grep -q "denied"; then
-            VERDICT="ALLOW"
-            STATUS="PASS"
-          elif echo "$APPLY_OUTPUT $EVENTS" | grep -q "denied"; then
-            VERDICT="DENY"
-            STATUS="FAIL"
-          else
-            VERDICT="ERROR"
-            STATUS="FAIL"
-          fi
-
-          echo "verdict=${VERDICT}" >> "$GITHUB_OUTPUT"
-          echo "status=${STATUS}" >> "$GITHUB_OUTPUT"
-          echo "image=${IMAGE}" >> "$GITHUB_OUTPUT"
-
-      - name: Write evidence
-        if: always()
-        env:
-          SERVICE_NAME: ${{ matrix.service_name }}
-          NAMESPACE: ${{ matrix.namespace }}
-          VERDICT: ${{ steps.probe.outputs.verdict }}
-          STATUS: ${{ steps.probe.outputs.status }}
-          IMAGE: ${{ steps.probe.outputs.image }}
-          RUN_ID: ${{ github.run_id }}
-          SHA: ${{ github.sha }}
-        run: |
-          mkdir -p evidence
-          cat > evidence/onboarding-result.json <<EOF
-          {
-            "workflow_key": "onboarding-lab",
-            "service_name": "${SERVICE_NAME}",
-            "scenario": "VALID_ALLOW",
-            "expected_verdict": "ALLOW",
-            "actual_verdict": "${VERDICT:-ERROR}",
-            "test_status": "${STATUS:-FAIL}",
-            "namespace": "${NAMESPACE}",
-            "image": "${IMAGE}",
-            "run_id": "${RUN_ID}",
-            "sha": "${SHA}"
           }
-          EOF
-          cat evidence/onboarding-result.json
+
+          # Helper: apply Deployment and classify verdict
+          run_scenario() {
+            local scenario="$1" expected="$2" deploy_yaml="$3"
+            echo "===== $scenario (expected: $expected) ====="
+            local apply_out
+            apply_out=$(echo "$deploy_yaml" | kubectl apply -f - 2>&1)
+            local apply_rc=$?
+            echo "$apply_out"
+
+            sleep 6
+            local events
+            events=$(kubectl -n "${NAMESPACE}" get events --field-selector type=Warning -o yaml 2>&1 || true)
+
+            local verdict
+            if [ $apply_rc -eq 0 ] && ! echo "$events" | grep -q "denied"; then
+              verdict="ALLOW"
+            elif echo "$apply_out $events" | grep -q "denied"; then
+              verdict="DENY"
+            else
+              verdict="ERROR"
+            fi
+
+            local status
+            if [ "$verdict" = "$expected" ]; then status="PASS"; else status="FAIL"; fi
+
+            echo "verdict=${verdict} expected=${expected} status=${status}"
+            echo "{\"scenario\":\"${scenario}\",\"expected\":\"${expected}\",\"actual\":\"${verdict}\",\"status\":\"${status}\"}" \
+              >> evidence/scenarios.jsonl
+          }
+
+          # Reset namespace between scenarios to avoid lingering deployments
+          reset_ns() {
+            kubectl -n "${NAMESPACE}" delete deployment --all --wait=true --timeout=30s 2>/dev/null || true
+          }
+
+          # ============================================
+          # Scenario 1: VALID_ALLOW
+          # ============================================
+          reset_ns
+          DEPLOY=$(render_deploy "${SERVICE_NAME}" "${SIGNED_IMAGE}" "0" "sha256:placeholder-sbom")
+          run_scenario "VALID_ALLOW" "ALLOW" "$DEPLOY"
+
+          # ============================================
+          # Scenario 2: NEG_MISSING_SBOM_DENY
+          # ============================================
+          reset_ns
+          DEPLOY=$(render_deploy "${SERVICE_NAME}-no-sbom" "${SIGNED_IMAGE}" "0" "")
+          run_scenario "NEG_MISSING_SBOM_DENY" "DENY" "$DEPLOY"
+
+          # ============================================
+          # Scenario 3: NEG_CVE_THRESHOLD_DENY
+          # ============================================
+          reset_ns
+          DEPLOY=$(render_deploy "${SERVICE_NAME}-high-cve" "${SIGNED_IMAGE}" "5" "sha256:placeholder-sbom")
+          run_scenario "NEG_CVE_THRESHOLD_DENY" "DENY" "$DEPLOY"
+
+          # ============================================
+          # Scenario 4: NEG_UNSIGNED_DENY
+          # ============================================
+          reset_ns
+          DEPLOY=$(render_deploy "${SERVICE_NAME}-unsigned" "${UNSIGNED_IMAGE}" "0" "sha256:placeholder-sbom")
+          run_scenario "NEG_UNSIGNED_DENY" "DENY" "$DEPLOY"
+
+          # ============================================
+          # Aggregate per-service results
+          # ============================================
+          python3 - <<PYEOF
+          import json, os
+          rows = []
+          with open("evidence/scenarios.jsonl") as f:
+              for line in f:
+                  if line.strip():
+                      rows.append(json.loads(line))
+          pass_n = sum(1 for r in rows if r["status"] == "PASS")
+          total_n = len(rows)
+          out = {
+              "workflow_key": "onboarding-lab",
+              "service_name": os.environ["SERVICE_NAME"],
+              "namespace": os.environ["NAMESPACE"],
+              "signed_image": os.environ.get("SIGNED_IMAGE", ""),
+              "scenarios": rows,
+              "pass_count": pass_n,
+              "total_count": total_n,
+              "overall_status": "PASS" if pass_n == total_n else "FAIL",
+          }
+          with open("evidence/onboarding-result.json", "w") as f:
+              json.dump(out, f, indent=2)
+          print(f"Service {os.environ['SERVICE_NAME']}: {pass_n}/{total_n} scenarios passed")
+          PYEOF
 
       - name: Upload onboarding evidence
         if: always()
@@ -221,39 +269,48 @@ jobs:
           n = len(services)
           ev_dir = Path("evidence")
 
-          rows = []
-          pass_count = 0
+          # Aggregate per-service per-scenario
+          per_service = {}  # name -> {scenario: status}
+          all_scenarios = ["VALID_ALLOW", "NEG_MISSING_SBOM_DENY", "NEG_CVE_THRESHOLD_DENY", "NEG_UNSIGNED_DENY"]
+
+          total_pass = 0
+          total_tests = 0
+
           for svc in services:
               name = svc["service_name"]
               fpath = ev_dir / f"onboarding-lab-{name}" / "onboarding-result.json"
+              row = {s: "MISSING" for s in all_scenarios}
               if fpath.exists():
                   try:
                       data = json.loads(fpath.read_text(encoding="utf-8"))
-                      verdict = data.get("actual_verdict", "MISSING")
-                      status = data.get("test_status", "MISSING")
+                      for sc in data.get("scenarios", []):
+                          row[sc["scenario"]] = sc["status"]
                   except Exception:
-                      verdict, status = "PARSE_ERROR", "FAIL"
-              else:
-                  verdict, status = "MISSING", "FAIL"
-
-              if status == "PASS":
-                  pass_count += 1
-              rows.append((name, verdict, status))
+                      pass
+              per_service[name] = row
+              total_pass += sum(1 for v in row.values() if v == "PASS")
+              total_tests += len(all_scenarios)
 
           run_url = f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}"
-          overall = "PASS" if pass_count == n else "FAIL"
+          overall = "PASS" if total_pass == total_tests else "FAIL"
 
           lines = [
-              f"## {overall} - Onboarding Lab Summary - {pass_count}/{n} services",
+              f"## {overall} - Onboarding Lab Summary - {total_pass}/{total_tests} admission tests ({n} services x 4 scenarios)",
               "",
-              "Scenario: VALID_ALLOW (signed image from Layer 1 + valid annotations)",
-              f"Image tag: `{os.environ.get('SHA_TAG', 'unknown')}`",
+              f"Signed image tag: `{os.environ.get('SHA_TAG', 'unknown')}`",
+              "Unsigned canary: `ghcr.io/sinhnguyen1411/stock-trading/unsigned-canary:latest`",
               "",
-              "| Service | Verdict | Status |",
-              "|---------|---------|--------|",
+              "| Service | VALID_ALLOW | NEG_MISSING_SBOM_DENY | NEG_CVE_THRESHOLD_DENY | NEG_UNSIGNED_DENY |",
+              "|---------|-------------|------------------------|-------------------------|--------------------|",
           ]
-          for name, verdict, status in rows:
-              lines.append(f"| `{name}` | {verdict} | {status} |")
+          for svc in services:
+              name = svc["service_name"]
+              r = per_service.get(name, {})
+              row = "| `" + name + "` "
+              for sc in all_scenarios:
+                  row += "| " + r.get(sc, "MISSING") + " "
+              row += "|"
+              lines.append(row)
 
           lines += ["", f"Run URL: {run_url}"]
 
