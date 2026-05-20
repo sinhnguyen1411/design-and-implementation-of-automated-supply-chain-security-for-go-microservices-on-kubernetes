@@ -17,7 +17,7 @@ const CASE_HINTS = {
 const ALL_SERVICES = [
   "user-service", "portfolio-service", "order-service", "risk-service",
   "market-data-service", "pricing-service", "execution-service", "settlement-service",
-  "compliance-service", "notification-service", "auth-service", "account-service",
+  "compliance-service", "notification-service", "apikey-service", "kyc-service",
   "watchlist-service", "analytics-service", "audit-service", "fees-service",
   "reporting-service", "gateway-service", "search-service", "alert-service",
   "data-feed-service", "backtest-service", "margin-service",

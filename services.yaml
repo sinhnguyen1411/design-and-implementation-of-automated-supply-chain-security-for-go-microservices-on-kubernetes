@@ -49,14 +49,14 @@ services:
     image: sinhnguyen1411/stock-trading/notification-service
     go_version: "1.25.10"
     profile_tags: ["async-message", "http-api"]
-  - name: auth-service
-    path: services/auth-service
-    image: sinhnguyen1411/stock-trading/auth-service
+  - name: apikey-service
+    path: services/apikey-service
+    image: sinhnguyen1411/stock-trading/apikey-service
     go_version: "1.25.10"
     profile_tags: ["http-api", "security-crypto"]
-  - name: account-service
-    path: services/account-service
-    image: sinhnguyen1411/stock-trading/account-service
+  - name: kyc-service
+    path: services/kyc-service
+    image: sinhnguyen1411/stock-trading/kyc-service
     go_version: "1.25.10"
     profile_tags: ["http-api", "db-migration"]
   - name: watchlist-service

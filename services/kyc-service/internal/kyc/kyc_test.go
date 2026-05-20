@@ -3,7 +3,7 @@ package kyc_test
 import (
 	"testing"
 
-	"github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/services/account-service/internal/kyc"
+	"github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/services/kyc-service/internal/kyc"
 )
 
 func TestCreate(t *testing.T) {
