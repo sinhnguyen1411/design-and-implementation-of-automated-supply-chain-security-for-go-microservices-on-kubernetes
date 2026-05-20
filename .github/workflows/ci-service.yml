@@ -67,6 +67,7 @@ env:
 jobs:
   discover:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       matrix: ${{ steps.matrix.outputs.result }}
       has_services: ${{ steps.matrix.outputs.has_services }}
@@ -184,6 +185,7 @@ jobs:
     needs: discover
     if: needs.discover.outputs.has_services == 'true' && (inputs.mode || 'normal') != 'benchmark'
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       max-parallel: 6
