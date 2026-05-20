@@ -465,7 +465,7 @@ Write-Section "Sign Advanced-Attack Image Variants (Layer 3)"
 # (a) NEG_WRONG_KEY_DENY: sign the wrong-key image with an ephemeral KEY B (different
 #     from the trusted key A). The policy verifies with key A's public key, so the
 #     signature from key B fails verification.
-$wrongKeyDir = Join-Path $DemoArtifactsDir "wrong-key"
+$wrongKeyDir = Join-Path $DemoDir "wrong-key"
 Ensure-Directory $wrongKeyDir
 $wrongKeyPath = Join-Path $wrongKeyDir "cosign.key"
 $wrongPubPath = Join-Path $wrongKeyDir "cosign.pub"
