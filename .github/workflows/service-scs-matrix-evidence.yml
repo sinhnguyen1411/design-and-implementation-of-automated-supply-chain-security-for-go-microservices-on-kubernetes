@@ -1,4 +1,4 @@
-﻿name: onboarding-lab
+name: onboarding-lab
 
 on:
   workflow_dispatch:
@@ -7,20 +7,26 @@ on:
 
 permissions:
   contents: read
+  packages: read
 
 jobs:
   discover-services:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       matrix: ${{ steps.matrix.outputs.result }}
+      sha_tag: ${{ steps.matrix.outputs.sha_tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build onboarding matrix from services.yaml
         id: matrix
         shell: python
+        env:
+          GITHUB_SHA_VALUE: ${{ github.sha }}
         run: |
           import json
+          import os
           import re
           import yaml
 
@@ -33,18 +39,22 @@ jobs:
               short = re.sub(r"-service$", "", name)
               include.append({
                   "service_name": name,
-                  "namespace": f"{short}-trading",
+                  "image_path": service["image"],
+                  "namespace": f"stock-trading-{short}",
                   "cluster_name": f"{short}-evidence",
+                  "short": short,
               })
 
           result = {"include": include}
-          with open(__import__("os").environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+          sha_tag = os.environ.get("GITHUB_SHA_VALUE", "")[:12]
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
               f.write(f"result={json.dumps(result)}\n")
+              f.write(f"sha_tag={sha_tag}\n")
 
   onboarding-probe:
     needs: discover-services
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       max-parallel: 3
@@ -60,50 +70,192 @@ jobs:
           cluster_name: ${{ matrix.cluster_name }}
           wait: 180s
 
-      - name: Bootstrap Kyverno and policies
+      - name: Bootstrap Kyverno + repo policies
         run: |
           chmod +x ./infra/scripts/devsecops_kind_bootstrap.sh
           KIND_CLUSTER_NAME=${{ matrix.cluster_name }} RESET_CLUSTER=false ./infra/scripts/devsecops_kind_bootstrap.sh
 
-      - name: Run onboarding probe
+      - name: Create test namespace and GHCR imagePullSecret
+        env:
+          NAMESPACE: ${{ matrix.namespace }}
+        run: |
+          kubectl create namespace "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
+          kubectl create secret docker-registry ghcr-pull \
+            --docker-server=ghcr.io \
+            --docker-username=${{ github.actor }} \
+            --docker-password=${{ secrets.GITHUB_TOKEN }} \
+            -n "${NAMESPACE}"
+
+      - name: VALID_ALLOW probe
         id: probe
+        env:
+          SERVICE_NAME: ${{ matrix.service_name }}
+          IMAGE_PATH: ${{ matrix.image_path }}
+          NAMESPACE: ${{ matrix.namespace }}
+          SHA_TAG: ${{ needs.discover-services.outputs.sha_tag }}
         shell: bash
         run: |
-          set -euo pipefail
-          RUN_ID="gha-${{ matrix.service_name }}-${{ github.run_number }}"
-          EXPORT_DIR="demo/evidence/${RUN_ID}"
-          mkdir -p "${EXPORT_DIR}"
+          set +e
+          IMAGE="ghcr.io/${IMAGE_PATH}:${SHA_TAG}"
 
-          cat > "${EXPORT_DIR}/evidence-metadata.json" <<EOF
-          {
-            "workflow_key": "onboarding-lab",
-            "service_name": "${{ matrix.service_name }}",
-            "scenario": "policy-scope-compatibility",
-            "runner_os": "ubuntu-latest",
-            "run_id": "${RUN_ID}",
-            "sha": "${{ github.sha }}",
-            "verdict": "generated",
-            "evidence_paths": [
-              "${EXPORT_DIR}/service-onboarding-summary.md"
-            ]
-          }
+          cat > deploy-valid.yaml <<EOF
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: ${SERVICE_NAME}
+            namespace: ${NAMESPACE}
+            labels:
+              app.kubernetes.io/name: ${SERVICE_NAME}
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app.kubernetes.io/name: ${SERVICE_NAME}
+            template:
+              metadata:
+                labels:
+                  app.kubernetes.io/name: ${SERVICE_NAME}
+                annotations:
+                  security.grype.io/high_critical: "0"
+                  security.stock-trading.dev/sbom-digest: "sha256:placeholder-onboarding"
+              spec:
+                imagePullSecrets:
+                  - name: ghcr-pull
+                containers:
+                  - name: ${SERVICE_NAME}
+                    image: ${IMAGE}
+                    ports:
+                      - containerPort: 8080
           EOF
 
+          APPLY_OUTPUT=$(kubectl apply -f deploy-valid.yaml 2>&1)
+          APPLY_EXIT=$?
+          echo "===== kubectl apply output ====="
+          echo "$APPLY_OUTPUT"
+          echo "===== exit code: $APPLY_EXIT ====="
+
+          # Give the cluster a moment to surface admission events
+          sleep 8
+          EVENTS=$(kubectl -n "${NAMESPACE}" get events --field-selector type=Warning -o yaml 2>&1 || true)
+
+          if [ $APPLY_EXIT -eq 0 ] && ! echo "$EVENTS" | grep -q "denied"; then
+            VERDICT="ALLOW"
+            STATUS="PASS"
+          elif echo "$APPLY_OUTPUT $EVENTS" | grep -q "denied"; then
+            VERDICT="DENY"
+            STATUS="FAIL"
+          else
+            VERDICT="ERROR"
+            STATUS="FAIL"
+          fi
+
+          echo "verdict=${VERDICT}" >> "$GITHUB_OUTPUT"
+          echo "status=${STATUS}" >> "$GITHUB_OUTPUT"
+          echo "image=${IMAGE}" >> "$GITHUB_OUTPUT"
+
+      - name: Write evidence
+        if: always()
+        env:
+          SERVICE_NAME: ${{ matrix.service_name }}
+          NAMESPACE: ${{ matrix.namespace }}
+          VERDICT: ${{ steps.probe.outputs.verdict }}
+          STATUS: ${{ steps.probe.outputs.status }}
+          IMAGE: ${{ steps.probe.outputs.image }}
+          RUN_ID: ${{ github.run_id }}
+          SHA: ${{ github.sha }}
+        run: |
+          mkdir -p evidence
+          cat > evidence/onboarding-result.json <<EOF
           {
-            echo "# Service Onboarding Probe Summary"
-            echo
-            echo "- Service: ${{ matrix.service_name }}"
-            echo "- Namespace: ${{ matrix.namespace }}"
-            echo "- Workflow run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            echo "- Status: generated"
-          } > "${EXPORT_DIR}/service-onboarding-summary.md"
+            "workflow_key": "onboarding-lab",
+            "service_name": "${SERVICE_NAME}",
+            "scenario": "VALID_ALLOW",
+            "expected_verdict": "ALLOW",
+            "actual_verdict": "${VERDICT:-ERROR}",
+            "test_status": "${STATUS:-FAIL}",
+            "namespace": "${NAMESPACE}",
+            "image": "${IMAGE}",
+            "run_id": "${RUN_ID}",
+            "sha": "${SHA}"
+          }
+          EOF
+          cat evidence/onboarding-result.json
 
-          echo "path=${EXPORT_DIR}" >> "$GITHUB_OUTPUT"
-
-      - name: Upload onboarding artifact
+      - name: Upload onboarding evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: onboarding-lab-${{ matrix.service_name }}
-          path: ${{ steps.probe.outputs.path }}
-          if-no-files-found: error
+          path: evidence/
+          if-no-files-found: warn
 
+  onboarding-summary:
+    needs: [discover-services, onboarding-probe]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Download all onboarding evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: onboarding-lab-*
+          path: evidence/
+          merge-multiple: false
+        continue-on-error: true
+
+      - name: Aggregate onboarding results
+        shell: python
+        env:
+          MATRIX_JSON: ${{ needs.discover-services.outputs.matrix }}
+          SHA_TAG: ${{ needs.discover-services.outputs.sha_tag }}
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          import json
+          import os
+          from pathlib import Path
+
+          matrix = json.loads(os.environ.get("MATRIX_JSON", '{"include":[]}'))
+          services = matrix.get("include", [])
+          n = len(services)
+          ev_dir = Path("evidence")
+
+          rows = []
+          pass_count = 0
+          for svc in services:
+              name = svc["service_name"]
+              fpath = ev_dir / f"onboarding-lab-{name}" / "onboarding-result.json"
+              if fpath.exists():
+                  try:
+                      data = json.loads(fpath.read_text(encoding="utf-8"))
+                      verdict = data.get("actual_verdict", "MISSING")
+                      status = data.get("test_status", "MISSING")
+                  except Exception:
+                      verdict, status = "PARSE_ERROR", "FAIL"
+              else:
+                  verdict, status = "MISSING", "FAIL"
+
+              if status == "PASS":
+                  pass_count += 1
+              rows.append((name, verdict, status))
+
+          run_url = f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}"
+          overall = "PASS" if pass_count == n else "FAIL"
+
+          lines = [
+              f"## {overall} - Onboarding Lab Summary - {pass_count}/{n} services",
+              "",
+              "Scenario: VALID_ALLOW (signed image from Layer 1 + valid annotations)",
+              f"Image tag: `{os.environ.get('SHA_TAG', 'unknown')}`",
+              "",
+              "| Service | Verdict | Status |",
+              "|---------|---------|--------|",
+          ]
+          for name, verdict, status in rows:
+              lines.append(f"| `{name}` | {verdict} | {status} |")
+
+          lines += ["", f"Run URL: {run_url}"]
+
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "w", encoding="utf-8") as f:
+              f.write("\n".join(lines))

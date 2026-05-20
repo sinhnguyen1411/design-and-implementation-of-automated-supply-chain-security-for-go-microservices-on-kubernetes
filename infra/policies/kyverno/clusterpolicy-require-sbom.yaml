@@ -16,9 +16,8 @@ spec:
         any:
           - resources:
               kinds: ["Pod"]
-              selector:
-                matchLabels:
-                  app.kubernetes.io/name: user-service
+              namespaces:
+                - stock-trading-*
       validate:
         message: "Pod rejected: missing SBOM reference annotation (security.stock-trading.dev/sbom-digest)."
         pattern:
