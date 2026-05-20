@@ -67,6 +67,7 @@ env:
 jobs:
   discover:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       matrix: ${{ steps.matrix.outputs.result }}
       has_services: ${{ steps.matrix.outputs.has_services }}
@@ -184,6 +185,7 @@ jobs:
     needs: discover
     if: needs.discover.outputs.has_services == 'true' && (inputs.mode || 'normal') != 'benchmark'
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       max-parallel: 6
@@ -213,6 +215,8 @@ jobs:
 
       - name: Build image
         uses: docker/build-push-action@v6
+        env:
+          DOCKER_BUILD_SUMMARY: 'false'
         with:
           context: ${{ matrix.path }}
           file: ${{ matrix.path }}/Dockerfile
@@ -280,61 +284,6 @@ jobs:
                   })
           out.write_text(json.dumps({"findings": findings}, indent=2), encoding="utf-8")
 
-      - name: Render security gate summary (job summary)
-        shell: python
-        env:
-          MATRIX_NAME: ${{ matrix.name }}
-        run: |
-          import json
-          from pathlib import Path
-          import os
-
-          gate = Path("${{ matrix.path }}/security-gate-findings.json")
-          findings = []
-          if gate.exists():
-            payload = json.loads(gate.read_text(encoding="utf-8"))
-            findings = payload if isinstance(payload, list) else payload.get("findings", [])
-            if not isinstance(findings, list):
-              findings = []
-
-          count = len(findings)
-          summary_path = Path(os.environ["GITHUB_STEP_SUMMARY"])
-          matrix_name = os.environ.get("MATRIX_NAME", "service")
-          lines = [
-              f"## Security Gate Findings ({matrix_name})",
-              "",
-              "- Gate mode: `enforced`",
-              f"- Fixable high/critical count: `{count}`",
-              "",
-          ]
-
-          if count == 0:
-              lines.extend([
-                  "No fixable high/critical vulnerabilities found.",
-                  "",
-              ])
-          else:
-              lines.extend([
-                  "| CVE | Severity | Package | Installed | Fix State | Fixed Versions |",
-                  "|---|---|---|---|---|---|",
-              ])
-              for item in findings:
-                  cve = str(item.get("cve", "-")).replace("|", "\\|")
-                  sev = str(item.get("severity", "-")).replace("|", "\\|")
-                  pkg = str(item.get("package", "-")).replace("|", "\\|")
-                  installed = str(item.get("installed", "-")).replace("|", "\\|")
-                  fix_state = str(item.get("fix_state", "-")).replace("|", "\\|")
-                  fixed_versions = item.get("fixed_versions", [])
-                  if isinstance(fixed_versions, list):
-                      fixed = ", ".join(str(v) for v in fixed_versions) if fixed_versions else "-"
-                  else:
-                      fixed = str(fixed_versions or "-")
-                  fixed = fixed.replace("|", "\\|")
-                  lines.append(f"| {cve} | {sev} | {pkg} | {installed} | {fix_state} | {fixed} |")
-              lines.append("")
-
-          summary_path.write_text("\n".join(lines), encoding="utf-8")
-
       - name: Enforce security gate
         shell: python
         env:
@@ -376,3 +325,129 @@ jobs:
           name: ${{ matrix.name }}-security-gate-findings
           path: ${{ matrix.path }}/security-gate-findings.json
           if-no-files-found: warn
+
+  ci-summary:
+    needs: [discover, verify-cross-os, supply-chain-ubuntu]
+    if: always() && needs.discover.outputs.has_services == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+    steps:
+      - name: Download all security gate findings
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '*-security-gate-findings'
+          path: findings/
+          merge-multiple: false
+        continue-on-error: true
+
+      - name: Write consolidated pipeline summary
+        shell: python
+        env:
+          MATRIX_JSON: ${{ needs.discover.outputs.matrix }}
+          VERIFY_RESULT: ${{ needs.verify-cross-os.result }}
+          SUPPLY_RESULT: ${{ needs.supply-chain-ubuntu.result }}
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: |
+          import json, os
+          from pathlib import Path
+          from datetime import datetime, timezone
+
+          matrix   = json.loads(os.environ.get('MATRIX_JSON', '{"include":[]}'))
+          services = matrix.get('include', [])
+          n        = len(services)
+          verify   = os.environ.get('VERIFY_RESULT', 'skipped')
+          supply   = os.environ.get('SUPPLY_RESULT', 'skipped')
+
+          def icon(r):
+              return {'success': '✅', 'failure': '❌', 'cancelled': '🚫'}.get(r, '⏭️')
+
+          overall_ok = verify == 'success' and supply == 'success'
+          overall    = '✅ PASS' if overall_ok else '❌ FAIL'
+
+          run_url   = f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}"
+          sha_short = os.environ.get('GITHUB_SHA', '')[:7]
+          ref       = os.environ.get('GITHUB_REF_NAME', '')
+          event     = os.environ.get('GITHUB_EVENT_NAME', '')
+          now       = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
+
+          # Aggregate per-service findings from downloaded artifacts
+          findings_dir = Path('findings')
+          svc_data = {}
+          for svc in services:
+              name  = svc['name']
+              fpath = findings_dir / f"{name}-security-gate-findings" / "security-gate-findings.json"
+              if fpath.exists():
+                  try:
+                      payload = json.loads(fpath.read_text(encoding='utf-8'))
+                      items   = payload if isinstance(payload, list) else payload.get('findings', [])
+                      svc_data[name] = items if isinstance(items, list) else []
+                  except Exception:
+                      svc_data[name] = None
+              else:
+                  svc_data[name] = None
+
+          total_cves   = sum(len(v) for v in svc_data.values() if v is not None)
+          clean_count  = sum(1 for v in svc_data.values() if v is not None and len(v) == 0)
+          flagged      = [(k, v) for k, v in svc_data.items() if v]
+
+          lines = [
+              f"## {overall} — CI Pipeline · {n}/{n} services",
+              "",
+              f"| Job | Result | Coverage |",
+              f"|-----|:------:|:--------:|",
+              f"| `verify-cross-os` (tests · govulncheck) | {icon(verify)} `{verify}` | {n}/{n} |",
+              f"| `supply-chain-ubuntu` (Docker · SBOM · Grype CVE) | {icon(supply)} `{supply}` | {n}/{n} |",
+              "",
+              f"---",
+              "",
+              f"### Security Gate — {total_cves} fixable high/critical CVEs across {n} services",
+              "",
+          ]
+
+          if flagged:
+              lines += [
+                  "| Service | CVE | Severity | Package | Fixed Versions |",
+                  "|---------|-----|:--------:|---------|----------------|",
+              ]
+              for svc_name, items in flagged:
+                  for item in items:
+                      cve  = str(item.get('cve', '-')).replace('|', '\\|')
+                      sev  = str(item.get('severity', '-')).replace('|', '\\|')
+                      pkg  = str(item.get('package', '-')).replace('|', '\\|')
+                      fxv  = item.get('fixed_versions', [])
+                      fixed = ', '.join(str(v) for v in fxv) if fxv else '-'
+                      lines.append(f"| `{svc_name}` | {cve} | {sev} | {pkg} | {fixed} |")
+          else:
+              lines += [
+                  "| Service | Gate | CVEs |",
+                  "|---------|:----:|:----:|",
+              ]
+              for svc in services:
+                  name = svc['name']
+                  d    = svc_data.get(name)
+                  if d is None:
+                      gate, count = '⚠️', '?'
+                  else:
+                      gate, count = '✅', str(len(d))
+                  lines.append(f"| `{name}` | {gate} | {count} |")
+
+          lines += [
+              "",
+              "---",
+              "",
+              f"| | |",
+              f"|---|---|",
+              f"| **Ref** | `{ref}` (`{event}`) |",
+              f"| **Commit** | [`{sha_short}`]({run_url}) |",
+              f"| **Timestamp** | {now} |",
+          ]
+
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'w', encoding='utf-8') as f:
+              f.write('\n'.join(lines))

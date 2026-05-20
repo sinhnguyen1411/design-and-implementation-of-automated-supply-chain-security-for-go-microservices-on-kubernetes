@@ -19,6 +19,7 @@ on:
 jobs:
   verify:
     runs-on: ${{ inputs.runner_os }}
+    timeout-minutes: 15
     permissions:
       contents: read
     steps:

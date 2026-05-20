@@ -440,6 +440,27 @@ if (-not $hasClusterPolicyApi) {
   if ($LASTEXITCODE -ne 0) { throw "Kyverno admission controller did not become ready." }
 }
 
+# Probe webhook: pod Ready != webhook TCP ready; retry dry-run until the mutating webhook responds
+$probeYaml = [System.IO.Path]::GetTempFileName() + ".yaml"
+@"
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: kyverno-webhook-probe
+spec:
+  rules: []
+"@ | Set-Content -Path $probeYaml -Encoding UTF8
+$maxProbe = 24
+$probeOk = $false
+for ($p = 0; $p -lt $maxProbe; $p++) {
+  $probeOut = & kubectl apply --dry-run=server -f $probeYaml 2>&1
+  if ("$probeOut" -notmatch "connection refused") { $probeOk = $true; break }
+  Write-Host "Kyverno webhook not ready yet ($($p+1)/$maxProbe), retrying in 5s..."
+  Start-Sleep -Seconds 5
+}
+Remove-Item $probeYaml -ErrorAction SilentlyContinue
+if (-not $probeOk) { throw "Kyverno webhook did not respond within $($maxProbe * 5)s." }
+
 Write-Section "Apply Repository Policies"
 & kubectl apply -k infra/policies/kyverno
 if ($LASTEXITCODE -ne 0) { throw "Applying repository Kyverno policies failed." }
