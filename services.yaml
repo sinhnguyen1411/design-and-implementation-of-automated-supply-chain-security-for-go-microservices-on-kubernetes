@@ -1,7 +1,7 @@
 services:
   - name: user-service
     path: services/user-service
-    image: sinhnguyen1411/stock-trading/user-service
+    image: sinhnguyen1411/stock-trading-app/user-service
     go_version: "1.25.10"
     profile_tags: ["http-api", "db-migration"]
   - name: portfolio-service

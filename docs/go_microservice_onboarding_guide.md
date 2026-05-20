@@ -13,7 +13,7 @@ For a new service, define and version these values first:
 | Parameter | Example in current repo | New service value |
 |---|---|---|
 | Go module path | `github.com/sinhnguyen1411/stock-trading-be/services/user-service` | `<your-module-path>` |
-| Image repository | `ghcr.io/sinhnguyen1411/stock-trading/user-service` | `<registry>/<org>/<service>` |
+| Image repository | `ghcr.io/sinhnguyen1411/stock-trading-app/user-service` | `<registry>/<org>/<service>` |
 | Kubernetes app label | `app.kubernetes.io/name=user-service` | `<service-app-label>` |
 | Namespace | `stock-trading` | `<service-namespace>` |
 | Runtime config secret keys | `auth-access-token-secret`, `auth-refresh-token-secret` | `<service-secret-keys>` |

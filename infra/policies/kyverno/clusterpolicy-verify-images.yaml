@@ -22,6 +22,7 @@ spec:
       verifyImages:
         - imageReferences:
             - "ghcr.io/sinhnguyen1411/stock-trading/*"
+            - "ghcr.io/sinhnguyen1411/stock-trading-app/*"
           attestors:
             - count: 1
               entries:
@@ -38,6 +39,7 @@ spec:
       verifyImages:
         - imageReferences:
             - "ghcr.io/sinhnguyen1411/stock-trading/*"
+            - "ghcr.io/sinhnguyen1411/stock-trading-app/*"
           attestations:
             - type: https://slsa.dev/provenance/v1
               attestors:
