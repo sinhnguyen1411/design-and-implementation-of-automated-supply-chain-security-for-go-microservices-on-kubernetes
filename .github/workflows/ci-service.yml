@@ -334,11 +334,42 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push image to GHCR
+      - name: Push image to GHCR (auto-recover on permission_denied)
         if: github.event_name == 'push' || github.event_name == 'schedule'
         env:
           IMAGE: ${{ steps.meta.outputs.image }}
-        run: docker push "${IMAGE}"
+          IMAGE_PATH: ${{ matrix.image }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set +e
+          OUT=$(docker push "${IMAGE}" 2>&1)
+          RC=$?
+          echo "$OUT"
+          if [ $RC -eq 0 ]; then exit 0; fi
+
+          if echo "$OUT" | grep -q "permission_denied: write_package"; then
+            echo ""
+            echo "===== Auto-recovery triggered ====="
+            echo "Permission denied on legacy GHCR package. Deleting + retrying..."
+            ENCODED=$(echo -n "$IMAGE_PATH" | sed 's|/|%2F|g')
+            DEL_HTTP=$(curl -sS -o /tmp/del-out -w "%{http_code}" -X DELETE \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              "https://api.github.com/user/packages/container/$ENCODED")
+            echo "DELETE response: HTTP $DEL_HTTP"
+            cat /tmp/del-out 2>/dev/null || true
+            if [ "$DEL_HTTP" = "204" ] || [ "$DEL_HTTP" = "404" ]; then
+              sleep 5
+              docker push "${IMAGE}"
+              exit $?
+            else
+              echo "Could not delete package via API. Aborting."
+              echo "Manual fix: https://github.com/users/${GITHUB_REPOSITORY_OWNER}/packages/container/${ENCODED}/settings -> Manage Actions access"
+              exit 1
+            fi
+          fi
+          exit $RC
 
       - name: Resolve image digest
         if: github.event_name == 'push' || github.event_name == 'schedule'
