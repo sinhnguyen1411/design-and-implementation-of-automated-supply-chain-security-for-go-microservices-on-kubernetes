@@ -408,7 +408,7 @@ jobs:
 
   push-unsigned-canary:
     needs: [discover, supply-chain-ubuntu]
-    if: needs.discover.outputs.has_services == 'true' && (github.event_name == 'push' || github.event_name == 'schedule')
+    if: always() && needs.discover.outputs.has_services == 'true' && (github.event_name == 'push' || github.event_name == 'schedule') && needs.supply-chain-ubuntu.result != 'cancelled'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
