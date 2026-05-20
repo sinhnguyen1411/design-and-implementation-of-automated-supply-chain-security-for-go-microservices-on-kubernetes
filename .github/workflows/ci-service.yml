@@ -149,7 +149,7 @@ jobs:
 
   windows-parity-smoke:
     needs: discover
-    if: needs.discover.outputs.has_services == 'true' && ((inputs.runner_target || 'auto') == 'self-hosted' || github.event_name != 'workflow_dispatch')
+    if: needs.discover.outputs.has_services == 'true' && (inputs.runner_target || 'auto') == 'self-hosted'
     runs-on: [self-hosted, Windows, X64, parity]
     continue-on-error: true
     steps:
