@@ -109,6 +109,36 @@ wait_for_kyverno
 kubectl -n kyverno wait --for=condition=Available deploy --all --timeout="${KYVERNO_ROLLOUT_TIMEOUT}"
 wait_for_kyverno_webhook
 
+# Webhook TCP probe: pod Ready != mutate webhook serving. Retry dry-run apply
+# of a minimal ClusterPolicy until any response other than "connection refused".
+probe_kyverno_webhook() {
+  local probe_yaml
+  probe_yaml="$(mktemp --suffix=.yaml)"
+  cat >"$probe_yaml" <<'YAML'
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: kyverno-webhook-probe
+spec:
+  rules: []
+YAML
+  local out
+  for i in $(seq 1 24); do
+    out="$(kubectl apply --dry-run=server -f "$probe_yaml" 2>&1 || true)"
+    if ! echo "$out" | grep -q "connection refused"; then
+      rm -f "$probe_yaml"
+      echo "Kyverno webhook is responding."
+      return 0
+    fi
+    echo "Kyverno webhook not ready yet (${i}/24), retrying in 5s..."
+    sleep 5
+  done
+  rm -f "$probe_yaml"
+  echo "Kyverno webhook did not respond within 120s." >&2
+  return 1
+}
+probe_kyverno_webhook
+
 echo "[3/4] Applying supply-chain policies"
 kubectl apply -k infra/policies/kyverno
 
