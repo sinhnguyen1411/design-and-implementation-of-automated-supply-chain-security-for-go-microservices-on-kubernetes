@@ -41,12 +41,24 @@ spec:
             - "ghcr.io/sinhnguyen1411/stock-trading/*"
             - "ghcr.io/sinhnguyen1411/stock-trading-app/*"
           attestations:
+            # Accept SLSA provenance signed by EITHER:
+            # (a) our ci-service.yml workflow -- L1 + L2-flavored (all 23 services)
+            # (b) the official OpenSSF slsa-github-generator reusable workflow -- L3
+            #     (currently produced for user-service flagship only)
+            # `count: 1` means at least one of the two attestor identities must match,
+            # so images that get L3 from (b) are accepted while older images attested
+            # only by (a) are still accepted.
             - type: https://slsa.dev/provenance/v1
               attestors:
                 - count: 1
                   entries:
                     - keyless:
                         subject: "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/.github/workflows/ci-service.yml@refs/heads/main"
+                        issuer: "https://token.actions.githubusercontent.com"
+                        rekor:
+                          url: https://rekor.sigstore.dev
+                    - keyless:
+                        subject: "https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@refs/tags/v2.0.0"
                         issuer: "https://token.actions.githubusercontent.com"
                         rekor:
                           url: https://rekor.sigstore.dev
