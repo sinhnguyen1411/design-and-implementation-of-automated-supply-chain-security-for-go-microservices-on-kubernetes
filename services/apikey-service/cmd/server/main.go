@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/services/auth-service/internal/apikey"
-	"github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/services/auth-service/internal/health"
+	"github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/services/apikey-service/internal/apikey"
+	"github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/services/apikey-service/internal/health"
 )
 
 var store = apikey.NewStore()

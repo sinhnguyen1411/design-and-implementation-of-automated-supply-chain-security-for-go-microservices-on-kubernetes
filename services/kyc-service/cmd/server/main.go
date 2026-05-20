@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/services/account-service/internal/health"
-	"github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/services/account-service/internal/kyc"
+	"github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/services/kyc-service/internal/health"
+	"github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/services/kyc-service/internal/kyc"
 )
 
 var registry = kyc.NewRegistry()
