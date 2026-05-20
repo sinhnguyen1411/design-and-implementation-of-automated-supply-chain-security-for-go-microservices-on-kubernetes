@@ -406,6 +406,41 @@ jobs:
           PROV_PATH: ${{ matrix.path }}/provenance.json
         run: cosign attest --yes --predicate "${PROV_PATH}" --type slsaprovenance1 "${IMAGE}@${DIGEST}"
 
+  push-unsigned-canary:
+    needs: [discover, supply-chain-ubuntu]
+    if: needs.discover.outputs.has_services == 'true' && (github.event_name == 'push' || github.event_name == 'schedule')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push unsigned canary image (NOT signed)
+        env:
+          DOCKER_BUILD_SUMMARY: 'false'
+        run: |
+          # A tiny placeholder image used by onboarding-lab to exercise the
+          # NEG_UNSIGNED_DENY scenario across all 23 services. Pushed without
+          # cosign sign / attest so Kyverno verify-images denies it.
+          mkdir -p ctx
+          cat > ctx/Dockerfile <<'EOF'
+          FROM gcr.io/distroless/static:nonroot
+          CMD ["/canary"]
+          EOF
+          docker buildx build \
+            --platform linux/amd64 \
+            --push \
+            -t ${{ env.REGISTRY }}/sinhnguyen1411/stock-trading/unsigned-canary:latest \
+            ctx
+
   ci-summary:
     needs: [discover, verify-cross-os, supply-chain-ubuntu]
     if: always() && needs.discover.outputs.has_services == 'true'
