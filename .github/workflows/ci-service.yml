@@ -326,6 +326,86 @@ jobs:
           path: ${{ matrix.path }}/security-gate-findings.json
           if-no-files-found: warn
 
+      - name: Log in to GHCR
+        if: github.event_name == 'push' || github.event_name == 'schedule'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push image to GHCR
+        if: github.event_name == 'push' || github.event_name == 'schedule'
+        env:
+          IMAGE: ${{ steps.meta.outputs.image }}
+        run: docker push "${IMAGE}"
+
+      - name: Resolve image digest
+        if: github.event_name == 'push' || github.event_name == 'schedule'
+        id: digest
+        env:
+          IMAGE: ${{ steps.meta.outputs.image }}
+        run: |
+          DIGEST=$(docker buildx imagetools inspect "${IMAGE}" --format '{{json .Manifest}}' | jq -r '.digest')
+          echo "value=${DIGEST}" >> "$GITHUB_OUTPUT"
+
+      - name: Install Cosign
+        if: github.event_name == 'push' || github.event_name == 'schedule'
+        uses: sigstore/cosign-installer@v3.7.0
+
+      - name: Sign image (keyless)
+        if: github.event_name == 'push' || github.event_name == 'schedule'
+        env:
+          IMAGE: ${{ steps.meta.outputs.image }}
+          DIGEST: ${{ steps.digest.outputs.value }}
+        run: cosign sign --yes "${IMAGE}@${DIGEST}"
+
+      - name: Attest SBOM (SPDX)
+        if: github.event_name == 'push' || github.event_name == 'schedule'
+        env:
+          IMAGE: ${{ steps.meta.outputs.image }}
+          DIGEST: ${{ steps.digest.outputs.value }}
+          SBOM_PATH: ${{ matrix.path }}/sbom.spdx.json
+        run: cosign attest --yes --predicate "${SBOM_PATH}" --type spdxjson "${IMAGE}@${DIGEST}"
+
+      - name: Build SLSA provenance predicate
+        if: github.event_name == 'push' || github.event_name == 'schedule'
+        env:
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          cat > "${{ matrix.path }}/provenance.json" <<EOF
+          {
+            "buildDefinition": {
+              "buildType": "https://github.com/actions/runner/v2",
+              "externalParameters": {
+                "workflow": "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/.github/workflows/ci-service.yml",
+                "ref": "${GITHUB_REF}",
+                "sha": "${GITHUB_SHA}"
+              }
+            },
+            "runDetails": {
+              "builder": {
+                "id": "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+              },
+              "metadata": {
+                "invocationId": "${GITHUB_RUN_ID}"
+              }
+            }
+          }
+          EOF
+
+      - name: Attest SLSA provenance
+        if: github.event_name == 'push' || github.event_name == 'schedule'
+        env:
+          IMAGE: ${{ steps.meta.outputs.image }}
+          DIGEST: ${{ steps.digest.outputs.value }}
+          PROV_PATH: ${{ matrix.path }}/provenance.json
+        run: cosign attest --yes --predicate "${PROV_PATH}" --type slsaprovenance1 "${IMAGE}@${DIGEST}"
+
   ci-summary:
     needs: [discover, verify-cross-os, supply-chain-ubuntu]
     if: always() && needs.discover.outputs.has_services == 'true'
