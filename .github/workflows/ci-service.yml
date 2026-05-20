@@ -378,3 +378,65 @@ jobs:
           name: ${{ matrix.name }}-security-gate-findings
           path: ${{ matrix.path }}/security-gate-findings.json
           if-no-files-found: warn
+
+  ci-summary:
+    needs: [discover, verify-cross-os, supply-chain-ubuntu]
+    if: always() && needs.discover.outputs.has_services == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Write pipeline summary
+        shell: python
+        env:
+          MATRIX_JSON: ${{ needs.discover.outputs.matrix }}
+          VERIFY_RESULT: ${{ needs.verify-cross-os.result }}
+          SUPPLY_RESULT: ${{ needs.supply-chain-ubuntu.result }}
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: |
+          import json, os
+          from datetime import datetime, timezone
+
+          matrix  = json.loads(os.environ.get('MATRIX_JSON', '{"include":[]}'))
+          services = matrix.get('include', [])
+          n = len(services)
+
+          verify = os.environ.get('VERIFY_RESULT', 'skipped')
+          supply = os.environ.get('SUPPLY_RESULT', 'skipped')
+
+          def icon(r):
+              return {'success': '✅', 'failure': '❌', 'cancelled': '🚫'}.get(r, '⏭️')
+
+          overall_ok = verify == 'success' and supply == 'success'
+          overall    = f"{'✅ PASS' if overall_ok else '❌ FAIL'}"
+
+          run_url = (
+              f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}"
+              f"/actions/runs/{os.environ['GITHUB_RUN_ID']}"
+          )
+          sha_short = os.environ.get('GITHUB_SHA', '')[:7]
+          ref       = os.environ.get('GITHUB_REF_NAME', '')
+          event     = os.environ.get('GITHUB_EVENT_NAME', '')
+          now       = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
+
+          lines = [
+              f"## {overall} — CI Pipeline · {n} services",
+              "",
+              f"| Job | Result | Coverage |",
+              f"|-----|:------:|:--------:|",
+              f"| `verify-cross-os` (unit tests · govulncheck) | {icon(verify)} `{verify}` | {n}/{n} services |",
+              f"| `supply-chain-ubuntu` (Docker · SBOM · Grype) | {icon(supply)} `{supply}` | {n}/{n} services |",
+              "",
+              f"| | |",
+              f"|---|---|",
+              f"| **Ref** | `{ref}` (`{event}`) |",
+              f"| **Commit** | [`{sha_short}`]({run_url}) |",
+              f"| **Timestamp** | {now} |",
+          ]
+
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'w', encoding='utf-8') as f:
+              f.write('\n'.join(lines))
