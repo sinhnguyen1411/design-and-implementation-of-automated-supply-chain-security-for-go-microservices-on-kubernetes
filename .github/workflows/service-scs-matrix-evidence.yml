@@ -57,7 +57,11 @@ jobs:
     timeout-minutes: 30
     strategy:
       fail-fast: false
-      max-parallel: 3
+      # Repo is public -> no concurrent-job cap, so we can run more onboarding
+      # clusters in parallel. 8 keeps Kind/Docker memory usage reasonable on
+      # ubuntu-latest runners (each cluster needs ~2 GB) while cutting wall
+      # time from ~8 batches (~40 min) to ~3 batches (~15 min) for 23 services.
+      max-parallel: 8
       matrix: ${{ fromJson(needs.discover-services.outputs.matrix) }}
 
     steps:

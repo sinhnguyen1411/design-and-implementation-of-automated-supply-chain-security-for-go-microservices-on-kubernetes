@@ -188,7 +188,9 @@ jobs:
     timeout-minutes: 25
     strategy:
       fail-fast: false
-      max-parallel: 6
+      # Repo is public -> no concurrent-job cap. 12 keeps build cache hot
+      # without saturating Docker layer locks on a single host.
+      max-parallel: 12
       matrix: ${{ fromJson(needs.discover.outputs.matrix) }}
     permissions:
       contents: read
