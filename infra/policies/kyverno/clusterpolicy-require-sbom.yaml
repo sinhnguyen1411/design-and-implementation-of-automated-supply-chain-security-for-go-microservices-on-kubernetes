@@ -17,7 +17,8 @@ spec:
           - resources:
               kinds: ["Pod"]
               namespaces:
-                - stock-trading-*
+                - stock-trading        # admission-lab (single-cluster deep tests)
+                - stock-trading-*      # onboarding-lab (per-service clusters)
       validate:
         message: "Pod rejected: missing SBOM reference annotation (security.stock-trading.dev/sbom-digest)."
         pattern:
