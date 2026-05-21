@@ -441,7 +441,7 @@ jobs:
       # Save image + digest as artifact so a downstream job can pipe them
       # into the official slsa-github-generator reusable workflow.
       - name: Save user-service digest for SLSA L3 attestation
-        if: matrix.short_name == 'user' && (github.event_name == 'push' || github.event_name == 'schedule')
+        if: matrix.name == 'user-service' && (github.event_name == 'push' || github.event_name == 'schedule')
         env:
           IMAGE: ${{ steps.meta.outputs.image }}
           DIGEST: ${{ steps.digest.outputs.value }}
@@ -452,7 +452,7 @@ jobs:
           echo "${DIGEST}" > /tmp/slsa-l3/digest.txt
 
       - name: Upload digest artifact for SLSA L3 job
-        if: matrix.short_name == 'user' && (github.event_name == 'push' || github.event_name == 'schedule')
+        if: matrix.name == 'user-service' && (github.event_name == 'push' || github.event_name == 'schedule')
         uses: actions/upload-artifact@v4
         with:
           name: user-service-slsa-l3-digest
@@ -517,6 +517,85 @@ jobs:
       registry-username: ${{ github.actor }}
     secrets:
       registry-password: ${{ secrets.GITHUB_TOKEN }}
+
+  # Official SLSA Build L3 verification using slsa-framework/slsa-verifier.
+  # This is the canonical OpenSSF tool that produces a PASS/FAIL verdict
+  # against the SLSA v1.0 specification. The output is uploaded as evidence
+  # so the thesis can cite a tool-verified compliance claim (not just
+  # human-eyeballed Rekor entries).
+  verify-slsa-l3-user-service:
+    needs: [read-user-slsa-digest, provenance-l3-user-service]
+    if: |
+      always()
+      && needs.read-user-slsa-digest.outputs.has_value == 'true'
+      && needs.provenance-l3-user-service.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Log in to GHCR (needed to fetch attestation manifest)
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install slsa-verifier
+        uses: slsa-framework/slsa-verifier/actions/installer@v2.6.0
+
+      - name: Verify SLSA L3 attestation via slsa-verifier
+        id: verify
+        env:
+          IMAGE: ${{ needs.read-user-slsa-digest.outputs.image }}
+          DIGEST: ${{ needs.read-user-slsa-digest.outputs.digest }}
+        run: |
+          mkdir -p /tmp/slsa-verify
+          echo "Verifying ${IMAGE}@${DIGEST} ..."
+          set -o pipefail
+          slsa-verifier verify-image \
+            "${IMAGE}@${DIGEST}" \
+            --source-uri "github.com/${{ github.repository }}" \
+            --builder-id "https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml" \
+            --print-provenance \
+            2>&1 | tee /tmp/slsa-verify/output.txt
+
+      - name: Render GitHub Step Summary (evidence for thesis)
+        if: always()
+        env:
+          IMAGE: ${{ needs.read-user-slsa-digest.outputs.image }}
+          DIGEST: ${{ needs.read-user-slsa-digest.outputs.digest }}
+        run: |
+          {
+            echo "## SLSA L3 Official Verification"
+            echo ""
+            if [[ "${{ steps.verify.outcome }}" == "success" ]]; then
+              echo "**Verdict: PASS**"
+            else
+              echo "**Verdict: FAIL**"
+            fi
+            echo ""
+            echo "- Tool: \`slsa-framework/slsa-verifier@v2.6.0\` (official OpenSSF)"
+            echo "- Image: \`${IMAGE}@${DIGEST}\`"
+            echo "- Trusted builder: \`slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.0.0\`"
+            echo "- Spec: SLSA v1.0 Build Track L3"
+            echo ""
+            echo '<details><summary>Full slsa-verifier output</summary>'
+            echo ""
+            echo '```'
+            cat /tmp/slsa-verify/output.txt 2>/dev/null || echo "(no output captured)"
+            echo '```'
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: slsa-l3-verifier-evidence
+          path: /tmp/slsa-verify/
+          retention-days: 90
 
   push-unsigned-canary:
     needs: [discover, supply-chain-ubuntu]
