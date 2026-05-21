@@ -441,7 +441,7 @@ jobs:
       # Save image + digest as artifact so a downstream job can pipe them
       # into the official slsa-github-generator reusable workflow.
       - name: Save user-service digest for SLSA L3 attestation
-        if: matrix.short_name == 'user' && (github.event_name == 'push' || github.event_name == 'schedule')
+        if: matrix.name == 'user-service' && (github.event_name == 'push' || github.event_name == 'schedule')
         env:
           IMAGE: ${{ steps.meta.outputs.image }}
           DIGEST: ${{ steps.digest.outputs.value }}
@@ -452,7 +452,7 @@ jobs:
           echo "${DIGEST}" > /tmp/slsa-l3/digest.txt
 
       - name: Upload digest artifact for SLSA L3 job
-        if: matrix.short_name == 'user' && (github.event_name == 'push' || github.event_name == 'schedule')
+        if: matrix.name == 'user-service' && (github.event_name == 'push' || github.event_name == 'schedule')
         uses: actions/upload-artifact@v4
         with:
           name: user-service-slsa-l3-digest
