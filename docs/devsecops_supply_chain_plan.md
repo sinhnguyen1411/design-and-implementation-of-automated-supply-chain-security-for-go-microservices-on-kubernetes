@@ -2,6 +2,8 @@
 
 This document maps the thesis requirements onto the current `stock-trading-be` user-service and defines the concrete technical work needed to turn the service into a demonstrable, enforceable supply-chain-security baseline.
 
+> **Status (2026-06-01):** This is the original design/planning document (single-service scope). The system as implemented is documented in [devsecops_ci_admission.md](devsecops_ci_admission.md) and now spans 23 services; this plan is retained as a historical design artifact.
+
 ## 1. Context & Scope
 - **Service under test**: existing Golang user-service (register/verify/login/etc.) packaged as a Docker container, deployed to Kubernetes.
 - **Threat model**: dependency compromise, vulnerable base images, tampered build artifacts, and unauthorized workloads within the cluster.

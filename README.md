@@ -8,8 +8,8 @@ This repository provides a practical DevSecOps baseline for implementing and val
 - Reproducible local validation workflow using Kind + Kyverno.
 - Thesis-aligned documentation, traceability, and evidence artifacts.
 
-## Service Landscape (10 Services)
-The monorepo currently includes 10 services for scalability experiments:
+## Service Landscape (23 Services)
+The monorepo includes 23 services to validate supply-chain pipeline repeatability at scale (full list in `services.yaml`):
 
 - Core baseline:
   - `user-service`: user/auth lifecycle with token flows and notification integration
@@ -23,6 +23,8 @@ The monorepo currently includes 10 services for scalability experiments:
   - `settlement-service`: T+N settlement preview (`POST /settlement/preview`)
   - `compliance-service`: policy/rule checks (`POST /compliance/check`)
   - `notification-service`: channel/message rendering (`POST /notification/render`)
+- Extended services (same supply-chain baseline + CI matrix):
+  - `apikey-service`, `kyc-service`, `watchlist-service`, `analytics-service`, `audit-service`, `fees-service`, `reporting-service`, `gateway-service`, `search-service`, `alert-service`, `data-feed-service`, `backtest-service`, `margin-service`
 
 ## Architecture Overview
 For the thesis-facing presentation version with visual legend and explanatory notes, open [docs/scs_architecture_diagram.html](docs/scs_architecture_diagram.html).
