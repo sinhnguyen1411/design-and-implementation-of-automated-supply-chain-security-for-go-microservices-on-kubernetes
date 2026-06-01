@@ -31,24 +31,22 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     -trimpath \
     -o /out/user-service .
 
-FROM ubuntu:18.04 AS runtime
+# Distroless nonroot runtime: includes CA certificates, has no shell or package
+# manager (smaller CVE surface than the previous Ubuntu 18.04 LTS base), and runs
+# as uid 65532 by default for least privilege.
+FROM gcr.io/distroless/static-debian12:nonroot AS runtime
 LABEL org.opencontainers.image.title="stock-trading-user-service" \
       org.opencontainers.image.vendor="stock-trading" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.source="https://github.com/sinhnguyen1411/stock-trading-be"
 
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
-RUN useradd -r -u 65532 -g root nonroot
-
-WORKDIR /app
 COPY --from=builder /out/user-service /usr/local/bin/user-service
 COPY cmd/server/config/local.yaml /etc/stock-trading/config.yaml
 
 ENV STOCK_TRADING_CONFIG=/etc/stock-trading/config.yaml
 
 EXPOSE 18080 19090
-USER 65532:0
+USER 65532:65532
 
 ENTRYPOINT ["/usr/local/bin/user-service"]
 CMD ["server", "--config", "/etc/stock-trading/config.yaml"]
-
