@@ -23,8 +23,11 @@ func TestComputeMetrics_uniformPositive(t *testing.T) {
 	if m.TotalReturn < 10 {
 		t.Fatalf("expected high total return (1.01^252-1), got %.4f", m.TotalReturn)
 	}
-	if m.MaxDrawdown != 0 {
-		t.Fatalf("expected zero drawdown for monotone positive returns, got %.4f", m.MaxDrawdown)
+	// Drawdown is non-negative by construction; on arm64 (macOS) FP contraction
+	// yields ~1e-18 instead of exactly 0, so assert with an epsilon tolerance
+	// rather than strict equality to keep the cross-OS matrix green.
+	if m.MaxDrawdown > 1e-9 {
+		t.Fatalf("expected ~zero drawdown for monotone positive returns, got %.4e", m.MaxDrawdown)
 	}
 }
 
