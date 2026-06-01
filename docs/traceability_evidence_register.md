@@ -1,12 +1,12 @@
 ﻿# Traceability Evidence Register
 
-As-of: `2026-05-19`
+As-of: `2026-06-01`
 
 Issue snapshot at this date:
 - Open: `#1` to `#9`, `#11`
 - Closed: `#10`, `#12`, `#13`, `#14`
 
-Scale context: Repository now contains **10 Go microservices** (user-service, portfolio-service, order-service, risk-service, market-data-service, pricing-service, execution-service, settlement-service, compliance-service, notification-service). All services aligned to Go `1.25.10` baseline as of commit `2821617`.
+Scale context: Repository now contains **23 Go microservices** (10 core: user-service, portfolio-service, order-service, risk-service, market-data-service, pricing-service, execution-service, settlement-service, compliance-service, notification-service; plus 13 extended: apikey, kyc, watchlist, analytics, audit, fees, reporting, gateway, search, alert, data-feed, backtest, margin). Full list in `services.yaml`. All services aligned to Go `1.25.10` baseline as of commit `2821617`.
 
 Purpose:
 - Provide a direct objective-to-evidence map for thesis packaging.
@@ -23,16 +23,15 @@ Purpose:
 - Dashboard fallback-only dataset: `docs/security-admission-dashboard/demo-data/evidence/`
 - Baseline CI run URL (2026-04-14): `https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/24406893294`
 - Baseline CI artifact IDs (aggregated, single-service era): `dependency-integrity-report=6431038166`, `govulncheck-report=6431053554`, `sbom=6431094849`, `grype-report=6431095016`, `cosign-bundle=6431095189`
-- Latest green CI run URL (push, 2026-05-19): `https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25811075803`
-- Latest green CI run URL (workflow_dispatch, 2026-05-19): `https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25811079788`
-- Latest CI artifact IDs — **user-service canonical** (run 25811075803, per-service structure):
-  - `user-service-sbom=6975304852`
-  - `user-service-grype-report=6975305135`
-  - `user-service-security-gate-findings=6975305453`
-  - `user-service-supply-chain-artifacts=6975305801` (cosign bundle, SLSA attestation, Kustomize overlay)
-  - `user-service-ubuntu-latest-verify=6975283688`
-  - `user-service-macos-latest-verify=6975281971`
-- Note: CI v2 (10-service era) exports per-service artifacts; `{service}-supply-chain-artifacts` replaces the old `cosign-bundle` bundle.
+- Latest green CI run URL (full cross-OS matrix, 2026-06-01, commit `7930650`): `https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/26732257799` (23 services × ubuntu+macos, all jobs success)
+- Latest CI artifact IDs — **user-service canonical** (run 26732257799, per-service structure):
+  - SBOM (SPDX): `sinhnguyen1411-stock-trading-app-user-service_79306504f27c.spdx.json=7322461363`
+  - `user-service-grype-report=7322465750`
+  - `user-service-security-gate-findings=7322465817`
+  - `user-service-slsa-l3-digest=7322475856` and run-level `slsa-l3-verifier-evidence=7322602265` (SLSA L3 provenance + verification evidence)
+  - `user-service-ubuntu-latest-verify=7322462282`
+  - `user-service-macos-latest-verify=7322470176`
+- Note: CI now exports a per-image SPDX SBOM named by image+digest (`<image>_<digest>.spdx.json`) and splits the former `{service}-supply-chain-artifacts` bundle into discrete SLSA L3 digest + verifier-evidence artifacts.
 
 ## Objective-to-Evidence Matrix
 | Objective Item | Related Issue(s) | CI Run URL (Final) | CI Artifact / Path Evidence (Repo-Local) | Admission Run-ID Evidence | Status |
@@ -46,7 +45,7 @@ Purpose:
 
 ## Remaining Fill-Ins Before Final Submission
 - Close Issue `#11` after final reviewer check of this register and linked evidence bundle.
-- Mirror the latest CI run URLs (runs/25811075803, runs/25811079788) into `docs/thesis_spec_en.md` traceability table for examiner navigation.
+- Mirror the latest CI run URL (runs/26732257799) into `docs/thesis_spec_en.md` traceability table for examiner navigation.
 - Note: `windows-parity-smoke` is intentionally skipped when `runner_target=gh-hosted` — this is by design and does not affect supply-chain gate status.
 - Capture one clean Kind bootstrap + admission matrix run-id from a host with `kind` CLI installed (issue #9).
 

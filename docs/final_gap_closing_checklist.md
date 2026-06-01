@@ -1,6 +1,6 @@
 # Final Gap-Closing Checklist (Issue-by-Issue)
 
-Last updated: 2026-05-19
+Last updated: 2026-06-01
 
 Repository: `sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes`
 
@@ -8,7 +8,7 @@ GitHub issue snapshot:
 - Open: `#1` to `#9`, `#11`
 - Closed: `#10`, `#12`, `#13`, `#14`
 
-Scale context (as of 2026-05-19): Repository expanded to 10 Go microservices; Go toolchain baseline raised to `1.25.10` across all services (commit `2821617`). CI pipeline (ci-service #48 push, #49 workflow_dispatch) green on `main` with this baseline.
+Scale context (as of 2026-06-01): Repository expanded to 23 Go microservices (10 core + 13 extended; full list in `services.yaml`); Go toolchain baseline raised to `1.25.10` across all services (commit `2821617`). CI pipeline green on `main` with this baseline (full cross-OS matrix run 26732257799, commit `7930650` cross-OS drawdown fix).
 
 This checklist is the execution contract to close the thesis package with auditable evidence.
 
@@ -142,14 +142,14 @@ Close when:
 Current state:
 - Grype JSON report and security gate are implemented.
 - `govulncheck` gate is integrated.
-- Go `1.25.10` baseline enforced as of commit `2821617`; govulncheck gate now passes green across all 10 services on the latest `main` CI runs (runs/25811075803, runs/25811079788).
+- Go `1.25.10` baseline enforced as of commit `2821617`; govulncheck gate now passes green across all 23 services on the latest `main` CI run (runs/26732257799, commit `7930650`).
 
 Gap to close:
 - Need explicit fail-case evidence in final package, not only pass-case logic.
 
 Checklist:
 - [ ] Capture one CI run (or controlled local simulation) where threshold gate fails.
-- [x] Latest passing run available: `https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25811075803` (push) and `runs/25811079788` (workflow_dispatch).
+- [x] Latest passing run available: `https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/26732257799` (full cross-OS matrix, commit `7930650`).
 - [ ] Add both run references to docs (`pass` and `fail`) with concise explanation.
 
 Close when:
@@ -323,9 +323,9 @@ Keep-closed checklist:
 4. `#1` + `#3` + `#4` polishing (consistency, fail/pass evidence completeness)
 
 ## Final Sign-off Checklist
-- [x] Latest CI runs on `main` green (ci-service #48 push runs/25811075803, #49 workflow_dispatch runs/25811079788).
-- [x] Go `1.25.10` baseline aligned across all 10 services (commit `2821617`).
-- [x] Artifact IDs from 2026-05-19 runs captured in traceability register (`user-service-sbom=6975304852`, `user-service-supply-chain-artifacts=6975305801`).
+- [x] Latest CI run on `main` green (full cross-OS matrix run 26732257799, commit `7930650`).
+- [x] Go `1.25.10` baseline aligned across all 23 services (commit `2821617`).
+- [x] Artifact IDs from green run 26732257799 captured in traceability register (`...user-service_79306504f27c.spdx.json=7322461363`, `user-service-slsa-l3-digest=7322475856`).
 - [ ] One final admission matrix run-id captured from real cluster (requires host with `kind` CLI).
 - [ ] Docs cross-links updated (`README`, `thesis_spec_en`, runbook, evidence docs).
 - [ ] Remaining open GitHub issues (`#1` to `#9`, `#11`) closed with evidence links.

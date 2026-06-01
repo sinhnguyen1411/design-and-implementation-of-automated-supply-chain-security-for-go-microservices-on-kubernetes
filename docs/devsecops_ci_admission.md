@@ -5,7 +5,7 @@ This document describes the secure supply-chain pipeline (`dependency-integrity 
 ## CI Workflow (`.github/workflows/ci-service.yml`)
 The workflow runs on pushes/PRs to `main`, on a nightly schedule (`15 1 * * *`), and on manual dispatch.
 
-**Scope**: 10 Go microservices — user-service, portfolio-service, order-service, risk-service, market-data-service, pricing-service, execution-service, settlement-service, compliance-service, notification-service. All services use Go `1.25.10` baseline.
+**Scope**: 23 Go microservices (10 core — user-service, portfolio-service, order-service, risk-service, market-data-service, pricing-service, execution-service, settlement-service, compliance-service, notification-service; plus 13 extended — apikey, kyc, watchlist, analytics, audit, fees, reporting, gateway, search, alert, data-feed, backtest, margin). Full list in `services.yaml`. All services use Go `1.25.10` baseline.
 
 **Matrix strategy**: On push/PR, only services with changed files are included (changed-only). On schedule or `workflow_dispatch` with `service=all`, the full matrix runs.
 
