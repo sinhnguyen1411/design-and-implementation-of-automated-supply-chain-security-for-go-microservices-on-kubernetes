@@ -99,6 +99,18 @@ type WalkForwardResult struct {
 	Benchmark    BenchmarkResult  `json:"benchmark"`
 }
 
+// driftEpsilon snaps sub-epsilon FP noise to 0. Drawdown is non-negative by
+// construction and real drawdowns are >=~1e-6; arm64 FP contraction can leave
+// ~1e-18 where amd64 yields exact 0, which would break the cross-OS matrix.
+const driftEpsilon = 1e-12
+
+func clampDrawdownNoise(maxDD float64) float64 {
+	if maxDD < driftEpsilon {
+		return 0
+	}
+	return maxDD
+}
+
 func RunBacktest(strategy Strategy, prices []float64, initialCapital float64) BacktestResult {
 	if len(prices) < 2 {
 		return BacktestResult{StrategyName: strategy.Name(), FinalCapital: initialCapital}
@@ -158,7 +170,7 @@ func RunBacktest(strategy Strategy, prices []float64, initialCapital float64) Ba
 	return BacktestResult{
 		StrategyName: strategy.Name(),
 		TotalReturn:  (capital - initialCapital) / initialCapital,
-		MaxDrawdown:  maxDD,
+		MaxDrawdown:  clampDrawdownNoise(maxDD),
 		Sharpe:       sharpe,
 		FinalCapital: capital,
 		Trades:       len(trades),
@@ -183,7 +195,7 @@ func BuyAndHold(prices []float64, initialCapital float64) BenchmarkResult {
 			maxDD = dd
 		}
 	}
-	return BenchmarkResult{TotalReturn: totalRet, MaxDrawdown: maxDD}
+	return BenchmarkResult{TotalReturn: totalRet, MaxDrawdown: clampDrawdownNoise(maxDD)}
 }
 
 func WalkForward(strategy Strategy, prices []float64, initialCapital float64, folds int) WalkForwardResult {

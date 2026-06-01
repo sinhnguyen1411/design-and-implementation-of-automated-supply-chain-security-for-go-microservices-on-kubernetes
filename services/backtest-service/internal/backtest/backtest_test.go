@@ -30,6 +30,16 @@ func TestBuyAndHold_maxDrawdown(t *testing.T) {
 	}
 }
 
+func TestBuyAndHold_monotoneRising_zeroDrawdown(t *testing.T) {
+	// Monotone-rising prices have no drawdown. The clamp must snap arch-dependent
+	// sub-epsilon FP noise to exactly 0 so this holds on amd64 and arm64 alike.
+	prices := []float64{100, 101, 102, 103, 104, 105}
+	result := backtest.BuyAndHold(prices, 10000)
+	if result.MaxDrawdown != 0 {
+		t.Fatalf("expected exact zero drawdown for monotone-rising prices, got %.4e", result.MaxDrawdown)
+	}
+}
+
 func TestSMAStrategy_name(t *testing.T) {
 	strategy := &backtest.SMAStrategy{Short: 3, Long: 5}
 	prices := []float64{10, 10, 10, 10, 10, 11, 12, 13, 14, 15}

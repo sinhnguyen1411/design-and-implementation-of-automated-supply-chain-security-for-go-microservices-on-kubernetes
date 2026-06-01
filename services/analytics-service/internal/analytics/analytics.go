@@ -19,6 +19,10 @@ type Metrics struct {
 const (
 	tradingDaysPerYear = 252
 	riskFreeDaily      = 0.04 / 252
+	// driftEpsilon snaps sub-epsilon FP noise to 0. Drawdown is non-negative by
+	// construction and real drawdowns are >=~1e-6; arm64 FP contraction can leave
+	// ~1e-18 where amd64 yields exact 0, which previously broke the cross-OS matrix.
+	driftEpsilon = 1e-12
 )
 
 func mean(rs []float64) float64 {
@@ -102,6 +106,9 @@ func ComputeMetrics(returns []DailyReturn) Metrics {
 		if dd := (peak - cur) / peak; dd > maxDD {
 			maxDD = dd
 		}
+	}
+	if maxDD < driftEpsilon {
+		maxDD = 0
 	}
 
 	return Metrics{
