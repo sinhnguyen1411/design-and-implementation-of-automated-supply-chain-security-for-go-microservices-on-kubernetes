@@ -24,12 +24,12 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           path: r
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: ${{ inputs.go_version }}
           cache-dependency-path: r/${{ inputs.service_path }}/go.sum
@@ -50,7 +50,7 @@ jobs:
         run: go test ./...
 
       - name: Cache govulncheck binary
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/go/bin/govulncheck
           key: govulncheck-${{ inputs.runner_os }}-v1.1.4
