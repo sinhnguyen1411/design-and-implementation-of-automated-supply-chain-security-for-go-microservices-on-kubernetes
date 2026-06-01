@@ -47,5 +47,5 @@ Purpose:
 - Close Issue `#11` after final reviewer check of this register and linked evidence bundle.
 - Mirror the latest CI run URL (runs/26732257799) into `docs/thesis_spec_en.md` traceability table for examiner navigation.
 - Note: `windows-parity-smoke` is intentionally skipped when `runner_target=gh-hosted` — this is by design and does not affect supply-chain gate status.
-- Capture one clean Kind bootstrap + admission matrix run-id from a host with `kind` CLI installed (issue #9).
+- [DONE 2026-06-01] Clean Kind bootstrap + admission matrix captured at `demo/evidence/20260601-kind-bootstrap/` (bootstrap.log + matrix-summary.md); closes issue #9.
 

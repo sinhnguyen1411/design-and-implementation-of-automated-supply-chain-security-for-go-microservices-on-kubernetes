@@ -226,22 +226,20 @@ Checklist:
 Close when:
 - [ ] Annotation contract is stable, documented, and reproducible.
 
-### #9 Automate Kind and Kyverno bootstrap for reproducible demo (Open)
+### #9 Automate Kind and Kyverno bootstrap for reproducible demo (Closed 2026-06-01)
 Current state:
 - Bootstrap script is idempotent and supports dynamic Kyverno deployment-name readiness checks.
 - Teardown/reset script exists for clean reruns (`infra/scripts/devsecops_kind_reset.sh`).
-- Fallback evidence loop was executed on `docker-desktop` because `kind` CLI is unavailable on current host (`demo/evidence/20260414-204808-contract-base-overlay/contract-summary.md`).
-
-Gap to close:
-- Need one clean-environment **Kind** bootstrap + rerun evidence log captured in docs/evidence bundle (still pending on a host with `kind` installed).
+- **Clean Kind bootstrap executed 2026-06-01** (kind v0.31.0, Docker 29.3.1): `RESET_CLUSTER=true infra/scripts/devsecops_kind_bootstrap.sh` created cluster `devsecops`, installed Kyverno v1.12.5, applied all 3 policies (`READY=True`, Enforce). Evidence: [demo/evidence/20260601-kind-bootstrap/bootstrap.log](../demo/evidence/20260601-kind-bootstrap/bootstrap.log).
+- Admission matrix re-run on the fresh Kind cluster: `VALID_ALLOW` admitted; `MISSING_SBOM`, `CVE_THRESHOLD`, and `UNSIGNED_IMAGE` denied (the last genuinely queried Sigstore Rekor/GHCR). Evidence: [demo/evidence/20260601-kind-bootstrap/matrix-summary.md](../demo/evidence/20260601-kind-bootstrap/matrix-summary.md), [admission-matrix.txt](../demo/evidence/20260601-kind-bootstrap/admission-matrix.txt).
 
 Checklist:
 - [x] Harmonize bootstrap readiness checks with currently installed Kyverno deployment names.
 - [x] Add teardown/reset script path and document idempotent rerun behavior.
-- [ ] Validate bootstrap on a clean environment and capture output log.
+- [x] Validate bootstrap on a clean environment and capture output log (Kind clean-run 2026-06-01).
 
 Close when:
-- [ ] Clean bootstrap + rerun works without manual patching.
+- [x] Clean bootstrap + rerun works without manual patching (verified 2026-06-01 on fresh Kind cluster).
 
 ### #10 Add adversarial deployment scenarios and evidence checklist (Closed)
 Current state:
@@ -326,7 +324,7 @@ Keep-closed checklist:
 - [x] Latest CI run on `main` green (full cross-OS matrix run 26732257799, commit `7930650`).
 - [x] Go `1.25.10` baseline aligned across all 23 services (commit `2821617`).
 - [x] Artifact IDs from green run 26732257799 captured in traceability register (`...user-service_79306504f27c.spdx.json=7322461363`, `user-service-slsa-l3-digest=7322475856`).
-- [ ] One final admission matrix run-id captured from real cluster (requires host with `kind` CLI).
+- [x] One final admission matrix captured from a clean **Kind** cluster (2026-06-01, `demo/evidence/20260601-kind-bootstrap/`).
 - [ ] Docs cross-links updated (`README`, `thesis_spec_en`, runbook, evidence docs).
 - [ ] Remaining open GitHub issues (`#1` to `#9`, `#11`) closed with evidence links.
 

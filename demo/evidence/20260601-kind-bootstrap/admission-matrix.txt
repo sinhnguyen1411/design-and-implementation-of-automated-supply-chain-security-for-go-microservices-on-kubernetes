@@ -1,0 +1,52 @@
+=== Kind admission matrix on fresh cluster 'devsecops' — 2026-06-01T04:45:39Z ===
+context: kind-devsecops
+namespace/stock-trading created
+
+----- A_VALID_ALLOW (expect: ADMIT) -----
+pod/probe-valid created
+>> RESULT: ADMITTED (rc=0)
+
+----- B_NEG_MISSING_SBOM_DENY (expect: DENY) -----
+Error from server: error when creating "STDIN": admission webhook "validate.kyverno.svc-fail" denied the request: 
+
+resource Pod/stock-trading/probe-nosbom was blocked due to the following policies 
+
+require-sbom-annotation:
+  require-sbom-digest: 'validation error: Pod rejected: missing SBOM reference annotation
+    (security.stock-trading.dev/sbom-digest). rule require-sbom-digest failed at path
+    /metadata/annotations/security.stock-trading.dev/sbom-digest/'
+>> RESULT: DENIED (rc=1)
+
+----- C_NEG_CVE_THRESHOLD_DENY (expect: DENY) -----
+Error from server: error when creating "STDIN": admission webhook "validate.kyverno.svc-fail" denied the request: 
+
+resource Pod/stock-trading/probe-cve was blocked due to the following policies 
+
+enforce-cve-threshold:
+  require-high-critical-zero: 'validation error: Pod rejected: fixable High/Critical
+    CVEs not cleared (security.grype.io/high_critical must be ''0''). rule require-high-critical-zero
+    failed at path /metadata/annotations/security.grype.io/high_critical/'
+>> RESULT: DENIED (rc=1)
+
+----- D_NEG_UNSIGNED_IMAGE_DENY (expect: DENY) -----
+Error from server: error when creating "STDIN": admission webhook "mutate.kyverno.svc-fail" denied the request: 
+
+resource Pod/stock-trading/probe-unsigned was blocked due to the following policies 
+
+verify-stock-trading-images:
+  verify-keyless-signature: 'failed to verify image ghcr.io/sinhnguyen1411/stock-trading/order-service:dev:
+    .attestors[0].entries[0].keyless: image tag not found: GET https://ghcr.io/v2/sinhnguyen1411/stock-trading/order-service/manifests/dev:
+    MANIFEST_UNKNOWN: manifest unknown'
+  verify-keyless-slsa-attestation: 'image attestations verification failed, verifiedCount:
+    0, requiredCount: 1, error: not found; not found'
+>> RESULT: DENIED (rc=1)
+
+=== clusterpolicies ===
+NAME                          ADMISSION   BACKGROUND   VALIDATE ACTION   READY   AGE   FAILURE POLICY   VALIDATE   MUTATE   GENERATE   VERIFY IMAGES   MESSAGE
+enforce-cve-threshold         true        true         Enforce           True    97s                    1          0        0          0               Ready
+require-sbom-annotation       true        true         Enforce           True    97s                    1          0        0          0               Ready
+verify-stock-trading-images   true        true         Enforce           True    97s                    0          0        0          2               Ready
+
+=== pods admitted in stock-trading ns ===
+NAME          READY   STATUS    RESTARTS   AGE
+probe-valid   1/1     Running   0          9s
