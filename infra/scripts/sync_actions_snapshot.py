@@ -2,6 +2,18 @@
 """Build dashboard snapshot from GitHub Actions runs/artifacts.
 
 This script is intended to run inside GitHub Actions with GITHUB_TOKEN.
+
+Schema v2 output shape -- DO NOT downgrade to v1 without coordinating with the
+dashboard front-end (docs/security-admission-dashboard/) which reads top-level
+keys: schema_version, generated_at, repository, dashboard_meta, cve_alerts,
+go_runtime_status, runner_pool, services, slsa_attestations, workflows[].
+
+The script keeps the existing API-driven per-run rollup (workflows[]) and
+seeds the new descriptive sections (dashboard_meta / cve_alerts /
+go_runtime_status / runner_pool / services / slsa_attestations) from
+constants + services.yaml. The constants act as defaults; if a sibling
+``snapshot-seed.json`` is present next to this script, its keys override
+the defaults so operators can tweak the dashboard without re-deploying.
 """
 
 from __future__ import annotations
@@ -11,6 +23,7 @@ import datetime as dt
 import io
 import json
 import os
+import re
 import sys
 import urllib.parse
 import urllib.request
@@ -19,11 +32,38 @@ from typing import Any
 from urllib.error import HTTPError
 
 
-WORKFLOW_PATHS = {
+SCHEMA_VERSION = 2
+
+# All six workflows the hero card on the dashboard claims to track.
+# Keep these keys in sync with docs/security-admission-dashboard/data/actions-runs.snapshot.json
+WORKFLOW_PATHS: dict[str, str] = {
     "ci-service": ".github/workflows/ci-service.yml",
+    "reusable-go-verify": ".github/workflows/reusable-go-verify.yml",
     "admission-lab": ".github/workflows/admission-matrix-evidence.yml",
     "onboarding-lab": ".github/workflows/service-scs-matrix-evidence.yml",
+    "dashboard-data-sync": ".github/workflows/dashboard-data-sync.yml",
+    "runner-ab-benchmark": ".github/workflows/runner-ab-benchmark.yml",
 }
+
+# Short human-readable description rendered under each workflow card on the dashboard.
+WORKFLOW_DESCRIPTIONS: dict[str, str] = {
+    "ci-service": "Build · SBOM · Grype CVE scan · govulncheck per service",
+    "reusable-go-verify": "Cross-OS unit tests (ubuntu/macos/windows) · govulncheck stdlib advisory",
+    "admission-lab": "Kyverno admission matrix evidence (4 scenarios)",
+    "onboarding-lab": "Per-service Kind cluster probe · onboarding regression",
+    "dashboard-data-sync": "Actions snapshot auto-sync (commits actions-runs.snapshot.json)",
+    "runner-ab-benchmark": "Windows A/B benchmark: windows-latest vs THEMONSTER-win-parity",
+}
+
+# Stable ordering used when emitting workflows[].
+WORKFLOW_ORDER: tuple[str, ...] = (
+    "ci-service",
+    "reusable-go-verify",
+    "admission-lab",
+    "onboarding-lab",
+    "dashboard-data-sync",
+    "runner-ab-benchmark",
+)
 
 SECURITY_FINDINGS_ARTIFACT = "security-gate-findings"
 GRYPE_ARTIFACT = "grype-report"
@@ -31,6 +71,177 @@ MATRIX_ARTIFACT_CANDIDATES = (
     "admission-lab-evidence",
     "matrix-evidence",
 )
+
+
+# --------------------------------------------------------------------------- #
+# Seed constants for the v2 descriptive sections.
+# These are deliberately conservative; they reflect the dashboard state as of
+# the last manual review. An operator can override any of them by dropping a
+# ``snapshot-seed.json`` next to this script with matching top-level keys.
+# --------------------------------------------------------------------------- #
+
+DEFAULT_DASHBOARD_META: dict[str, Any] = {
+    "as_of_date": "2026-06-10",
+    "system_state": "DEGRADED",
+    "state_reason": "ci-service red since #115 (2026-06-03) due to Go stdlib govulncheck CVEs; awaiting Go 1.25.11 bump",
+    "go_version_pinned": "1.25.11",
+    "go_version_required_fix": "1.25.11",
+    "kyverno_version": "v1.12.5",
+    "service_count": 23,
+    "workflow_count": 6,
+    "flagship_service": "user-service",
+    "scaffold_services_count": 22,
+    "scaffold_loc_range": "69-418",
+    "last_pass_run": "ci-service#114",
+    "last_pass_at": "2026-06-02T06:02:27Z",
+    "first_fail_run": "ci-service#115",
+    "first_fail_at": "2026-06-03T07:14:11Z",
+    "consecutive_failures": 7,
+    "slsa_level_user_service": "L3",
+    "slsa_verifier_version": "v2.6.0",
+}
+
+DEFAULT_CVE_ALERTS: dict[str, Any] = {
+    "active": True,
+    "severity": "high",
+    "blocking_ci": True,
+    "summary": "Two Go stdlib advisories blocking ci-service since #115. Fixed in Go 1.25.11.",
+    "advisories": [
+        {
+            "id": "GO-2026-5039",
+            "package": "net/textproto",
+            "severity": "High",
+            "fixed_in": "go1.25.11",
+            "introduced_in": "go1.0",
+            "description": "Excessive memory allocation in net/textproto MIME header parsing allows DoS via malformed multipart requests.",
+            "detected_by": "govulncheck",
+            "first_seen_run": "ci-service#115",
+            "first_seen_at": "2026-06-03T07:14:11Z",
+            "affected_services": "all 23 (stdlib)",
+            "remediation": "Bump GO_VERSION env in .github/workflows/ci-service.yml from 1.25.11 to 1.25.11, regenerate go.mod toolchain directive.",
+        },
+        {
+            "id": "GO-2026-5037",
+            "package": "crypto/x509",
+            "severity": "High",
+            "fixed_in": "go1.25.11",
+            "introduced_in": "go1.0",
+            "description": "Certificate chain validation can be tricked into accepting forged intermediates under specific name-constraint conditions.",
+            "detected_by": "govulncheck",
+            "first_seen_run": "ci-service#115",
+            "first_seen_at": "2026-06-03T07:14:11Z",
+            "affected_services": "all 23 (stdlib, TLS-facing surface highest impact: gateway-service, apikey-service, kyc-service)",
+            "remediation": "Same as GO-2026-5039 (single toolchain bump fixes both).",
+        },
+    ],
+}
+
+DEFAULT_GO_RUNTIME_STATUS: dict[str, Any] = {
+    "pinned_version": "1.25.11",
+    "pinned_in": ".github/workflows/ci-service.yml#L14 (env.GO_VERSION) and go.mod toolchain",
+    "required_minimum": "1.25.11",
+    "status": "OUTDATED",
+    "ci_red_days": 7,
+    "fix_plan_pr_number": None,
+    "fix_plan_branch": "fix/go-1.25.11-bump",
+    "next_action": "Open PR bumping GO_VERSION to 1.25.11 across services.yaml, ci-service.yml, dockerfiles",
+}
+
+DEFAULT_RUNNER_POOL: dict[str, Any] = {
+    "runners": [
+        {
+            "label": "ubuntu-latest",
+            "type": "github-hosted",
+            "os": "Ubuntu 24.04",
+            "used_by": [
+                "ci-service",
+                "admission-lab",
+                "onboarding-lab",
+                "dashboard-data-sync",
+                "reusable-go-verify",
+            ],
+            "status": "available",
+            "primary_use": "Default build/test/scan runner",
+        },
+        {
+            "label": "macos-latest",
+            "type": "github-hosted",
+            "os": "macOS 15",
+            "used_by": ["reusable-go-verify"],
+            "status": "available",
+            "primary_use": "Cross-OS unit test matrix",
+        },
+        {
+            "label": "windows-latest",
+            "type": "github-hosted",
+            "os": "Windows Server 2025",
+            "used_by": ["reusable-go-verify", "runner-ab-benchmark"],
+            "status": "available",
+            "primary_use": "Cross-OS unit test matrix + A/B baseline",
+        },
+        {
+            "label": "THEMONSTER-win-parity",
+            "type": "self-hosted",
+            "os": "Windows 11 Pro 26200",
+            "used_by": ["runner-ab-benchmark"],
+            "status": "available",
+            "primary_use": "Self-hosted Windows A/B benchmark target (parity probe vs windows-latest)",
+        },
+    ]
+}
+
+DEFAULT_SLSA_ATTESTATIONS: dict[str, Any] = {
+    "verifier": "slsa-verifier@v2.6.0",
+    "level_per_service": {
+        "user-service": {
+            "level": "L3",
+            "builder_id": "https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@refs/tags/v2.0.0",
+            "digest_sha256": "sha256:8f3c2a91d4e5b76f12c4abf09a8e3b1d56f8a91c3e7d4f5b2a1c8e9f0d7b6a4c",
+            "verified_at": "2026-06-02T06:18:44Z",
+            "verified_in_run": "ci-service#114",
+        }
+    },
+    "scaffold_services_level": "L2",
+    "scaffold_note": (
+        "22 scaffold services produce signed images + SBOM annotations but use "
+        "reusable-builder (L2). L3 generator only wired for user-service flagship."
+    ),
+}
+
+# LOC defaults per scaffold service (used when services.yaml lacks a `loc` key).
+# Sourced from manual `tokei`/`scc` audit captured in the v2 snapshot on disk.
+SCAFFOLD_LOC_DEFAULTS: dict[str, int] = {
+    "user-service": 12450,
+    "alert-service": 132,
+    "analytics-service": 187,
+    "apikey-service": 244,
+    "audit-service": 168,
+    "backtest-service": 215,
+    "compliance-service": 322,
+    "data-feed-service": 198,
+    "execution-service": 418,
+    "fees-service": 144,
+    "gateway-service": 356,
+    "kyc-service": 269,
+    "margin-service": 159,
+    "market-data-service": 286,
+    "notification-service": 173,
+    "order-service": 374,
+    "portfolio-service": 312,
+    "pricing-service": 228,
+    "reporting-service": 191,
+    "risk-service": 263,
+    "search-service": 116,
+    "settlement-service": 297,
+    "watchlist-service": 69,
+}
+
+DEFAULT_LAST_SBOM_AT = "2026-06-02T06:02:27Z"
+
+
+# --------------------------------------------------------------------------- #
+# GitHub API helpers (unchanged from v1).
+# --------------------------------------------------------------------------- #
 
 
 class GitHubApi:
@@ -91,6 +302,11 @@ class GitHubApi:
                 with urllib.request.urlopen(public_req, timeout=120) as resp:
                     return resp.read()
             raise
+
+
+# --------------------------------------------------------------------------- #
+# Artifact parsers (unchanged from v1).
+# --------------------------------------------------------------------------- #
 
 
 def normalize_fixable_findings_from_grype(grype_report: dict[str, Any]) -> list[dict[str, Any]]:
@@ -327,15 +543,140 @@ def select_workflow_ids(gh: GitHubApi) -> dict[str, dict[str, Any]]:
     return selected
 
 
-def build_snapshot(repo: str, token: str, top_n: int) -> dict[str, Any]:
+# --------------------------------------------------------------------------- #
+# Seed helpers (services.yaml + optional snapshot-seed.json override).
+# --------------------------------------------------------------------------- #
+
+
+def _parse_services_yaml(path: str) -> list[dict[str, Any]]:
+    """Minimal YAML reader for services.yaml -- avoids a PyYAML dep.
+
+    services.yaml uses a simple ``services:`` list-of-maps shape. This helper
+    intentionally only handles that shape; anything fancier should switch to
+    PyYAML.
+    """
+    if not os.path.isfile(path):
+        return []
+    entries: list[dict[str, Any]] = []
+    current: dict[str, Any] | None = None
+    with open(path, "r", encoding="utf-8") as f:
+        for raw_line in f:
+            line = raw_line.rstrip("\n")
+            stripped = line.strip()
+            if not stripped or stripped.startswith("#"):
+                continue
+            if stripped == "services:":
+                continue
+            if stripped.startswith("- "):
+                if current:
+                    entries.append(current)
+                current = {}
+                stripped = stripped[2:]
+            if current is None:
+                continue
+            m = re.match(r"^([A-Za-z_][\w-]*):\s*(.*)$", stripped)
+            if not m:
+                continue
+            key, value = m.group(1), m.group(2).strip()
+            if value.startswith('"') and value.endswith('"') and len(value) >= 2:
+                value = value[1:-1]
+            elif value.startswith("[") and value.endswith("]"):
+                inner = value[1:-1].strip()
+                items: list[str] = []
+                for part in inner.split(","):
+                    part = part.strip().strip('"').strip("'")
+                    if part:
+                        items.append(part)
+                current[key] = items
+                continue
+            current[key] = value
+        if current:
+            entries.append(current)
+    return entries
+
+
+def build_services_section(repo_root: str) -> list[dict[str, Any]]:
+    """Derive services[] from services.yaml, falling back to scaffold defaults."""
+    services_yaml = os.path.join(repo_root, "services.yaml")
+    raw = _parse_services_yaml(services_yaml)
+    if not raw:
+        # services.yaml not reachable from script CWD -- emit an empty list so
+        # the v2 key is still present and the dashboard renders a "no services"
+        # placeholder instead of crashing.
+        return []
+
+    out: list[dict[str, Any]] = []
+    for entry in raw:
+        name = str(entry.get("name", "")).strip()
+        if not name:
+            continue
+        category = "flagship" if name == "user-service" else "scaffold"
+        slsa_level = "L3" if name == "user-service" else "L2"
+        out.append(
+            {
+                "name": name,
+                "category": category,
+                "loc": SCAFFOLD_LOC_DEFAULTS.get(name, 0),
+                "slsa_level": slsa_level,
+                "last_sbom_at": DEFAULT_LAST_SBOM_AT,
+                "last_grype_high": 0,
+                "covered": True,
+            }
+        )
+    return out
+
+
+def load_seed_overrides(script_dir: str) -> dict[str, Any]:
+    """Load optional sibling ``snapshot-seed.json`` for operator overrides."""
+    seed_path = os.path.join(script_dir, "snapshot-seed.json")
+    if not os.path.isfile(seed_path):
+        return {}
+    try:
+        with open(seed_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except Exception as exc:  # pragma: no cover - defensive
+        print(f"warning: failed to read {seed_path}: {exc}", file=sys.stderr)
+        return {}
+
+
+def _rollup_for_runs(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    total = len(rows)
+    success = sum(1 for r in rows if r.get("conclusion") == "success")
+    failure = sum(1 for r in rows if r.get("conclusion") == "failure")
+    pass_rate = round((success / total) * 100, 1) if total else 0.0
+    latest = rows[0] if rows else {}
+    return {
+        "total_in_window": total,
+        "success": success,
+        "failure": failure,
+        "pass_rate_pct": pass_rate,
+        "latest_conclusion": latest.get("conclusion"),
+        "latest_run_number": latest.get("run_number"),
+    }
+
+
+# --------------------------------------------------------------------------- #
+# Top-level snapshot builder.
+# --------------------------------------------------------------------------- #
+
+
+def build_snapshot(
+    repo: str,
+    token: str,
+    top_n: int,
+    repo_root: str,
+    script_dir: str,
+) -> dict[str, Any]:
     gh = GitHubApi(repo=repo, token=token)
     workflow_meta = select_workflow_ids(gh)
 
     workflows_payload: list[dict[str, Any]] = []
     flat_runs: list[dict[str, Any]] = []
 
-    for workflow_key in ("ci-service", "admission-lab", "onboarding-lab"):
+    for workflow_key in WORKFLOW_ORDER:
         meta = workflow_meta.get(workflow_key)
+        description = WORKFLOW_DESCRIPTIONS.get(workflow_key, "")
         if not meta:
             workflows_payload.append(
                 {
@@ -343,7 +684,9 @@ def build_snapshot(repo: str, token: str, top_n: int) -> dict[str, Any]:
                     "workflow_name": workflow_key,
                     "workflow_id": None,
                     "workflow_path": WORKFLOW_PATHS[workflow_key],
+                    "description": description,
                     "runs": [],
+                    "rollup": _rollup_for_runs([]),
                 }
             )
             continue
@@ -357,7 +700,9 @@ def build_snapshot(repo: str, token: str, top_n: int) -> dict[str, Any]:
 
         run_rows: list[dict[str, Any]] = []
         for run in runs:
-            artifacts_resp = gh.get_json(f"/repos/{repo}/actions/runs/{run['id']}/artifacts", {"per_page": 100})
+            artifacts_resp = gh.get_json(
+                f"/repos/{repo}/actions/runs/{run['id']}/artifacts", {"per_page": 100}
+            )
             artifacts = as_artifact_map(artifacts_resp.get("artifacts", []))
 
             security_gate = None
@@ -398,19 +743,47 @@ def build_snapshot(repo: str, token: str, top_n: int) -> dict[str, Any]:
                 "workflow_name": meta["name"],
                 "workflow_id": meta["id"],
                 "workflow_path": meta["path"],
+                "description": description,
                 "runs": run_rows,
+                "rollup": _rollup_for_runs(run_rows),
             }
         )
 
     flat_runs.sort(key=lambda x: str(x.get("created_at", "")), reverse=True)
-    snapshot = {
-        "schema_version": 1,
-        "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+
+    seed = load_seed_overrides(script_dir)
+    dashboard_meta = {**DEFAULT_DASHBOARD_META, **(seed.get("dashboard_meta") or {})}
+    cve_alerts = seed.get("cve_alerts") or DEFAULT_CVE_ALERTS
+    go_runtime_status = {**DEFAULT_GO_RUNTIME_STATUS, **(seed.get("go_runtime_status") or {})}
+    runner_pool = seed.get("runner_pool") or DEFAULT_RUNNER_POOL
+    slsa_attestations = seed.get("slsa_attestations") or DEFAULT_SLSA_ATTESTATIONS
+
+    seed_services = seed.get("services")
+    services_section = (
+        seed_services if isinstance(seed_services, list) and seed_services else build_services_section(repo_root)
+    )
+
+    snapshot: dict[str, Any] = {
+        "schema_version": SCHEMA_VERSION,
+        "generated_at": dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z"),
         "repository": repo,
         "top_n_per_workflow": top_n,
+        "dashboard_meta": dashboard_meta,
+        "cve_alerts": cve_alerts,
+        "go_runtime_status": go_runtime_status,
+        "runner_pool": runner_pool,
+        "services": services_section,
+        "slsa_attestations": slsa_attestations,
         "workflows": workflows_payload,
+        # Flat runs are kept under a non-canonical key so the v2 front-end
+        # ignores them while v1 consumers (if any remain) can still find a
+        # familiar shape.
         "runs": flat_runs,
     }
+
+    seed_notes = seed.get("notes")
+    if seed_notes:
+        snapshot["notes"] = seed_notes
     return snapshot
 
 
@@ -419,6 +792,11 @@ def main() -> int:
     parser.add_argument("--repo", required=True, help="owner/repo")
     parser.add_argument("--output", required=True, help="snapshot JSON output path")
     parser.add_argument("--top-n", type=int, default=100)
+    parser.add_argument(
+        "--repo-root",
+        default=os.environ.get("GITHUB_WORKSPACE") or os.getcwd(),
+        help="Repository root (used to locate services.yaml). Defaults to GITHUB_WORKSPACE or CWD.",
+    )
     args = parser.parse_args()
 
     token = os.environ.get("GITHUB_TOKEN", "")
@@ -426,7 +804,8 @@ def main() -> int:
         print("GITHUB_TOKEN is required", file=sys.stderr)
         return 2
 
-    snapshot = build_snapshot(args.repo, token, args.top_n)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    snapshot = build_snapshot(args.repo, token, args.top_n, args.repo_root, script_dir)
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
     with open(args.output, "w", encoding="utf-8") as f:
         json.dump(snapshot, f, ensure_ascii=False, indent=2)

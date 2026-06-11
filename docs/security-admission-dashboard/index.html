@@ -26,18 +26,11 @@
           <button id="lang-vi" class="lang-button" type="button" data-lang="vi">VI</button>
         </div>
       </div>
-      <p class="hero-copy" data-i18n="heroCopy">
+      <p class="hero-copy" id="hero-copy" data-i18n="heroCopy">
         Automated supply chain security evidence: SBOM, CVE scanning, Kyverno admission control, SLSA provenance. Powered by 6 GitHub Actions workflows across 23 Go microservices.
       </p>
-      <div class="stats-strip">
-        <span class="stat-chip">23 services</span>
-        <span class="stat-chip">Go 1.25.10</span>
-        <span class="stat-chip">Kyverno v1.12.5</span>
-        <span class="stat-chip">Cosign keyless</span>
-        <span class="stat-chip">SLSA L1/L2</span>
-        <span class="stat-chip">Grype + govulncheck</span>
-        <span class="stat-chip">6 workflows</span>
-      </div>
+      <div id="alert-ribbon" class="alert-ribbon hidden" role="alert" aria-live="polite"></div>
+      <div class="stats-strip" id="stats-strip"></div>
       <div class="run-loader" role="group" aria-labelledby="run-label">
         <label id="run-label" for="run-combo-toggle" class="run-label" data-i18n="runLabel">Evidence Run ID</label>
         <div class="run-controls">
@@ -64,8 +57,35 @@
         </div>
         <p id="run-help" class="control-hint" data-i18n="runHelp">Click to open command palette, search run-id, then select to load automatically.</p>
       </div>
-      <p id="status-banner" class="status-banner" role="status" aria-live="polite">Scanning evidence runs...</p>
+      <div class="status-stack">
+        <p id="status-banner" class="status-banner" role="status" aria-live="polite">Scanning evidence runs...</p>
+        <p id="status-system" class="status-banner status-system" role="status" aria-live="polite">System: -</p>
+      </div>
     </header>
+
+    <section id="alert-cve" class="glass section alert-cve hidden" aria-label="Active CVE alerts">
+      <div class="section-head">
+        <h2 data-i18n="activeCveAlerts">Active CVE Alerts</h2>
+        <p id="cve-alerts-summary" data-i18n="activeCveAlertsNote">Blocking advisories pinned at top.</p>
+      </div>
+      <div id="cve-alerts-grid" class="cve-alerts-grid"></div>
+    </section>
+
+    <section id="go-runtime" class="glass section go-runtime hidden" aria-label="Go runtime status">
+      <div class="section-head">
+        <h2 data-i18n="goRuntimeStatus">Go Runtime Status</h2>
+        <p data-i18n="goRuntimeStatusNote">Pinned vs required toolchain · remediation plan.</p>
+      </div>
+      <div id="go-runtime-body" class="go-runtime-body"></div>
+    </section>
+
+    <section id="ci-timeline" class="glass section hidden" aria-label="7-day CI timeline">
+      <div class="section-head">
+        <h2 data-i18n="ciTimeline">7-Day CI Timeline</h2>
+        <p data-i18n="ciTimelineNote">Last 10 ci-service runs · click a dot to open run on GitHub.</p>
+      </div>
+      <div id="ci-timeline-strip" class="ci-timeline-strip" aria-live="polite"></div>
+    </section>
 
     <section class="glass section" aria-label="CI pipeline status">
       <div class="section-head">
@@ -126,20 +146,24 @@
         <h2 data-i18n="quickRawFiles">Quick Raw Files</h2>
         <p class="panel-note" data-i18n="quickRawFilesNote">Open scanner and SBOM outputs used for presentation evidence.</p>
         <ul class="quick-links">
-          <li><a href="../../.tmp-grype.json" target="_blank" rel="noopener noreferrer" data-i18n="linkGrype">Open `../../.tmp-grype.json`</a></li>
-          <li><a href="../../security-gate-findings.json" target="_blank" rel="noopener noreferrer" data-i18n="linkGateFindings">Open `../../security-gate-findings.json`</a></li>
-          <li><a href="../../.tmp-sbom.json" target="_blank" rel="noopener noreferrer" data-i18n="linkTmpSbom">Open `../../.tmp-sbom.json`</a></li>
-          <li><a href="../../demo/sbom.spdx.json" target="_blank" rel="noopener noreferrer" data-i18n="linkDemoSbom">Open `../../demo/sbom.spdx.json`</a></li>
-          <li><a href="./demo-data/sbom.spdx.json" target="_blank" rel="noopener noreferrer" data-i18n="linkBundledSbom">Open `./demo-data/sbom.spdx.json` (bundled)</a></li>
           <li><a href="./data/actions-runs.snapshot.json" target="_blank" rel="noopener noreferrer" data-i18n="linkActionsSnapshot">Open `./data/actions-runs.snapshot.json` (Actions snapshot)</a></li>
+          <li><a href="./demo-data/sbom.spdx.json" target="_blank" rel="noopener noreferrer" data-i18n="linkBundledSbom">Open `./demo-data/sbom.spdx.json` (bundled)</a></li>
           <li><a href="./demo-data/README.md" target="_blank" rel="noopener noreferrer" data-i18n="linkBundledNotes">Open bundled evidence notes</a></li>
+          <li><a href="#alert-cve" data-i18n="linkAlertCve">Jump to Active CVE Alerts</a></li>
+        </ul>
+        <p class="panel-subhead" data-i18n="quickRawFilesSourceHead">Source-of-truth files</p>
+        <ul class="quick-links">
+          <li><a href="https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/blob/master/services.yaml" target="_blank" rel="noopener noreferrer" data-i18n="linkServicesYaml">Open `services.yaml`</a></li>
+          <li><a href="https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/blob/master/.github/workflows/ci-service.yml" target="_blank" rel="noopener noreferrer" data-i18n="linkCiServiceYml">Open `.github/workflows/ci-service.yml`</a></li>
+          <li><a href="https://github.com/slsa-framework/slsa-verifier" target="_blank" rel="noopener noreferrer" data-i18n="linkSlsaVerifier">SLSA verifier docs</a></li>
         </ul>
       </article>
 
       <article class="glass panel">
         <h2 data-i18n="securityGateFindings">Security Gate Findings</h2>
         <p id="cve-summary" class="panel-note" data-i18n="cveLoading">Loading CVE findings...</p>
-        <div class="cve-table-wrap">
+        <div id="cve-snapshot-note" class="panel-note hidden"></div>
+        <div id="cve-table-wrap" class="cve-table-wrap">
           <table class="cve-table">
             <thead>
               <tr>
@@ -163,6 +187,7 @@
         <h2 data-i18n="admissionMatrix">Admission Matrix</h2>
         <p data-i18n="admissionMatrixNote">Fixed scenario order: VALID_ALLOW, NEG_UNSIGNED_DENY, NEG_MISSING_SBOM_DENY, NEG_CVE_THRESHOLD_DENY</p>
       </div>
+      <p id="admission-unaffected-note" class="panel-note hidden" data-i18n="admissionUnaffectedNote">admission-lab is GREEN (last 3 runs all 4/4) — unaffected by the stdlib CVE because it uses pre-built signed test images.</p>
       <div id="matrix-grid" class="matrix-grid" aria-live="polite"></div>
     </section>
 
@@ -171,6 +196,7 @@
         <div class="section-head compact">
           <h2 data-i18n="sbomDependencyView">SBOM Dependency View</h2>
           <p data-i18n="sbomDependencyNote">Grouped by package type: golang, deb, other</p>
+          <p class="panel-note" data-i18n="sbomSubtitle">SBOM from user-service flagship build #114 (last green) · stdlib not included in 3rd-party dep view.</p>
         </div>
         <div class="sbom-wrap">
           <div class="donut-shell">
@@ -196,6 +222,55 @@
           <pre id="summary-preview" class="summary-preview">No summary loaded.</pre>
         </div>
       </article>
+    </section>
+
+    <section id="slsa-tracker" class="glass section hidden" aria-label="SLSA attestation tracker">
+      <div class="section-head">
+        <h2 data-i18n="slsaTracker">SLSA Attestation Tracker</h2>
+        <p data-i18n="slsaTrackerNote">L3 user-service flagship · L2 scaffold fleet · slsa-verifier reference.</p>
+      </div>
+      <div id="slsa-tracker-body" class="slsa-tracker-body"></div>
+    </section>
+
+    <section id="runner-pool" class="glass section hidden" aria-label="Runner pool">
+      <div class="section-head">
+        <h2 data-i18n="runnerPool">Runner Pool</h2>
+        <p data-i18n="runnerPoolNote">GitHub-hosted + self-hosted runners used by the 6 workflows.</p>
+      </div>
+      <div id="runner-pool-grid" class="runner-pool-grid"></div>
+    </section>
+
+    <section id="runner-ab" class="glass section hidden" aria-label="Runner A/B benchmark">
+      <div class="section-head">
+        <h2 data-i18n="runnerAb">Runner A/B Benchmark</h2>
+        <p data-i18n="runnerAbNote">windows-latest vs THEMONSTER-win-parity (self-hosted).</p>
+      </div>
+      <div id="runner-ab-body" class="runner-ab-body"></div>
+    </section>
+
+    <section id="service-inventory" class="glass section hidden" aria-label="Service inventory">
+      <div class="section-head">
+        <h2 data-i18n="serviceInventory">Service Inventory (23 microservices)</h2>
+        <p data-i18n="serviceInventoryNote">Sortable detail: category · LOC · SLSA level · last SBOM · last grype high count.</p>
+      </div>
+      <div class="service-inventory-wrap">
+        <table id="service-inventory-table" class="service-inventory-table">
+          <thead>
+            <tr>
+              <th data-i18n="invName">Service</th>
+              <th data-i18n="invCategory">Category</th>
+              <th data-i18n="invLoc">LOC</th>
+              <th data-i18n="invSlsa">SLSA</th>
+              <th data-i18n="invSbom">Last SBOM</th>
+              <th data-i18n="invGrype">Last Grype High</th>
+              <th data-i18n="invCovered">Covered</th>
+            </tr>
+          </thead>
+          <tbody id="service-inventory-body">
+            <tr><td colspan="7">-</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   </main>
 

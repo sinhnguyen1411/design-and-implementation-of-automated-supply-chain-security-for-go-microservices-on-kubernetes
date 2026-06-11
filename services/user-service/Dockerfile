@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-ARG GO_VERSION=1.25.10
+ARG GO_VERSION=1.25.11
 
 FROM --platform=$BUILDPLATFORM golang:${GO_VERSION}-bookworm AS builder
 LABEL org.opencontainers.image.source="https://github.com/sinhnguyen1411/stock-trading-be"

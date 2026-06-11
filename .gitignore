@@ -55,3 +55,4 @@ cosign.pub
 scripts/install_vscode_extensions.sh
 tmp/actions-runs.snapshot.test.json
 tmp/run*
+tmp/ic/

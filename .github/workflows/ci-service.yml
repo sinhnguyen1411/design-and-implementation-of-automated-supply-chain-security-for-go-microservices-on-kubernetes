@@ -144,7 +144,7 @@ jobs:
     with:
       service_name: ${{ matrix.service.name }}
       service_path: ${{ matrix.service.path }}
-      go_version: ${{ matrix.service.go_version || '1.25.10' }}
+      go_version: ${{ matrix.service.go_version || '1.25.11' }}
       runner_os: ${{ matrix.runner_os }}
 
   windows-parity-smoke:
@@ -156,7 +156,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.25.10"
+          go-version: "1.25.11"
       - name: Report Windows toolchain
         shell: powershell
         run: |
@@ -173,7 +173,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.25.10"
+          go-version: "1.25.11"
       - name: Report Windows toolchain
         shell: powershell
         run: |
@@ -202,7 +202,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: ${{ matrix.go_version || '1.25.10' }}
+          go-version: ${{ matrix.go_version || '1.25.11' }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

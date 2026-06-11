@@ -3,7 +3,7 @@ param(
   [string]$Branch = "test/ci-cve-signal",
   [int]$Iterations = 5,
   [string]$TargetService = "services/user-service",
-  [string]$GoVersion = "1.25.10"
+  [string]$GoVersion = "1.25.11"
 )
 
 $ErrorActionPreference = "Stop"
