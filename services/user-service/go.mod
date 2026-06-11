@@ -1,6 +1,6 @@
 module github.com/sinhnguyen1411/stock-trading-be/services/user-service
 
-go 1.25.10
+go 1.25.11
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.3.0

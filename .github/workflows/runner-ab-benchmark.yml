@@ -10,7 +10,7 @@ on:
       go_version:
         description: "Go version"
         required: false
-        default: "1.25.10"
+        default: "1.25.11"
 
 jobs:
   gh-hosted-windows:
@@ -26,7 +26,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: ${{ inputs.go_version || '1.25.10' }}
+          go-version: ${{ inputs.go_version || '1.25.11' }}
       - name: Workload (go test)
         run: |
           go version
@@ -45,7 +45,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: ${{ inputs.go_version || '1.25.10' }}
+          go-version: ${{ inputs.go_version || '1.25.11' }}
       - name: Workload (go test)
         run: |
           go version
