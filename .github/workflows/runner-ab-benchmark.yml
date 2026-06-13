@@ -19,18 +19,40 @@ jobs:
     defaults:
       run:
         shell: powershell
-        working-directory: ${{ inputs.target_service || 'services/user-service' }}
     steps:
+      - name: Enable git long paths (Windows MAX_PATH workaround)
+        shell: powershell
+        run: |
+          git config --system core.longpaths true
+          git config --global core.longpaths true
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          path: r
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
           go-version: ${{ inputs.go_version || '1.25.11' }}
-      - name: Workload (go test)
+          cache-dependency-path: r/${{ inputs.target_service || 'services/user-service' }}/go.sum
+      - name: Workload (go test x3)
+        working-directory: r/${{ inputs.target_service || 'services/user-service' }}
         run: |
           go version
-          go test ./...
+          $samples = @()
+          for ($i = 1; $i -le 3; $i++) {
+            $sw = [System.Diagnostics.Stopwatch]::StartNew()
+            go test ./... -count=1
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            $sw.Stop()
+            $samples += $sw.Elapsed.TotalSeconds
+            Write-Host "Sample $i : $($sw.Elapsed.TotalSeconds) seconds"
+          }
+          $min = ($samples | Measure-Object -Minimum).Minimum
+          $avg = ($samples | Measure-Object -Average).Average
+          Write-Host "RESULT_RUNNER=gh-hosted-windows"
+          Write-Host "RESULT_MIN_SECONDS=$min"
+          Write-Host "RESULT_AVG_SECONDS=$avg"
+          "## gh-hosted-windows`n- min: $min s`n- avg: $avg s" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
 
   self-hosted-windows-parity:
     name: self-hosted-windows-parity
@@ -38,15 +60,37 @@ jobs:
     defaults:
       run:
         shell: powershell
-        working-directory: ${{ inputs.target_service || 'services/user-service' }}
     steps:
+      - name: Enable git long paths (Windows MAX_PATH workaround)
+        shell: powershell
+        run: |
+          git config --system core.longpaths true
+          git config --global core.longpaths true
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          path: r
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
           go-version: ${{ inputs.go_version || '1.25.11' }}
-      - name: Workload (go test)
+          cache-dependency-path: r/${{ inputs.target_service || 'services/user-service' }}/go.sum
+      - name: Workload (go test x3)
+        working-directory: r/${{ inputs.target_service || 'services/user-service' }}
         run: |
           go version
-          go test ./...
+          $samples = @()
+          for ($i = 1; $i -le 3; $i++) {
+            $sw = [System.Diagnostics.Stopwatch]::StartNew()
+            go test ./... -count=1
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            $sw.Stop()
+            $samples += $sw.Elapsed.TotalSeconds
+            Write-Host "Sample $i : $($sw.Elapsed.TotalSeconds) seconds"
+          }
+          $min = ($samples | Measure-Object -Minimum).Minimum
+          $avg = ($samples | Measure-Object -Average).Average
+          Write-Host "RESULT_RUNNER=self-hosted-windows-parity"
+          Write-Host "RESULT_MIN_SECONDS=$min"
+          Write-Host "RESULT_AVG_SECONDS=$avg"
+          "## self-hosted-windows-parity`n- min: $min s`n- avg: $avg s" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
