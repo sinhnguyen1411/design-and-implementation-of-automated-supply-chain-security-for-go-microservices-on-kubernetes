@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-07-25T04:45:01.988505Z",
+  "generated_at": "2026-07-25T05:57:46.840154Z",
   "repository": "sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes",
   "top_n_per_workflow": 100,
   "dashboard_meta": {
@@ -94921,6 +94921,194 @@
       "description": "Kyverno admission matrix evidence (4 scenarios)",
       "runs": [
         {
+          "run_key": "admission-lab#115",
+          "workflow_key": "admission-lab",
+          "workflow_name": "admission-lab",
+          "workflow_path": ".github/workflows/admission-matrix-evidence.yml",
+          "run_number": 115,
+          "run_id": 30145367962,
+          "head_sha": "9336c07025ca39dd8ac2b3556811dc40f7892308",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-07-25T05:12:47Z",
+          "updated_at": "2026-07-25T05:19:38Z",
+          "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/30145367962",
+          "artifacts": {
+            "admission-lab-evidence": {
+              "id": 8615868779,
+              "name": "admission-lab-evidence",
+              "size": 85969,
+              "expired": false,
+              "created_at": "2026-07-25T05:19:34Z",
+              "updated_at": "2026-07-25T05:19:34Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8615868779/zip"
+            }
+          },
+          "security_gate": null,
+          "matrix": {
+            "cases": [
+              {
+                "case": "VALID_ALLOW",
+                "expected": "Allowed",
+                "actual": "AllowedWithRuntimePullIssue",
+                "verdict": "PASS",
+                "reason": "Admission allowed; workload creation progressed but image pull/runtime readiness did not complete in wait window.",
+                "image": "ttl.sh/stock-trading-matrix-signed-b8ffa66f1645@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53",
+                "include_sbom": true,
+                "high_critical": "0",
+                "apply_exit_code": 0,
+                "wait_exit_code": 1,
+                "artifacts": {
+                  "apply": "VALID_ALLOW/kubectl-apply.txt",
+                  "wait": "VALID_ALLOW/kubectl-wait.txt",
+                  "events": "VALID_ALLOW/events.txt",
+                  "workloads": "VALID_ALLOW/workloads.txt",
+                  "describe_deployment": "VALID_ALLOW/describe-deployment.txt",
+                  "describe_replicasets": "VALID_ALLOW/describe-replicasets.txt",
+                  "describe_pods": "VALID_ALLOW/describe-pods.txt",
+                  "kyverno_logs": "VALID_ALLOW/kyverno-logs.txt"
+                }
+              },
+              {
+                "case": "NEG_UNSIGNED_DENY",
+                "expected": "Denied",
+                "actual": "Denied",
+                "verdict": "PASS",
+                "reason": "Admission deny evidence detected at apply phase.",
+                "image": "ttl.sh/stock-trading-matrix-unsigned-cbd0f2fb8070@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53",
+                "include_sbom": true,
+                "high_critical": "0",
+                "apply_exit_code": 1,
+                "wait_exit_code": -1,
+                "artifacts": {
+                  "apply": "NEG_UNSIGNED_DENY/kubectl-apply.txt",
+                  "wait": "NEG_UNSIGNED_DENY/kubectl-wait.txt",
+                  "events": "NEG_UNSIGNED_DENY/events.txt",
+                  "workloads": "NEG_UNSIGNED_DENY/workloads.txt",
+                  "describe_deployment": "NEG_UNSIGNED_DENY/describe-deployment.txt",
+                  "describe_replicasets": "NEG_UNSIGNED_DENY/describe-replicasets.txt",
+                  "describe_pods": "NEG_UNSIGNED_DENY/describe-pods.txt",
+                  "kyverno_logs": "NEG_UNSIGNED_DENY/kyverno-logs.txt"
+                }
+              },
+              {
+                "case": "NEG_MISSING_SBOM_DENY",
+                "expected": "Denied",
+                "actual": "Denied",
+                "verdict": "PASS",
+                "reason": "Admission deny evidence detected at apply phase.",
+                "image": "ttl.sh/stock-trading-matrix-signed-b8ffa66f1645@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53",
+                "include_sbom": false,
+                "high_critical": "0",
+                "apply_exit_code": 1,
+                "wait_exit_code": -1,
+                "artifacts": {
+                  "apply": "NEG_MISSING_SBOM_DENY/kubectl-apply.txt",
+                  "wait": "NEG_MISSING_SBOM_DENY/kubectl-wait.txt",
+                  "events": "NEG_MISSING_SBOM_DENY/events.txt",
+                  "workloads": "NEG_MISSING_SBOM_DENY/workloads.txt",
+                  "describe_deployment": "NEG_MISSING_SBOM_DENY/describe-deployment.txt",
+                  "describe_replicasets": "NEG_MISSING_SBOM_DENY/describe-replicasets.txt",
+                  "describe_pods": "NEG_MISSING_SBOM_DENY/describe-pods.txt",
+                  "kyverno_logs": "NEG_MISSING_SBOM_DENY/kyverno-logs.txt"
+                }
+              },
+              {
+                "case": "NEG_CVE_THRESHOLD_DENY",
+                "expected": "Denied",
+                "actual": "Denied",
+                "verdict": "PASS",
+                "reason": "Admission deny evidence detected at apply phase.",
+                "image": "ttl.sh/stock-trading-matrix-signed-b8ffa66f1645@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53",
+                "include_sbom": true,
+                "high_critical": "2",
+                "apply_exit_code": 1,
+                "wait_exit_code": -1,
+                "artifacts": {
+                  "apply": "NEG_CVE_THRESHOLD_DENY/kubectl-apply.txt",
+                  "wait": "NEG_CVE_THRESHOLD_DENY/kubectl-wait.txt",
+                  "events": "NEG_CVE_THRESHOLD_DENY/events.txt",
+                  "workloads": "NEG_CVE_THRESHOLD_DENY/workloads.txt",
+                  "describe_deployment": "NEG_CVE_THRESHOLD_DENY/describe-deployment.txt",
+                  "describe_replicasets": "NEG_CVE_THRESHOLD_DENY/describe-replicasets.txt",
+                  "describe_pods": "NEG_CVE_THRESHOLD_DENY/describe-pods.txt",
+                  "kyverno_logs": "NEG_CVE_THRESHOLD_DENY/kyverno-logs.txt"
+                }
+              },
+              {
+                "case": "NEG_WRONG_KEY_DENY",
+                "expected": "Denied",
+                "actual": "Denied",
+                "verdict": "PASS",
+                "reason": "Admission deny evidence detected at apply phase.",
+                "image": "ttl.sh/stock-trading-matrix-wrong-key-a26c0027cc4c@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53",
+                "include_sbom": true,
+                "high_critical": "0",
+                "apply_exit_code": 1,
+                "wait_exit_code": -1,
+                "artifacts": {
+                  "apply": "NEG_WRONG_KEY_DENY/kubectl-apply.txt",
+                  "wait": "NEG_WRONG_KEY_DENY/kubectl-wait.txt",
+                  "events": "NEG_WRONG_KEY_DENY/events.txt",
+                  "workloads": "NEG_WRONG_KEY_DENY/workloads.txt",
+                  "describe_deployment": "NEG_WRONG_KEY_DENY/describe-deployment.txt",
+                  "describe_replicasets": "NEG_WRONG_KEY_DENY/describe-replicasets.txt",
+                  "describe_pods": "NEG_WRONG_KEY_DENY/describe-pods.txt",
+                  "kyverno_logs": "NEG_WRONG_KEY_DENY/kyverno-logs.txt"
+                }
+              },
+              {
+                "case": "NEG_MISSING_PROVENANCE_DENY",
+                "expected": "Denied",
+                "actual": "Denied",
+                "verdict": "PASS",
+                "reason": "Admission deny evidence detected at apply phase.",
+                "image": "ttl.sh/stock-trading-matrix-no-prov-872c9db47c6d@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53",
+                "include_sbom": true,
+                "high_critical": "0",
+                "apply_exit_code": 1,
+                "wait_exit_code": -1,
+                "artifacts": {
+                  "apply": "NEG_MISSING_PROVENANCE_DENY/kubectl-apply.txt",
+                  "wait": "NEG_MISSING_PROVENANCE_DENY/kubectl-wait.txt",
+                  "events": "NEG_MISSING_PROVENANCE_DENY/events.txt",
+                  "workloads": "NEG_MISSING_PROVENANCE_DENY/workloads.txt",
+                  "describe_deployment": "NEG_MISSING_PROVENANCE_DENY/describe-deployment.txt",
+                  "describe_replicasets": "NEG_MISSING_PROVENANCE_DENY/describe-replicasets.txt",
+                  "describe_pods": "NEG_MISSING_PROVENANCE_DENY/describe-pods.txt",
+                  "kyverno_logs": "NEG_MISSING_PROVENANCE_DENY/kyverno-logs.txt"
+                }
+              }
+            ],
+            "summary_text": "# Admission Matrix Summary\n\n- Run ID: 20260725-051431\n- Kubernetes context: kind-thesis-evidence\n- Namespace: stock-trading\n- Signed image digest: ttl.sh/stock-trading-matrix-signed-b8ffa66f1645@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53\n- Unsigned image digest: ttl.sh/stock-trading-matrix-unsigned-cbd0f2fb8070@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53\n- SBOM digest: 58980F7829386D969CE4FE77E7FA779D435AC555B308F9FD3286C3004196D9B1\n\n| Case | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW | Allowed | AllowedWithRuntimePullIssue | PASS | Admission allowed; workload creation progressed but image pull/runtime readiness did not complete in wait window. |\n| NEG_UNSIGNED_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n| NEG_MISSING_SBOM_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n| NEG_CVE_THRESHOLD_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n| NEG_WRONG_KEY_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n| NEG_MISSING_PROVENANCE_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n\n## Regression Re-check\n\n| Check | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW_RECHECK | Allowed | AllowedWithRuntimePullIssue | PASS | Admission allowed; workload creation progressed but image pull/runtime readiness did not complete in wait window. |\n",
+            "regression": {
+              "case": "VALID_ALLOW_RECHECK",
+              "expected": "Allowed",
+              "actual": "AllowedWithRuntimePullIssue",
+              "verdict": "PASS",
+              "reason": "Admission allowed; workload creation progressed but image pull/runtime readiness did not complete in wait window.",
+              "image": "ttl.sh/stock-trading-matrix-signed-b8ffa66f1645@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53",
+              "include_sbom": true,
+              "high_critical": "0",
+              "apply_exit_code": 0,
+              "wait_exit_code": 1,
+              "artifacts": {
+                "apply": "VALID_ALLOW_RECHECK/kubectl-apply.txt",
+                "wait": "VALID_ALLOW_RECHECK/kubectl-wait.txt",
+                "events": "VALID_ALLOW_RECHECK/events.txt",
+                "workloads": "VALID_ALLOW_RECHECK/workloads.txt",
+                "describe_deployment": "VALID_ALLOW_RECHECK/describe-deployment.txt",
+                "describe_replicasets": "VALID_ALLOW_RECHECK/describe-replicasets.txt",
+                "describe_pods": "VALID_ALLOW_RECHECK/describe-pods.txt",
+                "kyverno_logs": "VALID_ALLOW_RECHECK/kyverno-logs.txt"
+              }
+            },
+            "metadata": {},
+            "source_artifact": "admission-lab-evidence"
+          },
+          "evidence_unavailable": false
+        },
+        {
           "run_key": "admission-lab#114",
           "workflow_key": "admission-lab",
           "workflow_name": "admission-lab",
@@ -109337,159 +109525,6 @@
           "security_gate": null,
           "matrix": null,
           "evidence_unavailable": false
-        },
-        {
-          "run_key": "admission-lab#15",
-          "workflow_key": "admission-lab",
-          "workflow_name": "admission-lab",
-          "workflow_path": ".github/workflows/admission-matrix-evidence.yml",
-          "run_number": 15,
-          "run_id": 25092423953,
-          "head_sha": "46eca48570bf39a20597a1d6fc08262f53858099",
-          "status": "completed",
-          "conclusion": "success",
-          "created_at": "2026-04-29T05:25:20Z",
-          "updated_at": "2026-04-29T05:30:59Z",
-          "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25092423953",
-          "artifacts": {
-            "admission-matrix-evidence": {
-              "id": 6700288592,
-              "name": "admission-matrix-evidence",
-              "size": 67598,
-              "expired": false,
-              "created_at": "2026-04-29T05:30:56Z",
-              "updated_at": "2026-04-29T05:30:56Z",
-              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6700288592/zip"
-            }
-          },
-          "security_gate": null,
-          "matrix": {
-            "cases": [
-              {
-                "case": "VALID_ALLOW",
-                "expected": "Allowed",
-                "actual": "Allowed",
-                "verdict": "PASS",
-                "reason": "Deployment became Available.",
-                "image": "ttl.sh/stock-trading-matrix-signed-5ea8d8f91196@sha256:3e17a5a7c88b3c13e2f347cb5f55cd325978763498e6a23c00b4d9cc77d74a12",
-                "include_sbom": true,
-                "high_critical": "0",
-                "apply_exit_code": 0,
-                "wait_exit_code": 0,
-                "artifacts": {
-                  "apply": "VALID_ALLOW/kubectl-apply.txt",
-                  "wait": "VALID_ALLOW/kubectl-wait.txt",
-                  "events": "VALID_ALLOW/events.txt",
-                  "workloads": "VALID_ALLOW/workloads.txt",
-                  "describe_deployment": "VALID_ALLOW/describe-deployment.txt",
-                  "describe_replicasets": "VALID_ALLOW/describe-replicasets.txt",
-                  "describe_pods": "VALID_ALLOW/describe-pods.txt",
-                  "kyverno_logs": "VALID_ALLOW/kyverno-logs.txt"
-                }
-              },
-              {
-                "case": "NEG_UNSIGNED_DENY",
-                "expected": "Denied",
-                "actual": "Denied",
-                "verdict": "PASS",
-                "reason": "Admission deny evidence detected at apply phase.",
-                "image": "ttl.sh/stock-trading-matrix-unsigned-7e97ce582023@sha256:3e17a5a7c88b3c13e2f347cb5f55cd325978763498e6a23c00b4d9cc77d74a12",
-                "include_sbom": true,
-                "high_critical": "0",
-                "apply_exit_code": 1,
-                "wait_exit_code": -1,
-                "artifacts": {
-                  "apply": "NEG_UNSIGNED_DENY/kubectl-apply.txt",
-                  "wait": "NEG_UNSIGNED_DENY/kubectl-wait.txt",
-                  "events": "NEG_UNSIGNED_DENY/events.txt",
-                  "workloads": "NEG_UNSIGNED_DENY/workloads.txt",
-                  "describe_deployment": "NEG_UNSIGNED_DENY/describe-deployment.txt",
-                  "describe_replicasets": "NEG_UNSIGNED_DENY/describe-replicasets.txt",
-                  "describe_pods": "NEG_UNSIGNED_DENY/describe-pods.txt",
-                  "kyverno_logs": "NEG_UNSIGNED_DENY/kyverno-logs.txt"
-                }
-              },
-              {
-                "case": "NEG_MISSING_SBOM_DENY",
-                "expected": "Denied",
-                "actual": "Denied",
-                "verdict": "PASS",
-                "reason": "Admission deny evidence detected in events/ReplicaSet describe.",
-                "image": "ttl.sh/stock-trading-matrix-signed-5ea8d8f91196@sha256:3e17a5a7c88b3c13e2f347cb5f55cd325978763498e6a23c00b4d9cc77d74a12",
-                "include_sbom": false,
-                "high_critical": "0",
-                "apply_exit_code": 0,
-                "wait_exit_code": 1,
-                "artifacts": {
-                  "apply": "NEG_MISSING_SBOM_DENY/kubectl-apply.txt",
-                  "wait": "NEG_MISSING_SBOM_DENY/kubectl-wait.txt",
-                  "events": "NEG_MISSING_SBOM_DENY/events.txt",
-                  "workloads": "NEG_MISSING_SBOM_DENY/workloads.txt",
-                  "describe_deployment": "NEG_MISSING_SBOM_DENY/describe-deployment.txt",
-                  "describe_replicasets": "NEG_MISSING_SBOM_DENY/describe-replicasets.txt",
-                  "describe_pods": "NEG_MISSING_SBOM_DENY/describe-pods.txt",
-                  "kyverno_logs": "NEG_MISSING_SBOM_DENY/kyverno-logs.txt"
-                }
-              },
-              {
-                "case": "NEG_CVE_THRESHOLD_DENY",
-                "expected": "Denied",
-                "actual": "Denied",
-                "verdict": "PASS",
-                "reason": "Admission deny evidence detected in events/ReplicaSet describe.",
-                "image": "ttl.sh/stock-trading-matrix-signed-5ea8d8f91196@sha256:3e17a5a7c88b3c13e2f347cb5f55cd325978763498e6a23c00b4d9cc77d74a12",
-                "include_sbom": true,
-                "high_critical": "2",
-                "apply_exit_code": 0,
-                "wait_exit_code": 1,
-                "artifacts": {
-                  "apply": "NEG_CVE_THRESHOLD_DENY/kubectl-apply.txt",
-                  "wait": "NEG_CVE_THRESHOLD_DENY/kubectl-wait.txt",
-                  "events": "NEG_CVE_THRESHOLD_DENY/events.txt",
-                  "workloads": "NEG_CVE_THRESHOLD_DENY/workloads.txt",
-                  "describe_deployment": "NEG_CVE_THRESHOLD_DENY/describe-deployment.txt",
-                  "describe_replicasets": "NEG_CVE_THRESHOLD_DENY/describe-replicasets.txt",
-                  "describe_pods": "NEG_CVE_THRESHOLD_DENY/describe-pods.txt",
-                  "kyverno_logs": "NEG_CVE_THRESHOLD_DENY/kyverno-logs.txt"
-                }
-              }
-            ],
-            "summary_text": "# Admission Matrix Summary\n\n- Run ID: 20260429-052621\n- Kubernetes context: kind-thesis-evidence\n- Namespace: stock-trading\n- Signed image digest: ttl.sh/stock-trading-matrix-signed-5ea8d8f91196@sha256:3e17a5a7c88b3c13e2f347cb5f55cd325978763498e6a23c00b4d9cc77d74a12\n- Unsigned image digest: ttl.sh/stock-trading-matrix-unsigned-7e97ce582023@sha256:3e17a5a7c88b3c13e2f347cb5f55cd325978763498e6a23c00b4d9cc77d74a12\n- SBOM digest: E87AF346677D75F4C07BBB564DE16B1D9284A39A9B528D0DDBD19D76B15C6613\n\n| Case | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW | Allowed | Allowed | PASS | Deployment became Available. |\n| NEG_UNSIGNED_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n| NEG_MISSING_SBOM_DENY | Denied | Denied | PASS | Admission deny evidence detected in events/ReplicaSet describe. |\n| NEG_CVE_THRESHOLD_DENY | Denied | Denied | PASS | Admission deny evidence detected in events/ReplicaSet describe. |\n\n## Regression Re-check\n\n| Check | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW_RECHECK | Allowed | Allowed | PASS | Deployment became Available. |\n",
-            "regression": {
-              "case": "VALID_ALLOW_RECHECK",
-              "expected": "Allowed",
-              "actual": "Allowed",
-              "verdict": "PASS",
-              "reason": "Deployment became Available.",
-              "image": "ttl.sh/stock-trading-matrix-signed-5ea8d8f91196@sha256:3e17a5a7c88b3c13e2f347cb5f55cd325978763498e6a23c00b4d9cc77d74a12",
-              "include_sbom": true,
-              "high_critical": "0",
-              "apply_exit_code": 0,
-              "wait_exit_code": 0,
-              "artifacts": {
-                "apply": "VALID_ALLOW_RECHECK/kubectl-apply.txt",
-                "wait": "VALID_ALLOW_RECHECK/kubectl-wait.txt",
-                "events": "VALID_ALLOW_RECHECK/events.txt",
-                "workloads": "VALID_ALLOW_RECHECK/workloads.txt",
-                "describe_deployment": "VALID_ALLOW_RECHECK/describe-deployment.txt",
-                "describe_replicasets": "VALID_ALLOW_RECHECK/describe-replicasets.txt",
-                "describe_pods": "VALID_ALLOW_RECHECK/describe-pods.txt",
-                "kyverno_logs": "VALID_ALLOW_RECHECK/kyverno-logs.txt"
-              }
-            },
-            "metadata": {
-              "workflow_key": "admission-matrix-evidence",
-              "workflow_name": "admission-matrix-evidence",
-              "run_number": "15",
-              "run_id": "25092423953",
-              "head_sha": "46eca48570bf39a20597a1d6fc08262f53858099",
-              "created_at": "2026-04-29T05:30:56.2104615Z",
-              "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25092423953",
-              "matrix_run_id": "20260429-052621"
-            },
-            "source_artifact": "admission-matrix-evidence"
-          },
-          "evidence_unavailable": false
         }
       ],
       "rollup": {
@@ -109498,7 +109533,7 @@
         "failure": 21,
         "pass_rate_pct": 79.0,
         "latest_conclusion": "success",
-        "latest_run_number": 114
+        "latest_run_number": 115
       }
     },
     {
@@ -109508,6 +109543,232 @@
       "workflow_path": ".github/workflows/service-scs-matrix-evidence.yml",
       "description": "Per-service Kind cluster probe · onboarding regression",
       "runs": [
+        {
+          "run_key": "onboarding-lab#107",
+          "workflow_key": "onboarding-lab",
+          "workflow_name": "onboarding-lab",
+          "workflow_path": ".github/workflows/service-scs-matrix-evidence.yml",
+          "run_number": 107,
+          "run_id": 30145853241,
+          "head_sha": "9336c07025ca39dd8ac2b3556811dc40f7892308",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-07-25T05:29:34Z",
+          "updated_at": "2026-07-25T05:43:42Z",
+          "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/30145853241",
+          "artifacts": {
+            "onboarding-lab-margin-service": {
+              "id": 8616093769,
+              "name": "onboarding-lab-margin-service",
+              "size": 663,
+              "expired": false,
+              "created_at": "2026-07-25T05:43:05Z",
+              "updated_at": "2026-07-25T05:43:05Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616093769/zip"
+            },
+            "onboarding-lab-backtest-service": {
+              "id": 8616092506,
+              "name": "onboarding-lab-backtest-service",
+              "size": 665,
+              "expired": false,
+              "created_at": "2026-07-25T05:42:58Z",
+              "updated_at": "2026-07-25T05:42:58Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616092506/zip"
+            },
+            "onboarding-lab-data-feed-service": {
+              "id": 8616091716,
+              "name": "onboarding-lab-data-feed-service",
+              "size": 665,
+              "expired": false,
+              "created_at": "2026-07-25T05:42:52Z",
+              "updated_at": "2026-07-25T05:42:52Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616091716/zip"
+            },
+            "onboarding-lab-gateway-service": {
+              "id": 8616077295,
+              "name": "onboarding-lab-gateway-service",
+              "size": 679,
+              "expired": false,
+              "created_at": "2026-07-25T05:41:16Z",
+              "updated_at": "2026-07-25T05:41:16Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616077295/zip"
+            },
+            "onboarding-lab-alert-service": {
+              "id": 8616077081,
+              "name": "onboarding-lab-alert-service",
+              "size": 661,
+              "expired": false,
+              "created_at": "2026-07-25T05:41:15Z",
+              "updated_at": "2026-07-25T05:41:15Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616077081/zip"
+            },
+            "onboarding-lab-search-service": {
+              "id": 8616074941,
+              "name": "onboarding-lab-search-service",
+              "size": 663,
+              "expired": false,
+              "created_at": "2026-07-25T05:41:01Z",
+              "updated_at": "2026-07-25T05:41:01Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616074941/zip"
+            },
+            "onboarding-lab-reporting-service": {
+              "id": 8616061974,
+              "name": "onboarding-lab-reporting-service",
+              "size": 664,
+              "expired": false,
+              "created_at": "2026-07-25T05:39:37Z",
+              "updated_at": "2026-07-25T05:39:37Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616061974/zip"
+            },
+            "onboarding-lab-fees-service": {
+              "id": 8616060861,
+              "name": "onboarding-lab-fees-service",
+              "size": 661,
+              "expired": false,
+              "created_at": "2026-07-25T05:39:29Z",
+              "updated_at": "2026-07-25T05:39:29Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616060861/zip"
+            },
+            "onboarding-lab-audit-service": {
+              "id": 8616059842,
+              "name": "onboarding-lab-audit-service",
+              "size": 662,
+              "expired": false,
+              "created_at": "2026-07-25T05:39:22Z",
+              "updated_at": "2026-07-25T05:39:22Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616059842/zip"
+            },
+            "onboarding-lab-watchlist-service": {
+              "id": 8616047960,
+              "name": "onboarding-lab-watchlist-service",
+              "size": 665,
+              "expired": false,
+              "created_at": "2026-07-25T05:38:05Z",
+              "updated_at": "2026-07-25T05:38:05Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616047960/zip"
+            },
+            "onboarding-lab-analytics-service": {
+              "id": 8616046549,
+              "name": "onboarding-lab-analytics-service",
+              "size": 665,
+              "expired": false,
+              "created_at": "2026-07-25T05:37:56Z",
+              "updated_at": "2026-07-25T05:37:56Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616046549/zip"
+            },
+            "onboarding-lab-kyc-service": {
+              "id": 8616042538,
+              "name": "onboarding-lab-kyc-service",
+              "size": 662,
+              "expired": false,
+              "created_at": "2026-07-25T05:37:31Z",
+              "updated_at": "2026-07-25T05:37:31Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616042538/zip"
+            },
+            "onboarding-lab-notification-service": {
+              "id": 8616031773,
+              "name": "onboarding-lab-notification-service",
+              "size": 667,
+              "expired": false,
+              "created_at": "2026-07-25T05:36:25Z",
+              "updated_at": "2026-07-25T05:36:25Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616031773/zip"
+            },
+            "onboarding-lab-apikey-service": {
+              "id": 8616031576,
+              "name": "onboarding-lab-apikey-service",
+              "size": 663,
+              "expired": false,
+              "created_at": "2026-07-25T05:36:24Z",
+              "updated_at": "2026-07-25T05:36:24Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616031576/zip"
+            },
+            "onboarding-lab-compliance-service": {
+              "id": 8616019303,
+              "name": "onboarding-lab-compliance-service",
+              "size": 665,
+              "expired": false,
+              "created_at": "2026-07-25T05:35:05Z",
+              "updated_at": "2026-07-25T05:35:05Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616019303/zip"
+            },
+            "onboarding-lab-settlement-service": {
+              "id": 8616016509,
+              "name": "onboarding-lab-settlement-service",
+              "size": 665,
+              "expired": false,
+              "created_at": "2026-07-25T05:34:46Z",
+              "updated_at": "2026-07-25T05:34:46Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616016509/zip"
+            },
+            "onboarding-lab-execution-service": {
+              "id": 8616016244,
+              "name": "onboarding-lab-execution-service",
+              "size": 681,
+              "expired": false,
+              "created_at": "2026-07-25T05:34:45Z",
+              "updated_at": "2026-07-25T05:34:45Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616016244/zip"
+            },
+            "onboarding-lab-pricing-service": {
+              "id": 8616002744,
+              "name": "onboarding-lab-pricing-service",
+              "size": 661,
+              "expired": false,
+              "created_at": "2026-07-25T05:33:19Z",
+              "updated_at": "2026-07-25T05:33:19Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616002744/zip"
+            },
+            "onboarding-lab-risk-service": {
+              "id": 8616001699,
+              "name": "onboarding-lab-risk-service",
+              "size": 661,
+              "expired": false,
+              "created_at": "2026-07-25T05:33:12Z",
+              "updated_at": "2026-07-25T05:33:12Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616001699/zip"
+            },
+            "onboarding-lab-market-data-service": {
+              "id": 8616000484,
+              "name": "onboarding-lab-market-data-service",
+              "size": 666,
+              "expired": false,
+              "created_at": "2026-07-25T05:33:04Z",
+              "updated_at": "2026-07-25T05:33:04Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616000484/zip"
+            },
+            "onboarding-lab-order-service": {
+              "id": 8615985060,
+              "name": "onboarding-lab-order-service",
+              "size": 676,
+              "expired": false,
+              "created_at": "2026-07-25T05:31:31Z",
+              "updated_at": "2026-07-25T05:31:31Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8615985060/zip"
+            },
+            "onboarding-lab-user-service": {
+              "id": 8615984727,
+              "name": "onboarding-lab-user-service",
+              "size": 661,
+              "expired": false,
+              "created_at": "2026-07-25T05:31:29Z",
+              "updated_at": "2026-07-25T05:31:29Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8615984727/zip"
+            },
+            "onboarding-lab-portfolio-service": {
+              "id": 8615983876,
+              "name": "onboarding-lab-portfolio-service",
+              "size": 665,
+              "expired": false,
+              "created_at": "2026-07-25T05:31:24Z",
+              "updated_at": "2026-07-25T05:31:24Z",
+              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8615983876/zip"
+            }
+          },
+          "security_gate": null,
+          "matrix": null,
+          "evidence_unavailable": false
+        },
         {
           "run_key": "onboarding-lab#106",
           "workflow_key": "onboarding-lab",
@@ -127492,171 +127753,15 @@
             "source_artifact": "service-scs-matrix-evidence-user-service"
           },
           "evidence_unavailable": false
-        },
-        {
-          "run_key": "onboarding-lab#7",
-          "workflow_key": "onboarding-lab",
-          "workflow_name": "onboarding-lab",
-          "workflow_path": ".github/workflows/service-scs-matrix-evidence.yml",
-          "run_number": 7,
-          "run_id": 25036141296,
-          "head_sha": "139344fec2a9f9dacba7597b64c103295e2bd8f0",
-          "status": "completed",
-          "conclusion": "failure",
-          "created_at": "2026-04-28T05:44:59Z",
-          "updated_at": "2026-04-28T05:50:58Z",
-          "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25036141296",
-          "artifacts": {
-            "service-scs-matrix-evidence-user-service": {
-              "id": 6677155075,
-              "name": "service-scs-matrix-evidence-user-service",
-              "size": 68014,
-              "expired": false,
-              "created_at": "2026-04-28T05:50:54Z",
-              "updated_at": "2026-04-28T05:50:54Z",
-              "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6677155075/zip"
-            }
-          },
-          "security_gate": null,
-          "matrix": {
-            "cases": [
-              {
-                "case": "VALID_ALLOW",
-                "expected": "Allowed",
-                "actual": "Allowed",
-                "verdict": "PASS",
-                "reason": "Deployment became Available.",
-                "image": "ttl.sh/stock-trading-matrix-signed-b2f52c29e60b@sha256:4ee4e79ecd98035a9d793cf93d9843c2132b7edf136c0a552da41287c4d4b6c8",
-                "include_sbom": true,
-                "high_critical": "0",
-                "apply_exit_code": 0,
-                "wait_exit_code": 0,
-                "artifacts": {
-                  "apply": "VALID_ALLOW/kubectl-apply.txt",
-                  "wait": "VALID_ALLOW/kubectl-wait.txt",
-                  "events": "VALID_ALLOW/events.txt",
-                  "workloads": "VALID_ALLOW/workloads.txt",
-                  "describe_deployment": "VALID_ALLOW/describe-deployment.txt",
-                  "describe_replicasets": "VALID_ALLOW/describe-replicasets.txt",
-                  "describe_pods": "VALID_ALLOW/describe-pods.txt",
-                  "kyverno_logs": "VALID_ALLOW/kyverno-logs.txt"
-                }
-              },
-              {
-                "case": "NEG_UNSIGNED_DENY",
-                "expected": "Denied",
-                "actual": "Denied",
-                "verdict": "PASS",
-                "reason": "Admission deny evidence detected at apply phase.",
-                "image": "ttl.sh/stock-trading-matrix-unsigned-f35cc08c266a@sha256:4ee4e79ecd98035a9d793cf93d9843c2132b7edf136c0a552da41287c4d4b6c8",
-                "include_sbom": true,
-                "high_critical": "0",
-                "apply_exit_code": 1,
-                "wait_exit_code": -1,
-                "artifacts": {
-                  "apply": "NEG_UNSIGNED_DENY/kubectl-apply.txt",
-                  "wait": "NEG_UNSIGNED_DENY/kubectl-wait.txt",
-                  "events": "NEG_UNSIGNED_DENY/events.txt",
-                  "workloads": "NEG_UNSIGNED_DENY/workloads.txt",
-                  "describe_deployment": "NEG_UNSIGNED_DENY/describe-deployment.txt",
-                  "describe_replicasets": "NEG_UNSIGNED_DENY/describe-replicasets.txt",
-                  "describe_pods": "NEG_UNSIGNED_DENY/describe-pods.txt",
-                  "kyverno_logs": "NEG_UNSIGNED_DENY/kyverno-logs.txt"
-                }
-              },
-              {
-                "case": "NEG_MISSING_SBOM_DENY",
-                "expected": "Denied",
-                "actual": "Denied",
-                "verdict": "PASS",
-                "reason": "Admission deny evidence detected in events/ReplicaSet describe.",
-                "image": "ttl.sh/stock-trading-matrix-signed-b2f52c29e60b@sha256:4ee4e79ecd98035a9d793cf93d9843c2132b7edf136c0a552da41287c4d4b6c8",
-                "include_sbom": false,
-                "high_critical": "0",
-                "apply_exit_code": 0,
-                "wait_exit_code": 1,
-                "artifacts": {
-                  "apply": "NEG_MISSING_SBOM_DENY/kubectl-apply.txt",
-                  "wait": "NEG_MISSING_SBOM_DENY/kubectl-wait.txt",
-                  "events": "NEG_MISSING_SBOM_DENY/events.txt",
-                  "workloads": "NEG_MISSING_SBOM_DENY/workloads.txt",
-                  "describe_deployment": "NEG_MISSING_SBOM_DENY/describe-deployment.txt",
-                  "describe_replicasets": "NEG_MISSING_SBOM_DENY/describe-replicasets.txt",
-                  "describe_pods": "NEG_MISSING_SBOM_DENY/describe-pods.txt",
-                  "kyverno_logs": "NEG_MISSING_SBOM_DENY/kyverno-logs.txt"
-                }
-              },
-              {
-                "case": "NEG_CVE_THRESHOLD_DENY",
-                "expected": "Denied",
-                "actual": "Denied",
-                "verdict": "PASS",
-                "reason": "Admission deny evidence detected in events/ReplicaSet describe.",
-                "image": "ttl.sh/stock-trading-matrix-signed-b2f52c29e60b@sha256:4ee4e79ecd98035a9d793cf93d9843c2132b7edf136c0a552da41287c4d4b6c8",
-                "include_sbom": true,
-                "high_critical": "2",
-                "apply_exit_code": 0,
-                "wait_exit_code": 1,
-                "artifacts": {
-                  "apply": "NEG_CVE_THRESHOLD_DENY/kubectl-apply.txt",
-                  "wait": "NEG_CVE_THRESHOLD_DENY/kubectl-wait.txt",
-                  "events": "NEG_CVE_THRESHOLD_DENY/events.txt",
-                  "workloads": "NEG_CVE_THRESHOLD_DENY/workloads.txt",
-                  "describe_deployment": "NEG_CVE_THRESHOLD_DENY/describe-deployment.txt",
-                  "describe_replicasets": "NEG_CVE_THRESHOLD_DENY/describe-replicasets.txt",
-                  "describe_pods": "NEG_CVE_THRESHOLD_DENY/describe-pods.txt",
-                  "kyverno_logs": "NEG_CVE_THRESHOLD_DENY/kyverno-logs.txt"
-                }
-              }
-            ],
-            "summary_text": "# Admission Matrix Summary\n\n- Run ID: 20260428-054604\n- Kubernetes context: kind-thesis-evidence\n- Namespace: stock-trading\n- Signed image digest: ttl.sh/stock-trading-matrix-signed-b2f52c29e60b@sha256:4ee4e79ecd98035a9d793cf93d9843c2132b7edf136c0a552da41287c4d4b6c8\n- Unsigned image digest: ttl.sh/stock-trading-matrix-unsigned-f35cc08c266a@sha256:4ee4e79ecd98035a9d793cf93d9843c2132b7edf136c0a552da41287c4d4b6c8\n- SBOM digest: 640CC7457A0626ABFFAE3B9F8E3CDB2BD38469AC5DE67B8C21B53AED2F00A8DC\n\n| Case | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW | Allowed | Allowed | PASS | Deployment became Available. |\n| NEG_UNSIGNED_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n| NEG_MISSING_SBOM_DENY | Denied | Denied | PASS | Admission deny evidence detected in events/ReplicaSet describe. |\n| NEG_CVE_THRESHOLD_DENY | Denied | Denied | PASS | Admission deny evidence detected in events/ReplicaSet describe. |\n\n## Regression Re-check\n\n| Check | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW_RECHECK | Allowed | Allowed | PASS | Deployment became Available. |\n",
-            "regression": {
-              "case": "VALID_ALLOW_RECHECK",
-              "expected": "Allowed",
-              "actual": "Allowed",
-              "verdict": "PASS",
-              "reason": "Deployment became Available.",
-              "image": "ttl.sh/stock-trading-matrix-signed-b2f52c29e60b@sha256:4ee4e79ecd98035a9d793cf93d9843c2132b7edf136c0a552da41287c4d4b6c8",
-              "include_sbom": true,
-              "high_critical": "0",
-              "apply_exit_code": 0,
-              "wait_exit_code": 0,
-              "artifacts": {
-                "apply": "VALID_ALLOW_RECHECK/kubectl-apply.txt",
-                "wait": "VALID_ALLOW_RECHECK/kubectl-wait.txt",
-                "events": "VALID_ALLOW_RECHECK/events.txt",
-                "workloads": "VALID_ALLOW_RECHECK/workloads.txt",
-                "describe_deployment": "VALID_ALLOW_RECHECK/describe-deployment.txt",
-                "describe_replicasets": "VALID_ALLOW_RECHECK/describe-replicasets.txt",
-                "describe_pods": "VALID_ALLOW_RECHECK/describe-pods.txt",
-                "kyverno_logs": "VALID_ALLOW_RECHECK/kyverno-logs.txt"
-              }
-            },
-            "metadata": {
-              "workflow_key": "service-scs-matrix-evidence",
-              "workflow_name": "service-scs-matrix-evidence",
-              "evidence_profile": "canonical-matrix",
-              "service_name": "user-service",
-              "namespace": "stock-trading",
-              "run_number": "7",
-              "run_id": "25036141296",
-              "head_sha": "139344fec2a9f9dacba7597b64c103295e2bd8f0",
-              "created_at": "2026-04-28T05:50:53.6382883Z",
-              "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25036141296",
-              "matrix_run_id": "20260428-054604"
-            },
-            "source_artifact": "service-scs-matrix-evidence-user-service"
-          },
-          "evidence_unavailable": false
         }
       ],
       "rollup": {
         "total_in_window": 100,
-        "success": 73,
-        "failure": 27,
-        "pass_rate_pct": 73.0,
+        "success": 74,
+        "failure": 26,
+        "pass_rate_pct": 74.0,
         "latest_conclusion": "success",
-        "latest_run_number": 106
+        "latest_run_number": 107
       }
     },
     {
@@ -127667,6 +127772,42 @@
       "description": "Actions snapshot auto-sync (commits actions-runs.snapshot.json)",
       "runs": [
         {
+          "run_key": "dashboard-data-sync#359",
+          "workflow_key": "dashboard-data-sync",
+          "workflow_name": "dashboard-data-sync",
+          "workflow_path": ".github/workflows/dashboard-data-sync.yml",
+          "run_number": 359,
+          "run_id": 30146265882,
+          "head_sha": "9336c07025ca39dd8ac2b3556811dc40f7892308",
+          "status": "in_progress",
+          "conclusion": null,
+          "created_at": "2026-07-25T05:43:44Z",
+          "updated_at": "2026-07-25T05:43:47Z",
+          "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/30146265882",
+          "artifacts": {},
+          "security_gate": null,
+          "matrix": null,
+          "evidence_unavailable": false
+        },
+        {
+          "run_key": "dashboard-data-sync#358",
+          "workflow_key": "dashboard-data-sync",
+          "workflow_name": "dashboard-data-sync",
+          "workflow_path": ".github/workflows/dashboard-data-sync.yml",
+          "run_number": 358,
+          "run_id": 30145569513,
+          "head_sha": "9336c07025ca39dd8ac2b3556811dc40f7892308",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-07-25T05:19:40Z",
+          "updated_at": "2026-07-25T05:26:29Z",
+          "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/30145569513",
+          "artifacts": {},
+          "security_gate": null,
+          "matrix": null,
+          "evidence_unavailable": false
+        },
+        {
           "run_key": "dashboard-data-sync#357",
           "workflow_key": "dashboard-data-sync",
           "workflow_name": "dashboard-data-sync",
@@ -127674,10 +127815,10 @@
           "run_number": 357,
           "run_id": 30144237875,
           "head_sha": "a35b1ebf4370da4022638d282de37ba37382492f",
-          "status": "in_progress",
-          "conclusion": null,
+          "status": "completed",
+          "conclusion": "success",
           "created_at": "2026-07-25T04:33:33Z",
-          "updated_at": "2026-07-25T04:33:36Z",
+          "updated_at": "2026-07-25T04:45:07Z",
           "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/30144237875",
           "artifacts": {},
           "security_gate": null,
@@ -129429,51 +129570,15 @@
           "security_gate": null,
           "matrix": null,
           "evidence_unavailable": false
-        },
-        {
-          "run_key": "dashboard-data-sync#259",
-          "workflow_key": "dashboard-data-sync",
-          "workflow_name": "dashboard-data-sync",
-          "workflow_path": ".github/workflows/dashboard-data-sync.yml",
-          "run_number": 259,
-          "run_id": 27936675534,
-          "head_sha": "c5023b6c56d2095b7eddf288dd38faedb73ce253",
-          "status": "completed",
-          "conclusion": "success",
-          "created_at": "2026-06-22T07:28:45Z",
-          "updated_at": "2026-06-22T07:50:46Z",
-          "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/27936675534",
-          "artifacts": {},
-          "security_gate": null,
-          "matrix": null,
-          "evidence_unavailable": false
-        },
-        {
-          "run_key": "dashboard-data-sync#258",
-          "workflow_key": "dashboard-data-sync",
-          "workflow_name": "dashboard-data-sync",
-          "workflow_path": ".github/workflows/dashboard-data-sync.yml",
-          "run_number": 258,
-          "run_id": 27934806984,
-          "head_sha": "98ebd5d4542b9d2fc827c3765de1dff7e16ead62",
-          "status": "completed",
-          "conclusion": "success",
-          "created_at": "2026-06-22T06:48:29Z",
-          "updated_at": "2026-06-22T07:08:56Z",
-          "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/27934806984",
-          "artifacts": {},
-          "security_gate": null,
-          "matrix": null,
-          "evidence_unavailable": false
         }
       ],
       "rollup": {
         "total_in_window": 100,
-        "success": 93,
-        "failure": 6,
-        "pass_rate_pct": 93.0,
+        "success": 92,
+        "failure": 7,
+        "pass_rate_pct": 92.0,
         "latest_conclusion": null,
-        "latest_run_number": 357
+        "latest_run_number": 359
       }
     },
     {
@@ -129514,6 +129619,456 @@
   ],
   "runs": [
     {
+      "run_key": "dashboard-data-sync#359",
+      "workflow_key": "dashboard-data-sync",
+      "workflow_name": "dashboard-data-sync",
+      "workflow_path": ".github/workflows/dashboard-data-sync.yml",
+      "run_number": 359,
+      "run_id": 30146265882,
+      "head_sha": "9336c07025ca39dd8ac2b3556811dc40f7892308",
+      "status": "in_progress",
+      "conclusion": null,
+      "created_at": "2026-07-25T05:43:44Z",
+      "updated_at": "2026-07-25T05:43:47Z",
+      "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/30146265882",
+      "artifacts": {},
+      "security_gate": null,
+      "matrix": null,
+      "evidence_unavailable": false
+    },
+    {
+      "run_key": "onboarding-lab#107",
+      "workflow_key": "onboarding-lab",
+      "workflow_name": "onboarding-lab",
+      "workflow_path": ".github/workflows/service-scs-matrix-evidence.yml",
+      "run_number": 107,
+      "run_id": 30145853241,
+      "head_sha": "9336c07025ca39dd8ac2b3556811dc40f7892308",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-07-25T05:29:34Z",
+      "updated_at": "2026-07-25T05:43:42Z",
+      "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/30145853241",
+      "artifacts": {
+        "onboarding-lab-margin-service": {
+          "id": 8616093769,
+          "name": "onboarding-lab-margin-service",
+          "size": 663,
+          "expired": false,
+          "created_at": "2026-07-25T05:43:05Z",
+          "updated_at": "2026-07-25T05:43:05Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616093769/zip"
+        },
+        "onboarding-lab-backtest-service": {
+          "id": 8616092506,
+          "name": "onboarding-lab-backtest-service",
+          "size": 665,
+          "expired": false,
+          "created_at": "2026-07-25T05:42:58Z",
+          "updated_at": "2026-07-25T05:42:58Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616092506/zip"
+        },
+        "onboarding-lab-data-feed-service": {
+          "id": 8616091716,
+          "name": "onboarding-lab-data-feed-service",
+          "size": 665,
+          "expired": false,
+          "created_at": "2026-07-25T05:42:52Z",
+          "updated_at": "2026-07-25T05:42:52Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616091716/zip"
+        },
+        "onboarding-lab-gateway-service": {
+          "id": 8616077295,
+          "name": "onboarding-lab-gateway-service",
+          "size": 679,
+          "expired": false,
+          "created_at": "2026-07-25T05:41:16Z",
+          "updated_at": "2026-07-25T05:41:16Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616077295/zip"
+        },
+        "onboarding-lab-alert-service": {
+          "id": 8616077081,
+          "name": "onboarding-lab-alert-service",
+          "size": 661,
+          "expired": false,
+          "created_at": "2026-07-25T05:41:15Z",
+          "updated_at": "2026-07-25T05:41:15Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616077081/zip"
+        },
+        "onboarding-lab-search-service": {
+          "id": 8616074941,
+          "name": "onboarding-lab-search-service",
+          "size": 663,
+          "expired": false,
+          "created_at": "2026-07-25T05:41:01Z",
+          "updated_at": "2026-07-25T05:41:01Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616074941/zip"
+        },
+        "onboarding-lab-reporting-service": {
+          "id": 8616061974,
+          "name": "onboarding-lab-reporting-service",
+          "size": 664,
+          "expired": false,
+          "created_at": "2026-07-25T05:39:37Z",
+          "updated_at": "2026-07-25T05:39:37Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616061974/zip"
+        },
+        "onboarding-lab-fees-service": {
+          "id": 8616060861,
+          "name": "onboarding-lab-fees-service",
+          "size": 661,
+          "expired": false,
+          "created_at": "2026-07-25T05:39:29Z",
+          "updated_at": "2026-07-25T05:39:29Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616060861/zip"
+        },
+        "onboarding-lab-audit-service": {
+          "id": 8616059842,
+          "name": "onboarding-lab-audit-service",
+          "size": 662,
+          "expired": false,
+          "created_at": "2026-07-25T05:39:22Z",
+          "updated_at": "2026-07-25T05:39:22Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616059842/zip"
+        },
+        "onboarding-lab-watchlist-service": {
+          "id": 8616047960,
+          "name": "onboarding-lab-watchlist-service",
+          "size": 665,
+          "expired": false,
+          "created_at": "2026-07-25T05:38:05Z",
+          "updated_at": "2026-07-25T05:38:05Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616047960/zip"
+        },
+        "onboarding-lab-analytics-service": {
+          "id": 8616046549,
+          "name": "onboarding-lab-analytics-service",
+          "size": 665,
+          "expired": false,
+          "created_at": "2026-07-25T05:37:56Z",
+          "updated_at": "2026-07-25T05:37:56Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616046549/zip"
+        },
+        "onboarding-lab-kyc-service": {
+          "id": 8616042538,
+          "name": "onboarding-lab-kyc-service",
+          "size": 662,
+          "expired": false,
+          "created_at": "2026-07-25T05:37:31Z",
+          "updated_at": "2026-07-25T05:37:31Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616042538/zip"
+        },
+        "onboarding-lab-notification-service": {
+          "id": 8616031773,
+          "name": "onboarding-lab-notification-service",
+          "size": 667,
+          "expired": false,
+          "created_at": "2026-07-25T05:36:25Z",
+          "updated_at": "2026-07-25T05:36:25Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616031773/zip"
+        },
+        "onboarding-lab-apikey-service": {
+          "id": 8616031576,
+          "name": "onboarding-lab-apikey-service",
+          "size": 663,
+          "expired": false,
+          "created_at": "2026-07-25T05:36:24Z",
+          "updated_at": "2026-07-25T05:36:24Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616031576/zip"
+        },
+        "onboarding-lab-compliance-service": {
+          "id": 8616019303,
+          "name": "onboarding-lab-compliance-service",
+          "size": 665,
+          "expired": false,
+          "created_at": "2026-07-25T05:35:05Z",
+          "updated_at": "2026-07-25T05:35:05Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616019303/zip"
+        },
+        "onboarding-lab-settlement-service": {
+          "id": 8616016509,
+          "name": "onboarding-lab-settlement-service",
+          "size": 665,
+          "expired": false,
+          "created_at": "2026-07-25T05:34:46Z",
+          "updated_at": "2026-07-25T05:34:46Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616016509/zip"
+        },
+        "onboarding-lab-execution-service": {
+          "id": 8616016244,
+          "name": "onboarding-lab-execution-service",
+          "size": 681,
+          "expired": false,
+          "created_at": "2026-07-25T05:34:45Z",
+          "updated_at": "2026-07-25T05:34:45Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616016244/zip"
+        },
+        "onboarding-lab-pricing-service": {
+          "id": 8616002744,
+          "name": "onboarding-lab-pricing-service",
+          "size": 661,
+          "expired": false,
+          "created_at": "2026-07-25T05:33:19Z",
+          "updated_at": "2026-07-25T05:33:19Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616002744/zip"
+        },
+        "onboarding-lab-risk-service": {
+          "id": 8616001699,
+          "name": "onboarding-lab-risk-service",
+          "size": 661,
+          "expired": false,
+          "created_at": "2026-07-25T05:33:12Z",
+          "updated_at": "2026-07-25T05:33:12Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616001699/zip"
+        },
+        "onboarding-lab-market-data-service": {
+          "id": 8616000484,
+          "name": "onboarding-lab-market-data-service",
+          "size": 666,
+          "expired": false,
+          "created_at": "2026-07-25T05:33:04Z",
+          "updated_at": "2026-07-25T05:33:04Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8616000484/zip"
+        },
+        "onboarding-lab-order-service": {
+          "id": 8615985060,
+          "name": "onboarding-lab-order-service",
+          "size": 676,
+          "expired": false,
+          "created_at": "2026-07-25T05:31:31Z",
+          "updated_at": "2026-07-25T05:31:31Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8615985060/zip"
+        },
+        "onboarding-lab-user-service": {
+          "id": 8615984727,
+          "name": "onboarding-lab-user-service",
+          "size": 661,
+          "expired": false,
+          "created_at": "2026-07-25T05:31:29Z",
+          "updated_at": "2026-07-25T05:31:29Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8615984727/zip"
+        },
+        "onboarding-lab-portfolio-service": {
+          "id": 8615983876,
+          "name": "onboarding-lab-portfolio-service",
+          "size": 665,
+          "expired": false,
+          "created_at": "2026-07-25T05:31:24Z",
+          "updated_at": "2026-07-25T05:31:24Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8615983876/zip"
+        }
+      },
+      "security_gate": null,
+      "matrix": null,
+      "evidence_unavailable": false
+    },
+    {
+      "run_key": "dashboard-data-sync#358",
+      "workflow_key": "dashboard-data-sync",
+      "workflow_name": "dashboard-data-sync",
+      "workflow_path": ".github/workflows/dashboard-data-sync.yml",
+      "run_number": 358,
+      "run_id": 30145569513,
+      "head_sha": "9336c07025ca39dd8ac2b3556811dc40f7892308",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-07-25T05:19:40Z",
+      "updated_at": "2026-07-25T05:26:29Z",
+      "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/30145569513",
+      "artifacts": {},
+      "security_gate": null,
+      "matrix": null,
+      "evidence_unavailable": false
+    },
+    {
+      "run_key": "admission-lab#115",
+      "workflow_key": "admission-lab",
+      "workflow_name": "admission-lab",
+      "workflow_path": ".github/workflows/admission-matrix-evidence.yml",
+      "run_number": 115,
+      "run_id": 30145367962,
+      "head_sha": "9336c07025ca39dd8ac2b3556811dc40f7892308",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-07-25T05:12:47Z",
+      "updated_at": "2026-07-25T05:19:38Z",
+      "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/30145367962",
+      "artifacts": {
+        "admission-lab-evidence": {
+          "id": 8615868779,
+          "name": "admission-lab-evidence",
+          "size": 85969,
+          "expired": false,
+          "created_at": "2026-07-25T05:19:34Z",
+          "updated_at": "2026-07-25T05:19:34Z",
+          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/8615868779/zip"
+        }
+      },
+      "security_gate": null,
+      "matrix": {
+        "cases": [
+          {
+            "case": "VALID_ALLOW",
+            "expected": "Allowed",
+            "actual": "AllowedWithRuntimePullIssue",
+            "verdict": "PASS",
+            "reason": "Admission allowed; workload creation progressed but image pull/runtime readiness did not complete in wait window.",
+            "image": "ttl.sh/stock-trading-matrix-signed-b8ffa66f1645@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53",
+            "include_sbom": true,
+            "high_critical": "0",
+            "apply_exit_code": 0,
+            "wait_exit_code": 1,
+            "artifacts": {
+              "apply": "VALID_ALLOW/kubectl-apply.txt",
+              "wait": "VALID_ALLOW/kubectl-wait.txt",
+              "events": "VALID_ALLOW/events.txt",
+              "workloads": "VALID_ALLOW/workloads.txt",
+              "describe_deployment": "VALID_ALLOW/describe-deployment.txt",
+              "describe_replicasets": "VALID_ALLOW/describe-replicasets.txt",
+              "describe_pods": "VALID_ALLOW/describe-pods.txt",
+              "kyverno_logs": "VALID_ALLOW/kyverno-logs.txt"
+            }
+          },
+          {
+            "case": "NEG_UNSIGNED_DENY",
+            "expected": "Denied",
+            "actual": "Denied",
+            "verdict": "PASS",
+            "reason": "Admission deny evidence detected at apply phase.",
+            "image": "ttl.sh/stock-trading-matrix-unsigned-cbd0f2fb8070@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53",
+            "include_sbom": true,
+            "high_critical": "0",
+            "apply_exit_code": 1,
+            "wait_exit_code": -1,
+            "artifacts": {
+              "apply": "NEG_UNSIGNED_DENY/kubectl-apply.txt",
+              "wait": "NEG_UNSIGNED_DENY/kubectl-wait.txt",
+              "events": "NEG_UNSIGNED_DENY/events.txt",
+              "workloads": "NEG_UNSIGNED_DENY/workloads.txt",
+              "describe_deployment": "NEG_UNSIGNED_DENY/describe-deployment.txt",
+              "describe_replicasets": "NEG_UNSIGNED_DENY/describe-replicasets.txt",
+              "describe_pods": "NEG_UNSIGNED_DENY/describe-pods.txt",
+              "kyverno_logs": "NEG_UNSIGNED_DENY/kyverno-logs.txt"
+            }
+          },
+          {
+            "case": "NEG_MISSING_SBOM_DENY",
+            "expected": "Denied",
+            "actual": "Denied",
+            "verdict": "PASS",
+            "reason": "Admission deny evidence detected at apply phase.",
+            "image": "ttl.sh/stock-trading-matrix-signed-b8ffa66f1645@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53",
+            "include_sbom": false,
+            "high_critical": "0",
+            "apply_exit_code": 1,
+            "wait_exit_code": -1,
+            "artifacts": {
+              "apply": "NEG_MISSING_SBOM_DENY/kubectl-apply.txt",
+              "wait": "NEG_MISSING_SBOM_DENY/kubectl-wait.txt",
+              "events": "NEG_MISSING_SBOM_DENY/events.txt",
+              "workloads": "NEG_MISSING_SBOM_DENY/workloads.txt",
+              "describe_deployment": "NEG_MISSING_SBOM_DENY/describe-deployment.txt",
+              "describe_replicasets": "NEG_MISSING_SBOM_DENY/describe-replicasets.txt",
+              "describe_pods": "NEG_MISSING_SBOM_DENY/describe-pods.txt",
+              "kyverno_logs": "NEG_MISSING_SBOM_DENY/kyverno-logs.txt"
+            }
+          },
+          {
+            "case": "NEG_CVE_THRESHOLD_DENY",
+            "expected": "Denied",
+            "actual": "Denied",
+            "verdict": "PASS",
+            "reason": "Admission deny evidence detected at apply phase.",
+            "image": "ttl.sh/stock-trading-matrix-signed-b8ffa66f1645@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53",
+            "include_sbom": true,
+            "high_critical": "2",
+            "apply_exit_code": 1,
+            "wait_exit_code": -1,
+            "artifacts": {
+              "apply": "NEG_CVE_THRESHOLD_DENY/kubectl-apply.txt",
+              "wait": "NEG_CVE_THRESHOLD_DENY/kubectl-wait.txt",
+              "events": "NEG_CVE_THRESHOLD_DENY/events.txt",
+              "workloads": "NEG_CVE_THRESHOLD_DENY/workloads.txt",
+              "describe_deployment": "NEG_CVE_THRESHOLD_DENY/describe-deployment.txt",
+              "describe_replicasets": "NEG_CVE_THRESHOLD_DENY/describe-replicasets.txt",
+              "describe_pods": "NEG_CVE_THRESHOLD_DENY/describe-pods.txt",
+              "kyverno_logs": "NEG_CVE_THRESHOLD_DENY/kyverno-logs.txt"
+            }
+          },
+          {
+            "case": "NEG_WRONG_KEY_DENY",
+            "expected": "Denied",
+            "actual": "Denied",
+            "verdict": "PASS",
+            "reason": "Admission deny evidence detected at apply phase.",
+            "image": "ttl.sh/stock-trading-matrix-wrong-key-a26c0027cc4c@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53",
+            "include_sbom": true,
+            "high_critical": "0",
+            "apply_exit_code": 1,
+            "wait_exit_code": -1,
+            "artifacts": {
+              "apply": "NEG_WRONG_KEY_DENY/kubectl-apply.txt",
+              "wait": "NEG_WRONG_KEY_DENY/kubectl-wait.txt",
+              "events": "NEG_WRONG_KEY_DENY/events.txt",
+              "workloads": "NEG_WRONG_KEY_DENY/workloads.txt",
+              "describe_deployment": "NEG_WRONG_KEY_DENY/describe-deployment.txt",
+              "describe_replicasets": "NEG_WRONG_KEY_DENY/describe-replicasets.txt",
+              "describe_pods": "NEG_WRONG_KEY_DENY/describe-pods.txt",
+              "kyverno_logs": "NEG_WRONG_KEY_DENY/kyverno-logs.txt"
+            }
+          },
+          {
+            "case": "NEG_MISSING_PROVENANCE_DENY",
+            "expected": "Denied",
+            "actual": "Denied",
+            "verdict": "PASS",
+            "reason": "Admission deny evidence detected at apply phase.",
+            "image": "ttl.sh/stock-trading-matrix-no-prov-872c9db47c6d@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53",
+            "include_sbom": true,
+            "high_critical": "0",
+            "apply_exit_code": 1,
+            "wait_exit_code": -1,
+            "artifacts": {
+              "apply": "NEG_MISSING_PROVENANCE_DENY/kubectl-apply.txt",
+              "wait": "NEG_MISSING_PROVENANCE_DENY/kubectl-wait.txt",
+              "events": "NEG_MISSING_PROVENANCE_DENY/events.txt",
+              "workloads": "NEG_MISSING_PROVENANCE_DENY/workloads.txt",
+              "describe_deployment": "NEG_MISSING_PROVENANCE_DENY/describe-deployment.txt",
+              "describe_replicasets": "NEG_MISSING_PROVENANCE_DENY/describe-replicasets.txt",
+              "describe_pods": "NEG_MISSING_PROVENANCE_DENY/describe-pods.txt",
+              "kyverno_logs": "NEG_MISSING_PROVENANCE_DENY/kyverno-logs.txt"
+            }
+          }
+        ],
+        "summary_text": "# Admission Matrix Summary\n\n- Run ID: 20260725-051431\n- Kubernetes context: kind-thesis-evidence\n- Namespace: stock-trading\n- Signed image digest: ttl.sh/stock-trading-matrix-signed-b8ffa66f1645@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53\n- Unsigned image digest: ttl.sh/stock-trading-matrix-unsigned-cbd0f2fb8070@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53\n- SBOM digest: 58980F7829386D969CE4FE77E7FA779D435AC555B308F9FD3286C3004196D9B1\n\n| Case | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW | Allowed | AllowedWithRuntimePullIssue | PASS | Admission allowed; workload creation progressed but image pull/runtime readiness did not complete in wait window. |\n| NEG_UNSIGNED_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n| NEG_MISSING_SBOM_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n| NEG_CVE_THRESHOLD_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n| NEG_WRONG_KEY_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n| NEG_MISSING_PROVENANCE_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n\n## Regression Re-check\n\n| Check | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW_RECHECK | Allowed | AllowedWithRuntimePullIssue | PASS | Admission allowed; workload creation progressed but image pull/runtime readiness did not complete in wait window. |\n",
+        "regression": {
+          "case": "VALID_ALLOW_RECHECK",
+          "expected": "Allowed",
+          "actual": "AllowedWithRuntimePullIssue",
+          "verdict": "PASS",
+          "reason": "Admission allowed; workload creation progressed but image pull/runtime readiness did not complete in wait window.",
+          "image": "ttl.sh/stock-trading-matrix-signed-b8ffa66f1645@sha256:bfcdd30c202ad0843f5092bab26ee79c4ca06568eba96e2bf65516ee2574be53",
+          "include_sbom": true,
+          "high_critical": "0",
+          "apply_exit_code": 0,
+          "wait_exit_code": 1,
+          "artifacts": {
+            "apply": "VALID_ALLOW_RECHECK/kubectl-apply.txt",
+            "wait": "VALID_ALLOW_RECHECK/kubectl-wait.txt",
+            "events": "VALID_ALLOW_RECHECK/events.txt",
+            "workloads": "VALID_ALLOW_RECHECK/workloads.txt",
+            "describe_deployment": "VALID_ALLOW_RECHECK/describe-deployment.txt",
+            "describe_replicasets": "VALID_ALLOW_RECHECK/describe-replicasets.txt",
+            "describe_pods": "VALID_ALLOW_RECHECK/describe-pods.txt",
+            "kyverno_logs": "VALID_ALLOW_RECHECK/kyverno-logs.txt"
+          }
+        },
+        "metadata": {},
+        "source_artifact": "admission-lab-evidence"
+      },
+      "evidence_unavailable": false
+    },
+    {
       "run_key": "dashboard-data-sync#357",
       "workflow_key": "dashboard-data-sync",
       "workflow_name": "dashboard-data-sync",
@@ -129521,10 +130076,10 @@
       "run_number": 357,
       "run_id": 30144237875,
       "head_sha": "a35b1ebf4370da4022638d282de37ba37382492f",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "success",
       "created_at": "2026-07-25T04:33:33Z",
-      "updated_at": "2026-07-25T04:33:36Z",
+      "updated_at": "2026-07-25T04:45:07Z",
       "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/30144237875",
       "artifacts": {},
       "security_gate": null,
@@ -182187,24 +182742,6 @@
       "evidence_unavailable": false
     },
     {
-      "run_key": "dashboard-data-sync#259",
-      "workflow_key": "dashboard-data-sync",
-      "workflow_name": "dashboard-data-sync",
-      "workflow_path": ".github/workflows/dashboard-data-sync.yml",
-      "run_number": 259,
-      "run_id": 27936675534,
-      "head_sha": "c5023b6c56d2095b7eddf288dd38faedb73ce253",
-      "status": "completed",
-      "conclusion": "success",
-      "created_at": "2026-06-22T07:28:45Z",
-      "updated_at": "2026-06-22T07:50:46Z",
-      "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/27936675534",
-      "artifacts": {},
-      "security_gate": null,
-      "matrix": null,
-      "evidence_unavailable": false
-    },
-    {
       "run_key": "admission-lab#82",
       "workflow_key": "admission-lab",
       "workflow_name": "admission-lab",
@@ -182390,24 +182927,6 @@
         "metadata": {},
         "source_artifact": "admission-lab-evidence"
       },
-      "evidence_unavailable": false
-    },
-    {
-      "run_key": "dashboard-data-sync#258",
-      "workflow_key": "dashboard-data-sync",
-      "workflow_name": "dashboard-data-sync",
-      "workflow_path": ".github/workflows/dashboard-data-sync.yml",
-      "run_number": 258,
-      "run_id": 27934806984,
-      "head_sha": "98ebd5d4542b9d2fc827c3765de1dff7e16ead62",
-      "status": "completed",
-      "conclusion": "success",
-      "created_at": "2026-06-22T06:48:29Z",
-      "updated_at": "2026-06-22T07:08:56Z",
-      "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/27934806984",
-      "artifacts": {},
-      "security_gate": null,
-      "matrix": null,
       "evidence_unavailable": false
     },
     {
@@ -258269,315 +258788,6 @@
           "created_at": "2026-04-29T05:46:01.2185403Z",
           "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25092830773",
           "matrix_run_id": "20260429-054116"
-        },
-        "source_artifact": "service-scs-matrix-evidence-user-service"
-      },
-      "evidence_unavailable": false
-    },
-    {
-      "run_key": "admission-lab#15",
-      "workflow_key": "admission-lab",
-      "workflow_name": "admission-lab",
-      "workflow_path": ".github/workflows/admission-matrix-evidence.yml",
-      "run_number": 15,
-      "run_id": 25092423953,
-      "head_sha": "46eca48570bf39a20597a1d6fc08262f53858099",
-      "status": "completed",
-      "conclusion": "success",
-      "created_at": "2026-04-29T05:25:20Z",
-      "updated_at": "2026-04-29T05:30:59Z",
-      "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25092423953",
-      "artifacts": {
-        "admission-matrix-evidence": {
-          "id": 6700288592,
-          "name": "admission-matrix-evidence",
-          "size": 67598,
-          "expired": false,
-          "created_at": "2026-04-29T05:30:56Z",
-          "updated_at": "2026-04-29T05:30:56Z",
-          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6700288592/zip"
-        }
-      },
-      "security_gate": null,
-      "matrix": {
-        "cases": [
-          {
-            "case": "VALID_ALLOW",
-            "expected": "Allowed",
-            "actual": "Allowed",
-            "verdict": "PASS",
-            "reason": "Deployment became Available.",
-            "image": "ttl.sh/stock-trading-matrix-signed-5ea8d8f91196@sha256:3e17a5a7c88b3c13e2f347cb5f55cd325978763498e6a23c00b4d9cc77d74a12",
-            "include_sbom": true,
-            "high_critical": "0",
-            "apply_exit_code": 0,
-            "wait_exit_code": 0,
-            "artifacts": {
-              "apply": "VALID_ALLOW/kubectl-apply.txt",
-              "wait": "VALID_ALLOW/kubectl-wait.txt",
-              "events": "VALID_ALLOW/events.txt",
-              "workloads": "VALID_ALLOW/workloads.txt",
-              "describe_deployment": "VALID_ALLOW/describe-deployment.txt",
-              "describe_replicasets": "VALID_ALLOW/describe-replicasets.txt",
-              "describe_pods": "VALID_ALLOW/describe-pods.txt",
-              "kyverno_logs": "VALID_ALLOW/kyverno-logs.txt"
-            }
-          },
-          {
-            "case": "NEG_UNSIGNED_DENY",
-            "expected": "Denied",
-            "actual": "Denied",
-            "verdict": "PASS",
-            "reason": "Admission deny evidence detected at apply phase.",
-            "image": "ttl.sh/stock-trading-matrix-unsigned-7e97ce582023@sha256:3e17a5a7c88b3c13e2f347cb5f55cd325978763498e6a23c00b4d9cc77d74a12",
-            "include_sbom": true,
-            "high_critical": "0",
-            "apply_exit_code": 1,
-            "wait_exit_code": -1,
-            "artifacts": {
-              "apply": "NEG_UNSIGNED_DENY/kubectl-apply.txt",
-              "wait": "NEG_UNSIGNED_DENY/kubectl-wait.txt",
-              "events": "NEG_UNSIGNED_DENY/events.txt",
-              "workloads": "NEG_UNSIGNED_DENY/workloads.txt",
-              "describe_deployment": "NEG_UNSIGNED_DENY/describe-deployment.txt",
-              "describe_replicasets": "NEG_UNSIGNED_DENY/describe-replicasets.txt",
-              "describe_pods": "NEG_UNSIGNED_DENY/describe-pods.txt",
-              "kyverno_logs": "NEG_UNSIGNED_DENY/kyverno-logs.txt"
-            }
-          },
-          {
-            "case": "NEG_MISSING_SBOM_DENY",
-            "expected": "Denied",
-            "actual": "Denied",
-            "verdict": "PASS",
-            "reason": "Admission deny evidence detected in events/ReplicaSet describe.",
-            "image": "ttl.sh/stock-trading-matrix-signed-5ea8d8f91196@sha256:3e17a5a7c88b3c13e2f347cb5f55cd325978763498e6a23c00b4d9cc77d74a12",
-            "include_sbom": false,
-            "high_critical": "0",
-            "apply_exit_code": 0,
-            "wait_exit_code": 1,
-            "artifacts": {
-              "apply": "NEG_MISSING_SBOM_DENY/kubectl-apply.txt",
-              "wait": "NEG_MISSING_SBOM_DENY/kubectl-wait.txt",
-              "events": "NEG_MISSING_SBOM_DENY/events.txt",
-              "workloads": "NEG_MISSING_SBOM_DENY/workloads.txt",
-              "describe_deployment": "NEG_MISSING_SBOM_DENY/describe-deployment.txt",
-              "describe_replicasets": "NEG_MISSING_SBOM_DENY/describe-replicasets.txt",
-              "describe_pods": "NEG_MISSING_SBOM_DENY/describe-pods.txt",
-              "kyverno_logs": "NEG_MISSING_SBOM_DENY/kyverno-logs.txt"
-            }
-          },
-          {
-            "case": "NEG_CVE_THRESHOLD_DENY",
-            "expected": "Denied",
-            "actual": "Denied",
-            "verdict": "PASS",
-            "reason": "Admission deny evidence detected in events/ReplicaSet describe.",
-            "image": "ttl.sh/stock-trading-matrix-signed-5ea8d8f91196@sha256:3e17a5a7c88b3c13e2f347cb5f55cd325978763498e6a23c00b4d9cc77d74a12",
-            "include_sbom": true,
-            "high_critical": "2",
-            "apply_exit_code": 0,
-            "wait_exit_code": 1,
-            "artifacts": {
-              "apply": "NEG_CVE_THRESHOLD_DENY/kubectl-apply.txt",
-              "wait": "NEG_CVE_THRESHOLD_DENY/kubectl-wait.txt",
-              "events": "NEG_CVE_THRESHOLD_DENY/events.txt",
-              "workloads": "NEG_CVE_THRESHOLD_DENY/workloads.txt",
-              "describe_deployment": "NEG_CVE_THRESHOLD_DENY/describe-deployment.txt",
-              "describe_replicasets": "NEG_CVE_THRESHOLD_DENY/describe-replicasets.txt",
-              "describe_pods": "NEG_CVE_THRESHOLD_DENY/describe-pods.txt",
-              "kyverno_logs": "NEG_CVE_THRESHOLD_DENY/kyverno-logs.txt"
-            }
-          }
-        ],
-        "summary_text": "# Admission Matrix Summary\n\n- Run ID: 20260429-052621\n- Kubernetes context: kind-thesis-evidence\n- Namespace: stock-trading\n- Signed image digest: ttl.sh/stock-trading-matrix-signed-5ea8d8f91196@sha256:3e17a5a7c88b3c13e2f347cb5f55cd325978763498e6a23c00b4d9cc77d74a12\n- Unsigned image digest: ttl.sh/stock-trading-matrix-unsigned-7e97ce582023@sha256:3e17a5a7c88b3c13e2f347cb5f55cd325978763498e6a23c00b4d9cc77d74a12\n- SBOM digest: E87AF346677D75F4C07BBB564DE16B1D9284A39A9B528D0DDBD19D76B15C6613\n\n| Case | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW | Allowed | Allowed | PASS | Deployment became Available. |\n| NEG_UNSIGNED_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n| NEG_MISSING_SBOM_DENY | Denied | Denied | PASS | Admission deny evidence detected in events/ReplicaSet describe. |\n| NEG_CVE_THRESHOLD_DENY | Denied | Denied | PASS | Admission deny evidence detected in events/ReplicaSet describe. |\n\n## Regression Re-check\n\n| Check | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW_RECHECK | Allowed | Allowed | PASS | Deployment became Available. |\n",
-        "regression": {
-          "case": "VALID_ALLOW_RECHECK",
-          "expected": "Allowed",
-          "actual": "Allowed",
-          "verdict": "PASS",
-          "reason": "Deployment became Available.",
-          "image": "ttl.sh/stock-trading-matrix-signed-5ea8d8f91196@sha256:3e17a5a7c88b3c13e2f347cb5f55cd325978763498e6a23c00b4d9cc77d74a12",
-          "include_sbom": true,
-          "high_critical": "0",
-          "apply_exit_code": 0,
-          "wait_exit_code": 0,
-          "artifacts": {
-            "apply": "VALID_ALLOW_RECHECK/kubectl-apply.txt",
-            "wait": "VALID_ALLOW_RECHECK/kubectl-wait.txt",
-            "events": "VALID_ALLOW_RECHECK/events.txt",
-            "workloads": "VALID_ALLOW_RECHECK/workloads.txt",
-            "describe_deployment": "VALID_ALLOW_RECHECK/describe-deployment.txt",
-            "describe_replicasets": "VALID_ALLOW_RECHECK/describe-replicasets.txt",
-            "describe_pods": "VALID_ALLOW_RECHECK/describe-pods.txt",
-            "kyverno_logs": "VALID_ALLOW_RECHECK/kyverno-logs.txt"
-          }
-        },
-        "metadata": {
-          "workflow_key": "admission-matrix-evidence",
-          "workflow_name": "admission-matrix-evidence",
-          "run_number": "15",
-          "run_id": "25092423953",
-          "head_sha": "46eca48570bf39a20597a1d6fc08262f53858099",
-          "created_at": "2026-04-29T05:30:56.2104615Z",
-          "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25092423953",
-          "matrix_run_id": "20260429-052621"
-        },
-        "source_artifact": "admission-matrix-evidence"
-      },
-      "evidence_unavailable": false
-    },
-    {
-      "run_key": "onboarding-lab#7",
-      "workflow_key": "onboarding-lab",
-      "workflow_name": "onboarding-lab",
-      "workflow_path": ".github/workflows/service-scs-matrix-evidence.yml",
-      "run_number": 7,
-      "run_id": 25036141296,
-      "head_sha": "139344fec2a9f9dacba7597b64c103295e2bd8f0",
-      "status": "completed",
-      "conclusion": "failure",
-      "created_at": "2026-04-28T05:44:59Z",
-      "updated_at": "2026-04-28T05:50:58Z",
-      "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25036141296",
-      "artifacts": {
-        "service-scs-matrix-evidence-user-service": {
-          "id": 6677155075,
-          "name": "service-scs-matrix-evidence-user-service",
-          "size": 68014,
-          "expired": false,
-          "created_at": "2026-04-28T05:50:54Z",
-          "updated_at": "2026-04-28T05:50:54Z",
-          "archive_download_url": "https://api.github.com/repos/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/artifacts/6677155075/zip"
-        }
-      },
-      "security_gate": null,
-      "matrix": {
-        "cases": [
-          {
-            "case": "VALID_ALLOW",
-            "expected": "Allowed",
-            "actual": "Allowed",
-            "verdict": "PASS",
-            "reason": "Deployment became Available.",
-            "image": "ttl.sh/stock-trading-matrix-signed-b2f52c29e60b@sha256:4ee4e79ecd98035a9d793cf93d9843c2132b7edf136c0a552da41287c4d4b6c8",
-            "include_sbom": true,
-            "high_critical": "0",
-            "apply_exit_code": 0,
-            "wait_exit_code": 0,
-            "artifacts": {
-              "apply": "VALID_ALLOW/kubectl-apply.txt",
-              "wait": "VALID_ALLOW/kubectl-wait.txt",
-              "events": "VALID_ALLOW/events.txt",
-              "workloads": "VALID_ALLOW/workloads.txt",
-              "describe_deployment": "VALID_ALLOW/describe-deployment.txt",
-              "describe_replicasets": "VALID_ALLOW/describe-replicasets.txt",
-              "describe_pods": "VALID_ALLOW/describe-pods.txt",
-              "kyverno_logs": "VALID_ALLOW/kyverno-logs.txt"
-            }
-          },
-          {
-            "case": "NEG_UNSIGNED_DENY",
-            "expected": "Denied",
-            "actual": "Denied",
-            "verdict": "PASS",
-            "reason": "Admission deny evidence detected at apply phase.",
-            "image": "ttl.sh/stock-trading-matrix-unsigned-f35cc08c266a@sha256:4ee4e79ecd98035a9d793cf93d9843c2132b7edf136c0a552da41287c4d4b6c8",
-            "include_sbom": true,
-            "high_critical": "0",
-            "apply_exit_code": 1,
-            "wait_exit_code": -1,
-            "artifacts": {
-              "apply": "NEG_UNSIGNED_DENY/kubectl-apply.txt",
-              "wait": "NEG_UNSIGNED_DENY/kubectl-wait.txt",
-              "events": "NEG_UNSIGNED_DENY/events.txt",
-              "workloads": "NEG_UNSIGNED_DENY/workloads.txt",
-              "describe_deployment": "NEG_UNSIGNED_DENY/describe-deployment.txt",
-              "describe_replicasets": "NEG_UNSIGNED_DENY/describe-replicasets.txt",
-              "describe_pods": "NEG_UNSIGNED_DENY/describe-pods.txt",
-              "kyverno_logs": "NEG_UNSIGNED_DENY/kyverno-logs.txt"
-            }
-          },
-          {
-            "case": "NEG_MISSING_SBOM_DENY",
-            "expected": "Denied",
-            "actual": "Denied",
-            "verdict": "PASS",
-            "reason": "Admission deny evidence detected in events/ReplicaSet describe.",
-            "image": "ttl.sh/stock-trading-matrix-signed-b2f52c29e60b@sha256:4ee4e79ecd98035a9d793cf93d9843c2132b7edf136c0a552da41287c4d4b6c8",
-            "include_sbom": false,
-            "high_critical": "0",
-            "apply_exit_code": 0,
-            "wait_exit_code": 1,
-            "artifacts": {
-              "apply": "NEG_MISSING_SBOM_DENY/kubectl-apply.txt",
-              "wait": "NEG_MISSING_SBOM_DENY/kubectl-wait.txt",
-              "events": "NEG_MISSING_SBOM_DENY/events.txt",
-              "workloads": "NEG_MISSING_SBOM_DENY/workloads.txt",
-              "describe_deployment": "NEG_MISSING_SBOM_DENY/describe-deployment.txt",
-              "describe_replicasets": "NEG_MISSING_SBOM_DENY/describe-replicasets.txt",
-              "describe_pods": "NEG_MISSING_SBOM_DENY/describe-pods.txt",
-              "kyverno_logs": "NEG_MISSING_SBOM_DENY/kyverno-logs.txt"
-            }
-          },
-          {
-            "case": "NEG_CVE_THRESHOLD_DENY",
-            "expected": "Denied",
-            "actual": "Denied",
-            "verdict": "PASS",
-            "reason": "Admission deny evidence detected in events/ReplicaSet describe.",
-            "image": "ttl.sh/stock-trading-matrix-signed-b2f52c29e60b@sha256:4ee4e79ecd98035a9d793cf93d9843c2132b7edf136c0a552da41287c4d4b6c8",
-            "include_sbom": true,
-            "high_critical": "2",
-            "apply_exit_code": 0,
-            "wait_exit_code": 1,
-            "artifacts": {
-              "apply": "NEG_CVE_THRESHOLD_DENY/kubectl-apply.txt",
-              "wait": "NEG_CVE_THRESHOLD_DENY/kubectl-wait.txt",
-              "events": "NEG_CVE_THRESHOLD_DENY/events.txt",
-              "workloads": "NEG_CVE_THRESHOLD_DENY/workloads.txt",
-              "describe_deployment": "NEG_CVE_THRESHOLD_DENY/describe-deployment.txt",
-              "describe_replicasets": "NEG_CVE_THRESHOLD_DENY/describe-replicasets.txt",
-              "describe_pods": "NEG_CVE_THRESHOLD_DENY/describe-pods.txt",
-              "kyverno_logs": "NEG_CVE_THRESHOLD_DENY/kyverno-logs.txt"
-            }
-          }
-        ],
-        "summary_text": "# Admission Matrix Summary\n\n- Run ID: 20260428-054604\n- Kubernetes context: kind-thesis-evidence\n- Namespace: stock-trading\n- Signed image digest: ttl.sh/stock-trading-matrix-signed-b2f52c29e60b@sha256:4ee4e79ecd98035a9d793cf93d9843c2132b7edf136c0a552da41287c4d4b6c8\n- Unsigned image digest: ttl.sh/stock-trading-matrix-unsigned-f35cc08c266a@sha256:4ee4e79ecd98035a9d793cf93d9843c2132b7edf136c0a552da41287c4d4b6c8\n- SBOM digest: 640CC7457A0626ABFFAE3B9F8E3CDB2BD38469AC5DE67B8C21B53AED2F00A8DC\n\n| Case | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW | Allowed | Allowed | PASS | Deployment became Available. |\n| NEG_UNSIGNED_DENY | Denied | Denied | PASS | Admission deny evidence detected at apply phase. |\n| NEG_MISSING_SBOM_DENY | Denied | Denied | PASS | Admission deny evidence detected in events/ReplicaSet describe. |\n| NEG_CVE_THRESHOLD_DENY | Denied | Denied | PASS | Admission deny evidence detected in events/ReplicaSet describe. |\n\n## Regression Re-check\n\n| Check | Expected | Actual | Verdict | Reason |\n|---|---|---|---|---|\n| VALID_ALLOW_RECHECK | Allowed | Allowed | PASS | Deployment became Available. |\n",
-        "regression": {
-          "case": "VALID_ALLOW_RECHECK",
-          "expected": "Allowed",
-          "actual": "Allowed",
-          "verdict": "PASS",
-          "reason": "Deployment became Available.",
-          "image": "ttl.sh/stock-trading-matrix-signed-b2f52c29e60b@sha256:4ee4e79ecd98035a9d793cf93d9843c2132b7edf136c0a552da41287c4d4b6c8",
-          "include_sbom": true,
-          "high_critical": "0",
-          "apply_exit_code": 0,
-          "wait_exit_code": 0,
-          "artifacts": {
-            "apply": "VALID_ALLOW_RECHECK/kubectl-apply.txt",
-            "wait": "VALID_ALLOW_RECHECK/kubectl-wait.txt",
-            "events": "VALID_ALLOW_RECHECK/events.txt",
-            "workloads": "VALID_ALLOW_RECHECK/workloads.txt",
-            "describe_deployment": "VALID_ALLOW_RECHECK/describe-deployment.txt",
-            "describe_replicasets": "VALID_ALLOW_RECHECK/describe-replicasets.txt",
-            "describe_pods": "VALID_ALLOW_RECHECK/describe-pods.txt",
-            "kyverno_logs": "VALID_ALLOW_RECHECK/kyverno-logs.txt"
-          }
-        },
-        "metadata": {
-          "workflow_key": "service-scs-matrix-evidence",
-          "workflow_name": "service-scs-matrix-evidence",
-          "evidence_profile": "canonical-matrix",
-          "service_name": "user-service",
-          "namespace": "stock-trading",
-          "run_number": "7",
-          "run_id": "25036141296",
-          "head_sha": "139344fec2a9f9dacba7597b64c103295e2bd8f0",
-          "created_at": "2026-04-28T05:50:53.6382883Z",
-          "html_url": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/actions/runs/25036141296",
-          "matrix_run_id": "20260428-054604"
         },
         "source_artifact": "service-scs-matrix-evidence-user-service"
       },
