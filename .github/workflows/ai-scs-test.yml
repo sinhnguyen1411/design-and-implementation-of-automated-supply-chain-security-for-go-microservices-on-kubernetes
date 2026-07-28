@@ -1,0 +1,35 @@
+name: ai-scs-e2e-test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/mlops-ai-scs
+  pull_request:
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25.11"
+
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.12.0
+        with:
+          cluster_name: ai-scs-cluster
+          wait: 120s
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.7.0
+
+      - name: Run AI SCS E2E Test (Init-Container)
+        shell: pwsh
+        run: |
+          ./scripts/test_ai_scs_local.ps1
