@@ -7,7 +7,7 @@ metadata:
     app: qwen-llm-service
     layer: ai-backend
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: qwen-llm-service
@@ -61,11 +61,11 @@ spec:
               mountPath: /models
           resources:
             requests:
-              cpu: "2000m"
-              memory: "4Gi"
+              cpu: "500m"
+              memory: "512Mi"
             limits:
-              cpu: "4000m"
-              memory: "8Gi"
+              cpu: "1500m"
+              memory: "2Gi"
           readinessProbe:
             httpGet:
               path: /
