@@ -9,7 +9,10 @@ This repository provides a practical DevSecOps baseline for implementing and val
 - Thesis-aligned documentation, traceability, and evidence artifacts.
 
 ## Service Landscape (23 Services)
-The monorepo includes 23 services to validate supply-chain pipeline repeatability at scale (full list in `services.yaml`):
+Utilizing a **Microservices architecture housed in a Monorepo**, this project includes 23 services to validate supply-chain pipeline repeatability at scale (full list in `services.yaml`):
+
+> **Why a Monorepo for Microservices?**
+> While each of the 23 services is an independent microservice with its own lifecycle, `Dockerfile`, and isolated runtime boundaries on Kubernetes, they are all governed within a single monolithic repository. This architectural choice aligns with modern industry standards, enabling a single, unified DevSecOps pipeline (`.github/workflows/ci-service.yml`) and centralized Kubernetes admission policies (`deploy/policies`) across the entire ecosystem without the operational overhead of a polyrepo. The CI pipeline uses dynamic discovery to build and scan only the services that have changed, perfectly combining the rapid, decoupled execution of microservices with the strict, centralized security governance of a monorepo.
 
 - Core baseline:
   - `user-service`: user/auth lifecycle with token flows and notification integration
