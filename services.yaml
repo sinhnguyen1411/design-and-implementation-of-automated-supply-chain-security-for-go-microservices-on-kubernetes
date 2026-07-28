@@ -114,4 +114,9 @@ services:
     image: sinhnguyen1411/stock-trading/margin-service
     go_version: "1.25.11"
     profile_tags: ["http-api", "security-crypto"]
+  - name: qwen-llm-service
+    path: services/qwen-llm-service
+    image: sinhnguyen1411/stock-trading/qwen-llm-service
+    go_version: "1.25.11"
+    profile_tags: ["ai-model", "http-api"]
 
