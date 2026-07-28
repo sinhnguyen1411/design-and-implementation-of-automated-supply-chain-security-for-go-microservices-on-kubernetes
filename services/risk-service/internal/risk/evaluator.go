@@ -80,7 +80,7 @@ func callOllamaForRisk(req Request) string {
 	})
 
 	client := &http.Client{Timeout: 3 * time.Second}
-	resp, err := client.Post("http://qwen-llm-service:8080/api/generate", "application/json", bytes.NewBuffer(reqBody))
+	resp, err := client.Post("http://qwen-llm-service:11434/api/generate", "application/json", bytes.NewBuffer(reqBody))
 	if err != nil {
 		return "AI Service unavailable"
 	}
