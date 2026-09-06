@@ -55,6 +55,9 @@ jobs:
           push: false
           tags: local/user-service:benchmark
 
+      - name: Prepare Output Directory
+        run: mkdir -p evidence/thesis
+
       - name: Generate SBOM (SPDX via Syft / Anchore sbom-action)
         uses: anchore/sbom-action@v0.17.7
         with:
