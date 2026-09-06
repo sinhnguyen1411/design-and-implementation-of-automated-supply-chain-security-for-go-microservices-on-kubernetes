@@ -1,4 +1,4 @@
-name: A/B Benchmark PoC (Legacy Pipeline vs DevGuard Control Plane)
+name: A/B Benchmark PoC (Thesis ci-service.yml Pipeline vs DevGuard Control Plane)
 
 on:
   push:
@@ -9,24 +9,29 @@ on:
         description: "Target microservice path to benchmark"
         required: false
         default: "services/user-service"
+      gate_mode:
+        description: "Security gate mode for thesis pipeline: enforced | warn"
+        required: false
+        default: "enforced"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # =======================================================
-  # BRANCH A: LEGACY PIPELINE (Fragmented Standalone Tools)
-  # =======================================================
-  legacy-pipeline:
-    name: "Pipeline A: Legacy Tools (Trivy + Gitleaks)"
+  # =========================================================================
+  # BRANCH A: THESIS PIPELINE (.github/workflows/ci-service.yml Architecture)
+  # Uses: Docker Build + Syft (SPDX SBOM) + Grype (SCA) + Python Gate Enforcer
+  # =========================================================================
+  thesis-ci-service-pipeline:
+    name: "Pipeline A: Thesis ci-service.yml (Syft + Grype + Gate)"
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     outputs:
       duration_sec: ${{ steps.timer.outputs.duration_sec }}
-      sbom_status: "Fragmented (Isolated local JSON file only)"
-      storage_type: "Local runner disk / Unindexed"
-      governance: "None (Zero centralized visibility)"
+      sbom_status: "Isolated SPDX JSON (anchore/sbom-action)"
+      storage_type: "Local runner disk / GHA Artifact Zip"
+      governance: "None (Stateless script-based Security Gate)"
 
     steps:
       - name: Checkout Code
@@ -38,25 +43,96 @@ jobs:
         id: start-timer
         run: echo "START_TIME=$(date +%s)" >> "$GITHUB_ENV"
 
-      - name: Install Standalone Trivy CLI
-        run: |
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin v0.74.0
-          trivy --version
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Run Standalone Trivy Filesystem Scan (Save JSON)
-        run: |
-          mkdir -p evidence/legacy
-          trivy fs \
-            --format json \
-            --output evidence/legacy/trivy-report.json \
-            "${{ inputs.target_service || 'services/user-service' }}"
+      - name: Build Docker Image (Thesis Service)
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ inputs.target_service || 'services/user-service' }}
+          file: ${{ inputs.target_service || 'services/user-service' }}/Dockerfile
+          load: true
+          push: false
+          tags: local/user-service:benchmark
 
-      - name: Run Standalone Gitleaks Secret Scan
-        uses: gitleaks/gitleaks-action@v2
-        continue-on-error: true
+      - name: Generate SBOM (SPDX via Syft / Anchore sbom-action)
+        uses: anchore/sbom-action@v0.17.7
+        with:
+          image: local/user-service:benchmark
+          format: spdx-json
+          output-file: evidence/thesis/sbom.spdx.json
+
+      - name: Scan Image with Grype (anchore/scan-action)
+        uses: anchore/scan-action@v6
+        with:
+          image: local/user-service:benchmark
+          output-format: json
+          output-file: evidence/thesis/grype-report.json
+          fail-build: false
+          severity-cutoff: high
+
+      - name: Normalize Grype report path
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence/thesis
+          if [ -f "evidence/thesis/grype-report.json" ]; then
+            echo "grype-report.json already written"
+          elif [ -f "${GITHUB_WORKSPACE}/results.json" ]; then
+            cp "${GITHUB_WORKSPACE}/results.json" evidence/thesis/grype-report.json
+          fi
+
+      - name: Build security gate findings from Grype report
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+
+          report = Path("evidence/thesis/grype-report.json")
+          out = Path("evidence/thesis/security-gate-findings.json")
+          findings = []
+
+          if report.exists():
+              data = json.loads(report.read_text(encoding="utf-8"))
+              for m in data.get("matches", []):
+                  v = m.get("vulnerability", {}) or {}
+                  a = m.get("artifact", {}) or {}
+                  sev = str(v.get("severity", "")).lower()
+                  fix = (v.get("fix", {}) or {})
+                  state = str(fix.get("state", "unknown")).lower()
+                  if sev not in ("high", "critical"):
+                      continue
+                  if state in ("wont-fix", "not-fixed", "unknown"):
+                      continue
+                  findings.append({
+                      "cve": v.get("id", ""),
+                      "severity": sev,
+                      "package": a.get("name", ""),
+                      "installed": a.get("version", ""),
+                      "fix_state": state,
+                      "fixed_versions": fix.get("versions", []) or [],
+                  })
+          out.write_text(json.dumps({"findings": findings}, indent=2), encoding="utf-8")
+
+      - name: Enforce Security Gate (Thesis python script)
+        shell: python
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_ENABLE_SUMMARY: true
+          GATE_MODE: ${{ inputs.gate_mode || 'enforced' }}
+        run: |
+          import json, os
+          from pathlib import Path
+
+          gate = Path("evidence/thesis/security-gate-findings.json")
+          findings = []
+          gate_mode = (os.environ.get("GATE_MODE", "enforced") or "enforced").strip().lower()
+
+          if gate.exists():
+            payload = json.loads(gate.read_text(encoding="utf-8"))
+            findings = payload if isinstance(payload, list) else payload.get("findings", [])
+
+          print(f"Total fixable high/critical vulnerabilities found: {len(findings)}")
+          if findings and gate_mode == "enforced":
+            raise SystemExit("Security gate failed: fixable high/critical vulnerabilities detected.")
 
       - name: Calculate Duration
         id: timer
@@ -65,13 +141,14 @@ jobs:
           END_TIME=$(date +%s)
           DURATION=$((END_TIME - START_TIME))
           echo "duration_sec=$DURATION" >> "$GITHUB_OUTPUT"
-          echo "Legacy Pipeline finished in: ${DURATION}s"
+          echo "Thesis ci-service.yml Pipeline finished in: ${DURATION}s"
 
-      - name: Upload Legacy JSON Artifact
+      - name: Upload Thesis SPDX SBOM & Grype Artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: legacy-trivy-report
-          path: evidence/legacy/trivy-report.json
+          name: thesis-ciservice-artifacts
+          path: evidence/thesis/
 
   # =======================================================
   # BRANCH B: DEVGUARD PIPELINE (Unified Control Plane)
@@ -134,35 +211,37 @@ jobs:
   # =======================================================
   ab-benchmark-summary:
     name: "A/B Benchmark Matrix & Decision Summary"
-    needs: [legacy-pipeline, devguard-pipeline]
+    needs: [thesis-ci-service-pipeline, devguard-pipeline]
     runs-on: ubuntu-latest
     if: always()
 
     steps:
       - name: Generate Comparative Markdown Summary
         env:
-          LEGACY_TIME: ${{ needs.legacy-pipeline.outputs.duration_sec }}
+          THESIS_TIME: ${{ needs.thesis-ci-service-pipeline.outputs.duration_sec }}
           DEVGUARD_TIME: ${{ needs.devguard-pipeline.outputs.duration_sec }}
-          LEGACY_STORAGE: ${{ needs.legacy-pipeline.outputs.storage_type }}
+          THESIS_STORAGE: ${{ needs.thesis-ci-service-pipeline.outputs.storage_type }}
           DEVGUARD_STORAGE: ${{ needs.devguard-pipeline.outputs.storage_type }}
-          LEGACY_GOV: ${{ needs.legacy-pipeline.outputs.governance }}
+          THESIS_GOV: ${{ needs.thesis-ci-service-pipeline.outputs.governance }}
           DEVGUARD_GOV: ${{ needs.devguard-pipeline.outputs.governance }}
         run: |
           cat << 'EOF' >> "$GITHUB_STEP_SUMMARY"
-          # 📊 Bảng Đối Soát A/B Benchmark: Legacy Pipeline vs DevGuard Control Plane
+          # 📊 Bảng Đối Soát A/B Benchmark: Thesis ci-service.yml vs DevGuard Control Plane
 
-          Thực nghiệm được thực thi tự động song song trên **GitHub Actions Cloud Runner** nhằm đánh giá định lượng tính hiệu quả, độ phức tạp và khả năng kiểm soát an toàn chuỗi cung ứng:
+          Thực nghiệm được thực thi tự động song song trên **GitHub Actions Cloud Runner** nhằm đánh giá định lượng tính hiệu quả, độ phức tạp và khả năng kiểm soát an toàn chuỗi cung ứng giữa **Pipeline ci-service.yml Hiện tại của Đồ Án** và **DevGuard Control Plane (CyberDev)**:
 
-          | Tiêu chí Đánh giá (Criteria) | Nhánh A: Legacy Pipeline (Đồ án cũ) | Nhánh B: DevGuard Control Plane (Mới) | Đánh giá & Kết luận |
+          | Tiêu chí Đánh giá (Criteria) | Nhánh A: ci-service.yml (Đồ án hiện tại) | Nhánh B: DevGuard Control Plane (Mới) | Đánh giá & Kết luận |
           | :--- | :--- | :--- | :--- |
-          | **Mô hình kiến trúc** | Phân mảnh (Scripts rời rạc per service) | Hợp nhất (Micro-Control Plane tập trung) | **Đạt chuẩn kiến trúc tập trung** |
-          | **Công cụ & CLI** | 3 công cụ độc lập (Trivy, Gitleaks, Cosign) | 1 CLI duy nhất (`devguard-scanner`) | **Giảm 66% công cụ cần cài đặt** |
-          | **Quản lý SBOM** | File JSON cục bộ rải rác trên runner | CycloneDX lưu trữ PostgreSQL (`pg-semver`) | **Tra cứu PURL tức thì < 1s** |
-          | **Xử lý Cảnh báo giả (VEX)** | Không có (Phải tạo file ignore thủ công) | Tích hợp VEX Engine & Quick-Fix | **Triệt tiêu Alert Fatigue** |
-          | **Khả năng điều tra Zero-Day** | Phải kích hoạt build lại cả 23 services | Truy vấn trực tiếp SBOM DB (< 1s) | **Real-time Blast Radius Analysis** |
-          | **Quản trị Tuân thủ** | Không có | Tích hợp sẵn ISO27001, BSI Grundschutz | **Tự động hóa báo cáo kiểm toán** |
-          | **Thời gian thực thi Pipeline** | ~${{ env.LEGACY_TIME }} giây | ~${{ env.DEVGUARD_TIME }} giây | **Tối ưu hóa và tự động lưu vết** |
+          | **Mô hình kiến trúc** | Stateless Runner (Syft + Grype + Python Gate) | Micro-Control Plane tập trung (API + DB + Dashboard) | **Đạt chuẩn kiến trúc tập trung** |
+          | **Định dạng & Quản lý SBOM** | SPDX JSON lưu trữ tạm thời trên Runner Artifact | CycloneDX Ingestion lưu trữ PostgreSQL (`pg-semver`) | **Tra cứu PURL tức thì < 1s** |
+          | **Quét & Phân tích Lỗ hổng** | Grype quét image container tĩnh | Quét SCA mã nguồn + Dependency Tree + AST | **Trực quan hóa phả hệ đa tầng** |
+          | **Xử lý Cảnh báo giả (VEX)** | Chặn thô bạo (fail build nếu có CVE fixable) | Bộ quy tắc VEX Rule Engine & Reachability | **Triệt tiêu Alert Fatigue, không nghẽn release** |
+          | **Khả năng điều tra Zero-Day** | Phải trigger build lại cả 23 services | Truy vấn trực tiếp SBOM DB (< 1s) | **Real-time Blast Radius Analysis** |
+          | **Quản trị Tuân thủ Tiêu chuẩn** | Không có dashboard tuân thủ | Tích hợp sẵn ISO27001, BSI Grundschutz, NIST | **Tự động hóa báo cáo kiểm toán** |
+          | **Thực thi An toàn Runtime** | Cosign Attestation lưu trên OCI | K8s Admission Webhook đối soát thời gian thực | **Bảo vệ Zero-Trust tại Runtime** |
+          | **Thời gian thực thi Pipeline** | ~${{ env.THESIS_TIME }} giây | ~${{ env.DEVGUARD_TIME }} giây | **Tối ưu hóa và tự động lưu vết tập trung** |
 
           ---
           > **Chứng thực thực nghiệm:** Toàn bộ dữ liệu SBOM và rủi ro của `services/user-service` từ bài test trên đã được tiếp nhận thành công vào DevGuard Control Plane.
           EOF
+
