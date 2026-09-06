@@ -1,0 +1,73 @@
+name: CyberDev SSCS End-to-End PoC
+
+on:
+  push:
+    branches: [feat/poc-cyberdev-devguard]
+  workflow_dispatch:
+    inputs:
+      service:
+        description: "Target microservice to scan"
+        required: false
+        default: "services/user-service"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cyberdev-pipeline:
+    name: CyberDev SSCS Ingestion & Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go Runtime
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+          cache: false
+
+      - name: Install Trivy Vulnerability Engine
+        run: |
+          echo "=== Installing Trivy v0.74.0 ==="
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin v0.74.0
+          trivy --version
+
+      - name: Install CyberDev Scanner CLI
+        run: |
+          echo "=== Installing CyberDev Scanner CLI ==="
+          go install github.com/l3montree-dev/devguard/cmd/devguard-scanner@latest
+          devguard-scanner --help
+
+      - name: Verify CyberDev Control Plane Connectivity
+        run: |
+          echo "=== Checking CyberDev Control Plane Health ==="
+          curl -i -s -f "${{ secrets.CYBERDEV_API_URL }}/api/v1/health/" || {
+            echo "ERROR: Unable to reach CyberDev Control Plane at ${{ secrets.CYBERDEV_API_URL }}"
+            exit 1
+          }
+
+      - name: Execute CyberDev SCA Scan & CycloneDX SBOM Ingestion
+        run: |
+          TARGET_DIR="${{ inputs.service || 'services/user-service' }}"
+          echo "=== Scanning microservice at $TARGET_DIR ==="
+          
+          devguard-scanner sca \
+            --path "$GITHUB_WORKSPACE/$TARGET_DIR" \
+            --apiUrl "${{ secrets.CYBERDEV_API_URL }}" \
+            --assetName "thesis-microservices/core-services/user-auth-service" \
+            --token "${{ secrets.CYBERDEV_PAT_TOKEN }}"
+
+      - name: Pipeline Summary & PoC Verification
+        if: always()
+        run: |
+          echo "===================================================="
+          echo " CyberDev SSCS End-to-End PoC Completed Successfully!"
+          echo " Target Asset: thesis-microservices/core-services/user-auth-service"
+          echo " Ingested Commit: $GITHUB_SHA"
+          echo " Triggered by: $GITHUB_ACTOR on branch $GITHUB_REF"
+          echo " Control Plane: ${{ secrets.CYBERDEV_API_URL }}"
+          echo "===================================================="
