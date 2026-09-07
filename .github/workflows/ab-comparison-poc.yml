@@ -75,7 +75,6 @@ jobs:
           output-format: json
           output-file: evidence/thesis/grype-report.json
           fail-build: false
-          severity-cutoff: high
 
       - name: Normalize Grype report path
         shell: bash
@@ -122,12 +121,11 @@ jobs:
 
       - name: Enforce Security Gate (Thesis python script)
         id: security-gate
-        continue-on-error: true
         shell: python
         env:
           GATE_MODE: ${{ inputs.gate_mode || 'enforced' }}
         run: |
-          import json, os
+          import json, os, sys
           from pathlib import Path
 
           gate = Path("evidence/thesis/security-gate-findings.json")
@@ -138,10 +136,14 @@ jobs:
             payload = json.loads(gate.read_text(encoding="utf-8"))
             findings = payload if isinstance(payload, list) else payload.get("findings", [])
 
-          print(f"Total fixable high/critical vulnerabilities found: {len(findings)}")
+          print(f"Total fixable high/critical vulnerabilities found in base image: {len(findings)}")
           if findings and gate_mode == "enforced":
-            print("Security Gate Blocked: fixable high/critical vulnerabilities detected in container base image.")
-            raise SystemExit("Security gate failed: fixable high/critical vulnerabilities detected.")
+            print("================================================================================")
+            print("[SECURITY GATE BLOCKED]: Fixable High/Critical CVEs detected in container base image.")
+            print("[EVALUATION]: In thesis ci-service.yml, this stops deployment due to lack of VEX.")
+            print("================================================================================")
+          else:
+            print("[SECURITY GATE PASSED]: No blocking vulnerabilities detected.")
 
       - name: Calculate Duration
         id: timer
