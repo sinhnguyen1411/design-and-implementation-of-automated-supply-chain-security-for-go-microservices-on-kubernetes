@@ -77,8 +77,8 @@ jobs:
           TARGET_DIR="services/${{ matrix.service }}"
           echo "=== Scanning microservice at $TARGET_DIR ==="
           
-          # The asset name should be unique per service
-          ASSET_NAME="thesis-microservices/core-services/${{ matrix.service }}"
+          # Use the pre-created asset to test concurrent load ingestion
+          ASSET_NAME="thesis-microservices/core-services/user-auth-service"
           
           devguard-scanner sca \
             --path "$GITHUB_WORKSPACE/$TARGET_DIR" \
@@ -91,7 +91,7 @@ jobs:
         run: |
           echo "===================================================="
           echo " DevGuard SSCS End-to-End PoC Completed Successfully!"
-          echo " Target Asset: thesis-microservices/core-services/${{ matrix.service }}"
+          echo " Target Asset: thesis-microservices/core-services/user-auth-service (Load Test)"
           echo " Ingested Commit: $GITHUB_SHA"
           echo " Triggered by: $GITHUB_ACTOR on branch $GITHUB_REF"
           echo " Control Plane: ${{ secrets.CYBERDEV_API_URL }}"
