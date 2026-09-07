@@ -18,6 +18,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  DOCKER_BUILD_SUMMARY: 'false'
+
 jobs:
   # =========================================================================
   # BRANCH A: THESIS PIPELINE (.github/workflows/ci-service.yml Architecture)
@@ -249,7 +252,7 @@ jobs:
           | **Thời gian thực thi Pipeline** | ~${{ env.THESIS_TIME }} giây | ~${{ env.DEVGUARD_TIME }} giây | **Tối ưu hóa và tự động lưu vết tập trung** |
 
           ---
-          > **Chứng thực thực nghiệm:** Toàn bộ dữ liệu SBOM và rủi ro của `services/user-service` từ bài test trên đã được tiếp nhận thành công vào DevGuard Control Plane.
+          > **Minh chứng thực nghiệm:** Toàn bộ dữ liệu SBOM và rủi ro của `services/user-service` từ bài test trên đã được tiếp nhận thành công vào DevGuard Control Plane.
           EOF
 
 
