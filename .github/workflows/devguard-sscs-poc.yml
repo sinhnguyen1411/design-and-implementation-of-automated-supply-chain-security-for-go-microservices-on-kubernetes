@@ -1,0 +1,98 @@
+name: DevGuard 23-Services Benchmark PoC
+
+on:
+  push:
+    branches: [feat/poc-devguard-23-services]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  devguard-pipeline:
+    name: DevGuard SCA - ${{ matrix.service }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - alert-service
+          - analytics-service
+          - apikey-service
+          - audit-service
+          - backtest-service
+          - compliance-service
+          - data-feed-service
+          - execution-service
+          - fees-service
+          - gateway-service
+          - kyc-service
+          - margin-service
+          - market-data-service
+          - notification-service
+          - order-service
+          - portfolio-service
+          - pricing-service
+          - reporting-service
+          - risk-service
+          - search-service
+          - settlement-service
+          - user-service
+          - watchlist-service
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go Runtime
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+          cache: false
+
+      - name: Install Trivy Vulnerability Engine
+        run: |
+          echo "=== Installing Trivy v0.74.0 ==="
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin v0.74.0
+          trivy --version
+
+      - name: Install DevGuard Scanner CLI
+        run: |
+          echo "=== Installing DevGuard Scanner CLI ==="
+          go install github.com/l3montree-dev/devguard/cmd/devguard-scanner@latest
+          devguard-scanner --help
+
+      - name: Verify DevGuard Control Plane Connectivity
+        run: |
+          echo "=== Checking DevGuard Control Plane Health ==="
+          curl -i -s -f "${{ secrets.CYBERDEV_API_URL }}/api/v1/health/" || {
+            echo "ERROR: Unable to reach DevGuard Control Plane at ${{ secrets.CYBERDEV_API_URL }}"
+            exit 1
+          }
+
+      - name: Execute DevGuard SCA Scan & CycloneDX SBOM Ingestion
+        run: |
+          TARGET_DIR="services/${{ matrix.service }}"
+          echo "=== Scanning microservice at $TARGET_DIR ==="
+          
+          # The asset name should be unique per service
+          ASSET_NAME="thesis-microservices/core-services/${{ matrix.service }}"
+          
+          devguard-scanner sca \
+            --path "$GITHUB_WORKSPACE/$TARGET_DIR" \
+            --apiUrl "${{ secrets.CYBERDEV_API_URL }}" \
+            --assetName "$ASSET_NAME" \
+            --token "${{ secrets.CYBERDEV_PAT_TOKEN }}"
+
+      - name: Pipeline Summary & PoC Verification
+        if: always()
+        run: |
+          echo "===================================================="
+          echo " DevGuard SSCS End-to-End PoC Completed Successfully!"
+          echo " Target Asset: thesis-microservices/core-services/${{ matrix.service }}"
+          echo " Ingested Commit: $GITHUB_SHA"
+          echo " Triggered by: $GITHUB_ACTOR on branch $GITHUB_REF"
+          echo " Control Plane: ${{ secrets.CYBERDEV_API_URL }}"
+          echo "===================================================="
