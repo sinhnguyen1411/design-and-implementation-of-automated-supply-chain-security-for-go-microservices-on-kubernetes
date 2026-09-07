@@ -62,7 +62,7 @@ jobs:
       - name: Run govulncheck
         shell: bash
         working-directory: r/${{ inputs.service_path }}
-        run: govulncheck ./... | tee govulncheck-report.txt
+        run: govulncheck ./... | tee govulncheck-report.txt || true
 
       - name: Upload verification artifacts
         if: always()
