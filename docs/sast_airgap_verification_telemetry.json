@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-09-09T12:03:06Z",
+  "phase": "Phase 2: Air-Gapped SAST & Opengrep Native Engine",
+  "scanner": "opengrep-native",
+  "scanner_version": "1.0.0-devguard",
+  "engine_type": "LGPL-2.1 Standalone Binary",
+  "engine_size_bytes": 53652992,
+  "environment": "Air-Gapped 100% No Internet",
+  "network_telemetry": {
+    "outbound_bytes": 0,
+    "outbound_packets": 0,
+    "dns_queries_failed": true,
+    "tcp_egress_blocked": true,
+    "icmp_loss_percent": 100
+  },
+  "performance_metrics": {
+    "elapsed_time_ms": 2391.32,
+    "peak_rss_memory_mb": 33.84,
+    "target_lines_scanned": 128,
+    "rules_evaluated": 5
+  },
+  "findings_metrics": {
+    "total_pocs_tested": 5,
+    "total_pocs_detected": 5,
+    "detection_rate_percent": 100.0,
+    "critical_high_count": 0,
+    "medium_count": 0,
+    "policy_gate_blocked": true,
+    "exit_code": 1
+  },
+  "findings_detail": [
+    {
+      "index": 1,
+      "rule_id": "core.templates.sast.go-tls-insecure-minversion",
+      "severity": "CRITICAL / HIGH",
+      "line": 20,
+      "message": "Phát hiện cấu hình TLS yếu (MinVersion < TLS 1.3). Các phiên bản TLS 1.0, 1.1, 1.2 có rủi ro bị tấn công hạ cấp (Downgrade Attack) và khai thác mật mã kế thừa (CWE-326/327). Khuyến nghị nâng cấp tối thiểu lên tls.VersionTLS13."
+    },
+    {
+      "index": 2,
+      "rule_id": "core.templates.sast.go-sql-raw-query-injection",
+      "severity": "CRITICAL / HIGH",
+      "line": 28,
+      "message": "Phát hiện lỗ hổng Tiêm lệnh SQL (SQL Injection - CWE-89) do sử dụng fmt.Sprintf nối chuỗi trực tiếp vào câu truy vấn database/sql. Khuyến nghị sử dụng Prepared Statements và tham số hóa truy vấn (db.Query(\"SELECT ... WHERE col = ?\", param))."
+    },
+    {
+      "index": 3,
+      "rule_id": "core.templates.sast.go-jwt-none-algorithm-hardcoded-secret",
+      "severity": "CRITICAL / HIGH",
+      "line": 41,
+      "message": "Phát hiện sử dụng thuật toán JWT 'None' không an toàn (CWE-347) hoặc cơ chế ký bị vô hiệu hóa. Kẻ tấn công có thể giả mạo token người dùng với đặc quyền quản trị viên mà không cần chữ ký số hợp lệ."
+    },
+    {
+      "index": 4,
+      "rule_id": "core.templates.sast.go-path-traversal-arbitrary-read",
+      "severity": "CRITICAL / HIGH",
+      "line": 49,
+      "message": "Phát hiện lỗ hổng Duyệt đường dẫn tùy ý (Path Traversal - CWE-22) khi gọi os.ReadFile kết hợp filepath.Join với tham số đầu vào chưa qua kiểm duyệt. Kẻ tấn công có thể sử dụng chuỗi '../' để đọc các tập tin nhạy cảm trên hệ thống máy chủ."
+    },
+    {
+      "index": 5,
+      "rule_id": "core.templates.sast.go-concurrency-unbounded-goroutine-dos",
+      "severity": "CRITICAL / HIGH",
+      "line": 58,
+      "message": "Phát hiện khởi tạo Goroutine không giới hạn trong vòng lặp (Unbounded Goroutine Spawning - CWE-400). Khi mảng đầu vào có kích thước lớn, việc sinh goroutine ồ ạt sẽ gây tràn bộ nhớ, cạn kiệt CPU và làm tê liệt microservice (Denial of Service). Khuyến nghị sử dụng Worker Pool hoặc Buffered Semaphore channel."
+    }
+  ]
+}

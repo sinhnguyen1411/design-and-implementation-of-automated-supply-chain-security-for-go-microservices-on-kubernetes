@@ -1,0 +1,48 @@
+{
+  "timestamp": "2026-09-09T12:18:38Z",
+  "phase": "Phase 6: Air-Gapped DAST & Nuclei Engine",
+  "scanner": "nuclei-dast",
+  "scanner_version": "v3.11.1",
+  "engine_type": "Go Native Standalone Binary",
+  "engine_size_bytes": 144920576,
+  "environment": "Air-Gapped 100% No Internet",
+  "network_telemetry": {
+    "outbound_bytes": 0,
+    "outbound_packets": 0,
+    "template_download_blocked": true,
+    "dns_queries_failed": true,
+    "tcp_egress_blocked": true,
+    "icmp_loss_percent": 100
+  },
+  "performance_metrics": {
+    "elapsed_time_ms": 455.95,
+    "peak_rss_memory_mb": 42.3,
+    "endpoints_tested": 3,
+    "templates_evaluated": 3
+  },
+  "findings_metrics": {
+    "total_vulnerabilities_detected": 3,
+    "policy_gate_blocked": true,
+    "exit_code": 1
+  },
+  "findings_detail": [
+    {
+      "index": 1,
+      "rule_id": "debug-endpoint-exposure",
+      "severity": "NOTE",
+      "message": "Unauthenticated Debug Endpoint Information Disclosure (debug-endpoint-exposure) found on 127.0.0.1"
+    },
+    {
+      "index": 2,
+      "rule_id": "missing-security-headers",
+      "severity": "NOTE",
+      "message": "Missing HTTP Security Headers (missing-security-headers) found on 127.0.0.1"
+    },
+    {
+      "index": 3,
+      "rule_id": "cors-misconfiguration",
+      "severity": "ERROR",
+      "message": "CORS Wildcard Origin With Credentials Misconfiguration (cors-misconfiguration) found on 127.0.0.1"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-09-09T12:21:08Z",
+  "phase": "Phase 7: Air-Gapped Supply Chain Security & Cosign SLSA v1.0",
+  "scanner": "cosign-slsa",
+  "scanner_version": "v2.4.0",
+  "crypto_algorithm": "ECDSA P-256 (NIST Curve)",
+  "key_type": "On-Premise Offline Keypair (PKCS#8 PEM)",
+  "rekor_transparency_log": "Disabled (--insecure-ignore-tlog=true)",
+  "environment": "Air-Gapped 100% No Internet",
+  "network_telemetry": {
+    "outbound_bytes": 0,
+    "outbound_packets": 0,
+    "rekor_cloud_calls": 0,
+    "fulcio_pki_calls": 0,
+    "dns_queries_failed": true,
+    "tcp_egress_blocked": true,
+    "icmp_loss_percent": 100
+  },
+  "performance_metrics": {
+    "elapsed_time_ms": 61.01,
+    "peak_rss_memory_mb": 28.5,
+    "binary_size_mb": 19.06,
+    "tamper_detection_latency_ms": 41.2
+  },
+  "verification_metrics": {
+    "valid_signature_verified": true,
+    "tamper_detection_successful": true,
+    "slsa_attestation_verified": true,
+    "slsa_level": "SLSA Build Level 3",
+    "policy_gate_status": "BLOCKED",
+    "exit_code": 1
+  }
+}

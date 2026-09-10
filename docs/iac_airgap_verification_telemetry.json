@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-09-09T12:11:50Z",
+  "phase": "Phase 4: Air-Gapped IaC Security & Trivy Config Engine",
+  "scanner": "trivy-config",
+  "scanner_version": "v0.74.0",
+  "engine_type": "Go Native Standalone Binary",
+  "engine_size_bytes": 172239360,
+  "environment": "Air-Gapped 100% No Internet",
+  "network_telemetry": {
+    "outbound_bytes": 0,
+    "outbound_packets": 0,
+    "policy_download_blocked": true,
+    "dns_queries_failed": true,
+    "tcp_egress_blocked": true,
+    "icmp_loss_percent": 100
+  },
+  "performance_metrics": {
+    "elapsed_time_ms": 925.46,
+    "peak_rss_memory_mb": 48.2,
+    "manifest_files_scanned": 6,
+    "checks_evaluated": 200
+  },
+  "findings_metrics": {
+    "total_misconfigurations_detected": 3,
+    "policy_gate_blocked": true,
+    "exit_code": 1
+  },
+  "findings_detail": [
+    {
+      "index": 1,
+      "rule_id": "KSV-01010",
+      "severity": "WARNING",
+      "file": "configmap.yaml",
+      "message": "Artifact: configmap.yaml\nType: kubernetes\nVulnerability KSV-01010\nSeverity: MEDIUM\nMessage: ConfigMap 'user-service-config' in 'default' namespace stores sensitive contents in key(s) or value(s) '{\"      from\", \"      username\", \"  email\"}'\nLink: [KSV-01010](https://avd.aquasec.com/misconfig/ksv-01010)"
+    },
+    {
+      "index": 2,
+      "rule_id": "KSV-0110",
+      "severity": "NOTE",
+      "file": "deployment.yaml",
+      "message": "Artifact: deployment.yaml\nType: kubernetes\nVulnerability KSV-0110\nSeverity: LOW\nMessage: deployment user-service in default namespace should set metadata.namespace to a non-default namespace\nLink: [KSV-0110](https://avd.aquasec.com/misconfig/ksv-0110)"
+    },
+    {
+      "index": 3,
+      "rule_id": "KSV-0125",
+      "severity": "WARNING",
+      "file": "deployment.yaml",
+      "message": "Artifact: deployment.yaml\nType: kubernetes\nVulnerability KSV-0125\nSeverity: MEDIUM\nMessage: Container user-service in deployment user-service (namespace: default) uses an image from an untrusted registry.\nLink: [KSV-0125](https://avd.aquasec.com/misconfig/ksv-0125)"
+    }
+  ]
+}

@@ -56,3 +56,6 @@ scripts/install_vscode_extensions.sh
 tmp/actions-runs.snapshot.test.json
 tmp/run*
 tmp/ic/
+jobs.json
+*.key
+docs/cosign_keys/*.key

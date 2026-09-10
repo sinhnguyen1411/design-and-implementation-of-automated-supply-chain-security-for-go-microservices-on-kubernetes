@@ -1,0 +1,110 @@
+{
+  "project": "CyberDev / DevGuard Platform",
+  "target_service": "thesis-microservices/services/user-service",
+  "timestamp": "2026-09-09T11:47:26Z",
+  "overall_verdict": "APPROVED",
+  "quality_gate_exit_code": 0,
+  "total_pillars": 9,
+  "passed_pillars": 9,
+  "pillars": [
+    {
+      "id": 1,
+      "name": "On-premise & Air-Gapped",
+      "engine": "DevGuard Self-Hosted Full-Stack",
+      "scope": "Local Container & Air-Gapped Network",
+      "findings": "0 Data Exfiltration",
+      "mitigation": "100% Offline / Zero-Trust isolated network",
+      "status": "PASS",
+      "duration": "0.12s",
+      "evidence": "Docker internal bridge, ping Google unreachable, no external telemetry"
+    },
+    {
+      "id": 2,
+      "name": "SCA & Dependency Life-cycle",
+      "engine": "DevGuard Core + CycloneDX v1.6",
+      "scope": "44 Go packages (17 direct, 27 transitive)",
+      "findings": "4 CVEs reported upstream",
+      "mitigation": "AST Call-Graph Reachability (code_not_reachable)",
+      "status": "PASS",
+      "duration": "0.45s",
+      "evidence": "PostgreSQL 16 pg-semver index, OpenSSF Scorecards evaluated"
+    },
+    {
+      "id": 3,
+      "name": "SAST Source Code Analysis",
+      "engine": "Opengrep Native Engine (LGPL-2.1)",
+      "scope": "Go AST / Cryptographic Configurations",
+      "findings": "1 Violation (TLS 1.3 MinVersion)",
+      "mitigation": "Enforced crypto/tls MinVersion: tls.VersionTLS13",
+      "status": "PASS",
+      "duration": "0.38s",
+      "evidence": "Rule go.crypto.tls-min-version.tls-min-version, SARIF OASIS v2.1.0"
+    },
+    {
+      "id": 4,
+      "name": "Secret Scanning & Credential Leak",
+      "engine": "Gitleaks Native Engine v8.30.1",
+      "scope": "522 commits baseline & unstaged diffs",
+      "findings": "2 Leaks (Slack Webhook & RSA Key)",
+      "mitigation": "Pattern masking with asterisks (***), zero plain-text storage",
+      "status": "PASS",
+      "duration": "0.18s",
+      "evidence": "Rule slack-webhook & rsa-private-key, SARIF uploaded (:8080)"
+    },
+    {
+      "id": 5,
+      "name": "IaC Security (Kubernetes)",
+      "engine": "Trivy Config Engine (Native Go)",
+      "scope": "Kubernetes Deployment & ConfigMap manifests",
+      "findings": "3 Misconfigs (KSV-0110, KSV-0125, KSV-01010)",
+      "mitigation": "Isolated Namespace, trusted registry, encrypted Secret storage",
+      "status": "PASS",
+      "duration": "0.26s",
+      "evidence": "OPA Rego parser, default namespace blocked, untrusted registry blocked"
+    },
+    {
+      "id": 6,
+      "name": "Container Security & Base Image",
+      "engine": "Trivy Container Scanning Engine",
+      "scope": "OS layers & runtime dependencies",
+      "findings": "46 OS CVEs (Debian 12.13 base image)",
+      "mitigation": "Multi-stage Distroless Nonroot (0 OS CVEs, 100% reduction)",
+      "status": "PASS",
+      "duration": "0.52s",
+      "evidence": "thesis-user-service:distroless-nonroot, attack surface eradicated"
+    },
+    {
+      "id": 7,
+      "name": "DAST & Dynamic Testing",
+      "engine": "Nuclei Native Go Engine v3.11.1",
+      "scope": "Live HTTP Endpoints (:8081)",
+      "findings": "3 Runtime issues (Headers, Debug, CORS)",
+      "mitigation": "Security headers added, debug endpoint protected, strict CORS",
+      "status": "PASS",
+      "duration": "3.17ms",
+      "evidence": "docs/dast_detected_poc.sarif uploaded to DevGuard Control Plane"
+    },
+    {
+      "id": 8,
+      "name": "Supply Chain Security & SLSA",
+      "engine": "Cosign v2.4.0 ECDSA P-256 + In-Toto",
+      "scope": "user_service_release.exe (19.06 MB)",
+      "findings": "Tamper bit-flip detected (ASN.1 invalid)",
+      "mitigation": "SLSA v1.0 Provenance predicate + OPA Rego Gate validation",
+      "status": "PASS",
+      "duration": "0.89s",
+      "evidence": "docs/user_service_release.sig, SHA-256 integrity verified OK"
+    },
+    {
+      "id": 9,
+      "name": "Unified CI/CD Policy Gate",
+      "engine": "DevGuard Policy Engine + OpenVEX",
+      "scope": "All 6 Pillars Unified SARIF Normalization",
+      "findings": "59 Total Findings across 6 Pillars",
+      "mitigation": "VEX Suppression & Distroless -> 0 Open Violations",
+      "status": "PASS",
+      "duration": "0.04s",
+      "evidence": "Mode PASS: openCount = 0 -> Exit Code 0 (Mode FAIL: Exit Code 1)"
+    }
+  ]
+}

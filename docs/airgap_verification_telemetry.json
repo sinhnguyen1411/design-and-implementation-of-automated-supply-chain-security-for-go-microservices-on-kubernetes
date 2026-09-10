@@ -1,0 +1,82 @@
+{
+  "timestamp": "2026-09-09 18:56:38",
+  "network_id": "airgapped-net",
+  "internal_only": true,
+  "tier1_icmp": [
+    {
+      "ip": "8.8.8.8",
+      "blocked": true,
+      "details": "ping: sendto: Network unreachable"
+    },
+    {
+      "ip": "1.1.1.1",
+      "blocked": true,
+      "details": "ping: sendto: Network unreachable"
+    },
+    {
+      "ip": "208.67.222.222",
+      "blocked": true,
+      "details": "ping: sendto: Network unreachable"
+    }
+  ],
+  "tier2_dns": [
+    {
+      "domain": "google.com",
+      "blocked": true,
+      "details": "SERVFAIL: Resolver disabled in airgap subnet"
+    },
+    {
+      "domain": "github.com",
+      "blocked": true,
+      "details": "SERVFAIL: Resolver disabled in airgap subnet"
+    },
+    {
+      "domain": "metrics.semgrep.dev",
+      "blocked": true,
+      "details": "SERVFAIL: Resolver disabled in airgap subnet"
+    },
+    {
+      "domain": "ghcr.io",
+      "blocked": true,
+      "details": "SERVFAIL: Resolver disabled in airgap subnet"
+    },
+    {
+      "domain": "registry.npmjs.org",
+      "blocked": true,
+      "details": "SERVFAIL: Resolver disabled in airgap subnet"
+    }
+  ],
+  "tier3_tcp_egress": [
+    {
+      "target": "metrics.semgrep.dev:443",
+      "blocked": true,
+      "details": "Command timed out (Egress dropped by firewall/internal bridge)"
+    },
+    {
+      "target": "api.github.com:443",
+      "blocked": true,
+      "details": "Command timed out (Egress dropped by firewall/internal bridge)"
+    },
+    {
+      "target": "telemetry.devguard.org:443",
+      "blocked": true,
+      "details": "Command timed out (Egress dropped by firewall/internal bridge)"
+    }
+  ],
+  "tier4_intranet": {
+    "core_api": {
+      "status": "ACTIVE",
+      "details": "HTTP 404 (Control Plane Daemon Active)"
+    },
+    "web_dashboard": {
+      "status": "ACTIVE",
+      "details": "HTTP 200 OK (Next.js Web UI Active)"
+    }
+  },
+  "summary": {
+    "airgap_isolation": "100% VERIFIED",
+    "outbound_leak_bytes": 0,
+    "egress_packet_loss": "100%",
+    "intranet_operational": true
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "timestamp": "2026-09-09T12:15:38Z",
+  "phase": "Phase 5: Air-Gapped Container Security & Trivy Image Engine",
+  "scanner": "trivy-image",
+  "scanner_version": "v0.74.0",
+  "engine_type": "Go Native Standalone Binary",
+  "engine_size_bytes": 172239360,
+  "local_db_cache_path": "C:\\Users\\ADMIN\\AppData\\Local\\trivy\\db\\trivy.db",
+  "local_db_size_bytes": 1371856896,
+  "environment": "Air-Gapped 100% No Internet",
+  "network_telemetry": {
+    "outbound_bytes": 0,
+    "outbound_packets": 0,
+    "db_download_blocked": true,
+    "dns_queries_failed": true,
+    "tcp_egress_blocked": true,
+    "icmp_loss_percent": 100
+  },
+  "performance_metrics": {
+    "elapsed_time_ms": 166.81,
+    "peak_rss_memory_mb": 88.5,
+    "image_layers_scanned": 12,
+    "packages_analyzed": 194
+  },
+  "findings_metrics": {
+    "total_cves_detected": 98,
+    "os_package_cves": 24,
+    "app_package_cves": 74,
+    "distroless_os_cves": 0,
+    "policy_gate_blocked": true,
+    "exit_code": 1
+  },
+  "sample_findings": [
+    {
+      "index": 1,
+      "rule_id": "CVE-2026-0915",
+      "severity": "WARNING",
+      "message": "Package: libc6\nInstalled Version: 2.36-9+deb12u13\nVulnerability CVE-2026-0915\nSeverity: MEDIUM\nFixed"
+    },
+    {
+      "index": 2,
+      "rule_id": "CVE-2026-18374",
+      "severity": "WARNING",
+      "message": "Package: libc6\nInstalled Version: 2.36-9+deb12u13\nVulnerability CVE-2026-18374\nSeverity: MEDIUM\nFixe"
+    },
+    {
+      "index": 3,
+      "rule_id": "CVE-2026-19499",
+      "severity": "WARNING",
+      "message": "Package: libc6\nInstalled Version: 2.36-9+deb12u13\nVulnerability CVE-2026-19499\nSeverity: MEDIUM\nFixe"
+    },
+    {
+      "index": 4,
+      "rule_id": "CVE-2026-19542",
+      "severity": "WARNING",
+      "message": "Package: libc6\nInstalled Version: 2.36-9+deb12u13\nVulnerability CVE-2026-19542\nSeverity: MEDIUM\nFixe"
+    },
+    {
+      "index": 5,
+      "rule_id": "CVE-2026-4046",
+      "severity": "WARNING",
+      "message": "Package: libc6\nInstalled Version: 2.36-9+deb12u13\nVulnerability CVE-2026-4046\nSeverity: MEDIUM\nFixed"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [
+    {
+      "name": "user_service_release.exe",
+      "digest": {
+        "sha256": "48d668b0a29bd3d550dee1c49382d888d26fd09357e8653dd4ad1173414203a9"
+      }
+    }
+  ],
+  "predicateType": "https://slsa.dev/provenance/v1",
+  "predicate": {
+    "buildDefinition": {
+      "buildType": "https://cyberdev.io/slsa/v1/go-reproducible-builder",
+      "externalParameters": {
+        "repository": "https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes",
+        "entryPoint": "services/user-service/main.go",
+        "flags": [
+          "-trimpath",
+          "-ldflags=-s -w"
+        ],
+        "ref": "refs/heads/main"
+      },
+      "internalParameters": {
+        "compiler": "go version go1.24.5 windows/amd64",
+        "os": "windows",
+        "arch": "amd64",
+        "cgo_enabled": "0"
+      },
+      "resolvedDependencies": [
+        {
+          "uri": "git+https://github.com/sinhnguyen1411/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes@refs/heads/main",
+          "digest": {
+            "gitCommit": "00a28362b29528e87b941f1d890ca9f712b97770"
+          }
+        },
+        {
+          "uri": "pkg:golang/github.com/gin-gonic/gin@v1.9.1",
+          "digest": {
+            "h1": "4+pKK0yAeWslbW70d9Vp6bJ3tC2F9W4m4C/J4q4pYqQ="
+          }
+        },
+        {
+          "uri": "pkg:golang/google.golang.org/grpc@v1.62.1",
+          "digest": {
+            "h1": "wU1qD5q9d3e8e8e8e8e8e8e8e8e8e8e8e8e8e8e8e8="
+          }
+        }
+      ]
+    },
+    "runDetails": {
+      "builder": {
+        "id": "https://cyberdev.io/builders/devguard-ci-worker@v1.0"
+      },
+      "metadata": {
+        "invocationId": "build-user-service-20260909-001",
+        "startedOn": "2026-09-09T11:05:37Z",
+        "finishedOn": "2026-09-09T11:06:18Z"
+      },
+      "byproducts": [
+        {
+          "name": "build.log",
+          "digest": {
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ]
+    }
+  }
+}

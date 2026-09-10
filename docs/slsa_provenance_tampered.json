@@ -1,0 +1,30 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [
+    {
+      "name": "unknown_binary.exe",
+      "digest": {
+        "sha256": "bad_hash_123"
+      }
+    }
+  ],
+  "predicateType": "https://slsa.dev/provenance/v1",
+  "predicate": {
+    "buildDefinition": {
+      "buildType": "https://cyberdev.io/slsa/v1/go-reproducible-builder",
+      "externalParameters": {
+        "repository": "https://github.com/attacker/malicious-repo",
+        "entryPoint": "main.go",
+        "flags": [
+          "-O3"
+        ],
+        "ref": "refs/heads/untrusted"
+      }
+    },
+    "runDetails": {
+      "builder": {
+        "id": "https://untrusted-ci.attacker.org/worker@v99"
+      }
+    }
+  }
+}
