@@ -11,7 +11,7 @@
   "predicateType": "https://slsa.dev/provenance/v1",
   "predicate": {
     "buildDefinition": {
-      "buildType": "https://cyberdev.io/slsa/v1/go-reproducible-builder",
+      "buildType": "https://devguard.org/slsa/v1/go-reproducible-builder",
       "externalParameters": {
         "repository": "https://github.com/attacker/malicious-repo",
         "entryPoint": "main.go",

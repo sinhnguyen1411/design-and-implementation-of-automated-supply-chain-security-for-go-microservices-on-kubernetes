@@ -1,7 +1,7 @@
 {
-  "project": "CyberDev / DevGuard Platform",
+  "project": "DevGuard Security Platform",
   "target_service": "thesis-microservices/services/user-service",
-  "timestamp": "2026-09-09T11:47:26Z",
+  "timestamp": "2026-09-13T15:12:23Z",
   "overall_verdict": "APPROVED",
   "quality_gate_exit_code": 0,
   "total_pillars": 9,

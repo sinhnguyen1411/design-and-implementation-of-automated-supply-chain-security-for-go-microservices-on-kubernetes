@@ -1,4 +1,4 @@
-name: CyberDev Full 9-Pillars Security Pipeline
+name: DevGuard Multi-Pillars Security Pipeline
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - 'services/**'
-      - '.github/workflows/cyberdev-full-pillars.yml'
+      - '.github/workflows/devguard-full-pillars.yml'
   workflow_dispatch:
     inputs:
       service:
@@ -30,12 +30,12 @@ on:
           - enforced
           - warn
       distroless_mode:
-        description: "Enable Distroless Nonroot Base Image (Triệt tiêu 46 OS CVEs)"
+        description: "Enable Distroless Nonroot Base Image (Triá»‡t tiÃªu 46 OS CVEs)"
         required: true
         default: true
         type: boolean
       enable_vex:
-        description: "Enable OpenVEX Call-Graph Reachability (Triệt tiêu cảnh báo giả)"
+        description: "Enable OpenVEX Call-Graph Reachability (Triá»‡t tiÃªu cáº£nh bÃ¡o giáº£)"
         required: true
         default: true
         type: boolean
@@ -45,8 +45,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  cyberdev-9-pillars:
-    name: "CyberDev 9-Pillars: ${{ github.event.inputs.service || 'user-service' }}"
+  devguard-9-pillars:
+    name: "DevGuard 9-Pillars: ${{ github.event.inputs.service || 'user-service' }}"
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -107,8 +107,8 @@ jobs:
 
       - name: Create Artifacts Workspace
         run: |
-          mkdir -p .cyberdev/sarif .cyberdev/attestations .cyberdev/sbom .cyberdev/bin
-          echo "CyberDev workspace initialized at .cyberdev/"
+          mkdir -p .devguard/sarif .devguard/attestations .devguard/sbom .devguard/bin
+          echo "DevGuard workspace initialized at .devguard/"
 
       # ========================================================================
       # PILLAR 1: ON-PREMISE & AIR-GAPPED VERIFICATION
@@ -132,13 +132,13 @@ jobs:
           echo "=== [PILLAR 2/9] Generating CycloneDX SBOM for services/$TARGET_SERVICE ==="
           trivy fs \
             --format cyclonedx \
-            --output .cyberdev/sbom/cyclonedx_sbom.json \
+            --output .devguard/sbom/cyclonedx_sbom.json \
             "services/$TARGET_SERVICE"
           
           # Count components in SBOM
           PKG_COUNT=$(python3 -c "
           import json
-          with open('.cyberdev/sbom/cyclonedx_sbom.json') as f:
+          with open('.devguard/sbom/cyclonedx_sbom.json') as f:
               data = json.load(f)
           print(len(data.get('components', [])))
           ")
@@ -174,11 +174,11 @@ jobs:
               '\$schema': 'https://json.schemastore.org/sarif-2.1.0.json',
               'version': '2.1.0',
               'runs': [{
-                  'tool': {'driver': {'name': 'CyberDev-SAST-Opengrep', 'version': '1.0.0'}},
+                  'tool': {'driver': {'name': 'DevGuard-SAST-Opengrep', 'version': '1.0.0'}},
                   'results': violations
               }]
           }
-          with open('.cyberdev/sarif/sast-results.sarif', 'w') as f:
+          with open('.devguard/sarif/sast-results.sarif', 'w') as f:
               json.dump(sarif, f, indent=2)
           print(f'SAST scan completed. Found {len(violations)} violations.')
           "
@@ -194,13 +194,13 @@ jobs:
           gitleaks detect \
             --source="." \
             --report-format="sarif" \
-            --report-path=".cyberdev/sarif/secret-results.sarif" \
+            --report-path=".devguard/sarif/secret-results.sarif" \
             --no-banner \
             --exit-code=0 || true
 
           SECRET_LEAKS=$(python3 -c "
           import json, os
-          path = '.cyberdev/sarif/secret-results.sarif'
+          path = '.devguard/sarif/secret-results.sarif'
           if os.path.exists(path):
               with open(path) as f:
                   data = json.load(f)
@@ -221,7 +221,7 @@ jobs:
           echo "=== [PILLAR 5/9] Scanning Kubernetes Manifests with Trivy Config ==="
           trivy config \
             --format sarif \
-            --output .cyberdev/sarif/iac-results.sarif \
+            --output .devguard/sarif/iac-results.sarif \
             --severity HIGH,CRITICAL \
             --exit-code 0 \
             "services/$TARGET_SERVICE" || true
@@ -264,11 +264,11 @@ jobs:
               '\$schema': 'https://json.schemastore.org/sarif-2.1.0.json',
               'version': '2.1.0',
               'runs': [{
-                  'tool': {'driver': {'name': 'CyberDev-DAST-Nuclei', 'version': '3.3.9'}},
+                  'tool': {'driver': {'name': 'DevGuard-DAST-Nuclei', 'version': '3.3.9'}},
                   'results': []
               }]
           }
-          with open('.cyberdev/sarif/dast-results.sarif', 'w') as f:
+          with open('.devguard/sarif/dast-results.sarif', 'w') as f:
               json.dump(dast_results, f, indent=2)
           print('DAST Nuclei probe completed. Runtime headers verified.')
           "
@@ -284,42 +284,42 @@ jobs:
           
           # 1. Reproducible Go Build
           cd "services/$TARGET_SERVICE"
-          go build -trimpath -ldflags="-s -w" -o "$GITHUB_WORKSPACE/.cyberdev/bin/service_release" ./main.go || true
+          go build -trimpath -ldflags="-s -w" -o "$GITHUB_WORKSPACE/.devguard/bin/service_release" ./main.go || true
           cd "$GITHUB_WORKSPACE"
           
           # Compute SHA256 digest
-          if [ -f ".cyberdev/bin/service_release" ]; then
-            BINARY_HASH=$(sha256sum ".cyberdev/bin/service_release" | awk '{print $1}')
+          if [ -f ".devguard/bin/service_release" ]; then
+            BINARY_HASH=$(sha256sum ".devguard/bin/service_release" | awk '{print $1}')
           else
             # Mock hash if main.go requires external DB stubs
             BINARY_HASH=$(echo -n "user_service_binary_deterministic" | sha256sum | awk '{print $1}')
-            echo "deterministic_payload" > ".cyberdev/bin/service_release"
+            echo "deterministic_payload" > ".devguard/bin/service_release"
           fi
           echo "Binary SHA-256: $BINARY_HASH"
 
           # 2. Cosign Keypair Generation (Ephemeral Non-interactive)
-          export COSIGN_PASSWORD="cyberdev-ci-ephemeral-pass"
+          export COSIGN_PASSWORD="devguard-ci-ephemeral-pass"
           cosign generate-key-pair
-          mv cosign.key .cyberdev/attestations/cosign.key
-          mv cosign.pub .cyberdev/attestations/cosign.pub
+          mv cosign.key .devguard/attestations/cosign.key
+          mv cosign.pub .devguard/attestations/cosign.pub
 
           # 3. Sign Binary Artifact
           cosign sign-blob \
             --yes \
             --tlog-upload=false \
-            --key .cyberdev/attestations/cosign.key \
-            --output-signature .cyberdev/attestations/service_release.sig \
-            ".cyberdev/bin/service_release"
+            --key .devguard/attestations/cosign.key \
+            --output-signature .devguard/attestations/service_release.sig \
+            ".devguard/bin/service_release"
 
           # 4. Verify Signature
           cosign verify-blob \
             --insecure-ignore-tlog=true \
-            --key .cyberdev/attestations/cosign.pub \
-            --signature .cyberdev/attestations/service_release.sig \
-            ".cyberdev/bin/service_release"
+            --key .devguard/attestations/cosign.pub \
+            --signature .devguard/attestations/service_release.sig \
+            ".devguard/bin/service_release"
 
           # 5. Generate SLSA v1.0 Provenance Predicate
-          cat <<EOF > .cyberdev/attestations/slsa_provenance.json
+          cat <<EOF > .devguard/attestations/slsa_provenance.json
           {
             "_type": "https://in-toto.io/Statement/v1",
             "subject": [
@@ -331,7 +331,7 @@ jobs:
             "predicateType": "https://slsa.dev/provenance/v1",
             "predicate": {
               "buildDefinition": {
-                "buildType": "https://cyberdev.io/buildtypes/go-microservice@v1.0",
+                "buildType": "https://devguard.org/buildtypes/go-microservice@v1.0",
                 "externalParameters": {
                   "source": "https://github.com/${{ github.repository }}",
                   "commit": "${{ github.sha }}",
@@ -339,7 +339,7 @@ jobs:
                 }
               },
               "runDetails": {
-                "builder": { "id": "https://cyberdev.io/builders/devguard-ci-worker@v1.0" }
+                "builder": { "id": "https://devguard.org/builders/ci-worker@v1.0" }
               }
             }
           }
@@ -385,7 +385,7 @@ jobs:
               'open_count': open_count,
               'exit_code': exit_code
           }
-          with open('.cyberdev/quality_gate_result.json', 'w') as f:
+          with open('.devguard/quality_gate_result.json', 'w') as f:
               json.dump(summary, f, indent=2)
 
           if exit_code != 0 and gate_mode == 'enforced':
@@ -401,46 +401,47 @@ jobs:
         if: always()
         run: |
           cat << 'EOF' >> $GITHUB_STEP_SUMMARY
-          # 🛡️ CyberDev Security Quality Gate: 9-Pillars Evaluation Summary
+          # 🛡️ DevGuard Security Quality Gate: 9-Pillars Evaluation Summary
 
-          ### 🎯 Target Microservice: `${{ env.TARGET_SERVICE }}`
+          ### ðŸŽ¯ Target Microservice: `${{ env.TARGET_SERVICE }}`
           **Repository:** `${{ github.repository }}` | **Commit:** `${{ github.sha }}` | **Branch:** `${{ github.ref_name }}`
 
           ---
 
-          ## 📊 Ma Trận Nghiệm Thu 9 Trụ Cột An Ninh Chuỗi Cung Ứng
+          ## ðŸ“Š Ma Tráº­n Nghiá»‡m Thu 9 Trá»¥ Cá»™t An Ninh Chuá»—i Cung á»¨ng
 
-          | ID | Trụ Cột An Ninh (Security Pillar) | Động Cơ / Công Nghệ | Kết Quả | Ghi Chú Kỹ Thuật |
+          | ID | Trá»¥ Cá»™t An Ninh (Security Pillar) | Äá»™ng CÆ¡ / CÃ´ng Nghá»‡ | Káº¿t Quáº£ | Ghi ChÃº Ká»¹ Thuáº­t |
           |:--:|:----------------------------------|:-------------------|:-------:|:-----------------|
-          | **1** | **On-premise & Air-Gapped** | DevGuard Zero-Trust | ✅ **PASS** | Mạng cô lập 100%, 0 dữ liệu rò rỉ ra ngoài |
-          | **2** | **SCA & Dependency Life-cycle** | CycloneDX v1.6 SBOM | ✅ **PASS** | Kiểm soát toàn bộ thư viện Go & OpenSSF |
-          | **3** | **SAST Source Code Security** | Opengrep Native | ✅ **PASS** | Chuẩn hóa quy chuẩn mật mã TLS 1.3 |
-          | **4** | **Secret Scanning** | Gitleaks v8.24.0 | ✅ **PASS** | Tự động che giấu chuỗi bí mật (***) |
-          | **5** | **IaC Security (Kubernetes)** | Trivy Config Engine | ✅ **PASS** | Chặn lỗi cấu hình Namespace/Secret K8s |
-          | **6** | **Container Security** | Distroless Nonroot | ✅ **PASS** | Triệt tiêu 100% (46/46) OS Package CVEs |
-          | **7** | **DAST Runtime Testing** | Nuclei Engine v3.3.9 | ✅ **PASS** | Rà quét HTTP Security Headers & Debug |
-          | **8** | **Supply Chain & SLSA v1.0** | Cosign ECDSA P-256 | ✅ **PASS** | Ký số binary & sinh SLSA In-Toto Statement |
-          | **9** | **Unified CI/CD Policy Gate** | OpenVEX Rule Engine | ✅ **PASS** | Triệt tiêu cảnh báo giả, Exit Code 0 |
+          | **1** | **On-premise & Air-Gapped** | DevGuard Zero-Trust | âœ… **PASS** | Máº¡ng cÃ´ láº­p 100%, 0 dá»¯ liá»‡u rÃ² rá»‰ ra ngoÃ i |
+          | **2** | **SCA & Dependency Life-cycle** | CycloneDX v1.6 SBOM | âœ… **PASS** | Kiá»ƒm soÃ¡t toÃ n bá»™ thÆ° viá»‡n Go & OpenSSF |
+          | **3** | **SAST Source Code Security** | Opengrep Native | âœ… **PASS** | Chuáº©n hÃ³a quy chuáº©n máº­t mÃ£ TLS 1.3 |
+          | **4** | **Secret Scanning** | Gitleaks v8.24.0 | âœ… **PASS** | Tá»± Ä‘á»™ng che giáº¥u chuá»—i bÃ­ máº­t (***) |
+          | **5** | **IaC Security (Kubernetes)** | Trivy Config Engine | âœ… **PASS** | Cháº·n lá»—i cáº¥u hÃ¬nh Namespace/Secret K8s |
+          | **6** | **Container Security** | Distroless Nonroot | âœ… **PASS** | Triá»‡t tiÃªu 100% (46/46) OS Package CVEs |
+          | **7** | **DAST Runtime Testing** | Nuclei Engine v3.3.9 | âœ… **PASS** | RÃ  quÃ©t HTTP Security Headers & Debug |
+          | **8** | **Supply Chain & SLSA v1.0** | Cosign ECDSA P-256 | âœ… **PASS** | KÃ½ sá»‘ binary & sinh SLSA In-Toto Statement |
+          | **9** | **Unified CI/CD Policy Gate** | OpenVEX Rule Engine | âœ… **PASS** | Triá»‡t tiÃªu cáº£nh bÃ¡o giáº£, Exit Code 0 |
 
           ---
 
-          ## 🏆 Quyết Định Cổng Kiểm Soát Chất Lượng (Executive Verdict)
-          > ### **VERDICT: `[APPROVED]` — ALL 9 SECURITY PILLARS MET**
-          > **Mã Thoát CI/CD (Exit Code):** `0` (Sẵn sàng phát hành lên Production Kubernetes)  
-          > **Cơ chế VEX:** Triệt tiêu hoàn toàn cảnh báo giả thông qua AST Reachability (`code_not_reachable`).
+          ## ðŸ† Quyáº¿t Äá»‹nh Cá»•ng Kiá»ƒm SoÃ¡t Cháº¥t LÆ°á»£ng (Executive Verdict)
+          > ### **VERDICT: `[APPROVED]` â€” ALL 9 SECURITY PILLARS MET**
+          > **MÃ£ ThoÃ¡t CI/CD (Exit Code):** `0` (Sáºµn sÃ ng phÃ¡t hÃ nh lÃªn Production Kubernetes)  
+          > **CÆ¡ cháº¿ VEX:** Triá»‡t tiÃªu hoÃ n toÃ n cáº£nh bÃ¡o giáº£ thÃ´ng qua AST Reachability (`code_not_reachable`).
           EOF
 
       # ========================================================================
       # STEP 14: UPLOAD SECURITY ARTIFACTS
       # ========================================================================
-      - name: Upload CyberDev Security Artifacts
+      - name: Upload DevGuard Security Artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cyberdev-security-bundle-${{ env.TARGET_SERVICE }}
+          name: devguard-security-bundle-${{ env.TARGET_SERVICE }}
           path: |
-            .cyberdev/sarif/
-            .cyberdev/sbom/
-            .cyberdev/attestations/
-            .cyberdev/quality_gate_result.json
+            .devguard/sarif/
+            .devguard/sbom/
+            .devguard/attestations/
+            .devguard/quality_gate_result.json
           retention-days: 14
+

@@ -19,7 +19,7 @@ RESET = "\033[0m"
 def print_banner():
     banner = f"""{BOLD}{CYAN}
 ================================================================================
-          CYBERDEV / DEVGUARD ALL-IN-ONE SECURITY PIPELINE ORCHESTRATOR          
+                DEVGUARD ALL-IN-ONE SECURITY PIPELINE ORCHESTRATOR          
        Automated Supply Chain Security for 23 Go Microservices on Kubernetes     
 ================================================================================{RESET}
 {BOLD}Target Service:{RESET} thesis-microservices/services/user-service (Port :8081)
@@ -176,7 +176,7 @@ def run_all_pillars():
     # Save summary to JSON
     output_path = Path("docs/all_pillars_executive_summary.json")
     summary_data = {
-        "project": "CyberDev / DevGuard Platform",
+        "project": "DevGuard Security Platform",
         "target_service": "thesis-microservices/services/user-service",
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "overall_verdict": "APPROVED",

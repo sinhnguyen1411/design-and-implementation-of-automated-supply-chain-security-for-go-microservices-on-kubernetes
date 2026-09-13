@@ -2,7 +2,7 @@ name: A/B Benchmark PoC (Thesis ci-service.yml Pipeline vs DevGuard Control Plan
 
 on:
   push:
-    branches: [feat/poc-cyberdev-devguard]
+    branches: [feat/poc-devguard-sscs, main]
   workflow_dispatch:
     inputs:
       target_service:
@@ -193,9 +193,10 @@ jobs:
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin v0.74.0
           go install github.com/l3montree-dev/devguard/cmd/devguard-scanner@latest
 
-      - name: Verify DevGuard Control Plane Health
+      - name: Verify DevGuard Control Plane Connectivity
         run: |
-          curl -i -s -f "${{ secrets.CYBERDEV_API_URL }}/api/v1/health/" || {
+          API_URL="${{ secrets.DEVGUARD_API_URL || secrets.CYBERDEV_API_URL }}"
+          curl -i -s -f "$API_URL/api/v1/health/" || {
             echo "ERROR: Cannot reach DevGuard Control Plane API"
             exit 1
           }
@@ -204,9 +205,9 @@ jobs:
         run: |
           devguard-scanner sca \
             --path "$GITHUB_WORKSPACE/${{ inputs.target_service || 'services/user-service' }}" \
-            --apiUrl "${{ secrets.CYBERDEV_API_URL }}" \
+            --apiUrl "${{ secrets.DEVGUARD_API_URL || secrets.CYBERDEV_API_URL }}" \
             --assetName "thesis-microservices/core-services/user-auth-service" \
-            --token "${{ secrets.CYBERDEV_PAT_TOKEN }}"
+            --token "${{ secrets.DEVGUARD_PAT_TOKEN || secrets.CYBERDEV_PAT_TOKEN }}"
 
       - name: Calculate Duration
         id: timer
@@ -225,7 +226,7 @@ jobs:
     needs: [thesis-ci-service-pipeline, devguard-pipeline]
     runs-on: ubuntu-latest
     if: always()
-
+    
     steps:
       - name: Generate Comparative Markdown Summary
         env:
@@ -239,7 +240,7 @@ jobs:
           cat << 'EOF' >> "$GITHUB_STEP_SUMMARY"
           # Bảng Đối Soát A/B Benchmark: Thesis ci-service.yml vs DevGuard Control Plane
 
-          Thực nghiệm được thực thi tự động song song trên **GitHub Actions Cloud Runner** nhằm đánh giá định lượng tính hiệu quả, độ phức tạp và khả năng kiểm soát an toàn chuỗi cung ứng giữa **Pipeline ci-service.yml Hiện tại của Đồ Án** và **DevGuard Control Plane (CyberDev)** trên cùng microservice đại diện `services/user-service`:
+          Thực nghiệm được thực thi tự động song song trên **GitHub Actions Cloud Runner** nhằm đánh giá định lượng tính hiệu quả, độ phức tạp và khả năng kiểm soát an toàn chuỗi cung ứng giữa **Pipeline ci-service.yml Hiện tại của Đồ Án** và **DevGuard Control Plane** trên cùng microservice đại diện `services/user-service`:
 
           | Tiêu chí Đánh giá (Criteria) | Nhánh A: ci-service.yml (Đồ án hiện tại) | Nhánh B: DevGuard Control Plane (Mới) | Đánh giá & Kết luận |
           | :--- | :--- | :--- | :--- |

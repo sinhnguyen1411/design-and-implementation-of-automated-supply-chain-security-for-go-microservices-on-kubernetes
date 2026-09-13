@@ -12,7 +12,7 @@
 [![Air-Gapped](https://img.shields.io/badge/Air--Gapped-100%25%20Verified%20(0.00%20B)-success?style=for-the-badge)](#5-kết-quả-thực-nghiệm-định-lượng--dữ-liệu-đo-kiểm-thực-tế)
 [![License](https://img.shields.io/badge/License-Apache%202.0%20%2F%20MIT-blue?style=for-the-badge)](LICENSE)
 
-**Nền tảng CyberDev (Kế thừa DevGuard Control Plane) — Thực thi An ninh Chuỗi Cung ứng Đa Tầng, Kiểm chứng Vận hành Air-Gapped Zero-Trust 100% trên 23 Go Microservices**
+**Giải pháp An ninh Chuỗi Cung ứng Đa tầng trên Nền tảng DevGuard Control Plane — Thực thi An ninh Toàn diện, Kiểm chứng Vận hành Air-Gapped Zero-Trust 100% trên 23 Go Microservices**
 
 [Báo cáo Nghiên cứu Toàn văn](docs/CyberDev_Experimental_Feasibility_Report.md) • [Báo cáo DOCX](docs/CyberDev_Experimental_Feasibility_Report.docx) • [Báo cáo PDF](docs/CyberDev_Experimental_Feasibility_Report.pdf) • [Dữ liệu Đo kiểm Thực nghiệm](docs/all_pillars_executive_summary.json) • [Hướng dẫn Khởi chạy](#7-hướng-dẫn-khởi-chạy--tái-lập-kết-quả-quickstart)
 
@@ -134,7 +134,7 @@ Toàn bộ số liệu dưới đây được trích xuất trực tiếp từ c
 | **6. DAST Dynamic Testing** | Nuclei Native Engine | 3.17 ms | 18.2 MB | 6.5% | **0.00 Bytes** | **PASS** (Quét cổng :8081 nội bộ) |
 | **7. Supply Chain & SLSA** | Cosign ECDSA P-256 | 0.89 s | 28.5 MB | 12.0% | **0.00 Bytes** | **PASS** (Độ trễ verify: 61 ms) |
 | **8. Unified Policy Gate** | DevGuard OPA Rego | 0.04 s | 16.3 MB | 5.1% | **0.00 Bytes** | **PASS** (Exit Code 0, VEX Filter) |
-| **Tổng thể Hệ thống** | **CyberDev Platform** | **2.72 s** | **64.8 MB max** | **22.1% max** | **0.00 Bytes** | **100% APPROVED** |
+| **Tổng thể Hệ thống** | **DevGuard Platform** | **2.72 s** | **64.8 MB max** | **22.1% max** | **0.00 Bytes** | **100% APPROVED** |
 
 > [!IMPORTANT]
 > **Kiểm chứng Mạng Cách ly (Zero-Trust Validation)**: Quá trình đo kiểm bắt gói tin hệ thống ghi nhận chính xác `0.00 Bytes` lưu lượng Egress ra mạng công cộng trong suốt quá trình chạy 8 trụ cột. Mọi yêu cầu truy vấn phân giải DNS ngoại vi đều trả về `NameResolutionFailure` do đường mạng bị ngắt hoàn toàn.
@@ -172,7 +172,7 @@ Thực nghiệm tải đồng thời trên GitHub Actions đối chiếu giữa 
 [Pipeline A: Ghép nối script truyền thống (23 Services)]
 ████████████████████████████████████████████ 17m 45s (Thất bại do 46 CVE cảnh báo giả)
 
-[Pipeline B: CyberDev / DevGuard Control Plane (23 Services)]
+[Pipeline B: DevGuard Control Plane (23 Services)]
 ██████ 2m 45s (100% Thành công, VEX tự động triệt tiêu cảnh báo giả)
 ```
 
@@ -322,9 +322,11 @@ Hệ thống được thiết kế bám sát các tiêu chuẩn quốc tế nghi
 
 ---
 
-## 10. Tác giả & Giấy phép Mã nguồn (License & Credits)
+## 10. Tác giả & Giấy phép Mã nguồn (License & Legal Attributions)
 
 - **Đề tài Luận văn**: *Thiết kế và Triển khai Giải pháp An ninh Chuỗi Cung ứng Tự động cho Hệ sinh thái Go Microservices trên Kubernetes*.
 - **Sinh viên thực hiện**: Nguyễn Sinh ([@sinhnguyen1411](https://github.com/sinhnguyen1411))
-- **Nền tảng tham chiếu upstream**: Kế thừa và phát triển trên nền tảng mã nguồn mở [DevGuard](https://github.com/l3montree-dev/devguard) của `l3montree-dev`.
-- **Giấy phép bản quyền**: Mã nguồn được phân phối dưới giấy phép kép [Apache License 2.0](LICENSE) và [MIT License](LICENSE).
+- **Nền tảng Điều phối An ninh Upstream**: Kế thừa và tích hợp từ nền tảng mã nguồn mở [DevGuard](https://github.com/l3montree-dev/devguard) của tác giả và nhà phát hành **l3montree GmbH & DevGuard Contributors**, tuân thủ nghiêm ngặt giấy phép **GNU AGPL-3.0-or-later**.
+- **Phân định Giấy phép Bản quyền**:
+  - Mã nguồn hệ sinh thái 23 Go Microservices và các bộ kịch bản thực nghiệm do sinh viên phát triển độc lập được phân phối dưới giấy phép [Apache License 2.0](LICENSE) / [MIT License](LICENSE).
+  - Các thành phần thuộc hệ thống DevGuard Control Plane và DevGuard Scanner tuân thủ giấy phép gốc [GNU Affero General Public License v3 (AGPL-3.0-or-later)](https://www.gnu.org/licenses/agpl-3.0.html) theo đúng quy định của nhà phát hành l3montree GmbH. Nhãn hiệu "DevGuard" và "l3montree" thuộc quyền sở hữu trí tuệ của l3montree GmbH.

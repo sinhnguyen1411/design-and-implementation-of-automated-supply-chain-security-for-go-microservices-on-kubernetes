@@ -66,9 +66,10 @@ jobs:
 
       - name: Verify DevGuard Control Plane Connectivity
         run: |
-          echo "=== Checking DevGuard Control Plane Health ==="
-          curl -i -s -f "${{ secrets.CYBERDEV_API_URL }}/api/v1/health/" || {
-            echo "ERROR: Unable to reach DevGuard Control Plane at ${{ secrets.CYBERDEV_API_URL }}"
+          API_URL="${{ secrets.DEVGUARD_API_URL || secrets.CYBERDEV_API_URL }}"
+          echo "=== Checking DevGuard Control Plane Health at $API_URL ==="
+          curl -i -s -f "$API_URL/api/v1/health/" || {
+            echo "ERROR: Unable to reach DevGuard Control Plane at $API_URL"
             exit 1
           }
 
@@ -82,17 +83,18 @@ jobs:
           
           devguard-scanner sca \
             --path "$GITHUB_WORKSPACE/$TARGET_DIR" \
-            --apiUrl "${{ secrets.CYBERDEV_API_URL }}" \
+            --apiUrl "${{ secrets.DEVGUARD_API_URL || secrets.CYBERDEV_API_URL }}" \
             --assetName "$ASSET_NAME" \
-            --token "${{ secrets.CYBERDEV_PAT_TOKEN }}"
+            --token "${{ secrets.DEVGUARD_PAT_TOKEN || secrets.CYBERDEV_PAT_TOKEN }}"
 
       - name: Pipeline Summary & PoC Verification
         if: always()
         run: |
+          API_URL="${{ secrets.DEVGUARD_API_URL || secrets.CYBERDEV_API_URL }}"
           echo "===================================================="
           echo " DevGuard SSCS End-to-End PoC Completed Successfully!"
           echo " Target Asset: thesis-microservices/core-services/user-auth-service (Load Test)"
           echo " Ingested Commit: $GITHUB_SHA"
           echo " Triggered by: $GITHUB_ACTOR on branch $GITHUB_REF"
-          echo " Control Plane: ${{ secrets.CYBERDEV_API_URL }}"
+          echo " Control Plane: $API_URL"
           echo "===================================================="
