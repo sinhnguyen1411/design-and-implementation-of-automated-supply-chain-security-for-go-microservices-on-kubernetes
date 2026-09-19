@@ -1,101 +1,101 @@
 {
-  "timestamp": "2026-09-19T19:55:51Z",
+  "timestamp": "2026-09-19T22:48:27Z",
   "scenario_a": [
     {
-      "package": "Benign Core Utility",
+      "package": "G\u00f3i chu\u1ea9n (google/uuid)",
       "path": "github.com/google/uuid/@v/v1.6.0.info",
       "category": "safe",
       "status_code": 200,
-      "latency_ms": 361.15,
+      "latency_ms": 327.12,
       "blocked": false,
       "leaked_to_disk": false
     },
     {
-      "package": "Policy Blocked Logging",
+      "package": "G\u00f3i b\u1ecb c\u1ea5m (logrus)",
       "path": "github.com/sirupsen/logrus/@v/v1.9.3.info",
       "category": "policy_blocked",
       "status_code": 200,
-      "latency_ms": 326.45,
+      "latency_ms": 306.51,
       "blocked": false,
       "leaked_to_disk": true
     },
     {
-      "package": "Known OSV Malware",
+      "package": "M\u00e3 \u0111\u1ed9c th\u1eed nghi\u1ec7m",
       "path": "github.com/fake-org/malicious-package/@v/v1.0.0.info",
       "category": "malware",
       "status_code": 404,
-      "latency_ms": 337.72,
+      "latency_ms": 1885.68,
       "blocked": false,
       "leaked_to_disk": true
     },
     {
-      "package": "Real OSV Malware",
+      "package": "M\u00e3 \u0111\u1ed9c boltdb-go th\u1eadt",
       "path": "github.com/boltdb-go/bolt/@v/v1.3.1.info",
       "category": "malware",
       "status_code": 403,
-      "latency_ms": 613.67,
+      "latency_ms": 656.1,
       "blocked": true,
       "leaked_to_disk": false
     },
     {
-      "package": "Cooldown Quarantine (<48h)",
+      "package": "G\u00f3i m\u1edbi c\u1ea7n c\u00e1ch ly",
       "path": "golang.org/x/sync/@v/v0.6.0.info",
       "category": "cooldown",
       "status_code": 200,
-      "latency_ms": 343.32,
+      "latency_ms": 448.13,
       "blocked": false,
       "leaked_to_disk": true
     }
   ],
   "scenario_b": [
     {
-      "package": "Benign Core Utility",
+      "package": "G\u00f3i chu\u1ea9n (google/uuid)",
       "path": "github.com/google/uuid/@v/v1.6.0.info",
       "category": "safe",
       "status_code": 200,
-      "latency_ms": 14.44,
+      "latency_ms": 14.48,
       "blocked": false,
       "security_header": "HIT",
       "leaked_to_disk": false
     },
     {
-      "package": "Policy Blocked Logging",
+      "package": "G\u00f3i b\u1ecb c\u1ea5m (logrus)",
       "path": "github.com/sirupsen/logrus/@v/v1.9.3.info",
       "category": "policy_blocked",
       "status_code": 403,
-      "latency_ms": 24.8,
+      "latency_ms": 3.96,
       "blocked": true,
-      "security_header": "X-Not-Allowed-Package",
+      "security_header": "Ch\u1eb7n theo lu\u1eadt",
       "leaked_to_disk": false
     },
     {
-      "package": "Known OSV Malware",
+      "package": "M\u00e3 \u0111\u1ed9c th\u1eed nghi\u1ec7m",
       "path": "github.com/fake-org/malicious-package/@v/v1.0.0.info",
       "category": "malware",
       "status_code": 403,
-      "latency_ms": 11.44,
+      "latency_ms": 5.53,
       "blocked": true,
-      "security_header": "X-Malicious-Package",
+      "security_header": "Ch\u1eb7n m\u00e3 \u0111\u1ed9c",
       "leaked_to_disk": false
     },
     {
-      "package": "Real OSV Malware",
+      "package": "M\u00e3 \u0111\u1ed9c boltdb-go th\u1eadt",
       "path": "github.com/boltdb-go/bolt/@v/v1.3.1.info",
       "category": "malware",
       "status_code": 403,
-      "latency_ms": 29.03,
+      "latency_ms": 5.59,
       "blocked": true,
-      "security_header": "X-Malicious-Package",
+      "security_header": "Ch\u1eb7n m\u00e3 \u0111\u1ed9c",
       "leaked_to_disk": false
     },
     {
-      "package": "Cooldown Quarantine (<48h)",
+      "package": "G\u00f3i m\u1edbi c\u1ea7n c\u00e1ch ly",
       "path": "golang.org/x/sync/@v/v0.6.0.info",
       "category": "cooldown",
       "status_code": 403,
-      "latency_ms": 67.61,
+      "latency_ms": 74.31,
       "blocked": true,
-      "security_header": "X-Too-New-Package",
+      "security_header": "Ch\u1eb7n c\u00e1ch ly (m\u1edbi ra)",
       "leaked_to_disk": false
     }
   ],
@@ -103,35 +103,35 @@
     {
       "package": "github.com/google/uuid",
       "status_code": 200,
-      "latency_ms": 4.29,
+      "latency_ms": 20.13,
       "cache_status": "HIT",
       "served_offline": true
     },
     {
       "package": "github.com/gin-gonic/gin",
       "status_code": 200,
-      "latency_ms": 14.48,
+      "latency_ms": 5.08,
       "cache_status": "HIT",
       "served_offline": true
     },
     {
       "package": "go.uber.org/zap",
       "status_code": 200,
-      "latency_ms": 16.26,
+      "latency_ms": 4.84,
       "cache_status": "HIT",
       "served_offline": true
     },
     {
       "package": "github.com/stretchr/testify",
       "status_code": 200,
-      "latency_ms": 16.08,
+      "latency_ms": 5.52,
       "cache_status": "HIT",
       "served_offline": true
     },
     {
       "package": "github.com/prometheus/client_golang",
       "status_code": 200,
-      "latency_ms": 14.93,
+      "latency_ms": 5.45,
       "cache_status": "HIT",
       "served_offline": true
     }
@@ -142,7 +142,7 @@
     "scenario_b_block_rate": 100.0,
     "scenario_b_leaked": 0,
     "scenario_c_cache_hit_rate": 100.0,
-    "scenario_c_avg_latency_ms": 13.208000000000002,
-    "speedup_factor": 27.3
+    "scenario_c_avg_latency_ms": 8.203999999999999,
+    "speedup_factor": 39.9
   }
 }

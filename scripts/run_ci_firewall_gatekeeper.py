@@ -12,6 +12,9 @@ import time
 import re
 import requests
 
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 SERVICES_DIR = "services"
 PROXY_BASE_URL = os.environ.get("DEVGUARD_PROXY_URL", "http://localhost:8080/api/v1/dependency-proxy")
 ASSET_SECRET = os.environ.get("DEVGUARD_ASSET_SECRET", "4a882f42-bdb4-49a0-b5fe-0509eb92faa0")
@@ -95,14 +98,14 @@ def check_dependency(mod_path, version):
 
 def run_gatekeeper():
     print("=" * 90)
-    print("  DEVGUARD DEPENDENCY FIREWALL: 23 GO MICROSERVICES ENTERPRISE AUDIT MATRIX")
+    print("  KIỂM TRA AN NINH THƯ VIỆN CỦA 23 GO MICROSERVICES")
     print("=" * 90)
 
     services = [d for d in os.listdir(SERVICES_DIR) if os.path.isdir(os.path.join(SERVICES_DIR, d))]
     services.sort()
 
     total_services = len(services)
-    print(f"[AUDIT] Scanning {total_services} microservices in '{SERVICES_DIR}/'...\n")
+    print(f"Bắt đầu quét {total_services} microservices trong thư mục '{SERVICES_DIR}/'...\n")
 
     matrix_report = []
     overall_total_deps = 0
@@ -110,8 +113,8 @@ def run_gatekeeper():
     overall_blocked_deps = 0
     service_pass_count = 0
 
-    # Header for CLI table
-    print(f"{'No.':<4} | {'Microservice Name':<26} | {'Deps':<5} | {'Passed':<7} | {'Blocked':<8} | {'Avg Latency':<12} | {'Compliance Status'}")
+    # Header bảng kết quả
+    print(f"{'STT':<4} | {'Tên Microservice':<26} | {'Tổng':<5} | {'Hợp lệ':<7} | {'Bị chặn':<8} | {'Thời gian':<12} | {'Kết quả'}")
     print("-" * 90)
 
     for idx, svc_name in enumerate(services, 1):
@@ -132,7 +135,7 @@ def run_gatekeeper():
         overall_passed_deps += passed_deps
         overall_blocked_deps += blocked_deps
 
-        status_str = "PASSED [100%]" if blocked_deps == 0 else f"FAIL [{blocked_deps} Violations]"
+        status_str = "ĐẠT [100%]" if blocked_deps == 0 else f"LỖI [{blocked_deps} gói cấm]"
         if blocked_deps == 0:
             service_pass_count += 1
 
@@ -150,14 +153,14 @@ def run_gatekeeper():
         })
 
     print("-" * 90)
-    print(f"[SUMMARY] Total Services Audited       : {total_services} / {total_services}")
-    print(f"[SUMMARY] Compliant Services (Zero Vuln): {service_pass_count} / {total_services} ({(service_pass_count/total_services)*100:.1f}%)")
-    print(f"[SUMMARY] Total Dependency Checkpoints : {overall_total_deps}")
-    print(f"[SUMMARY] Approved & Clean Packages    : {overall_passed_deps}")
-    print(f"[SUMMARY] Blocked / Quarantined Packages: {overall_blocked_deps}")
+    print(f"Tổng số microservice kiểm tra    : {total_services} / {total_services}")
+    print(f"Số service đạt chuẩn (không lỗi) : {service_pass_count} / {total_services} ({(service_pass_count/total_services)*100:.1f}%)")
+    print(f"Tổng số lượt kiểm tra thư viện   : {overall_total_deps}")
+    print(f"Số gói an toàn được thông qua    : {overall_passed_deps}")
+    print(f"Số gói vi phạm bị chặn           : {overall_blocked_deps}")
     print("=" * 90)
 
-    # Save report
+    # Lưu kết quả ra file JSON
     out_file = "docs/dependency_firewall_23_services_audit.json"
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump({
@@ -169,7 +172,7 @@ def run_gatekeeper():
             "total_blocked": overall_blocked_deps,
             "services_matrix": matrix_report
         }, f, indent=2)
-    print(f"[REPORT] Enterprise audit matrix successfully saved to {out_file}")
+    print(f"[ĐÃ LƯU] File kết quả: {out_file}")
 
 if __name__ == "__main__":
     run_gatekeeper()
