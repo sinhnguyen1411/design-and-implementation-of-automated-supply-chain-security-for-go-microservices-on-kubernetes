@@ -1,0 +1,192 @@
+{
+  "experiment_name": "Hadolint Dockerfile Build Security Evaluation",
+  "standard_specifications": [
+    "CIS Docker Benchmark v1.6.0",
+    "NIST SP 800-190 Container Security",
+    "SLSA Build Level 3 Hermetic Builds"
+  ],
+  "timestamp": "2026-09-19T06:58:54Z",
+  "engine": {
+    "name": "Hadolint",
+    "version": "v2.12.0",
+    "type": "AST Parser + ShellCheck Integration",
+    "execution_mode": "Native Offline Single-Binary (Air-Gapped)",
+    "binary_size_bytes": 7372288
+  },
+  "network_isolation_telemetry": {
+    "egress_bytes": 0.0,
+    "dns_queries": 0,
+    "telemetry_exfiltration": "BLOCKED (Air-Gapped Zero-Trust)"
+  },
+  "ab_comparison_user_service": {
+    "baseline": {
+      "dockerfile": "services\\user-service\\Dockerfile.baseline",
+      "base_image": "ubuntu:latest",
+      "user_privilege": "root (UID 0)",
+      "total_violations": 10,
+      "breakdown": {
+        "error": 3,
+        "warning": 6,
+        "style": 1,
+        "info": 0
+      },
+      "rules_triggered": [
+        "DL3002",
+        "DL3007",
+        "DL3008",
+        "DL3009",
+        "DL3015",
+        "DL3020",
+        "DL3025",
+        "DL4006"
+      ],
+      "quality_gate_status": "BLOCKED",
+      "exit_code": 1,
+      "analysis_duration_ms": 115.59
+    },
+    "hardened_distroless": {
+      "dockerfile": "services\\user-service\\Dockerfile",
+      "base_image": "gcr.io/distroless/static-debian12:nonroot",
+      "user_privilege": "65532:65532 (Nonroot Least Privilege)",
+      "total_violations": 0,
+      "breakdown": {
+        "error": 0,
+        "warning": 0,
+        "style": 0,
+        "info": 0
+      },
+      "rules_triggered": [],
+      "quality_gate_status": "APPROVED",
+      "exit_code": 0,
+      "analysis_duration_ms": 112.61
+    },
+    "differential_metrics": {
+      "violation_reduction_percentage": 100.0,
+      "privilege_escalation_risk": "ELIMINATED (UID 65532)",
+      "reproducibility_assurance": "ENFORCED (Pinned tags & Clean layers)"
+    }
+  },
+  "ecosystem_evaluation_23_services": {
+    "total_services": 23,
+    "compliant_services": 23,
+    "compliance_rate_percent": 100.0,
+    "total_scan_time_ms": 2412.06,
+    "services": {
+      "alert-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 102.79
+      },
+      "analytics-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 111.95
+      },
+      "apikey-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 102.54
+      },
+      "audit-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 102.53
+      },
+      "backtest-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 102.56
+      },
+      "compliance-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 101.07
+      },
+      "data-feed-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 106.23
+      },
+      "execution-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 101.9
+      },
+      "fees-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 103.26
+      },
+      "gateway-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 106.87
+      },
+      "kyc-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 102.16
+      },
+      "margin-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 104.22
+      },
+      "market-data-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 102.18
+      },
+      "notification-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 113.28
+      },
+      "order-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 103.95
+      },
+      "portfolio-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 104.74
+      },
+      "pricing-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 103.09
+      },
+      "reporting-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 103.74
+      },
+      "risk-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 105.98
+      },
+      "search-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 103.95
+      },
+      "settlement-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 102.95
+      },
+      "user-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 105.63
+      },
+      "watchlist-service": {
+        "status": "PASS",
+        "findings_count": 0,
+        "latency_ms": 112.55
+      }
+    }
+  }
+}

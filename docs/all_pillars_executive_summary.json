@@ -1,7 +1,7 @@
 {
   "project": "DevGuard Security Platform",
   "target_service": "thesis-microservices/services/user-service",
-  "timestamp": "2026-09-13T15:12:23Z",
+  "timestamp": "2026-09-19T07:04:40Z",
   "overall_verdict": "APPROVED",
   "quality_gate_exit_code": 0,
   "total_pillars": 9,
@@ -64,14 +64,14 @@
     },
     {
       "id": 6,
-      "name": "Container Security & Base Image",
-      "engine": "Trivy Container Scanning Engine",
-      "scope": "OS layers & runtime dependencies",
-      "findings": "46 OS CVEs (Debian 12.13 base image)",
-      "mitigation": "Multi-stage Distroless Nonroot (0 OS CVEs, 100% reduction)",
+      "name": "Container Security: Hadolint & Distroless",
+      "engine": "Hadolint v2.12.0 + Trivy Container Engine",
+      "scope": "Dockerfile AST & Minimalist Distroless Layers",
+      "findings": "Hadolint: 0 Violations (Clean Pass, 100% compliant) | Trivy: 0 OS CVEs",
+      "mitigation": "Multi-stage Distroless Nonroot (UID 65532, 100% violation & CVE reduction)",
       "status": "PASS",
-      "duration": "0.52s",
-      "evidence": "thesis-user-service:distroless-nonroot, attack surface eradicated"
+      "duration": "109.53ms + 0.52s",
+      "evidence": "docs/hadolint_hardened.sarif & thesis-user-service:distroless-nonroot (0 CVEs)"
     },
     {
       "id": 7,
@@ -99,8 +99,8 @@
       "id": 9,
       "name": "Unified CI/CD Policy Gate",
       "engine": "DevGuard Policy Engine + OpenVEX",
-      "scope": "All 6 Pillars Unified SARIF Normalization",
-      "findings": "59 Total Findings across 6 Pillars",
+      "scope": "All Multi-Pillars Unified SARIF Normalization",
+      "findings": "59 Total Findings across Pillars (Pre-VEX)",
       "mitigation": "VEX Suppression & Distroless -> 0 Open Violations",
       "status": "PASS",
       "duration": "0.04s",

@@ -1,0 +1,39 @@
+# ==============================================================================
+# BASELINE DOCKERFILE (Legacy / Unhardened Pattern - Anti-patterns for A/B PoC)
+# Target: services/user-service
+# Noticeable Violations: Root execution, unpinned packages, cache leakage, piping
+# ==============================================================================
+
+FROM golang:latest AS builder
+WORKDIR /app
+
+# DL3020: Use COPY instead of ADD for files and folders
+ADD go.mod go.sum ./
+RUN go mod download
+
+ADD . .
+RUN CGO_ENABLED=0 go build -o user-service .
+
+# DL3007: Using latest tag is prone to breaking changes and supply chain drift
+FROM ubuntu:latest
+
+# DL3015: Avoid additional packages by specifying `--no-install-recommends`
+# DL3008: Pin versions in apt get install.
+# DL3009: Delete the apt-get lists after installing something
+RUN apt-get update && apt-get install -y curl net-tools ca-certificates
+
+# DL4006: Set the SHELL option -o pipefail before RUN with a pipe in it
+# SC2086: Double quote to prevent globbing and word splitting
+RUN curl -fsSL https://raw.githubusercontent.com/example/healthcheck/main/install.sh | bash
+
+WORKDIR /app
+COPY --from=builder /app/user-service /app/user-service
+COPY cmd/server/config/local.yaml /app/config.yaml
+
+EXPOSE 18080 19090
+
+# DL3002: Last USER should not be root (Violation of Principle of Least Privilege)
+USER root
+
+# DL3025: Use arguments JSON notation for CMD and ENTRYPOINT arguments
+CMD /app/user-service server --config /app/config.yaml

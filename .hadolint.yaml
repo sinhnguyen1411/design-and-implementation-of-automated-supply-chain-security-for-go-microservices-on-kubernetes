@@ -1,0 +1,39 @@
+# ==============================================================================
+# HADOLINT CONFIGURATION: Dockerfile Security & Best Practice Linter
+# Project: Automated Supply Chain Security for Go Microservices on Kubernetes
+# Standards: CIS Docker Benchmark v1.6, NIST SP 800-190, SLSA Level 3
+# ==============================================================================
+
+# Minimum severity to trigger failure in CI/CD Quality Gate
+failure-threshold: warning
+
+# Severity level overrides for critical supply chain security rules
+override:
+  error:
+    - DL3002 # Last USER should not be root (Enforce Least Privilege / Nonroot)
+    - DL3004 # Do not use sudo as it leads to unpredictable privilege escalation
+    - DL3006 # Always tag the version of an image explicitly
+    - DL3008 # Pin versions in apt-get install (Avoid non-deterministic builds)
+    - DL3013 # Pin versions in pip
+    - DL3018 # Pin versions in apk add
+    - DL4006 # Set the SHELL option -o pipefail before RUN with pipes
+    - SC2086 # Double quote to prevent globbing and word splitting
+  warning:
+    - DL3007 # Using latest tag is prone to breaking and supply chain drift
+    - DL3009 # Delete the apt-get lists after installing packages (Cache Minimization)
+    - DL3015 # Avoid additional packages by specifying --no-install-recommends
+    - DL3020 # Use COPY instead of ADD for local files and folders
+    - DL3059 # Multiple consecutive RUN instructions. Consider consolidation
+  info:
+    - DL3019 # Use the `--no-cache` switch in apk add
+  style:
+    - DL3025 # Use arguments JSON notation for CMD and ENTRYPOINT arguments
+
+# Allowed/trusted image registries to prevent pulling from unverified sources
+trustedRegistries:
+  - docker.io
+  - gcr.io
+  - ghcr.io
+  - registry.k8s.io
+  - mcr.microsoft.com
+  - quay.io

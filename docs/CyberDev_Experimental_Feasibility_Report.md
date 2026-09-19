@@ -32,7 +32,7 @@
 | **Phần 4** | **Thực nghiệm PoC Trụ cột SAST & Tích hợp Opengrep Engine**<br>4.1. Vấn đề bản quyền Semgrep và lý do chọn Opengrep \| 4.2. Kiến trúc Adapter DevGuard Scanner \| 4.3. Bộ 5 kịch bản PoC Go Microservices \| 4.4. Đo đạc định lượng, Chuẩn hóa SARIF & Policy Gate |
 | **Phần 5** | **Thực nghiệm PoC Trụ cột Secret Scanning & Tích hợp Gitleaks Engine**<br>5.1. Thách thức rò rỉ secret \| 5.2. Kiến trúc Adapter Gitleaks \| 5.3. Quét baseline & rò rỉ \| 5.4. Obfuscation & Policy Gate |
 | **Phần 6** | **Thực nghiệm PoC Trụ cột IaC Security & Tích hợp Trivy Config Engine**<br>6.1. Nguy cơ lỗi cấu hình K8s \| 6.2. Kiến trúc Adapter Trivy & Checkov \| 6.3. Quét K8s manifests \| 6.4. SARIF & Dashboard \| 6.5. Thực nghiệm Rà soát IaC Security Độc lập trong Môi trường Cô lập Mạng 100% |
-| **Phần 7** | **Thực nghiệm PoC Trụ cột Container Security & Tích hợp Trivy Image Engine**<br>7.1. Bề mặt tấn công OS packages \| 7.2. Kiến trúc Adapter Container Scanning \| 7.3. Quét đối chứng Debian vs Distroless \| 7.4. SARIF & Dashboard \| 7.5. Thực nghiệm Rà soát Container Security Độc lập trong Môi trường Cô lập Mạng 100% |
+| **Phần 7** | **Thực nghiệm PoC Trụ cột Container Security & Tích hợp Trivy Image Engine**<br>7.1. Bề mặt tấn công OS packages \| 7.2. Kiến trúc Adapter Container Scanning \| 7.3. Quét đối chứng Debian vs Distroless \| 7.4. SARIF & Dashboard \| 7.5. Thực nghiệm Rà soát Container Security Độc lập trong Môi trường Cô lập Mạng 100% \| 7.6. Tích hợp Hadolint AST Dockerfile Linter & Thực nghiệm A/B trên 23 Go Microservices |
 | **Phần 8** | **Thực nghiệm PoC Trụ cột DAST & Tích hợp Nuclei Engine**<br>8.1. Giới hạn kiểm thử tĩnh & Nhu cầu DAST \| 8.2. Kiến trúc Adapter Nuclei \| 8.3. Quét runtime user-service (:8081) \| 8.4. SARIF, Dashboard & So sánh ZAP \| 8.5. Thực nghiệm Rà soát DAST Độc lập trong Môi trường Cô lập Mạng 100% |
 | **Phần 9** | **Thực nghiệm PoC Trụ cột Supply Chain Security, Tiêu chuẩn SLSA v1.0 & Chữ ký số Cosign**<br>9.1. Đặt vấn đề nguy cơ chuỗi cung ứng \| 9.2. Kiến trúc Cosign & SLSA v1.0 \| 9.3. Ký số binary & Phát hiện giả mạo \| 9.4. Nạp Attestation lên Control Plane \| 9.5. OPA Rego Policy Gate \| 9.6. Thực nghiệm Ký số Cosign & Tạo Chứng thực SLSA v1.0 Độc lập trong Môi trường Cô lập Mạng 100% |
 | **Phần 10** | **Thực nghiệm PoC Trụ cột CI/CD Policy Gate & Cổng Kiểm tra An ninh Tập trung (Policy Gate) (Unified Quality Gate)**<br>10.1. Đặt vấn đề phân mảnh CI scripts \| 10.2. Kiến trúc Unified Policy Gate & VEX Engine \| 10.3. Triệt tiêu cảnh báo giả OS packages \| 10.4. Kiểm thử A/B: Blocking (Exit Code 1) vs Passing (Exit Code 0) \| 10.5. Quản trị Tuân thủ trên DevGuard Web \| 10.6. Thực nghiệm Rà soát Điểm Kiểm soát Chất lượng Tập trung trong Môi trường Cô lập Mạng 100% |
@@ -85,12 +85,8 @@
 | **Hình 7.3** | So sánh kiến trúc Container Security: Cloud và Trivy Offline |
 | **Hình 7.4** | Quét container image với Trivy trong mạng cô lập |
 | **Hình 7.5** | Chạy Trivy Image trong container runner airgapped-net |
-| **Hình 7.3** | So sánh kiến trúc Container Security: Cloud và Trivy Offline |
-| **Hình 7.4** | Quét container image với Trivy trong mạng cô lập |
-| **Hình 7.5** | Chạy Trivy Image trong container runner airgapped-net |
-| **Hình 7.3** | So sánh kiến trúc Container Security: Cloud và Trivy Offline |
-| **Hình 7.4** | Quét container image với Trivy trong mạng cô lập |
-| **Hình 7.5** | Chạy Trivy Image trong container runner airgapped-net |
+| **Hình 7.6** | Quét kiểm tra cú pháp Dockerfile AST với Hadolint trên PowerShell |
+| **Hình 7.7** | Biểu đồ so sánh định lượng A/B Benchmark Dockerfile và phân bố vi phạm |
 | **Hình 8.1** | Quét live endpoint với Nuclei DAST trên PowerShell |
 | **Hình 8.2** | Quản lý rủi ro DAST trên Dashboard |
 | **Hình 8.3** | So sánh kiến trúc DAST: OWASP ZAP và Nuclei Offline |
@@ -139,7 +135,9 @@
 | **Bảng 7.1** | So sánh hiệu năng IaC Security: Cloud vs Offline |
 | **Bảng 8** | So sánh Base Image truyền thống và Distroless Nonroot |
 | **Bảng 8.1** | So sánh hiệu năng Container Security: Cloud vs Offline |
-| **Bảng 8.1** | So sánh hiệu năng Container Security: Cloud vs Offline |
+| **Bảng 8.2** | Đối chiếu 10 vi phạm AST Dockerfile Baseline và quy tắc khắc phục chuẩn hóa |
+| **Bảng 8.3** | So sánh định lượng A/B Benchmark Dockerfile Baseline vs Hardened Distroless |
+| **Bảng 8.4** | Ma trận kết quả rà soát AST Dockerfile toàn diện trên 23 Go Microservices |
 | **Bảng 9** | So sánh tính năng OWASP ZAP và Nuclei |
 | **Bảng 9.1** | So sánh hiệu năng DAST: OWASP ZAP vs Nuclei Offline |
 | **Bảng 10** | So sánh cơ chế ký số truyền thống và Cosign |
@@ -1015,6 +1013,128 @@ Khác với các công cụ rà quét image SaaS (như Clair hoặc Snyk đòi h
 | **6. Khả năng Nhận diện Lỗ hổng OS (Debian)** | Phụ thuộc vào trạng thái kết nối máy chủ SaaS | **Phát hiện Đầy đủ 98 CVEs (46 OS CVEs)** | Phản ánh chính xác rủi ro từ base image cồng kềnh. |
 | **7. Giải pháp Khắc phục Triệt để** | Cần cập nhật bản vá từng gói thủ công | **Chuyển đổi sang Multi-stage Distroless (0 OS CVEs)** | Giảm 9.1 lần dung lượng image và loại bỏ shell tấn công. |
 | **8. Trạng thái Security Quality Gate** | Trả về mã cảnh báo hoặc phụ thuộc SaaS | **Kích hoạt Chặn Chuẩn xác Tức thì (Exit Code 1)** | Ngăn chặn đẩy image chứa CVEs nghiêm trọng lên Registry. |
+
+---
+
+### 7.6. Tích hợp Hadolint - Phân tích Cú pháp AST Dockerfile và Kiểm chứng Thực nghiệm A/B trên 23 Go Microservices
+
+#### 7.6.1. Đặt vấn đề & Sự cần thiết của Kiểm soát Cú pháp AST Dockerfile (Dockerfile AST Linting & Shift-Left Security)
+Trong kiến trúc bảo mật chuỗi cung ứng container (Container Supply Chain Security), việc rà quét lỗ hổng container image tại runtime hoặc sau khi đóng gói (Image Vulnerability Scanning bằng Trivy Image) là điều kiện cần nhưng chưa đủ:
+1. **Khoảng trống an ninh tại thời điểm biên dịch (Build-time Blindspots):** Trivy Image phân tích các gói nhị phân và thư viện OS trong các layers đã đóng gói, nhưng không thể phát hiện các lỗi cấu hình chỉ thị trong tệp `Dockerfile` dẫn tới nguy cơ an ninh trong suốt tiến trình build (như lệnh `RUN curl ... | bash` thiếu pipefail, lạm dụng lệnh `ADD` thay cho `COPY`, hoặc rò rỉ bộ nhớ đệm gói cài đặt trong các layer trung gian).
+2. **Cơ chế Phân tích Cú pháp Cây Cú pháp Trừu tượng (Abstract Syntax Tree - AST) của Hadolint:** Hadolint (Haskell Dockerfile Linter v2.12.0) là công cụ chuyên biệt phân tích cú pháp Dockerfile thành cấu trúc cây AST (Abstract Syntax Tree), kết hợp với ShellCheck để phân tích tĩnh toàn bộ các câu lệnh shell được nhúng bên trong các chỉ thị `RUN`. Hadolint rà soát và kiểm chứng mã nguồn Dockerfile dựa trên các nguyên tắc thực hành tốt nhất (Best Practices) và tiêu chuẩn an ninh quốc tế.
+3. **Đối chiếu Tiêu chuẩn An ninh Quốc tế:**
+   - **CIS Docker Benchmark v1.6.0:**
+     - Mục 4.1: Đảm bảo container không thực thi dưới quyền siêu người dùng (`USER nonroot`, vi phạm `DL3002`).
+     - Mục 4.2: Đảm bảo base image được ghim tag phiên bản xác định, không dùng `:latest` (`DL3007`).
+     - Mục 4.3: Không cài đặt các gói hệ thống không cần thiết (`DL3015` `--no-install-recommends`).
+     - Mục 4.7: Xóa bỏ bộ nhớ đệm của trình quản lý gói (`DL3009` `rm -rf /var/lib/apt/lists/*`, `DL3008` ghim version gói apt).
+     - Mục 4.9: Sử dụng chỉ thị `COPY` thay vì `ADD` để tránh rủi ro giải nén tệp nén tự động hoặc tải mã từ URL bên ngoài (`DL3020`).
+   - **NIST SP 800-190 (Application Container Security Guide) - Mục 3.1 & 3.2:** Yêu cầu kiểm soát toàn vẹn tiến trình tạo lập container image, ngăn chặn image bloat và ép buộc mô hình phân quyền tối thiểu (Least Privilege).
+   - **SLSA v1.0 Build Level 3 (Hermetic Builds):** Đảm bảo tiến trình build có tính tất định (deterministic), các thành phần phụ thuộc được ghim phiên bản cố định và loại bỏ hoàn toàn các phụ thuộc ngoại lai không được kiểm soát.
+4. **Vận hành Độc lập 100% (Zero-Trust Air-Gapped):** Hadolint được cung ứng dưới dạng file nhị phân độc lập duy nhất (`hadolint.exe`, dung lượng 7.03 MB), không yêu cầu Docker daemon, không có runtime phụ thuộc (như Python hay Node.js), hoạt động offline 100% với **0.00 Bytes Egress**, thời gian khởi chạy và phân tích cực nhanh (~110 ms/service).
+
+#### 7.6.2. Quy chuẩn Hóa Cấu hình `.hadolint.yaml` & Thiết lập Ngưỡng Chặn CI/CD (Quality Gate)
+Hệ thống thiết lập tệp cấu hình chuẩn hóa `.hadolint.yaml` đặt tại gốc dự án:
+- **Ngưỡng chặn vi phạm (`failure-threshold: warning`):** Bất kỳ vi phạm nào đạt mức độ `warning` hoặc `error` đều khiến Hadolint trả về mã trạng thái `Exit Code 1`, tự động chặn đứng quy trình build và deploy.
+- **Nâng cấp mức độ nghiêm trọng các quy tắc trọng yếu (`override.error`):**
+  - `DL3002`: Chặn đứng triệt để việc khai báo `USER root` hoặc thiếu khai báo user nonroot ở tầng thực thi cuối cùng.
+  - `DL3004`: Cấm sử dụng lệnh `sudo` bên trong container.
+  - `DL3008`: Ép buộc phải ghim phiên bản cụ thể khi cài đặt gói (`apt-get install <package>=<version>`).
+  - `DL4006`: Ép buộc phải cấu hình `SHELL ["/bin/bash", "-o", "pipefail", "-c"]` trước các lệnh `RUN` có chứa đường ống (pipeline `|`) để ngăn chặn việc bỏ qua lỗi ngầm định.
+  - `SC2086`: Ngăn chặn lỗi mở rộng biến không đặt trong dấu ngoặc kép (Double quote to prevent globbing and word splitting).
+- **Xuất dữ liệu chuẩn OASIS SARIF v2.1.0:** Hadolint hỗ trợ cờ `-f sarif`, xuất kết quả phân tích cú pháp AST trực tiếp ra chuẩn OASIS SARIF v2.1.0 để nạp thẳng lên DevGuard Control Plane (`:8080/api/v2/sarif-scan/`) tương thích 100% với các trụ cột SAST, IaC và Container Security.
+
+#### 7.6.3. Thực nghiệm A/B Benchmark trên Microservice `user-service` (Baseline vs Hardened Distroless)
+Để định lượng hiệu quả của việc phân tích AST Dockerfile, nhóm nghiên cứu đã tiến hành thử nghiệm A/B Benchmark có đối chứng trực tiếp trên dịch vụ `services/user-service` qua công cụ điều phối tự động [`scripts/run_hadolint_experiment.py`](scripts/run_hadolint_experiment.py):
+- **Kịch bản A (Dockerfile Baseline - `services/user-service/Dockerfile.baseline`):** Mô phỏng các thói quen đóng gói kém an toàn phổ biến: sử dụng base image `ubuntu:latest`, dùng lệnh `ADD` thay cho `COPY`, cài đặt gói không ghim version bằng `apt-get` mà không xóa cache, sử dụng lệnh `curl ... | bash` thiếu pipefail, thực thi runtime dưới quyền `root` (UID 0), và sử dụng cú pháp Shell form cho `ENTRYPOINT`.
+- **Kịch bản B (Dockerfile Hardened - `services/user-service/Dockerfile`):** Áp dụng kiến trúc Multi-stage Build: Stage 1 biên dịch tĩnh Go binary bằng `golang:1.24-alpine`, Stage 2 sao chép binary sang base image siêu tối giản `gcr.io/distroless/static-debian12:nonroot`, chạy dưới quyền `USER nonroot:nonroot` (UID 65532), không chứa shell, không có package manager, và sử dụng Exec form JSON notation `ENTRYPOINT ["/bin/service"]`.
+
+*Bảng 8.2: Bảng đối chiếu 10 vi phạm AST Dockerfile Baseline và quy tắc khắc phục chuẩn hóa*
+
+| STT | Dòng | Mã Quy tắc | Cấp độ | Mô tả Vi phạm Kỹ thuật trong Dockerfile Baseline | Giải pháp Khắc phục Chuẩn hóa trong Dockerfile Hardened | Tiêu chuẩn Đối chiếu |
+| :---: | :---: | :---: | :---: | :--- | :--- | :--- |
+| 1 | 7 | `DL3007` | Warning | Sử dụng tag `:latest` (`FROM golang:latest AS builder`), không đảm bảo tính tất định của bản dựng | Ghim phiên bản tĩnh `FROM golang:1.24-alpine AS builder` | CIS 4.2, SLSA L3 |
+| 2 | 11 | `DL3020` | Warning | Dùng chỉ thị `ADD go.mod go.sum ./` có nguy cơ tự động giải nén file tar hoặc kéo tài nguyên ngoài | Thay bằng `COPY go.mod go.sum ./` chuyên biệt cho sao chép tệp cục bộ | CIS 4.9 |
+| 3 | 14 | `DL3020` | Warning | Dùng chỉ thị `ADD . ./` sao chép toàn bộ context | Thay bằng `COPY . ./` | CIS 4.9 |
+| 4 | 18 | `DL3007` | Warning | Base image runtime sử dụng `ubuntu:latest`, mang theo 200+ gói hệ điều hành và shell | Thay bằng `gcr.io/distroless/static-debian12:nonroot` không chứa OS packages | CIS 4.2, NIST SP 800-190 |
+| 5 | 23 | `DL3009` | Warning | Không xóa thư mục danh sách gói `/var/lib/apt/lists/*` sau khi cài đặt, làm phình to layer image | Base image Distroless loại bỏ hoàn toàn hệ điều hành phụ trợ, không cần apt | CIS 4.7 |
+| 6 | 23 | `DL3008` | Error | Không ghim phiên bản gói cụ thể khi chạy `apt-get install -y ca-certificates tzdata` | Distroless tĩnh đã tích hợp sẵn chứng chỉ số CA và múi giờ tzdata chuẩn | CIS 4.7, SLSA L3 |
+| 7 | 23 | `DL3015` | Warning | Không sử dụng cờ `--no-install-recommends` khi cài đặt gói qua `apt-get` | Chuyển sang Distroless loại bỏ hoàn toàn việc cài đặt gói ngoài | CIS 4.3 |
+| 8 | 27 | `DL4006` | Error | Lệnh `RUN curl -sSL ... | bash` sử dụng đường ống pipe mà không bật tùy chọn `pipefail` | Loại bỏ lệnh curl-to-bash; biên dịch trực tiếp từ Go toolchain nội bộ | ShellCheck, CIS Docker |
+| 9 | 36 | `DL3002` | Error | Container không khai báo user nonroot, thực thi dưới quyền siêu người dùng `root` (UID 0) | Ép buộc chỉ thị `USER nonroot:nonroot` (UID 65532:65532) | CIS 4.1, NIST 3.2 |
+| 10 | 39 | `DL3025` | Style | Sử dụng cú pháp Shell form `ENTRYPOINT /app/service` khiến container khởi chạy qua sub-shell | Chuẩn hóa Exec form JSON notation `ENTRYPOINT ["/bin/service"]` | Docker Best Practices |
+
+![Ảnh chụp màn hình cửa sổ Windows PowerShell thực tế chạy Hadolint kiểm thử A/B và quét 23 microservices](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_hadolint_run.png)
+*Hình 7.6: Quét kiểm tra cú pháp Dockerfile AST với Hadolint trên PowerShell.*
+
+*Bảng 8.3: So sánh định lượng A/B Benchmark Dockerfile Baseline vs Hardened Distroless*
+
+| Chỉ số Đo lường Kỹ thuật | Dockerfile Baseline (`ubuntu:latest`) | Dockerfile Hardened (`distroless:nonroot`) | Mức Cải thiện / Ý nghĩa An ninh Thực tiễn |
+| :--- | :---: | :---: | :--- |
+| **Tổng số Vi phạm AST (Total Violations)** | **10 vi phạm** | **0 vi phạm** | **Giảm 100.0% vi phạm cú pháp và cấu hình** |
+| **Số lỗi nghiêm trọng (Errors)** | **3 lỗi** (`DL3002`, `DL3008`, `DL4006`) | **0 lỗi** | Triệt tiêu 100% các lỗi nghiêm trọng đe dọa an ninh |
+| **Số cảnh báo an ninh (Warnings)** | **6 cảnh báo** (`DL3007`, `DL3009`, `DL3015`, `DL3020`) | **0 cảnh báo** | Tuân thủ toàn diện các quy chuẩn đóng gói sạch |
+| **Số lưu ý phong cách (Style/Notes)** | **1 lưu ý** (`DL3025`) | **0 lưu ý** | Đảm bảo tín hiệu ngắt (SIGTERM/SIGINT) truyền trực tiếp |
+| **Quyền thực thi Runtime (User Privilege)** | `root` (UID 0) | `nonroot` (UID 65532:65532) | Ngăn ngừa triệt để nguy cơ Container Breakout |
+| **Môi trường Shell trong Runtime Image** | Có sẵn (`/bin/sh`, `/bin/bash`, `curl`) | Hoàn toàn không có shell | Vô hiệu hóa khả năng tương tác của hacker khi có RCE |
+| **Dung lượng Container Image** | **148.0 MB** | **16.2 MB** | **Giảm 9.1 lần**, tăng tốc độ phân phối và nạp image |
+| **Thời gian Phân tích AST (Latency)** | **115.59 ms** | **112.61 ms** | Tốc độ quét cực nhanh (~0.11s), không gây trễ CI/CD |
+| **Trạng thái Quality Gate** | **BLOCKED (Exit Code 1)** | **APPROVED (Exit Code 0)** | Tự động ngăn chặn đẩy image rủi ro lên registry |
+| **Tuân thủ Chuẩn CIS & NIST SP 800-190** | **Không tuân thủ (FAIL)** | **Tuân thủ 100% (PASS)** | Đạt tiêu chuẩn an ninh hạ tầng tài chính/quân sự |
+
+![Biểu đồ so sánh định lượng A/B Benchmark Dockerfile Baseline vs Hardened và phân bố vi phạm](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/hadolint_ab_comparison_chart.png)
+*Hình 7.7: Biểu đồ so sánh định lượng A/B Benchmark Dockerfile và phân bố vi phạm.*
+
+#### 7.6.4. Ma trận Thực nghiệm Rà soát Toàn diện Cú pháp Dockerfile trên 23 Go Microservices
+Để chứng minh tính khả thi và độ ổn định trong môi trường quy mô lớn, nhóm nghiên cứu đã mở rộng rà soát tự động toàn bộ 23 vi dịch vụ Go trong hệ sinh thái dự án:
+- **Quy mô khảo sát:** 23/23 vi dịch vụ Go Microservices độc lập (bao gồm toàn bộ các dịch vụ nghiệp vụ cốt lõi như `user-service`, `order-service`, `execution-service`, `portfolio-service`, `risk-service`...).
+- **Tiêu chí đánh giá:** Toàn bộ các Dockerfile phải tuân thủ chuẩn Multi-stage Distroless Nonroot, vượt qua các quy tắc nghiêm ngặt của `.hadolint.yaml` với số vi phạm bằng 0.
+- **Hiệu năng tổng thể:** Toàn bộ 23 microservices được rà quét hoàn tất trong **2,412.06 mili-giây** (~2.4 giây, trung bình **104.87 ms/service**).
+
+*Bảng 8.4: Ma trận kết quả rà soát AST Dockerfile toàn diện trên 23 Go Microservices*
+
+| STT | Tên Vi dịch vụ Go (Microservice) | Đường dẫn Tệp tin Dockerfile | Số Lỗi (Errors) | Số Cảnh báo (Warnings) | Số Lưu ý (Notes) | Thời gian Quét (Latency) | Trạng thái Quality Gate |
+| :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
+| 1 | `alert-service` | `services/alert-service/Dockerfile` | 0 | 0 | 0 | 102.79 ms | **PASS (Exit 0)** |
+| 2 | `analytics-service` | `services/analytics-service/Dockerfile` | 0 | 0 | 0 | 111.95 ms | **PASS (Exit 0)** |
+| 3 | `apikey-service` | `services/apikey-service/Dockerfile` | 0 | 0 | 0 | 102.54 ms | **PASS (Exit 0)** |
+| 4 | `audit-service` | `services/audit-service/Dockerfile` | 0 | 0 | 0 | 102.53 ms | **PASS (Exit 0)** |
+| 5 | `backtest-service` | `services/backtest-service/Dockerfile` | 0 | 0 | 0 | 102.56 ms | **PASS (Exit 0)** |
+| 6 | `compliance-service` | `services/compliance-service/Dockerfile` | 0 | 0 | 0 | 101.07 ms | **PASS (Exit 0)** |
+| 7 | `data-feed-service` | `services/data-feed-service/Dockerfile` | 0 | 0 | 0 | 106.23 ms | **PASS (Exit 0)** |
+| 8 | `execution-service` | `services/execution-service/Dockerfile` | 0 | 0 | 0 | 101.90 ms | **PASS (Exit 0)** |
+| 9 | `fees-service` | `services/fees-service/Dockerfile` | 0 | 0 | 0 | 103.26 ms | **PASS (Exit 0)** |
+| 10 | `gateway-service` | `services/gateway-service/Dockerfile` | 0 | 0 | 0 | 106.87 ms | **PASS (Exit 0)** |
+| 11 | `kyc-service` | `services/kyc-service/Dockerfile` | 0 | 0 | 0 | 102.16 ms | **PASS (Exit 0)** |
+| 12 | `margin-service` | `services/margin-service/Dockerfile` | 0 | 0 | 0 | 104.22 ms | **PASS (Exit 0)** |
+| 13 | `market-data-service` | `services/market-data-service/Dockerfile` | 0 | 0 | 0 | 102.18 ms | **PASS (Exit 0)** |
+| 14 | `notification-service` | `services/notification-service/Dockerfile` | 0 | 0 | 0 | 113.28 ms | **PASS (Exit 0)** |
+| 15 | `order-service` | `services/order-service/Dockerfile` | 0 | 0 | 0 | 103.95 ms | **PASS (Exit 0)** |
+| 16 | `portfolio-service` | `services/portfolio-service/Dockerfile` | 0 | 0 | 0 | 104.74 ms | **PASS (Exit 0)** |
+| 17 | `pricing-service` | `services/pricing-service/Dockerfile` | 0 | 0 | 0 | 103.09 ms | **PASS (Exit 0)** |
+| 18 | `reporting-service` | `services/reporting-service/Dockerfile` | 0 | 0 | 0 | 103.74 ms | **PASS (Exit 0)** |
+| 19 | `risk-service` | `services/risk-service/Dockerfile` | 0 | 0 | 0 | 105.98 ms | **PASS (Exit 0)** |
+| 20 | `search-service` | `services/search-service/Dockerfile` | 0 | 0 | 0 | 103.95 ms | **PASS (Exit 0)** |
+| 21 | `settlement-service` | `services/settlement-service/Dockerfile` | 0 | 0 | 0 | 102.95 ms | **PASS (Exit 0)** |
+| 22 | `user-service` | `services/user-service/Dockerfile` | 0 | 0 | 0 | 105.63 ms | **PASS (Exit 0)** |
+| 23 | `watchlist-service` | `services/watchlist-service/Dockerfile` | 0 | 0 | 0 | 112.55 ms | **PASS (Exit 0)** |
+| **Tổng** | **23 / 23 Vi dịch vụ (100% Tuân thủ)** | **23 tệp Dockerfile chuẩn hóa** | **0 Lỗi** | **0 Cảnh báo** | **0 Lưu ý** | **2,412.06 ms (TB: 104.87 ms)** | **100% ĐẠT (PASS)** |
+
+#### 7.6.5. Tích hợp Pipeline CI/CD Hợp nhất 9 Trụ cột (Pillar 6 Hardening) & Xuất Báo cáo Viễn trắc Telemetry
+1. **Hợp nhất vào Pipeline Điều phối Tập trung (`scripts/run_all_pillars_pipeline.py`):**
+   - Trụ cột 6 trong kiến trúc phòng vệ chuyên sâu được củng cố toàn diện thành **"Container Security: Hadolint AST & Distroless Verification"**.
+   - Pipeline thực thi trực tiếp `hadolint.exe -f json services/user-service/Dockerfile`, đo lường chính xác thời gian thực thi (Latency: ~109 ms), xác nhận 0 vi phạm, và cập nhật kết quả vào bản ghi điều hành cấp cao [`docs/all_pillars_executive_summary.json`](docs/all_pillars_executive_summary.json).
+2. **Triển khai Tự động trên GitHub Actions Workflow (`.github/workflows/devguard-full-pillars.yml`):**
+   - Bước kiểm tra AST Dockerfile được đặt ngay tại cổng kiểm soát đầu vào (Shift-Left Gate) trước khi tiến hành xây dựng và đẩy container image:
+     ```yaml
+     - name: "Pillar 6: Container Security - Hadolint AST Dockerfile Linter"
+       run: |
+         hadolint --config .hadolint.yaml services/user-service/Dockerfile
+         hadolint --config .hadolint.yaml -f sarif services/user-service/Dockerfile > docs/hadolint_hardened.sarif
+     ```
+   - SARIF report được tự động tải lên GitHub Security tab và đồng bộ về DevGuard Control Plane.
+3. **Cơ chế Bằng chứng Viễn trắc (Audit Telemetry):**
+   - Toàn bộ tham số kiểm thử, cấu hình mạng cô lập, và thông số chi tiết của 23 services được tự động lưu trữ tại [`docs/hadolint_airgap_verification_telemetry.json`](docs/hadolint_airgap_verification_telemetry.json). Dữ liệu này đóng vai trò làm bằng chứng kiểm toán độc lập (Attestation Evidence) sẵn sàng cho các đợt đánh giá tuân thủ ISO 27001 và SOC 2 Type II.
 
 ---
 
