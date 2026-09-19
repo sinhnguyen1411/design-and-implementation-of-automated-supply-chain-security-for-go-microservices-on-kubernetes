@@ -86,7 +86,7 @@
 | **Hình 7.4** | Quét container image với Trivy trong mạng cô lập |
 | **Hình 7.5** | Chạy Trivy Image trong container runner airgapped-net |
 | **Hình 7.6** | Quét kiểm tra cú pháp Dockerfile AST với Hadolint trên PowerShell |
-| **Hình 7.7** | Biểu đồ so sánh định lượng A/B Benchmark Dockerfile và phân bố vi phạm |
+| **Hình 7.7** | Cấu hình quy tắc an ninh .hadolint.yaml và kết quả phân tích AST trên Windows Terminal |
 | **Hình 8.1** | Quét live endpoint với Nuclei DAST trên PowerShell |
 | **Hình 8.2** | Quản lý rủi ro DAST trên Dashboard |
 | **Hình 8.3** | So sánh kiến trúc DAST: OWASP ZAP và Nuclei Offline |
@@ -1082,8 +1082,8 @@ Hệ thống thiết lập tệp cấu hình chuẩn hóa `.hadolint.yaml` đặ
 | **Trạng thái Quality Gate** | **BLOCKED (Exit Code 1)** | **APPROVED (Exit Code 0)** | Tự động ngăn chặn đẩy image rủi ro lên registry |
 | **Tuân thủ Chuẩn CIS & NIST SP 800-190** | **Không tuân thủ (FAIL)** | **Tuân thủ 100% (PASS)** | Đạt tiêu chuẩn an ninh hạ tầng tài chính/quân sự |
 
-![Biểu đồ so sánh định lượng A/B Benchmark Dockerfile Baseline vs Hardened và phân bố vi phạm](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/hadolint_ab_comparison_chart.png)
-*Hình 7.7: Biểu đồ so sánh định lượng A/B Benchmark Dockerfile và phân bố vi phạm.*
+![Ảnh chụp màn hình cửa sổ Windows Terminal thực tế hiển thị cấu hình quy chuẩn .hadolint.yaml và kết quả rà soát AST](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_hadolint_violations.png)
+*Hình 7.7: Cấu hình quy tắc an ninh .hadolint.yaml và kết quả phân tích AST trên Windows Terminal.*
 
 #### 7.6.4. Ma trận Thực nghiệm Rà soát Toàn diện Cú pháp Dockerfile trên 23 Go Microservices
 Để chứng minh tính khả thi và độ ổn định trong môi trường quy mô lớn, nhóm nghiên cứu đã mở rộng rà soát tự động toàn bộ 23 vi dịch vụ Go trong hệ sinh thái dự án:

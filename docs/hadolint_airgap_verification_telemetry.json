@@ -5,7 +5,7 @@
     "NIST SP 800-190 Container Security",
     "SLSA Build Level 3 Hermetic Builds"
   ],
-  "timestamp": "2026-09-19T06:58:54Z",
+  "timestamp": "2026-09-19T07:22:31Z",
   "engine": {
     "name": "Hadolint",
     "version": "v2.12.0",
@@ -42,7 +42,7 @@
       ],
       "quality_gate_status": "BLOCKED",
       "exit_code": 1,
-      "analysis_duration_ms": 115.59
+      "analysis_duration_ms": 115.15
     },
     "hardened_distroless": {
       "dockerfile": "services\\user-service\\Dockerfile",
@@ -58,7 +58,7 @@
       "rules_triggered": [],
       "quality_gate_status": "APPROVED",
       "exit_code": 0,
-      "analysis_duration_ms": 112.61
+      "analysis_duration_ms": 109.2
     },
     "differential_metrics": {
       "violation_reduction_percentage": 100.0,
@@ -70,122 +70,122 @@
     "total_services": 23,
     "compliant_services": 23,
     "compliance_rate_percent": 100.0,
-    "total_scan_time_ms": 2412.06,
+    "total_scan_time_ms": 2466.86,
     "services": {
       "alert-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 102.79
+        "latency_ms": 109.63
       },
       "analytics-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 111.95
+        "latency_ms": 103.25
       },
       "apikey-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 102.54
+        "latency_ms": 109.35
       },
       "audit-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 102.53
+        "latency_ms": 108.43
       },
       "backtest-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 102.56
+        "latency_ms": 104.68
       },
       "compliance-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 101.07
+        "latency_ms": 104.42
       },
       "data-feed-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 106.23
+        "latency_ms": 101.64
       },
       "execution-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 101.9
+        "latency_ms": 105.53
       },
       "fees-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 103.26
+        "latency_ms": 103.22
       },
       "gateway-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 106.87
+        "latency_ms": 114.49
       },
       "kyc-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 102.16
+        "latency_ms": 104.81
       },
       "margin-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 104.22
+        "latency_ms": 112.85
       },
       "market-data-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 102.18
+        "latency_ms": 104.54
       },
       "notification-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 113.28
+        "latency_ms": 106.51
       },
       "order-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 103.95
+        "latency_ms": 103.66
       },
       "portfolio-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 104.74
+        "latency_ms": 106.8
       },
       "pricing-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 103.09
+        "latency_ms": 106.46
       },
       "reporting-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 103.74
+        "latency_ms": 105.93
       },
       "risk-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 105.98
+        "latency_ms": 115.64
       },
       "search-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 103.95
+        "latency_ms": 112.99
       },
       "settlement-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 102.95
+        "latency_ms": 105.96
       },
       "user-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 105.63
+        "latency_ms": 111.08
       },
       "watchlist-service": {
         "status": "PASS",
         "findings_count": 0,
-        "latency_ms": 112.55
+        "latency_ms": 103.02
       }
     }
   }
