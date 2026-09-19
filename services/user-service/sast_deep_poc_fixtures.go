@@ -1,6 +1,4 @@
-// Package fixtures contains deliberate security vulnerability test fixtures for SAST evaluation.
-// Generated for DevGuard automated supply chain security verification on Go Microservices.
-package fixtures
+package main
 
 import (
 	"crypto/tls"
