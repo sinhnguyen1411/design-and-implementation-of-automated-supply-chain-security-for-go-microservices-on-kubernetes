@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Generate publication-quality, high-resolution architecture and flow diagrams
-for DevGuard Dependency Firewall matching the exact aesthetic of airgap_zero_trust_topology.png.
+Generate clean, conversational, easy-to-understand architecture and flow diagrams
+for DevGuard Dependency Firewall.
 """
 import os
 import shutil
@@ -13,25 +13,25 @@ HTML_ARCHITECTURE = """<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>DevGuard Dependency Firewall Architecture</title>
+<title>Cách DevGuard Bảo Vệ 23 Microservices</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
     background: #0B0F19;
     color: #F8FAFC;
-    padding: 48px 56px;
+    padding: 44px 50px;
     width: 2200px;
-    min-height: 1400px;
+    min-height: 1350px;
   }
   .header {
     text-align: center;
-    margin-bottom: 48px;
+    margin-bottom: 40px;
   }
   .header h1 {
     font-size: 38px;
     font-weight: 800;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     text-transform: uppercase;
     color: #FFFFFF;
     margin-bottom: 12px;
@@ -41,6 +41,7 @@ HTML_ARCHITECTURE = """<!DOCTYPE html>
     color: #94A3B8;
     max-width: 1400px;
     margin: 0 auto;
+    line-height: 1.5;
   }
 
   /* 4-Stage Horizontal Pipeline */
@@ -48,14 +49,14 @@ HTML_ARCHITECTURE = """<!DOCTYPE html>
     display: flex;
     align-items: stretch;
     justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 48px;
+    gap: 18px;
+    margin-bottom: 40px;
   }
   .stage-card {
     flex: 1;
     background: #111827;
     border-radius: 16px;
-    padding: 28px 24px;
+    padding: 26px 22px;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -70,12 +71,12 @@ HTML_ARCHITECTURE = """<!DOCTYPE html>
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
+    width: 40px;
     flex-shrink: 0;
   }
   .connector-circle {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -83,25 +84,17 @@ HTML_ARCHITECTURE = """<!DOCTYPE html>
     font-size: 20px;
     font-weight: bold;
     border: 2px solid;
-  }
-  .connector-circle.arrow {
     background: rgba(16, 185, 129, 0.15);
     border-color: #10B981;
     color: #10B981;
   }
-  .connector-circle.deny {
-    background: rgba(239, 68, 68, 0.15);
-    border-color: #EF4444;
-    color: #EF4444;
-  }
 
   .stage-header {
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
   .stage-title {
     font-size: 20px;
     font-weight: 800;
-    letter-spacing: 0.5px;
     text-transform: uppercase;
     margin-bottom: 6px;
   }
@@ -119,8 +112,8 @@ HTML_ARCHITECTURE = """<!DOCTYPE html>
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    margin-bottom: 24px;
+    gap: 12px;
+    margin-bottom: 22px;
   }
   .feature-item {
     display: flex;
@@ -156,11 +149,10 @@ HTML_ARCHITECTURE = """<!DOCTYPE html>
 
   .stage-footer {
     border-radius: 10px;
-    padding: 12px 16px;
+    padding: 12px 14px;
     text-align: center;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
-    letter-spacing: 0.5px;
     text-transform: uppercase;
   }
   .stage-card.blue .stage-footer {
@@ -189,19 +181,18 @@ HTML_ARCHITECTURE = """<!DOCTYPE html>
     background: #111827;
     border: 2px solid #1E3A8A;
     border-radius: 16px;
-    padding: 28px 32px;
+    padding: 26px 30px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   }
   .table-title {
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 800;
     color: #38BDF8;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
   }
   .table-title::before {
     content: '';
@@ -222,14 +213,13 @@ HTML_ARCHITECTURE = """<!DOCTYPE html>
     color: #94A3B8;
     font-weight: 700;
     text-align: left;
-    padding: 14px 18px;
+    padding: 12px 16px;
     text-transform: uppercase;
     font-size: 13px;
-    letter-spacing: 0.8px;
     border-bottom: 2px solid #334155;
   }
   td {
-    padding: 16px 18px;
+    padding: 15px 16px;
     border-bottom: 1px solid #1E293B;
     color: #E2E8F0;
     vertical-align: middle;
@@ -242,12 +232,10 @@ HTML_ARCHITECTURE = """<!DOCTYPE html>
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
   }
   .pill.red { background: rgba(239, 68, 68, 0.2); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.4); }
   .pill.amber { background: rgba(245, 158, 11, 0.2); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.4); }
   .pill.green { background: rgba(16, 185, 129, 0.2); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.4); }
-  .pill.blue { background: rgba(14, 165, 233, 0.2); color: #38BDF8; border: 1px solid rgba(14, 165, 233, 0.4); }
   
   .mono {
     font-family: 'Consolas', 'Courier New', monospace;
@@ -258,8 +246,8 @@ HTML_ARCHITECTURE = """<!DOCTYPE html>
 <body>
 
   <div class="header">
-    <h1>Kiến Trúc Tường Lửa Phụ Thuộc DevGuard (Dependency Firewall Architecture)</h1>
-    <p>Mô hình In-line Pre-ingestion Proxy kiểm soát toàn diện chuỗi cung ứng mã nguồn cho 23 Go Microservices trên Kubernetes</p>
+    <h1>Cách DevGuard Bảo Vệ 23 Microservices Khi Tải Thư Viện Go</h1>
+    <p>DevGuard đứng giữa làm người gác cổng: chặn gói cấm, diệt mã độc, giữ lại gói mới ra lò và lưu sẵn trên đĩa để build nhanh hơn</p>
   </div>
 
   <div class="pipeline-container">
@@ -267,169 +255,169 @@ HTML_ARCHITECTURE = """<!DOCTYPE html>
     <!-- Stage 1 -->
     <div class="stage-card blue">
       <div class="stage-header">
-        <div class="stage-title">1. Môi Trường Build & Clients</div>
-        <div class="stage-subtitle">Các điểm phát sinh nhu cầu tải phụ thuộc Go</div>
+        <div class="stage-title">1. Phía Dev & 23 Dịch Vụ</div>
+        <div class="stage-subtitle">Nơi chạy code và gọi lệnh tải thư viện</div>
       </div>
       <div class="stage-content">
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>23 Go Microservices:</b> user-service, order-service, payment-service, auth-service, ...</div>
+          <div><b>23 Dịch vụ Go:</b> user-service, order-service, payment-service, auth-service...</div>
         </div>
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>Developer Workstation:</b> Lệnh <code>go get</code> / <code>go mod download</code></div>
+          <div><b>Lệnh chạy hàng ngày:</b> <code>go get</code>, <code>go mod download</code>, <code>docker build</code></div>
         </div>
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>CI/CD Runner:</b> GitHub Actions / GitLab CI Runner nội bộ</div>
+          <div><b>Cài đặt duy nhất:</b> Đổi địa chỉ tải gói sang DevGuard thay vì tự tải thẳng</div>
         </div>
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>Kubernetes Builder:</b> Docker BuildKit / Kaniko multi-stage</div>
+          <div><b>Nguyên tắc an toàn:</b> Bắt buộc đi qua DevGuard, nếu có lỗi sẽ dừng build ngay</div>
         </div>
         <div class="code-badge">
-          ENV GOPROXY="http://devguard:8080/api/v1/dependency-proxy/{secret}/go"
+          export GOPROXY="http://devguard:8080/api/v1/dependency-proxy/{secret}/go"
         </div>
       </div>
-      <div class="stage-footer">FAIL-CLOSED ENFORCEMENT (CHẶN 100% DIRECT)</div>
+      <div class="stage-footer">BẮT BUỘC ĐI QUA CỔNG KIỂM TRA</div>
     </div>
 
     <div class="connector">
-      <div class="connector-circle arrow">&rarr;</div>
+      <div class="connector-circle">&rarr;</div>
     </div>
 
     <!-- Stage 2 -->
     <div class="stage-card orange">
       <div class="stage-header">
-        <div class="stage-title">2. DevGuard Firewall Gateway</div>
-        <div class="stage-subtitle">Cổng kiểm soát an ninh in-line độc quyền (Core)</div>
+        <div class="stage-title">2. Cổng Lọc DevGuard</div>
+        <div class="stage-subtitle">Người gác cổng kiểm tra mọi thứ trước khi cho tải</div>
       </div>
       <div class="stage-content">
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>Reverse Proxy Router:</b> Phân tích giao thức GOPROXY (<code>/@v/list</code>, <code>.info</code>, <code>.mod</code>, <code>.zip</code>)</div>
+          <div><b>Nhận diện dự án:</b> Đọc mã bí mật (secret) để biết ai đang gọi tải gói</div>
         </div>
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>Secret Scope Resolver:</b> Xác thực token phân cấp Asset / Project / Organization</div>
+          <div><b>So danh sách cấm:</b> Kiểm tra tên gói xem có trong danh sách đen không</div>
         </div>
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>Rule Pattern Matcher:</b> Whitelist / Blacklist PURL (hỗ trợ wildcard <code>*</code> và phủ định <code>!</code>)</div>
+          <div><b>Kiểm tra tuổi của gói:</b> Nếu gói mới ra mắt dưới 48 tiếng thì chặn ngay</div>
         </div>
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>Cooldown Quarantine Engine:</b> Ngăn chặn gói mới phát hành &lt; 48 giờ (Phòng vệ Zero-Day)</div>
+          <div><b>Báo lỗi tức thì:</b> Trả về lỗi 403, mã độc không bao giờ chạm được vào máy</div>
         </div>
       </div>
-      <div class="stage-footer">HTTP 403 FORBIDDEN (CHẶN PRE-INGESTION)</div>
+      <div class="stage-footer">CHẶN NGAY TỪ CỔNG (LỖI 403)</div>
     </div>
 
     <div class="connector">
-      <div class="connector-circle arrow">&rarr;</div>
+      <div class="connector-circle">&rarr;</div>
     </div>
 
     <!-- Stage 3 -->
     <div class="stage-card cyan">
       <div class="stage-header">
-        <div class="stage-title">3. Dữ Liệu & Bộ Đệm Cục Bộ</div>
-        <div class="stage-subtitle">Kho tình báo mã độc & đệm đĩa tăng tốc K8s</div>
+        <div class="stage-title">3. Danh Sách Mã Độc & Cache</div>
+        <div class="stage-subtitle">Kho dữ liệu nguy hiểm & nơi lưu sẵn gói sạch</div>
       </div>
       <div class="stage-content">
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>PostgreSQL VulnDB:</b> Bảng <code>malicious_packages</code> & components đồng bộ OSV / OpenSSF</div>
+          <div><b>Cập nhật mã độc:</b> Lấy liên tục từ cơ sở dữ liệu quốc tế OSV và GitHub</div>
         </div>
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>Malicious Checker:</b> Tra cứu mã độc <code>MAL-*</code> TRƯỚC KHI truy xuất bộ nhớ đệm cache</div>
+          <div><b>Kiểm tra mã độc trước:</b> Luôn soát mã độc trước khi cho phép lưu tạm vào máy</div>
         </div>
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>Disk-backed LRU Cache:</b> Giới hạn 1GB, thời gian sống 7 ngày cho file bất biến (immutable)</div>
+          <div><b>Lưu sẵn trên đĩa (Cache):</b> Giữ lại gói an toàn để lần sau không phải tải lại</div>
         </div>
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>Cache Poisoning Defense:</b> Xóa đệm đĩa ngay lập tức khi phát hiện mã độc mới</div>
+          <div><b>Tự động dọn dẹp:</b> Nếu phát hiện gói đã lưu bị đánh dấu độc hại, xóa sạch ngay</div>
         </div>
       </div>
-      <div class="stage-footer">X-CACHE: HIT (TĂNG TỐC BUILD 75%)</div>
+      <div class="stage-footer">BUILD LẠI SIÊU NHANH (TIẾT KIỆM 70% THỜI GIAN)</div>
     </div>
 
     <div class="connector">
-      <div class="connector-circle arrow">&rarr;</div>
+      <div class="connector-circle">&rarr;</div>
     </div>
 
     <!-- Stage 4 -->
     <div class="stage-card green">
       <div class="stage-header">
-        <div class="stage-title">4. Upstream Go Ecosystem</div>
-        <div class="stage-subtitle">Hệ sinh thái Golang chính thức toàn cầu</div>
+        <div class="stage-title">4. Kho Gốc Của Google</div>
+        <div class="stage-subtitle">Kho chứa thư viện Go chính thức trên internet</div>
       </div>
       <div class="stage-content">
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>Official Go Proxy:</b> <code>https://proxy.golang.org</code> cung cấp nguồn module sạch</div>
+          <div><b>proxy.golang.org:</b> Nơi DevGuard ra tải hộ nếu trong máy chưa có sẵn</div>
         </div>
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>Checksum Database:</b> <code>https://sum.golang.org</code> bảo đảm tính toàn vẹn cryptographic</div>
+          <div><b>sum.golang.org:</b> Nơi đối chiếu mã kiểm tra chống hacker sửa trộm gói</div>
         </div>
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>Egress Security Transport:</b> DevGuard lọc và cô lập kết nối ra bên ngoài qua proxy</div>
+          <div><b>Chỉ DevGuard ra ngoài:</b> Máy lập trình viên không cần nối mạng ra ngoài internet</div>
         </div>
         <div class="feature-item">
           <div class="feature-dot"></div>
-          <div><b>Left-Pad Resiliency:</b> Ổn định build ngay cả khi registry công cộng bị sập hoặc xóa gói</div>
+          <div><b>Không lo đứt cáp:</b> Dù kho gốc có sập thì cụm K8s vẫn build được nhờ bộ nhớ đệm</div>
         </div>
       </div>
-      <div class="stage-footer">HTTP 200 OK (CHỨNG THỰC NGUYÊN BẢN)</div>
+      <div class="stage-footer">KHO NGUYÊN BẢN CỦA GOOGLE / GOLANG</div>
     </div>
 
   </div>
 
   <!-- Bottom Table -->
   <div class="table-container">
-    <div class="table-title">Ma Trận 4 Chốt Chặn An Ninh Thực Nghiệm & Cơ Chế Phòng Thủ (Security Gates)</div>
+    <div class="table-title">4 Bước DevGuard Kiểm Tra Mỗi Khi Có Người Tải Gói</div>
     <table>
       <thead>
         <tr>
-          <th>Chốt Chặn An Ninh</th>
-          <th>Mục Tiêu Bảo Vệ</th>
-          <th>Cơ Chế Kỹ Thuật (DevGuard Core)</th>
-          <th>Mã Trả Về & Header HTTP</th>
-          <th>Trạng Thái Bảo Vệ</th>
+          <th>Bước Kiểm Tra</th>
+          <th>Mục Đích Là Gì?</th>
+          <th>DevGuard Làm Thế Nào?</th>
+          <th>Kết Quả Trả Về</th>
+          <th>Tác Dụng Thực Tế</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><b>Chốt Chặn 1: Rule Engine</b></td>
-          <td>Ngăn chặn các package không được phê duyệt hoặc vi phạm chính sách tổ chức</td>
-          <td>Hàm <span class="mono">CheckNotAllowedPackage</span> so khớp PURL với danh sách quy tắc (Whitelist / Blacklist)</td>
-          <td><span class="mono">HTTP 403</span> | <span class="mono">X-Not-Allowed-Package: blocked</span></td>
-          <td><span class="pill red">Chặn Tức Thì (0ms đĩa)</span></td>
+          <td><b>Bước 1: So với danh sách cấm</b></td>
+          <td>Tránh dùng thư viện lạ, rác hoặc công ty cấm</td>
+          <td>So tên gói với danh sách quy tắc do quản trị viên đặt ra</td>
+          <td><span class="mono">HTTP 403</span> | <span class="mono">X-Not-Allowed-Package</span></td>
+          <td><span class="pill red">Chặn Tức Thì (0ms)</span></td>
         </tr>
         <tr>
-          <td><b>Chốt Chặn 2: Malicious DB</b></td>
-          <td>Chặn đứng các gói độc hại đã bị gắn mã định danh khai thác OSV / OpenSSF</td>
-          <td>Hàm <span class="mono">checkMaliciousPackage</span> truy vấn bảng <span class="mono">malicious_packages</span> trước khi đọc Cache</td>
-          <td><span class="mono">HTTP 403</span> | <span class="mono">X-Malicious-Package: blocked</span></td>
-          <td><span class="pill red">Chống Cache Poisoning</span></td>
+          <td><b>Bước 2: Quét mã độc OSV</b></td>
+          <td>Chặn các gói hacker đã cài cắm mã độc phá hoại</td>
+          <td>Tra cứu tên và phiên bản trong kho dữ liệu mã độc đã biết</td>
+          <td><span class="mono">HTTP 403</span> | <span class="mono">X-Malicious-Package</span></td>
+          <td><span class="pill red">Chống Bị Cài Cửa Sau</span></td>
         </tr>
         <tr>
-          <td><b>Chốt Chặn 3: Cooldown Quarantine</b></td>
-          <td>Cách ly các gói mới phát hành để phòng ngừa tấn công Account Hijacking & Zero-Day</td>
-          <td>Bóc tách <span class="mono">Time</span> trong metadata <span class="mono">.info</span>; tính <span class="mono">time.Since(Time) &lt; MinReleaseAge</span></td>
-          <td><span class="mono">HTTP 403</span> | <span class="mono">X-Too-New-Package: blocked</span></td>
-          <td><span class="pill amber">Cách Ly An Toàn (48h)</span></td>
+          <td><b>Bước 3: Cách ly gói mới ra mắt</b></td>
+          <td>Tránh bẫy hacker vừa tạo gói giả hoặc chiếm tài khoản tải lên</td>
+          <td>Xem ngày giờ phát hành: nếu chưa đủ 48 tiếng thì chặn lại</td>
+          <td><span class="mono">HTTP 403</span> | <span class="mono">X-Too-New-Package</span></td>
+          <td><span class="pill amber">Đợi 48h An Toàn</span></td>
         </tr>
         <tr>
-          <td><b>Chốt Chặn 4: Disk LRU Cache</b></td>
-          <td>Bảo đảm tính sẵn sàng cao, miễn nhiễm sự cố sập registry và tăng tốc độ build K8s</td>
-          <td>Lưu trữ các file bất biến (<span class="mono">.info</span>, <span class="mono">.mod</span>, <span class="mono">.zip</span>) trong đĩa cục bộ với TTL 7 ngày</td>
+          <td><b>Bước 4: Lấy từ bộ nhớ tạm (Cache)</b></td>
+          <td>Tăng tốc độ build, không lo mạng chập chờn</td>
+          <td>Nếu gói đã kiểm tra an toàn và có sẵn trên đĩa thì trả về luôn</td>
           <td><span class="mono">HTTP 200</span> | <span class="mono">X-Cache: HIT</span></td>
-          <td><span class="pill green">Tăng Tốc 75% (0.8s)</span></td>
+          <td><span class="pill green">Tải Trong Tích Tắc (&lt; 0.5s)</span></td>
         </tr>
       </tbody>
     </table>
@@ -443,25 +431,25 @@ HTML_FLOW = """<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>DevGuard Dependency Firewall Request Flow</title>
+<title>Quy Trình DevGuard Xử Lý Khi Tải Gói</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
     background: #0B0F19;
     color: #F8FAFC;
-    padding: 48px 56px;
+    padding: 44px 50px;
     width: 2200px;
-    min-height: 1400px;
+    min-height: 1350px;
   }
   .header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 36px;
   }
   .header h1 {
     font-size: 38px;
     font-weight: 800;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     text-transform: uppercase;
     color: #FFFFFF;
     margin-bottom: 12px;
@@ -471,14 +459,15 @@ HTML_FLOW = """<!DOCTYPE html>
     color: #94A3B8;
     max-width: 1400px;
     margin: 0 auto;
+    line-height: 1.5;
   }
 
   /* Decision Tree Flow */
   .flow-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-    margin-bottom: 40px;
+    gap: 20px;
+    margin-bottom: 36px;
   }
   .flow-card {
     background: #111827;
@@ -488,7 +477,6 @@ HTML_FLOW = """<!DOCTYPE html>
     display: flex;
     flex-direction: column;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    position: relative;
   }
   .flow-card.active-step { border-color: #0284C7; }
   .flow-card.gate-step { border-color: #D97706; }
@@ -532,6 +520,7 @@ HTML_FLOW = """<!DOCTYPE html>
     display: flex;
     flex-direction: column;
     gap: 4px;
+    line-height: 1.4;
   }
   .branch-box.block {
     background: rgba(239, 68, 68, 0.12);
@@ -549,12 +538,12 @@ HTML_FLOW = """<!DOCTYPE html>
   .responses-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+    gap: 20px;
   }
   .resp-card {
     background: #111827;
     border-radius: 14px;
-    padding: 22px;
+    padding: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   }
   .resp-card.red { border: 2px solid #DC2626; }
@@ -565,10 +554,10 @@ HTML_FLOW = """<!DOCTYPE html>
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
   .resp-title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 800;
     text-transform: uppercase;
   }
@@ -577,7 +566,7 @@ HTML_FLOW = """<!DOCTYPE html>
   .resp-card.green .resp-title { color: #34D399; }
 
   .resp-status {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
     padding: 3px 8px;
     border-radius: 4px;
@@ -590,11 +579,11 @@ HTML_FLOW = """<!DOCTYPE html>
     background: #0B0F19;
     border: 1px solid #1E293B;
     border-radius: 8px;
-    padding: 14px;
+    padding: 12px;
     font-family: 'Consolas', 'Courier New', monospace;
     font-size: 13px;
     color: #E2E8F0;
-    line-height: 1.5;
+    line-height: 1.45;
     white-space: pre-wrap;
   }
   .resp-meta {
@@ -608,76 +597,76 @@ HTML_FLOW = """<!DOCTYPE html>
 <body>
 
   <div class="header">
-    <h1>Luồng Điều Phối & Cây Quyết Định Cách Ly Phụ Thuộc (Decision Tree & Request Flow)</h1>
-    <p>Quy trình tuần tự xử lý yêu cầu tải module Go và cơ chế kích hoạt 3 chốt chặn an ninh tại cổng mạng</p>
+    <h1>Quy Trình DevGuard Xử Lý Khi Có Yêu Cầu Tải Gói Go</h1>
+    <p>Từng bước kiểm tra đơn giản, rõ ràng: quyết định cho phép tải về hay chặn đứng một thư viện</p>
   </div>
 
   <div class="flow-grid">
     
     <!-- Card 1 -->
     <div class="flow-card active-step">
-      <div class="step-num">BƯỚC 1: TIẾP NHẬN YÊU CẦU</div>
-      <div class="card-title">Go Client Khởi Tạo Yêu Cầu</div>
+      <div class="step-num">BƯỚC 1: NHẬN YÊU CẦU</div>
+      <div class="card-title">Máy Dev Hoặc CI Gọi Lệnh Tải</div>
       <div class="card-desc">
-        Microservice thực thi <code>go mod download</code> hoặc <code>go get</code>. Yêu cầu tải metadata bản phát hành được chuyển hướng đến cổng DevGuard:
+        Lập trình viên hoặc server CI chạy lệnh <code>go get</code> hoặc <code>go mod download</code>. Lệnh tự động chuyển hướng qua DevGuard:
       </div>
       <div class="branch-box pass">
-        <b>Endpoint Yêu Cầu:</b>
+        <b>Đường dẫn gọi tới:</b>
         <code>GET /api/v1/dependency-proxy/{secret}/go/github.com/pkg/@v/v1.0.0.info</code>
       </div>
       <div class="branch-box pass">
-        <b>Hành động:</b> Giải mã Secret Scope & nạp cấu hình (Rules, MinReleaseAge = 48h).
+        <b>Hành động:</b> Đọc mã bí mật (secret) để nạp danh sách luật cấm và thời gian cách ly (48 giờ).
       </div>
     </div>
 
     <!-- Card 2 -->
     <div class="flow-card gate-step">
-      <div class="step-num">BƯỚC 2: CHỐT CHẶN CHÍNH SÁCH</div>
-      <div class="card-title">Kiểm Tra Quy Tắc (Rule Engine)</div>
+      <div class="step-num">BƯỚC 2: TÊN GÓI CÓ BỊ CẤM KHÔNG?</div>
+      <div class="card-title">So Với Danh Sách Luật Cấm</div>
       <div class="card-desc">
-        So khớp PURL (<code>pkg:go/...</code>) theo thứ tự định nghĩa giống .gitignore (quy tắc cuối cùng quyết định, hỗ trợ <code>!</code> cho whitelist):
+        So khớp tên gói với danh sách quy tắc cho phép hoặc cấm của công ty:
       </div>
       <div class="branch-box block">
-        <b>&#10006; VI PHẠM BLACKLIST:</b>
-        Trả về ngay <b>HTTP 403 Forbidden</b>. Build dừng ngay lập tức, mã độc không chạm đĩa!
+        <b>&#10006; NẾU BỊ CẤM:</b>
+        Chặn luôn với lỗi 403 Forbidden. Build dừng ngay, mã độc không vào được máy.
       </div>
       <div class="branch-box pass">
-        <b>&#10004; HỢP LỆ THEO RULE:</b>
-        Cho phép đi tiếp đến Chốt chặn Kiểm tra Mã độc (Malicious DB).
+        <b>&#10004; NẾU HỢP LỆ:</b>
+        Cho phép chuyển tiếp sang Bước 3 để rà soát mã độc.
       </div>
     </div>
 
     <!-- Card 3 -->
     <div class="flow-card gate-step">
-      <div class="step-num">BƯỚC 3: ĐỐI SOÁT MÃ ĐỘC</div>
-      <div class="card-title">Truy Vấn OSV Malicious Feed</div>
+      <div class="step-num">BƯỚC 3: CÓ PHẢI MÃ ĐỘC ĐÃ BIẾT?</div>
+      <div class="card-title">Quét Kho Dữ Liệu Mã Độc OSV</div>
       <div class="card-desc">
-        Truy vấn bảng <code>malicious_packages</code> TRƯỚC KHI đọc Cache để triệt tiêu hoàn toàn nguy cơ Cache Poisoning:
+        Tra cứu tên gói trong kho dữ liệu mã độc (OSV / GitHub) trước khi đụng vào bộ nhớ đệm:
       </div>
       <div class="branch-box block">
-        <b>&#10006; KHỚP MÃ ĐỘC MAL-*:</b>
-        Xóa ngay khỏi cache đĩa nếu có, trả về <b>HTTP 403 (X-Malicious-Package)</b>.
+        <b>&#10006; NẾU LÀ MÃ ĐỘC:</b>
+        Chặn ngay với lỗi 403 Forbidden và xóa sạch đĩa nếu từng lưu.
       </div>
       <div class="branch-box pass">
-        <b>&#10004; SẠCH SẼ (CLEAN):</b>
-        Cho phép tiến hành kiểm tra bộ đệm đĩa cục bộ (Disk Cache).
+        <b>&#10004; NẾU SẠCH SẼ:</b>
+        Cho phép chuyển tiếp sang Bước 4 để kiểm tra tuổi gói.
       </div>
     </div>
 
     <!-- Card 4 -->
     <div class="flow-card cache-step">
-      <div class="step-num">BƯỚC 4: BỘ ĐỆM & QUARANTINE</div>
-      <div class="card-title">Đánh Giá Cooldown & Caching</div>
+      <div class="step-num">BƯỚC 4: GÓI CÓ QUÁ MỚI KHÔNG?</div>
+      <div class="card-title">Cách Ly Gói Mới & Trả Từ Cache</div>
       <div class="card-desc">
-        Kiểm tra trạng thái đĩa cache hoặc tải từ upstream <code>proxy.golang.org</code> kèm đánh giá thời gian phát hành:
+        Kiểm tra thời gian phát hành của gói và kiểm tra bộ nhớ đệm đĩa:
       </div>
       <div class="branch-box block">
-        <b>&#10006; QUÁ MỚI (&lt; 48 GIỜ):</b>
-        Trả về <b>HTTP 403 (X-Too-New-Package)</b>. Kích hoạt cơ chế cách ly Zero-Day!
+        <b>&#10006; MỚI DƯỚI 48 GIỜ:</b>
+        Chặn lại với lỗi 403 Forbidden. Tạm cách ly chờ cộng đồng kiểm chứng!
       </div>
       <div class="branch-box pass">
-        <b>&#10004; AN TOÀN (&ge; 48 GIỜ):</b>
-        Lưu Cache đĩa & trả về <b>HTTP 200 OK (X-Cache: HIT/MISS)</b>.
+        <b>&#10004; TRÊN 48 GIỜ & CÓ TRONG CACHE:</b>
+        Trả về ngay lập tức (Báo thành công 200 OK, không tốn internet).
       </div>
     </div>
 
@@ -689,8 +678,8 @@ HTML_FLOW = """<!DOCTYPE html>
     <!-- Resp 1 -->
     <div class="resp-card red">
       <div class="resp-header">
-        <div class="resp-title">1. Phản Ứng Khi Chặn Rule / Mã Độc</div>
-        <div class="resp-status">HTTP 403 FORBIDDEN</div>
+        <div class="resp-title">1. Khi Bị Chặn Vì Là Mã Độc Hoặc Cấm</div>
+        <div class="resp-status">LỖI 403 FORBIDDEN</div>
       </div>
       <div class="resp-code">HTTP/1.1 403 Forbidden
 Content-Type: application/json
@@ -698,18 +687,18 @@ X-Malicious-Package: blocked
 
 {
   "error": "Forbidden",
-  "message": "This package has been blocked by the malicious package firewall",
-  "reason": "Package github.com/fake-org/malicious-package is flagged as malicious (ID: MAL-FAKE-TEST-GO-GITHUB-COM-FAKE-ORG-MALICIOUS-PACKAGE)",
+  "message": "Gói này bị chặn vì phát hiện chứa mã độc nguy hiểm",
+  "reason": "Phát hiện mã độc phá hoại mang mã định danh MAL-...",
   "blocked": true
 }</div>
-      <div class="resp-meta">Hiệu ứng: Chặn đứng tức thì tại bước <code>go mod download</code>. Runner thoát với exit code 1, bảo vệ máy chủ an toàn tuyệt đối.</div>
+      <div class="resp-meta">Tác dụng: Lệnh build dừng ngay lập tức. Hacker không thể cài cắm bất cứ file độc nào vào ổ cứng của bạn.</div>
     </div>
 
     <!-- Resp 2 -->
     <div class="resp-card amber">
       <div class="resp-header">
-        <div class="resp-title">2. Phản Ứng Cách Ly Cooldown (Zero-Day)</div>
-        <div class="resp-status">HTTP 403 FORBIDDEN</div>
+        <div class="resp-title">2. Khi Bị Chặn Vì Gói Mới Ra Lò (Dưới 48 Giờ)</div>
+        <div class="resp-status">LỖI 403 FORBIDDEN</div>
       </div>
       <div class="resp-code">HTTP/1.1 403 Forbidden
 Content-Type: application/json
@@ -717,18 +706,18 @@ X-Too-New-Package: blocked
 
 {
   "error": "Forbidden",
-  "message": "This package has been blocked because it was released too recently",
-  "reason": "Package github.com/gin-gonic/gin was released 14h20m ago, which is less than the required minimum of 48 hours",
+  "message": "Gói này bị chặn vì phát hành quá mới",
+  "reason": "Gói mới ra mắt được 14 tiếng, quy định cần đủ 48 tiếng để đảm bảo an toàn",
   "blocked": true
 }</div>
-      <div class="resp-meta">Hiệu ứng: Ngăn chặn 90%+ cuộc tấn công Account Hijacking xảy ra trong 48 giờ đầu khi cộng đồng chưa kịp cảnh báo CVE.</div>
+      <div class="resp-meta">Tác dụng: Tránh hơn 90% các vụ hacker vừa chiếm tài khoản lập trình viên rồi tải ngay bản độc hại lên mạng.</div>
     </div>
 
     <!-- Resp 3 -->
     <div class="resp-card green">
       <div class="resp-header">
-        <div class="resp-title">3. Phản Ứng Khi Gói An Toàn & Cache HIT</div>
-        <div class="resp-status">HTTP 200 OK</div>
+        <div class="resp-title">3. Khi Gói An Toàn Và Lấy Từ Bộ Nhớ Tạm</div>
+        <div class="resp-status">THÀNH CÔNG 200 OK</div>
       </div>
       <div class="resp-code">HTTP/1.1 200 OK
 Content-Type: text/plain; charset=utf-8
@@ -739,7 +728,7 @@ X-Proxy-Type: go
   "Version": "v1.9.1",
   "Time": "2023-03-08T08:52:16Z"
 }</div>
-      <div class="resp-meta">Hiệu ứng: Phục vụ trực tiếp từ bộ đệm đĩa nội bộ trong cụm K8s, thời gian đáp ứng dưới 10ms, giảm tải 100% băng thông internet ngoài.</div>
+      <div class="resp-meta">Tác dụng: Lấy trực tiếp từ ổ cứng trong mạng nội bộ Kubernetes, tốc độ dưới 10 mili-giây, không tốn mạng internet.</div>
     </div>
 
   </div>
@@ -748,8 +737,8 @@ X-Proxy-Type: go
 </html>
 """
 
-def render_html_with_selenium(html_content: str, output_png_path: str, width=2200, height=1400):
-    temp_html = output_png_path.replace(".png", "_temp.html")
+def render_html_with_selenium(html_content: str, output_png_path: str, width=2200, height=1350):
+    temp_html = output_png_path.replace(".png", "_temp_render.html")
     with open(temp_html, "w", encoding="utf-8") as f:
         f.write(html_content)
 
@@ -764,14 +753,9 @@ def render_html_with_selenium(html_content: str, output_png_path: str, width=220
     driver = webdriver.Chrome(options=chrome_options)
     try:
         driver.get("file:///" + os.path.abspath(temp_html).replace("\\", "/"))
-        time.sleep(1) # wait for fonts & rendering
-        # Get actual height
-        required_height = driver.execute_script("return Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight);")
-        required_width = driver.execute_script("return Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth);")
-        driver.set_window_size(required_width, required_height)
-        time.sleep(0.5)
+        time.sleep(1)
         driver.save_screenshot(output_png_path)
-        print(f"Successfully rendered high-quality image: {output_png_path} ({required_width}x{required_height})")
+        print(f"Successfully rendered: {output_png_path}")
     finally:
         driver.quit()
         if os.path.exists(temp_html):
@@ -785,11 +769,11 @@ def main():
     arch_img = os.path.join(thesis_img_dir, "devguard_dependency_firewall_architecture.png")
     flow_img = os.path.join(thesis_img_dir, "devguard_dependency_firewall_flow.png")
 
-    print("=== Rendering Architecture Diagram ===")
-    render_html_with_selenium(HTML_ARCHITECTURE, arch_img, width=2200, height=1350)
+    print("=== Rendering Architecture Diagram with Conversational Vietnamese ===")
+    render_html_with_selenium(HTML_ARCHITECTURE, arch_img)
 
-    print("=== Rendering Flow & Decision Diagram ===")
-    render_html_with_selenium(HTML_FLOW, flow_img, width=2200, height=1350)
+    print("=== Rendering Flow Diagram with Conversational Vietnamese ===")
+    render_html_with_selenium(HTML_FLOW, flow_img)
 
     # Sync to CyberDev
     if os.path.exists(cyberdev_img_dir):
