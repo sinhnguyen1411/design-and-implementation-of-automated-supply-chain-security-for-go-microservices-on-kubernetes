@@ -1,0 +1,631 @@
+{
+  "timestamp": "2026-09-19T20:15:39Z",
+  "total_services": 23,
+  "compliant_services": 23,
+  "total_dependencies_audited": 37,
+  "total_passed": 37,
+  "total_blocked": 0,
+  "services_matrix": [
+    {
+      "service": "alert-service",
+      "go_mod_path": "services\\alert-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 9.11,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 9.11,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "analytics-service",
+      "go_mod_path": "services\\analytics-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 27.55,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 27.55,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "apikey-service",
+      "go_mod_path": "services\\apikey-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 6.21,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 6.21,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "audit-service",
+      "go_mod_path": "services\\audit-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 28.76,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 28.76,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "backtest-service",
+      "go_mod_path": "services\\backtest-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 18.63,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 18.63,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "compliance-service",
+      "go_mod_path": "services\\compliance-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 4.9,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 4.9,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "data-feed-service",
+      "go_mod_path": "services\\data-feed-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 19.31,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 19.31,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "execution-service",
+      "go_mod_path": "services\\execution-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 6.03,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 6.03,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "fees-service",
+      "go_mod_path": "services\\fees-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 5.13,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 5.13,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "gateway-service",
+      "go_mod_path": "services\\gateway-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 4.9,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 4.9,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "kyc-service",
+      "go_mod_path": "services\\kyc-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 5.43,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 5.43,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "margin-service",
+      "go_mod_path": "services\\margin-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 4.75,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 4.75,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "market-data-service",
+      "go_mod_path": "services\\market-data-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 4.77,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 4.77,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "notification-service",
+      "go_mod_path": "services\\notification-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 21.28,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 21.28,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "order-service",
+      "go_mod_path": "services\\order-service\\go.mod",
+      "total_dependencies": 0,
+      "passed": 0,
+      "blocked": 0,
+      "avg_latency_ms": 0.0,
+      "compliance_status": "COMPLIANT",
+      "dependencies": []
+    },
+    {
+      "service": "portfolio-service",
+      "go_mod_path": "services\\portfolio-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 5.25,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 5.25,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "pricing-service",
+      "go_mod_path": "services\\pricing-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 4.89,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 4.89,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "reporting-service",
+      "go_mod_path": "services\\reporting-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 29.35,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 29.35,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "risk-service",
+      "go_mod_path": "services\\risk-service\\go.mod",
+      "total_dependencies": 0,
+      "passed": 0,
+      "blocked": 0,
+      "avg_latency_ms": 0.0,
+      "compliance_status": "COMPLIANT",
+      "dependencies": []
+    },
+    {
+      "service": "search-service",
+      "go_mod_path": "services\\search-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 21.04,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 21.04,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "settlement-service",
+      "go_mod_path": "services\\settlement-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 4.98,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 4.98,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "user-service",
+      "go_mod_path": "services\\user-service\\go.mod",
+      "total_dependencies": 17,
+      "passed": 17,
+      "blocked": 0,
+      "avg_latency_ms": 134.97,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/envoyproxy/protoc-gen-validate",
+          "version": "v1.3.3",
+          "status_code": 200,
+          "latency_ms": 281.39,
+          "cache_status": "MISS",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "github.com/go-sql-driver/mysql",
+          "version": "v1.10.0",
+          "status_code": 200,
+          "latency_ms": 447.4,
+          "cache_status": "MISS",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "github.com/golang-jwt/jwt/v5",
+          "version": "v5.3.1",
+          "status_code": 200,
+          "latency_ms": 92.36,
+          "cache_status": "MISS",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 5.48,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "github.com/grpc-ecosystem/go-grpc-prometheus",
+          "version": "v1.2.0",
+          "status_code": 200,
+          "latency_ms": 92.47,
+          "cache_status": "MISS",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "github.com/grpc-ecosystem/grpc-gateway",
+          "version": "v1.16.0",
+          "status_code": 200,
+          "latency_ms": 84.69,
+          "cache_status": "MISS",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "github.com/grpc-ecosystem/grpc-gateway/v2",
+          "version": "v2.29.0",
+          "status_code": 200,
+          "latency_ms": 73.57,
+          "cache_status": "MISS",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "github.com/prometheus/client_golang",
+          "version": "v1.24.1",
+          "status_code": 200,
+          "latency_ms": 4.92,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "github.com/segmentio/kafka-go",
+          "version": "v0.4.51",
+          "status_code": 200,
+          "latency_ms": 83.73,
+          "cache_status": "MISS",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "github.com/spf13/viper",
+          "version": "v1.21.0",
+          "status_code": 200,
+          "latency_ms": 97.25,
+          "cache_status": "MISS",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "github.com/stretchr/testify",
+          "version": "v1.11.1",
+          "status_code": 200,
+          "latency_ms": 30.55,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "github.com/urfave/cli/v2",
+          "version": "v2.27.7",
+          "status_code": 200,
+          "latency_ms": 279.89,
+          "cache_status": "MISS",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "golang.org/x/crypto",
+          "version": "v0.54.0",
+          "status_code": 200,
+          "latency_ms": 108.5,
+          "cache_status": "MISS",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "google.golang.org/genproto/googleapis/api",
+          "version": "v0.0.0-20260727163830-6c54dddc4772",
+          "status_code": 200,
+          "latency_ms": 311.53,
+          "cache_status": "MISS",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "google.golang.org/genproto/googleapis/rpc",
+          "version": "v0.0.0-20260727163830-6c54dddc4772",
+          "status_code": 200,
+          "latency_ms": 125.15,
+          "cache_status": "MISS",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "google.golang.org/grpc",
+          "version": "v1.82.1",
+          "status_code": 200,
+          "latency_ms": 87.31,
+          "cache_status": "MISS",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        },
+        {
+          "module": "google.golang.org/protobuf",
+          "version": "v1.36.11",
+          "status_code": 200,
+          "latency_ms": 88.3,
+          "cache_status": "MISS",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "service": "watchlist-service",
+      "go_mod_path": "services\\watchlist-service\\go.mod",
+      "total_dependencies": 1,
+      "passed": 1,
+      "blocked": 0,
+      "avg_latency_ms": 17.35,
+      "compliance_status": "COMPLIANT",
+      "dependencies": [
+        {
+          "module": "github.com/google/uuid",
+          "version": "v1.6.0",
+          "status_code": 200,
+          "latency_ms": 17.35,
+          "cache_status": "HIT",
+          "is_blocked": false,
+          "trigger": "CLEAN",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

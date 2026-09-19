@@ -1,0 +1,48 @@
+name: "DevGuard Dependency Firewall Gatekeeper"
+
+on:
+  push:
+    branches: ["main", "feat/**"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  firewall-gatekeeper:
+    name: "Pre-Ingestion Dependency Firewall Gatekeeper"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Codebase"
+        uses: actions/checkout@v4
+
+      - name: "Setup Go Environment with Controlled Egress"
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+          check-latest: false
+
+      - name: "Configure DevGuard In-line Secure Proxy"
+        env:
+          DEVGUARD_PROXY_URL: ${{ secrets.DEVGUARD_PROXY_URL || 'http://devguard-core:8080/api/v1/dependency-proxy' }}
+          DEVGUARD_ASSET_SECRET: ${{ secrets.DEVGUARD_ASSET_SECRET || '4a882f42-bdb4-49a0-b5fe-0509eb92faa0' }}
+        run: |
+          echo "Configuring GOPROXY with strict in-line isolation..."
+          # Enforce DevGuard proxy endpoint, completely prohibiting direct internet egress fallback
+          go env -w GOPROXY="${DEVGUARD_PROXY_URL}/${DEVGUARD_ASSET_SECRET}/go"
+          go env -w GONOSUMDB="*"
+          go env -w GOPRIVATE="github.com/sinhnguyen1411/stock-trading-be/*"
+
+      - name: "Execute 23 Go Microservices Dependency Verification Matrix"
+        run: |
+          python3 scripts/run_ci_firewall_gatekeeper.py
+
+      - name: "Upload Dependency Firewall Audit Artifact"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-firewall-audit-report
+          path: docs/dependency_firewall_23_services_audit.json

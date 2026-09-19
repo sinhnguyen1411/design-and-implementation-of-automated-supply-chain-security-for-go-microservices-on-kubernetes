@@ -1,0 +1,56 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: enforce-devguard-dependency-firewall-egress
+  namespace: stock-trading
+  labels:
+    app.kubernetes.io/part-of: supply-chain-security
+    security.devguard.io/tier: dependency-firewall
+    security.devguard.io/control: nist-sp-800-218-pw-4-1
+spec:
+  podSelector:
+    matchLabels:
+      pipeline.devguard.io/protected: "true"
+  policyTypes:
+    - Egress
+  egress:
+    # 1. Allow Core DNS resolution within the cluster
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+
+    # 2. Allow Egress exclusively to DevGuard Dependency Proxy Gateway
+    # Prohibits direct bypass to public proxy.golang.org or arbitrary internet IPs
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: devguard-system
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: devguard-core
+      ports:
+        - protocol: TCP
+          port: 8080
+
+    # 3. Allow internal cluster service mesh communications (gRPC / HTTP between microservices)
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/part-of: stock-trading-be
+      ports:
+        - protocol: TCP
+          port: 18080
+        - protocol: TCP
+          port: 19090
+
+    # Explicitly omitted: 0.0.0.0/0 on port 80/443 (Controlled Egress Enforcement)
+    # Any attempt by go mod download or curl to fetch directly from internet is dropped at Linux kernel eBPF / iptables.
