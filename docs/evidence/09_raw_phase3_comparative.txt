@@ -1,0 +1,42 @@
+=====================================================================================
+  SO SÁNH ĐỐI CHỨNG 3 KỊCH BẢN (A / B / C)
+=====================================================================================
+
+-------------------------------------------------------------------------------------
+  [KỊCH BẢN A] TẢI THẲNG TỪ INTERNET (GOPROXY = proxy.golang.org - KHÔNG CÓ TƯỜNG LỬA)
+-------------------------------------------------------------------------------------
+  [Gói chuẩn (google/uuid)  ] Mã: 200 | Thời gian: 388.25 ms | Bị chặn: False | Lọt vào máy: False
+  [Gói bị cấm (logrus)      ] Mã: 200 | Thời gian: 324.07 ms | Bị chặn: False | Lọt vào máy: True
+  [Mã độc thử nghiệm        ] Mã: 404 | Thời gian: 362.07 ms | Bị chặn: False | Lọt vào máy: True
+  [Mã độc boltdb-go thật    ] Mã: 403 | Thời gian: 627.76 ms | Bị chặn: True  | Lọt vào máy: False
+  [Gói mới cần cách ly      ] Mã: 200 | Thời gian: 338.46 ms | Bị chặn: False | Lọt vào máy: True
+
+-------------------------------------------------------------------------------------
+  [KỊCH BẢN B] TẢI QUA DEVGUARD FIREWALL (BẮT BUỘC ĐI QUA PROXY)
+-------------------------------------------------------------------------------------
+  [Gói chuẩn (google/uuid)  ] Mã: 200 | Thời gian:   5.88 ms | Bị chặn: False | Cơ chế: HIT
+  [Gói bị cấm (logrus)      ] Mã: 403 | Thời gian:  14.27 ms | Bị chặn: True  | Cơ chế: Chặn theo luật
+  [Mã độc thử nghiệm        ] Mã: 403 | Thời gian:   5.59 ms | Bị chặn: True  | Cơ chế: Chặn mã độc
+  [Mã độc boltdb-go thật    ] Mã: 403 | Thời gian:   5.48 ms | Bị chặn: True  | Cơ chế: Chặn mã độc
+  [Gói mới cần cách ly      ] Mã: 403 | Thời gian:  72.17 ms | Bị chặn: True  | Cơ chế: Chặn cách ly (mới ra)
+
+-------------------------------------------------------------------------------------
+  [KỊCH BẢN C] MẤT MẠNG HOÀN TOÀN (CHỈ DÙNG CACHE NỘI BỘ TRÊN MÁY)
+-------------------------------------------------------------------------------------
+  1. Tải sẵn (warm-up) các thư viện Go vào cache...
+  2. Kiểm tra tốc độ đọc trực tiếp từ cache khi không ra ngoài mạng...
+  [github.com/google/uuid             ] Mã: 200 | Thời gian:  22.37 ms | Cache: HIT | Chạy offline: True
+  [github.com/gin-gonic/gin           ] Mã: 200 | Thời gian:   5.39 ms | Cache: HIT | Chạy offline: True
+  [go.uber.org/zap                    ] Mã: 200 | Thời gian:   5.84 ms | Cache: HIT | Chạy offline: True
+  [github.com/stretchr/testify        ] Mã: 200 | Thời gian:   5.58 ms | Cache: HIT | Chạy offline: True
+  [github.com/prometheus/client_golang] Mã: 200 | Thời gian:   5.94 ms | Cache: HIT | Chạy offline: True
+
+=====================================================================================
+  BẢNG TỔNG HỢP SO SÁNH 3 KỊCH BẢN
+=====================================================================================
+  Kịch bản A (Không tường lửa): Lọt 3/4 gói nguy hiểm vào máy (Chặn: 0.0%)
+  Kịch bản B (Có DevGuard)    : Chặn 4/4 gói nguy hiểm (Chặn: 100.0%, không lọt gói nào)
+  Kịch bản C (Cache offline)  : Tỷ lệ lấy từ cache = 100.0% | Thời gian TB = 9.02 ms
+  Tốc độ khi có cache         : Nhanh hơn 43.0 lần so với kéo từ Internet
+=====================================================================================
+[ĐÃ LƯU] File kết quả: docs/dependency_firewall_phase3_comparative.json

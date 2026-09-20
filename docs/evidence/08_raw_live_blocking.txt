@@ -1,0 +1,35 @@
+=== TEST 1: SAFE PACKAGE (google/uuid) ===
+HTTP/1.1 200 OK
+Content-Type: text/plain; charset=utf-8
+Vary: Origin
+X-Cache: HIT
+X-Proxy-Type: go
+Date: Sun, 20 Sep 2026 11:17:56 GMT
+Content-Length: 187
+
+{"Version":"v1.6.0","Time":"2024-01-23T18:54:04Z","Origin":{"VCS":"git","URL":"https://github.com/google/uuid","Ref":"refs/tags/v1.6.0","Hash":"0f11ee6918f41a04c201eceeadf612a377bc7fbc"}}
+
+=== TEST 2: BLOCKED BY RULE (sirupsen/logrus) ===
+HTTP/1.1 403 Forbidden
+Content-Type: application/json
+Vary: Origin
+X-Not-Allowed-Package: blocked
+Date: Sun, 20 Sep 2026 11:17:56 GMT
+Content-Length: 266
+
+{"blocked":true,"error":"Forbidden","message":"This package has been blocked by the dependency proxy rules","path":"github.com/sirupsen/logrus/@v/v1.9.3.info/","reason":"Package github.com/sirupsen/logrus is not allowed by rule: pkg:go/github.com/sirupsen/logrus*"}
+
+=== TEST 3: MALWARE PACKAGE (boltdb-go/bolt) ===
+HTTP/1.1 403 Forbidden
+Content-Type: application/json
+Vary: Origin
+X-Malicious-Package: blocked
+Date: Sun, 20 Sep 2026 11:17:56 GMT
+Content-Length: 303
+
+{"blocked":true,"error":"Forbidden","message":"This package has been blocked by the malicious package firewall","path":"github.com/boltdb-go/bolt/@v/v1.3.1.info/","reason":"Package github.com/boltdb-go/bolt is flagged as malicious (ID: MAL-2025-2545): Malicious code in github.com/boltdb-go/bolt (Go)"}
+
+=== TEST 4: GO TOOLCHAIN GOPROXY BLOCKING ===
+# get http://localhost:8080/api/v1/dependency-proxy/4a882f42-bdb4-49a0-b5fe-0509eb92faa0/go/github.com/boltdb-go/bolt/@v/v1.3.1.info
+# get http://localhost:8080/api/v1/dependency-proxy/4a882f42-bdb4-49a0-b5fe-0509eb92faa0/go/github.com/boltdb-go/bolt/@v/v1.3.1.info: 403 Forbidden (0.014s)
+go: github.com/boltdb-go/bolt@v1.3.1: reading http://localhost:8080/api/v1/dependency-proxy/4a882f42-bdb4-49a0-b5fe-0509eb92faa0/go/github.com/boltdb-go/bolt/@v/v1.3.1.info: 403 Forbidden
