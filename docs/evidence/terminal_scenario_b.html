@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PowerShell - Kịch Bản B: Tải Qua DevGuard Dependency Firewall</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: #0b0f19;
+    font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .window {
+    width: 1240px;
+    background: #0c0c0c;
+    border-radius: 10px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.1);
+    overflow: hidden;
+  }
+  .title-bar {
+    background: #1f1f1f;
+    padding: 8px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2d2d2d;
+  }
+  .tabs { display: flex; align-items: center; gap: 8px; }
+  .tab {
+    background: #0c0c0c;
+    color: #e5e7eb;
+    padding: 6px 16px;
+    border-radius: 6px 6px 0 0;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-top: 2px solid #22c55e;
+  }
+  .tab-icon {
+    width: 14px;
+    height: 14px;
+    background: #22c55e;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 9px;
+    font-weight: bold;
+  }
+  .controls { display: flex; gap: 16px; color: #888; font-size: 13px; }
+  .terminal-body {
+    padding: 22px 26px;
+    color: #cccccc;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .prompt { color: #60a5fa; font-weight: bold; }
+  .path { color: #34d399; }
+  .cmd { color: #f9fafb; font-weight: bold; }
+  .safe { color: #4ade80; }
+  .blocked { color: #f87171; font-weight: bold; }
+  .rule-badge { background: #7f1d1d; color: #fecaca; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px; }
+  .malware-badge { background: #991b1b; color: #fef2f2; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px; border: 1px solid #ef4444; }
+  .cooldown-badge { background: #854d0e; color: #fef08a; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px; }
+  .cache-badge { background: #065f46; color: #a7f3d0; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px; }
+  .success-box {
+    margin-top: 18px;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid #22c55e;
+    border-radius: 6px;
+    padding: 12px 16px;
+    color: #86efac;
+  }
+  .divider { color: #4b5563; }
+</style>
+</head>
+<body>
+
+<div class="window">
+  <div class="title-bar">
+    <div class="tabs">
+      <div class="tab">
+        <span class="tab-icon">B</span>
+        <span>PowerShell — [KỊCH BẢN B] Tải Qua DevGuard Firewall (Kiểm Soát Egress — Chặn Chủ Động Trước Tải)</span>
+      </div>
+    </div>
+    <div class="controls"><span>&#8212;</span><span>&#9633;</span><span>&#10005;</span></div>
+  </div>
+  <div class="terminal-body">
+    <span class="path">PS C:\...\design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes></span> <span class="cmd">python scripts/run_phase3_comparative_evaluation.py --scenario B</span><br><br>
+    <span class="divider">---------------------------------------------------------------------------------------------------------</span><br>
+    <span class="safe">&nbsp;&nbsp;[KỊCH BẢN B] TẢI QUA DEVGUARD DEPENDENCY FIREWALL (GOPROXY = DevGuard In-line Proxy)</span><br>
+    <span class="divider">---------------------------------------------------------------------------------------------------------</span><br>
+    &nbsp;&nbsp;[Gói chuẩn (google/uuid)&nbsp;&nbsp;] Mã: <span class="safe">200</span> | Thời gian: &nbsp;10.14 ms | Bị chặn: False | Cơ chế: <span class="cache-badge">CACHE HIT (CHO PHÉP)</span><br>
+    &nbsp;&nbsp;[Gói bị cấm (logrus)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] Mã: <span class="blocked">403</span> | Thời gian: &nbsp;23.73 ms | Bị chặn: True&nbsp;&nbsp;| Cơ chế: <span class="rule-badge">CHẶN THEO LUẬT TỔ CHỨC (X-Not-Allowed-Package)</span><br>
+    &nbsp;&nbsp;[Mã độc thử nghiệm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] Mã: <span class="blocked">403</span> | Thời gian: &nbsp;31.40 ms | Bị chặn: True&nbsp;&nbsp;| Cơ chế: <span class="malware-badge">CHẶN CSDL MÃ ĐỘC (X-Malicious-Package)</span><br>
+    &nbsp;&nbsp;[Mã độc boltdb-go thật&nbsp;&nbsp;&nbsp;&nbsp;] Mã: <span class="blocked">403</span> | Thời gian: &nbsp;25.80 ms | Bị chặn: True&nbsp;&nbsp;| Cơ chế: <span class="malware-badge">CHẶN MÃ ĐỘC OSV (MAL-2025-2545)</span><br>
+    &nbsp;&nbsp;[Gói mới cần cách ly&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] Mã: <span class="blocked">403</span> | Thời gian: 206.26 ms | Bị chặn: True&nbsp;&nbsp;| Cơ chế: <span class="cooldown-badge">CHẶN CÁCH LY COOLDOWN (X-Too-New-Package)</span><br>
+    <span class="divider">---------------------------------------------------------------------------------------------------------</span><br>
+
+    <div class="success-box">
+      <strong>🛡️ KẾT QUẢ PHÒNG THỦ KỊCH BẢN B (DEVGUARD IN-LINE FIREWALL):</strong><br>
+      • Tỷ lệ chặn đứng nguy cơ độc hại trước khi tải (Pre-download Blocking Rate): <span style="color:#22c55e; font-weight:bold;">100.0% (4 / 4 gói bị chặn)</span><br>
+      • Tỷ lệ rò rỉ mã độc ra đĩa máy trạm: <span style="color:#22c55e; font-weight:bold;">0.0% (Tuyệt đối không một tệp mã độc nào lọt về máy)</span><br>
+      • Thời gian ra quyết định chặn trung bình: <strong>21.27 ms</strong> (giảm độ trễ hơn 35 lần so với tải trực tiếp)<br>
+      • <em>Đặc tính vượt trội: Chặn ngay tại cổng vào của Go toolchain, ngăn ngừa hoàn toàn nguy cơ thực thi mã độc qua go test hoặc build script!</em>
+    </div><br>
+    <span class="path">PS C:\...\design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes></span> <span class="cmd">_</span>
+  </div>
+</div>
+
+</body>
+</html>

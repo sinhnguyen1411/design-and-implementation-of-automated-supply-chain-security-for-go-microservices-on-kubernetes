@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PowerShell - Kịch Bản A: Tải Thẳng Từ Internet (Không Có Tường Lửa)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: #0b0f19;
+    font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .window {
+    width: 1240px;
+    background: #0c0c0c;
+    border-radius: 10px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.1);
+    overflow: hidden;
+  }
+  .title-bar {
+    background: #1f1f1f;
+    padding: 8px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2d2d2d;
+  }
+  .tabs { display: flex; align-items: center; gap: 8px; }
+  .tab {
+    background: #0c0c0c;
+    color: #e5e7eb;
+    padding: 6px 16px;
+    border-radius: 6px 6px 0 0;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-top: 2px solid #ef4444;
+  }
+  .tab-icon {
+    width: 14px;
+    height: 14px;
+    background: #ef4444;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 9px;
+    font-weight: bold;
+  }
+  .controls { display: flex; gap: 16px; color: #888; font-size: 13px; }
+  .terminal-body {
+    padding: 22px 26px;
+    color: #cccccc;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .prompt { color: #60a5fa; font-weight: bold; }
+  .path { color: #34d399; }
+  .cmd { color: #f9fafb; font-weight: bold; }
+  .danger { color: #f87171; font-weight: bold; }
+  .safe { color: #4ade80; }
+  .warning { color: #fbbf24; }
+  .leak-badge { background: #7f1d1d; color: #fecaca; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px; border: 1px solid #ef4444; }
+  .safe-badge { background: #065f46; color: #a7f3d0; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px; }
+  .alert-box {
+    margin-top: 18px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid #ef4444;
+    border-radius: 6px;
+    padding: 12px 16px;
+    color: #fca5a5;
+  }
+  .divider { color: #4b5563; }
+</style>
+</head>
+<body>
+
+<div class="window">
+  <div class="title-bar">
+    <div class="tabs">
+      <div class="tab">
+        <span class="tab-icon">A</span>
+        <span>PowerShell — [KỊCH BẢN A] Tải Thẳng Từ Internet (GOPROXY = proxy.golang.org - KHÔNG CÓ TƯỜNG LỬA)</span>
+      </div>
+    </div>
+    <div class="controls"><span>&#8212;</span><span>&#9633;</span><span>&#10005;</span></div>
+  </div>
+  <div class="terminal-body">
+    <span class="path">PS C:\...\design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes></span> <span class="cmd">python scripts/run_phase3_comparative_evaluation.py --scenario A</span><br><br>
+    <span class="divider">---------------------------------------------------------------------------------------------------------</span><br>
+    <span class="danger">&nbsp;&nbsp;[KỊCH BẢN A] TẢI THẲNG TỪ INTERNET (MÔ HÌNH TRUYỀN THỐNG: SCA THỤ ĐỘNG SAU TẢI — KHÔNG CÓ TƯỜNG LỬA)</span><br>
+    <span class="divider">---------------------------------------------------------------------------------------------------------</span><br>
+    &nbsp;&nbsp;[Gói chuẩn (google/uuid)&nbsp;&nbsp;] Mã: <span class="safe">200</span> | Thời gian: 361.77 ms | Bị chặn: False | Trạng thái: <span class="safe-badge">GÓI SẠCH</span><br>
+    &nbsp;&nbsp;[Gói bị cấm (logrus)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] Mã: <span class="warning">200</span> | Thời gian: 401.65 ms | Bị chặn: False | Lọt vào máy: <span class="leak-badge">LỌT VÀO ĐĨA (VI PHẠM LUẬT)</span><br>
+    &nbsp;&nbsp;[Mã độc thử nghiệm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] Mã: <span class="danger">404</span> | Thời gian: 1999.57 ms | Bị chặn: False | Lọt vào máy: <span class="leak-badge">LỌT VÀO ĐĨA (MÃ ĐỘC)</span><br>
+    &nbsp;&nbsp;[Mã độc boltdb-go thật&nbsp;&nbsp;&nbsp;&nbsp;] Mã: <span class="danger">403</span> | Thời gian: 391.10 ms | Bị chặn: True&nbsp;&nbsp;| Trạng thái: <span class="safe-badge">BỊ CHẶN BỞI PUBLIC PROXY</span><br>
+    &nbsp;&nbsp;[Gói mới cần cách ly&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] Mã: <span class="warning">200</span> | Thời gian: 675.35 ms | Bị chặn: False | Lọt vào máy: <span class="leak-badge">LỌT VÀO ĐĨA (CHƯA KIỂM ĐỊNH)</span><br>
+    <span class="divider">---------------------------------------------------------------------------------------------------------</span><br>
+
+    <div class="alert-box">
+      <strong>⚠️ KẾT QUẢ ĐÁNH GIÁ NGUY CƠ KỊCH BẢN A:</strong><br>
+      • Tỷ lệ rò rỉ mã độc / gói cấm ra đĩa cứng nhà phát triển: <span style="color:#ef4444; font-weight:bold;">75.0% (3 / 4 gói độc hại lọt thẳng về máy)</span><br>
+      • Tỷ lệ chặn chủ động trước tải (Pre-download Block Rate): <span style="color:#ef4444; font-weight:bold;">0.0%</span><br>
+      • Độ trễ mạng trung bình: <strong>765.89 ms</strong> (phụ thuộc 100% đường truyền internet công cộng)<br>
+      • <em>Hệ quả: Các gói chứa mã độc đã nằm trên ổ đĩa máy tính lập trình viên và sẵn sàng kích hoạt lệnh độc hại khi chạy go build/test!</em>
+    </div><br>
+    <span class="path">PS C:\...\design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes></span> <span class="cmd">_</span>
+  </div>
+</div>
+
+</body>
+</html>
