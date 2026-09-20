@@ -35,10 +35,11 @@
 | **Phần 7** | **Thực nghiệm PoC Trụ cột Container Security & Tích hợp Trivy Image Engine**<br>7.1. Bề mặt tấn công OS packages \| 7.2. Kiến trúc Adapter Container Scanning \| 7.3. Quét đối chứng Debian vs Distroless \| 7.4. SARIF & Dashboard \| 7.5. Thực nghiệm Rà soát Container Security Độc lập trong Môi trường Cô lập Mạng 100% \| 7.6. Tích hợp Hadolint AST Dockerfile Linter & Thực nghiệm A/B trên 23 Go Microservices |
 | **Phần 8** | **Thực nghiệm PoC Trụ cột DAST & Tích hợp Nuclei Engine**<br>8.1. Giới hạn kiểm thử tĩnh & Nhu cầu DAST \| 8.2. Kiến trúc Adapter Nuclei \| 8.3. Quét runtime user-service (:8081) \| 8.4. SARIF, Dashboard & So sánh ZAP \| 8.5. Thực nghiệm Rà soát DAST Độc lập trong Môi trường Cô lập Mạng 100% |
 | **Phần 9** | **Thực nghiệm PoC Trụ cột Supply Chain Security, Tiêu chuẩn SLSA v1.0 & Chữ ký số Cosign**<br>9.1. Đặt vấn đề nguy cơ chuỗi cung ứng \| 9.2. Kiến trúc Cosign & SLSA v1.0 \| 9.3. Ký số binary & Phát hiện giả mạo \| 9.4. Nạp Attestation lên Control Plane \| 9.5. OPA Rego Policy Gate \| 9.6. Thực nghiệm Ký số Cosign & Tạo Chứng thực SLSA v1.0 Độc lập trong Môi trường Cô lập Mạng 100% |
-| **Phần 10** | **Thực nghiệm PoC Trụ cột CI/CD Policy Gate & Cổng Kiểm tra An ninh Tập trung (Policy Gate) (Unified Quality Gate)**<br>10.1. Đặt vấn đề phân mảnh CI scripts \| 10.2. Kiến trúc Unified Policy Gate & VEX Engine \| 10.3. Lọc bỏ cảnh báo sai cho gói hệ điều hành OS \| 10.4. Kiểm thử A/B: Blocking (Exit Code 1) vs Passing (Exit Code 0) \| 10.5. Quản trị Tuân thủ trên DevGuard Web \| 10.6. Thực nghiệm Rà soát Điểm Kiểm soát Chất lượng Tập trung trong Môi trường Cô lập Mạng 100% |
-| **Phần 11** | **Kiến trúc DevGuard và Định hướng Mở rộng Microservices**<br>11.1. Static Reachability & OpenVEX \| 11.2. K8s In-Cluster Agent & Admission Webhook \| 11.3. A/B Benchmark |
-| **Phần 12** | **So sánh định lượng & Hiệu năng hệ thống**<br>12.1. So sánh tính năng \| 12.2. So sánh hiệu quả vận hành \| 12.3. Load Test 23 Services \| 12.4. Kết quả A/B CI/CD |
-| **Phần 13** | **Kết luận và Lộ trình triển khai**<br>13.1. Kết luận kỹ thuật \| 13.2. Lộ trình triển khai Giai đoạn 1 & Giai đoạn 2 |
+| **Phần 10** | **Thực nghiệm PoC Trụ cột Dependency Firewall & Ngăn chặn Mã độc Chủ động**<br>10.1. Tại sao cần Dependency Firewall thay vì chỉ quét sau khi tải? \| 10.2. Cơ chế Hoạt động của DevGuard Dependency Firewall In-line Proxy \| 10.3. Kết quả Thực nghiệm: Chặn Trực tiếp Gói Độc hại & So sánh Đối chứng 3 Kịch bản (A / B / C) \| 10.4. Ma trận Kiểm tra An ninh Thư viện trên Toàn bộ 23 Go Microservices \| 10.5. Quản trị Cấu hình Proxy và Giám sát Rủi ro Thư viện trên DevGuard Web UI |
+| **Phần 11** | **Thực nghiệm PoC Trụ cột CI/CD Policy Gate & Cổng Kiểm tra An ninh Tập trung (Unified Quality Gate)**<br>11.1. Đặt vấn đề phân mảnh CI scripts \| 11.2. Cấu trúc Unified Quality Gate: Hợp nhất Kết quả Kiểm tra qua OASIS SARIF & VEX Engine \| 11.3. Cơ chế Giảm Cảnh báo Giả (False Positive Mitigation): Distroless Nonroot & VEX Suppression \| 11.4. Kết quả Thực nghiệm A/B: Kịch bản Chặn Vi phạm (Exit Code 1) vs Kịch bản Cho phép (Exit Code 0) \| 11.5. Quản trị Tuân thủ Tập trung và Tích hợp Toàn diện trên DevGuard Web Dashboard \| 11.6. Thực nghiệm Rà soát Điểm Kiểm soát Chất lượng Tập trung trong Môi trường Cô lập Mạng 100% |
+| **Phần 12** | **Kiến trúc DevGuard và Định hướng Mở rộng Microservices**<br>12.1. Tính năng 1: Static Reachability Analysis tự động sinh OpenVEX \| 12.2. Tính năng 2: Kubernetes In-Cluster Agent & Admission Controller \| 12.3. So sánh A/B trực tiếp trên GitHub Actions |
+| **Phần 13** | **So sánh định lượng & Hiệu năng hệ thống**<br>13.1. So sánh tính năng \| 13.2. So sánh hiệu quả vận hành \| 13.3. Benchmark chuyên sâu: Khả năng chịu tải (Load Test) với 23 Services \| 13.4. Kết quả A/B Benchmark CI/CD trên GitHub Actions |
+| **Phần 14** | **Kết luận và Lộ trình triển khai**<br>14.1. Kết luận kỹ thuật \| 14.2. Lộ trình triển khai Giai đoạn 1 & Giai đoạn 2 |
 | | **Tài liệu tham khảo chuyên ngành (NIST SP 800-218 SSDF, SLSA v1.0, In-Toto, CycloneDX, OpenVEX, NTIA)** |
 
 ---
@@ -97,24 +98,30 @@
 | **Hình 9.3** | So sánh cơ chế ký số: Sigstore Cloud và Cosign Offline |
 | **Hình 9.4** | Xác thực chữ ký Cosign và chặn file nhị phân giả mạo |
 | **Hình 9.5** | Xác thực chữ ký và SLSA trong container runner |
-| **Hình 10.1** | Kiểm thử A/B Policy Gate (chặn vs cho phép) trên PowerShell |
-| **Hình 10.2** | Quản lý tuân thủ compliance postures trên Dashboard |
-| **Hình 10.3** | So sánh cơ chế Policy Gate: Cloud Webhooks và DevGuard OPA |
-| **Hình 10.4** | Kiểm thử Policy Gate ngắt mạng 100% trên PowerShell |
-| **Hình 10.5** | Kiểm tra Policy Gate trong container runner airgapped-net |
-| **Hình 11.1** | Quy trình từ Static Reachability đến K8s Admission Webhook |
-| **Hình 11.2** | Kết quả đối soát A/B Benchmark trên GitHub Actions |
-| **Hình 11.3** | Chi tiết các bước thực thi của Pipeline A truyền thống |
-| **Hình 11.4** | Chi tiết các bước thực thi của Pipeline B DevGuard |
-| **Hình 11.5** | Thống kê thời gian và tài nguyên runner của 2 pipeline |
-| **Hình 11.6** | Control Plane tiếp nhận Artifact và SBOM từ bài test A/B |
-| **Hình 11.7** | 44 dependencies Go được phân tích trên Control Plane |
-| **Hình 12.1** | Đánh giá tuân thủ ISO 27001 và BSI trên Dashboard |
-| **Hình 12.2** | So sánh thời gian chạy CI/CD khi tải đồng thời 23 services |
-| **Hình 12.3** | DevGuard hoàn thành quét đồng thời 23 services trong 2m45s |
-| **Hình 12.4** | Pipeline cũ mất 17m45s khi ép chạy xanh 23 services |
-| **Hình 12.5** | So sánh tỷ lệ giảm cảnh báo giả nhờ Reachability Analysis |
-| **Hình 13.1** | Biểu đồ Gantt lộ trình tích hợp an ninh DevGuard cho 23 services |
+| **Hình 10.1** | Sơ đồ kiểm tra an ninh 4 bước và cơ chế In-line Proxy của Dependency Firewall |
+| **Hình 10.2** | Cửa sổ Windows PowerShell thực tế chạy Harness Benchmark đo kiểm Dependency Firewall |
+| **Hình 10.3** | Lệnh curl.exe gửi tới Proxy ghi nhận HTTP 403 Forbidden chặn đứng gói độc hại boltdb-go |
+| **Hình 10.4** | Cửa sổ Windows PowerShell thực tế hiển thị Bảng tổng hợp so sánh đối chứng 3 kịch bản A / B / C |
+| **Hình 10.5** | Chi tiết nhật ký thực thi Kịch bản A (tải trực tiếp) và Kịch bản B (DevGuard Firewall) |
+| **Hình 10.6** | Giao diện quản trị DevGuard Web UI thiết lập Dependency Proxy, quy tắc cấm Blocked Package Rules và thời gian cách ly Cooldown Period cho vi dịch vụ user-auth-service |
+| **Hình 11.1** | Kiểm thử A/B Policy Gate (chặn vs cho phép) trên PowerShell |
+| **Hình 11.2** | Quản lý tuân thủ compliance postures trên Dashboard |
+| **Hình 11.3** | So sánh cơ chế Policy Gate: Cloud Webhooks và DevGuard OPA |
+| **Hình 11.4** | Kiểm thử Policy Gate ngắt mạng 100% trên PowerShell |
+| **Hình 11.5** | Kiểm tra Policy Gate trong container runner airgapped-net |
+| **Hình 12.1** | Quy trình từ Static Reachability đến K8s Admission Webhook |
+| **Hình 12.2** | Kết quả đối soát A/B Benchmark trên GitHub Actions |
+| **Hình 12.3** | Chi tiết các bước thực thi của Pipeline A truyền thống |
+| **Hình 12.4** | Chi tiết các bước thực thi của Pipeline B DevGuard |
+| **Hình 12.5** | Thống kê thời gian và tài nguyên runner của 2 pipeline |
+| **Hình 12.6** | Control Plane tiếp nhận Artifact và SBOM từ bài test A/B |
+| **Hình 12.7** | 44 dependencies Go được phân tích trên Control Plane |
+| **Hình 13.1** | Đánh giá tuân thủ ISO 27001 và BSI trên Dashboard |
+| **Hình 13.2** | So sánh thời gian chạy CI/CD khi tải đồng thời 23 services |
+| **Hình 13.3** | DevGuard hoàn thành quét đồng thời 23 services trong 2m45s |
+| **Hình 13.4** | Pipeline cũ mất 17m45s khi ép chạy xanh 23 services |
+| **Hình 13.5** | So sánh tỷ lệ giảm cảnh báo giả nhờ Reachability Analysis |
+| **Hình 14.1** | Biểu đồ Gantt lộ trình tích hợp an ninh DevGuard cho 23 services |
 
 ---
 
@@ -141,7 +148,9 @@
 | **Bảng 9** | So sánh tính năng OWASP ZAP và Nuclei |
 | **Bảng 9.1** | So sánh hiệu năng DAST: OWASP ZAP vs Nuclei Offline |
 | **Bảng 10** | So sánh cơ chế ký số truyền thống và Cosign |
-| **Bảng 10.1** | So sánh hiệu năng ký số Cosign: Cloud vs Offline |
+| **Bảng 9.2** | So sánh hiệu năng ký số Cosign: Cloud vs Offline |
+| **Bảng 10.1** | Kết quả đo đạc thực tế đối chứng 3 kịch bản tải thư viện Go (A / B / C) |
+| **Bảng 10.2** | Ma trận kiểm tra an ninh thư viện trên 23 Go Microservices |
 | **Bảng 11** | So sánh script rời rạc và DevGuard Policy Gate |
 | **Bảng 11.1** | Đặc tả cấu trúc OpenVEX Statement tự động |
 | **Bảng 11.2** | So sánh hiệu năng Policy Gate: Cloud Webhooks vs DevGuard |
@@ -178,7 +187,7 @@
 | :--- | :--- | :--- |
 | **1. SAST (Phân tích mã nguồn)** | Hỗ trợ nạp báo cáo SARIF từ các công cụ phân tích tĩnh. | **Đạt yêu cầu:** Tích hợp Opengrep chạy offline 100%. Đã thử trên `user-service` bắt được lỗi cấu hình TLS 1.3, xuất file SARIF chuẩn OASIS v2.1.0 và chặn pipeline đúng lúc (Exit Code 1). |
 | **2. SCA (Quét lỗ hổng thư viện)** | Tự động phát hiện CVE trong thư viện, sinh và quản lý SBOM cùng tài liệu VEX. | **Đạt yêu cầu:** Tự sinh SBOM CycloneDX v1.6 cho 44 thư viện của `user-service`, tra cứu CVE bằng PostgreSQL nội bộ, dùng OpenVEX lọc bỏ cảnh báo sai cho các hàm không bị gọi đến (tiết kiệm thời gian sửa lỗi). |
-| **3. Dependency Firewall (Tường lửa thư viện)** | Đứng làm proxy ở giữa (`GOPROXY`), kiểm tra gói khi tải về, chặn theo luật và cách ly gói mới phát hành. | **Đạt yêu cầu:** Chặn đứng 100% gói mã độc và gói cấm; cách ly gói mới dưới 48 giờ để phòng ngừa tấn công chiếm quyền maintainer; có bộ nhớ tạm (cache) giúp tải nhanh gấp 27-40 lần so với Internet; kiểm tra 23 microservices đạt chuẩn 100%. |
+| **3. Dependency Firewall** | Đứng làm proxy ở giữa (`GOPROXY`), kiểm tra gói khi tải về, chặn theo luật và cách ly gói mới phát hành. | **Đạt yêu cầu:** Chặn đứng 100% gói mã độc và gói cấm; cách ly gói mới dưới 48 giờ để phòng ngừa tấn công chiếm quyền maintainer; có bộ nhớ tạm (cache) giúp tải nhanh gấp 27-40 lần so với Internet; kiểm tra 23 microservices đạt chuẩn 100%. |
 | **4. Secret Scanning (Quét lộ khóa)** | Có sẵn engine tìm token, mật khẩu và API key trong mã nguồn. | **Đạt yêu cầu:** Tích hợp Gitleaks v8.30.1. Quét sạch 522 commit cũ, bắt đúng các token Slack và khóa riêng RSA bị lộ, tự che giấu mật khẩu (`***`) và chặn đẩy code lên (Exit Code 1). |
 | **5. IaC Security (Quét cấu hình hạ tầng)** | Kiểm tra lỗi bảo mật trong file Kubernetes manifests, Dockerfile và Terraform. | **Đạt yêu cầu:** Tích hợp Trivy Config và Hadolint chạy offline. Bắt đúng lỗi chạy quyền root trong Dockerfile và lỗi thiếu namespace/lộ secret trong Kubernetes manifest của `user-service`, chặn kịp thời trước khi deploy. |
 | **6. Container Security (Quét image)** | Quét lỗ hổng hệ điều hành và các tầng bên trong container image. | **Đạt yêu cầu:** Tích hợp Trivy Image. Chứng minh base image Debian cũ dính tới 46 CVE, chuyển sang dùng Distroless Nonroot thì sạch 100% không còn lỗ hổng hệ điều hành nào. |
@@ -1383,7 +1392,7 @@ Khác với mô hình Sigstore Cloud SaaS công cộng (phụ thuộc vào máy 
 ![Cửa sổ Windows PowerShell thực tế chạy CI Container Runner xác thực supply chain trong mạng Docker airgapped-net](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/airgap_docker_supply_chain_runner.png)
 *Hình 9.5: Xác thực chữ ký và SLSA trong container runner.*
 
-*Bảng 10.1: So sánh hiệu năng ký số Cosign: Cloud vs Offline*
+*Bảng 9.2: So sánh hiệu năng ký số Cosign: Cloud vs Offline*
 
 | Chỉ số Đo lường Kỹ thuật | Sigstore Public SaaS (Cloud) | DevGuard Cosign & SLSA (Air-Gapped Native) | Ý nghĩa An ninh & Vận hành Doanh nghiệp |
 | :--- | :--- | :--- | :--- |
@@ -1401,57 +1410,101 @@ Khác với mô hình Sigstore Cloud SaaS công cộng (phụ thuộc vào máy 
 
 ---
 
-## Phần 10: Thực nghiệm 9 - Đánh giá Tường lửa Thư viện (Dependency Firewall) & Ngăn chặn Mã độc Chủ động
+## Phần 10: Thực nghiệm PoC Trụ cột Dependency Firewall & Ngăn chặn Mã độc Chủ động
 
-### 10.1. Tại sao cần Tường lửa Thư viện thay vì chỉ quét sau khi tải?
-Trước đây, các công cụ quét thư viện (SCA) thường hoạt động theo kiểu "hậu kiểm": lập trình viên hoặc máy chủ CI chạy `go get` hoặc `go mod download` để tải toàn bộ thư viện về máy trước, sau đó mới quét file `go.sum` hoặc SBOM để tìm CVE.
+### 10.1. Tại sao cần Dependency Firewall thay vì chỉ quét sau khi tải?
+Trước đây, các công cụ quét an toàn thư viện (SCA) thường hoạt động theo cơ chế "hậu kiểm": lập trình viên hoặc máy chủ CI chạy lệnh `go get` hoặc `go mod download` để kéo toàn bộ mã nguồn thư viện về máy trạm trước, sau đó mới tiến hành quét tệp `go.sum` hoặc SBOM để đối soát lỗ hổng CVE.
 
-Cách làm này có hai bất cập lớn:
-1. **Mã độc đã lọt vào máy:** Nếu thư viện bị cài mã độc (như đánh cắp token, mở backdoor, chạy script cài cắm), mã độc đã nằm sẵn trên ổ đĩa của máy lập trình viên hoặc máy chủ CI ngay khi lệnh tải hoàn tất.
-2. **Không chặn được tấn công chiếm quyền tác giả (Hijacked Maintainer / Zero-Day):** Kẻ tấn công chiếm tài khoản GitHub/GitLab của tác giả thư viện và đẩy lên phiên bản chứa mã độc (như vụ tấn công XZ Utils). Khi đó, các cơ sở dữ liệu CVE chưa kịp cập nhật, các công cụ quét thụ động sẽ không báo lỗi gì và cho phép tải về.
+Phương thức truyền thống này bộc lộ hai bất cập an ninh đặc biệt nghiêm trọng trong môi trường doanh nghiệp:
+1. **Mã độc đã lọt vào máy tính (Pre-Execution Infection):** Nếu thư viện bị cài cắm mã độc (như mã đánh cắp token, mở backdoor ngầm, kích hoạt init script độc hại), payload độc hại đã nằm sẵn trên ổ đĩa của máy trạm lập trình viên hoặc runner CI ngay khi lệnh tải hoàn tất, trước cả khi công cụ SCA kịp phân tích.
+2. **Không chặn được tấn công chiếm quyền tác giả (Hijacked Maintainer / Zero-Day Supply Chain Attack):** Kẻ tấn công chiếm đoạt tài khoản tác giả và đẩy lên phiên bản chứa mã độc (điển hình như sự cố XZ Utils CVE-2024-3094 hay sự cố độc hại `event-stream`). Tại thời điểm phát hành, các cơ sở dữ liệu NVD/CVE hoàn toàn chưa có bản ghi cảnh báo. Các công cụ quét thụ động sẽ báo cáo "sạch" và cho phép đưa mã độc vào hệ thống.
 
-Vì vậy, giải pháp triệt để là phải đặt một **Tường lửa Thư viện (Dependency Firewall)** đứng chặn ở giữa máy dev/CI và Internet công cộng, làm nhiệm vụ kiểm tra an ninh ngay trong lúc tải gói (in-line proxy). Nếu gói có vấn đề, tường lửa sẽ trả về mã lỗi `HTTP 403 Forbidden` và chặn ngay lập tức, không để một byte mã độc nào chạm tới ổ đĩa máy tính.
-
----
-
-### 10.2. Cách thức hoạt động của DevGuard Dependency Firewall
-DevGuard có sẵn một module proxy chạy ngầm cho Go modules (`golang.go`) và OCI container (`oci.go`). Khi cấu hình biến môi trường `GOPROXY=http://<devguard-host>:8080/api/v1/dependency-proxy/<secret-token>/go,https://proxy.golang.org`, mọi yêu cầu tải thư viện của lệnh `go build` hay `go mod download` đều bắt buộc phải đi qua DevGuard.
-
-DevGuard thực hiện 4 bước kiểm tra nối tiếp nhau:
-1. **Kiểm tra luật chặn của công ty (`rules`):** DevGuard so khớp tên gói với danh sách luật do quản trị viên đặt ra (hỗ trợ ký tự đại diện `*` và dấu phủ định `!`). Ví dụ: công ty cấm dùng thư viện logging cũ `logrus` hoặc thư viện JWT lỗi thời `jwt-go`, DevGuard sẽ chặn ngay ở bước này (trả về header `X-Not-Allowed-Package`).
-2. **Kiểm tra thời gian cách ly gói mới (`minReleaseAge`):** DevGuard kiểm tra thời điểm phát hành của phiên bản thư viện trên upstream. Nếu gói mới phát hành dưới 48 giờ (hoặc số giờ do dự án quy định), DevGuard sẽ tạm thời cách ly và chặn không cho tải (trả về header `X-Too-New-Package`). Cơ chế này tạo ra một "vùng đệm an toàn", chờ cộng đồng an ninh mạng phát hiện và xử lý nếu đó là bản phát hành bị tấn công chuỗi cung ứng.
-3. **Đối soát danh sách mã độc đã biết (`checkMaliciousPackage`):** DevGuard kiểm tra tên gói trong bảng dữ liệu mã độc `malicious_packages` (đồng bộ từ cơ sở dữ liệu OSV quốc tế). Nếu phát hiện gói nằm trong danh sách mã độc (mã định danh `MAL-*`), DevGuard chặn ngay lập tức (trả về header `X-Malicious-Package`).
-4. **Bộ nhớ đệm nội bộ (Local LRU Cache):** Nếu gói an toàn, DevGuard sẽ tải về, lưu tạm vào ổ đĩa nội bộ (theo thuật toán LRU với dung lượng giới hạn) và chuyển tiếp về cho máy dev. Lần sau nếu cần tải lại gói đó, DevGuard sẽ trả về ngay từ cache mà không cần kết nối ra Internet, giúp tăng tốc độ build đáng kể và đảm bảo hệ thống vẫn build được bình thường ngay cả khi mất mạng.
+Vì vậy, giải pháp bảo vệ chủ động và triệt để là phải thiết lập **Dependency Firewall** đứng chốt chặn ở giữa máy phát triển/CI và Internet công cộng, thực thi nhiệm vụ kiểm soát an ninh ngay trong lúc tải gói (In-line Proxy). Nếu gói vi phạm bất kỳ tiêu chí an toàn nào, Dependency Firewall sẽ trả về mã lỗi `HTTP 403 Forbidden` và chặn đứng luồng truyền dữ liệu tức thì, không để một byte mã độc nào chạm tới ổ đĩa máy tính.
 
 ---
 
-### 10.3. Kết quả đo đạc thực tế: So sánh đối chứng 3 kịch bản (A / B / C)
-Thực nghiệm so sánh đối chứng được thực hiện trên 5 nhóm gói thư viện đại diện (gói sạch, gói cấm theo luật, gói mã độc thử nghiệm, gói mã độc OSV thật `boltdb-go`, và gói mới cần cách ly) qua 3 kịch bản:
-- **Kịch bản A (Tải thẳng từ Internet):** Máy dev trỏ trực tiếp ra `proxy.golang.org`, không dùng tường lửa.
+### 10.2. Cơ chế Hoạt động của DevGuard Dependency Firewall In-line Proxy
+DevGuard Control Plane tích hợp sẵn một module Proxy trung gian hiệu năng cao chuyên biệt cho hệ sinh thái Go modules (`golang.go`) và OCI container artifacts (`oci.go`). Khi cấu hình biến môi trường chuẩn của Go:
+```bash
+$env:GOPROXY="http://localhost:8080/api/v1/dependency-proxy/4a882f42-bdb4-49a0-b5fe-0509eb92faa0/go,https://proxy.golang.org"
+```
+Mọi yêu cầu truy vấn siêu dữ liệu (`.info`, `.mod`) và tệp nén mã nguồn (`.zip`) của lệnh `go build`, `go get`, hay `go mod download` đều bắt buộc phải chuyển tiếp qua DevGuard Proxy trước khi đi ra ngoài.
+
+![Sơ đồ nguyên lý hoạt động 4 bước và cơ chế In-line Proxy của DevGuard Dependency Firewall](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/devguard_dependency_firewall_flow.png)
+*Hình 10.1: Sơ đồ kiểm tra an ninh 4 bước và cơ chế In-line Proxy của Dependency Firewall.*
+
+Hệ thống Dependency Firewall thực thi quy trình 4 chốt chặn nối tiếp:
+1. **Kiểm tra Danh sách Luật Cấm Nội bộ (`rules`):** DevGuard so khớp đường dẫn gói với danh mục quy tắc do quản trị viên ban hành (hỗ trợ wildcard `*` và toán tử phủ định `!`). Ví dụ: tổ chức cấm sử dụng thư viện logging lỗi thời `github.com/sirupsen/logrus` (yêu cầu chuyển sang `uber-go/zap`), proxy sẽ chặn đứng ngay tại bước này và gửi kèm HTTP Header `X-Not-Allowed-Package: blocked`.
+2. **Kiểm tra Thời gian Cách ly Gói Mới Phát hành (`minReleaseAge`):** DevGuard tự động kiểm tra mốc thời gian release của phiên bản trên upstream. Nếu gói mới phát hành dưới 48 giờ (hoặc số giờ do dự án quy định), proxy kích hoạt cơ chế cách ly tự động (Quarantine), trả về `HTTP 403 Forbidden` kèm header `X-Too-New-Package: blocked`. Cơ chế này tạo ra "vùng đệm an toàn 48 giờ" để cộng đồng an ninh phát hiện và xử lý nếu đó là bản phát hành bị tấn công chiếm quyền maintainer.
+3. **Đối soát Danh sách Mã độc Toàn cầu (`checkMaliciousPackage`):** DevGuard đối soát tên gói trong bảng dữ liệu mã độc `malicious_packages` (đồng bộ trực tiếp từ cơ sở dữ liệu OSV quốc tế). Nếu phát hiện gói bị gắn mã định danh mã độc (mã `MAL-*`), proxy chặn đứng tức thì với header `X-Malicious-Package: blocked` và trả về payload chi tiết ID mã độc.
+4. **Bộ nhớ Đệm Tăng tốc Cục bộ (Local LRU Cache):** Nếu gói vượt qua cả 3 chốt chặn an ninh, DevGuard tải gói từ upstream, lưu tạm vào ổ đĩa nội bộ theo thuật toán LRU (Least Recently Used) và trả về cho máy dev. Lần sau nếu cần tải lại gói đó, proxy trả về trực tiếp từ cache nội bộ với độ trễ vài mili-giây, đồng thời bảo đảm các bản dựng vẫn thực thi mượt mà ngay cả khi môi trường mất mạng hoàn toàn (Air-Gapped).
+
+![Cửa sổ Windows PowerShell thực tế chạy Harness Benchmark kiểm thử 4 kịch bản quy chuẩn của Dependency Firewall](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_dependency_firewall_harness.png)
+*Hình 10.2: Cửa sổ Windows PowerShell thực tế chạy Harness Benchmark kiểm thử 4 kịch bản quy chuẩn của Dependency Firewall.*
+
+---
+
+### 10.3. Kết quả Thực nghiệm: Chặn Trực tiếp Gói Độc hại & So sánh Đối chứng 3 Kịch bản (A / B / C)
+
+#### 10.3.1. Chặn Trực tiếp Gói Độc hại Typosquatting (Live Blocking HTTP 403)
+Để chứng minh năng lực chặn đứng mã độc trước khi tải, nhóm nghiên cứu gửi truy vấn tải gói mã độc typosquatting thật `github.com/boltdb-go/bolt` (Mã định danh quốc tế **MAL-2025-2545**) trực tiếp qua DevGuard Dependency Proxy.
+
+Lệnh thực thi trên Windows PowerShell:
+```powershell
+curl.exe -i http://localhost:8080/api/v1/dependency-proxy/4a882f42-bdb4-49a0-b5fe-0509eb92faa0/go/github.com/boltdb-go/bolt/@v/v1.3.1.info
+```
+
+Kết quả phản hồi nguyên bản từ hệ thống:
+```http
+HTTP/1.1 403 Forbidden
+Content-Type: application/json
+Vary: Origin
+X-Malicious-Package: blocked
+Date: Sun, 20 Sep 2026 12:10:32 GMT
+Content-Length: 303
+
+{"blocked":true,"error":"Forbidden","message":"This package has been blocked by the malicious package firewall","path":"github.com/boltdb-go/bolt/@v/v1.3.1.info/","reason":"Package github.com/boltdb-go/bolt is flagged as malicious (ID: MAL-2025-2545): Malicious code in github.com/boltdb-go/bolt (Go)"}
+```
+
+![Lệnh curl.exe gửi trực tiếp tới DevGuard Dependency Proxy ghi nhận HTTP 403 Forbidden và header X-Malicious-Package chặn đứng gói độc hại boltdb-go/bolt](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_dependency_firewall_blocking.png)
+*Hình 10.3: Lệnh curl.exe gửi trực tiếp tới DevGuard Dependency Proxy ghi nhận HTTP 403 Forbidden và header X-Malicious-Package chặn đứng gói độc hại boltdb-go/bolt.*
+
+#### 10.3.2. Đo đạc Đối chứng 3 Kịch bản Thực tế (A / B / C Matrix)
+Thực nghiệm so sánh đối chứng được tiến hành trên 5 nhóm gói thư viện đại diện (gói sạch, gói cấm theo luật, gói mã độc thử nghiệm, gói mã độc OSV thật `boltdb-go`, và gói mới cần cách ly) qua 3 kịch bản:
+- **Kịch bản A (Tải thẳng từ Internet):** Máy dev trỏ trực tiếp ra `proxy.golang.org`, không kích hoạt Dependency Firewall.
 - **Kịch bản B (Tải qua DevGuard Firewall):** Máy dev bắt buộc phải đi qua DevGuard Dependency Proxy.
 - **Kịch bản C (Mất mạng hoàn toàn):** Môi trường ngắt kết nối Internet, máy dev tải lại các gói đã được lưu tạm trong cache của DevGuard.
 
-*Bảng 10.1: Kết quả đo đạc thực tế đối chứng 3 kịch bản tải thư viện Go*
+Toàn bộ thông số đo đạc kỹ thuật được ghi nhận độc lập tại tệp `docs/dependency_firewall_phase3_comparative.json`:
 
-| Nhóm gói kiểm thử | Đường dẫn gói | Kịch bản A (Internet trực tiếp) | Kịch bản B (DevGuard Firewall) | Kịch bản C (Cache nội bộ khi mất mạng) |
+*Bảng 10.1: Kết quả đo đạc thực tế đối chứng 3 kịch bản tải thư viện Go (A / B / C)*
+
+| Nhóm gói kiểm thử | Đường dẫn gói Go | Kịch bản A (Internet trực tiếp) | Kịch bản B (DevGuard Firewall) | Kịch bản C (Cache nội bộ khi mất mạng) |
 | :--- | :--- | :--- | :--- | :--- |
-| **Gói chuẩn (Sạch)** | `github.com/google/uuid` | Mã 200, thời gian: 327.1 ms (Lọt vào máy) | Mã 200, thời gian: 14.5 ms (Cho phép) | Mã 200, thời gian: 20.1 ms (Lấy từ cache offline) |
-| **Gói bị cấm theo luật** | `github.com/sirupsen/logrus` | Mã 200, thời gian: 306.5 ms (Nguy hiểm: lọt vào máy) | Mã 403, thời gian: 4.0 ms (Chặn theo luật) | Không áp dụng (đã bị chặn từ trước) |
-| **Mã độc thử nghiệm** | `github.com/fake-org/malicious-package` | Mã 404, thời gian: 1885.7 ms (Không chặn được) | Mã 403, thời gian: 5.5 ms (Chặn mã độc) | Không áp dụng (đã bị chặn từ trước) |
-| **Mã độc OSV thật** | `github.com/boltdb-go/bolt` | Mã 403, thời gian: 656.1 ms (Upstream chặn muộn) | Mã 403, thời gian: 5.6 ms (DevGuard chặn ngay) | Không áp dụng (đã bị chặn từ trước) |
-| **Gói mới cần cách ly** | `golang.org/x/sync` | Mã 200, thời gian: 448.1 ms (Nguy hiểm: lọt vào máy) | Mã 403, thời gian: 74.3 ms (Chặn cách ly tạm thời) | Không áp dụng (đã bị chặn từ trước) |
-| **Tỷ lệ chặn gói nguy hiểm** | **Đánh giá tổng thể** | **0%** (3/4 gói nguy hiểm lọt thẳng về máy) | **100%** (Chặn đứng 4/4 gói nguy hiểm) | **100% lấy từ cache** (Chạy offline mượt mà) |
-| **Thời gian phản hồi TB** | **Đo đạc độ trễ** | **724.7 ms** | **20.8 ms** (Nhanh gấp 35 lần) | **8.2 ms** (Nhanh gấp 88 lần) |
+| **Gói chuẩn (Sạch)** | `github.com/google/uuid` | Mã 200, 361.22 ms (Lọt vào máy) | Mã 200, 5.06 ms (Cho phép) | Mã 200, 5.85 ms (Lấy từ cache offline) |
+| **Gói bị cấm theo luật** | `github.com/sirupsen/logrus` | Mã 200, 341.90 ms (**Lọt vào máy trạm**) | Mã 403, 27.57 ms (**Chặn theo luật**) | Không áp dụng (đã bị chặn từ trước) |
+| **Mã độc thử nghiệm** | `fake-org/malicious-package` | Mã 404, 402.78 ms (**Không chặn được**) | Mã 403, 29.36 ms (**Chặn mã độc**) | Không áp dụng (đã bị chặn từ trước) |
+| **Mã độc OSV thật** | `github.com/boltdb-go/bolt` | Mã 403, 591.60 ms (Upstream chặn muộn) | Mã 403, 5.81 ms (**Chặn tức thì**) | Không áp dụng (đã bị chặn từ trước) |
+| **Gói mới cần cách ly** | `golang.org/x/sync` | Mã 200, 316.96 ms (**Lọt vào máy trạm**) | Mã 403, 82.20 ms (**Chặn cách ly 48h**) | Không áp dụng (đã bị chặn từ trước) |
+| **Tỷ lệ chặn gói nguy hiểm** | **Đánh giá tổng thể** | **0.0%** (3/4 gói nguy hiểm lọt vào máy) | **100.0%** (Chặn đứng 4/4 gói nguy hiểm) | **100.0% lấy từ cache** (Chạy offline mượt mà) |
+| **Thời gian phản hồi TB** | **Đo đạc độ trễ** | **402.89 ms** | **27.57 ms** (Chặn nhanh) | **8.09 ms** (Nhanh hơn **44.6 lần**) |
 
-**Nhận xét từ số liệu thực tế:**
-1. Khi không có tường lửa (Kịch bản A), các gói bị cấm theo luật và gói mới ra lò đều lọt thẳng về máy tính của lập trình viên mà không có bất kỳ rào cản nào.
-2. Khi bật DevGuard (Kịch bản B), 100% các gói vi phạm đều bị chặn đứng ngay lập tức với mã HTTP 403, kèm giải thích rõ ràng qua HTTP Header (`X-Not-Allowed-Package`, `X-Malicious-Package`, `X-Too-New-Package`).
-3. Khi có cache nội bộ (Kịch bản C), thời gian phản hồi chỉ còn khoảng 8.2 ms, nhanh gấp gần 40 lần so với việc tải từ Internet công cộng.
+![Cửa sổ Windows PowerShell thực tế hiển thị Bảng tổng hợp so sánh đối chứng 3 kịch bản A / B / C](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_dependency_firewall_phase3_matrix.png)
+*Hình 10.4: Cửa sổ Windows PowerShell thực tế hiển thị Bảng tổng hợp so sánh đối chứng 3 kịch bản A / B / C.*
+
+![Chi tiết nhật ký thực thi Kịch bản A (tải trực tiếp không qua Dependency Firewall) và Kịch bản B (chặn qua DevGuard Dependency Firewall)](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_dependency_firewall_phase3_details.png)
+*Hình 10.5: Chi tiết nhật ký thực thi Kịch bản A (tải trực tiếp không qua Dependency Firewall) và Kịch bản B (chặn qua DevGuard Dependency Firewall).*
+
+**Phân tích Kết quả Thực nghiệm Định lượng:**
+1. **Ngăn chặn Rò rỉ Tuyệt đối (Zero Leakage):** Khi tải trực tiếp không qua Dependency Firewall (Kịch bản A), gói cấm `logrus` và gói mới trong diện cách ly lọt thẳng vào ổ đĩa. Khi kích hoạt Dependency Firewall (Kịch bản B), **100.0% các gói vi phạm bị chặn đứng ngay từ tầng mạng** với mã HTTP 403, bảo đảm tính toàn vẹn của máy trạm phát triển.
+2. **Hiệu năng Tăng tốc 44.6 lần với Bộ nhớ đệm Nội bộ:** Khi hoạt động qua Cache nội bộ (Kịch bản C), độ trễ phản hồi trung bình chỉ đạt **8.09 ms**, nhanh hơn 44.6 lần so với kéo trực tiếp từ Internet (`proxy.golang.org` đạt 361.22 ms), giúp giải quyết bài toán build nhanh trong các pipeline CI/CD quy mô lớn.
 
 ---
 
-### 10.4. Ma trận kiểm tra an ninh thư viện trên toàn bộ 23 Go Microservices
-Để đưa vào sử dụng thực tế cho toàn bộ hệ thống, kịch bản kiểm tra an ninh đã được chạy rà soát tự động trên toàn bộ 23 microservices Go trong thư mục `services/`. Script đọc file `go.mod` của từng service, trích xuất tất cả các thư viện phụ thuộc và gửi yêu cầu kiểm tra qua DevGuard Dependency Firewall.
+### 10.4. Ma trận Kiểm tra An ninh Thư viện trên Toàn bộ 23 Go Microservices
+Để xác thực khả năng ứng dụng thực tế trên toàn bộ hệ thống phân tán, kịch bản kiểm tra an ninh tự động đã được thực thi rà soát trên toàn bộ 23 microservices Go trong thư mục `services/`. Script đọc tệp `go.mod` của từng microservice, trích xuất danh sách tất cả các thư viện phụ thuộc và gửi yêu cầu kiểm tra đối soát qua DevGuard Dependency Firewall.
+
+Toàn bộ dữ liệu kiểm toán 23 dịch vụ được đồng bộ tại `docs/dependency_firewall_23_services_audit.json`:
 
 *Bảng 10.2: Kết quả kiểm tra an ninh thư viện trên 23 Go Microservices*
 
@@ -1482,12 +1535,25 @@ Thực nghiệm so sánh đối chứng được thực hiện trên 5 nhóm gó
 | 23 | `watchlist-service` | 1 | 1 | 0 | 4.71 ms | Đạt (100%) |
 | **Tổng** | **Toàn bộ 23 microservices** | **37 gói** | **37 gói** | **0 gói** | **12.44 ms (TB)** | **23/23 Đạt chuẩn (100%)** |
 
-**Kết luận thực nghiệm:** Toàn bộ 23 microservices đang sử dụng các thư viện Go an toàn, không chứa gói mã độc trong cơ sở dữ liệu OSV và không vi phạm quy định nội bộ. Khi cấu hình `GOPROXY` qua DevGuard trong pipeline CI/CD hoặc Dockerfile build, toàn bộ quá trình tải thư viện được kiểm soát chặt chẽ với tốc độ phản hồi trung bình chỉ 12.44 ms.
+**Kết luận thực nghiệm 23 Microservices:** Toàn bộ 23 microservices đang sử dụng các thư viện Go an toàn, không chứa gói mã độc trong cơ sở dữ liệu OSV và không vi phạm quy tắc cấm của dự án. Khi cấu hình `GOPROXY` qua DevGuard trong pipeline CI/CD hoặc Dockerfile đa tầng (Multi-stage build), toàn bộ quá trình tải thư viện được bảo vệ chặt chẽ với tốc độ phản hồi trung bình chỉ **12.44 ms**.
 
+---
+
+### 10.5. Quản trị Cấu hình Proxy và Giám sát Rủi ro Thư viện trên DevGuard Web UI
+Không chỉ vận hành ở mức in-line proxy dòng lệnh qua biến môi trường `GOPROXY`, DevGuard cung cấp giao diện quản trị đồ họa trực quan (Settings > Dependency Proxy) tại `http://localhost:3000` phục vụ cấu hình chi tiết cho từng dịch vụ và phân hệ:
+- **Thiết lập Dependency Proxy URLs theo Asset Token:** Mỗi vi dịch vụ (như `user-auth-service`) được phân bổ một chuỗi URL proxy tích hợp Secret Token độc lập (`export GOPROXY="https://api.main.devguard.org/api/v1/dependency-proxy/4a882f42-bdb4-49a0-b5fe-050..."`), hỗ trợ chuyển đổi linh hoạt giữa 4 hệ sinh thái gói phần mềm chính: `go`, `npm`, `oci` và `pypi`.
+- **Trình soạn thảo Quy tắc Chặn Thư viện (Blocked Packages Rules):** Cung cấp bảng quy tắc cấu hình theo cú pháp chuẩn Package URL (PURL) dạng gitignore (ví dụ: `pkg:go/github.com/sirupsen/logrus*`, `pkg:go/github.com/dgrijalva/jwt-go*`), áp dụng theo thứ tự ưu tiên từ trên xuống dưới và hỗ trợ tính năng *Test your rules* để kiểm tra hiệu lực luật trước khi áp dụng.
+- **Thời gian Cách ly Gói Mới (Cooldown Period / Quarantine):** Quy định khoảng thời gian an toàn tối thiểu (*Minimum release age*) bắt buộc giữa thời điểm gói phát hành trên Registry toàn cầu và thời điểm được phép tải về qua proxy (thiết lập **48 giờ**). Cơ chế này giúp bảo vệ hệ thống trước các chiến dịch tấn công chuỗi cung ứng Repojacking / Compromised Account phát tán mã độc Zero-Day trước khi cộng đồng kịp phát hiện và thu hồi.
+
+![Giao diện DevGuard Web UI thiết lập Dependency Proxy, quy tắc cấm Blocked Package Rules và thời gian cách ly Cooldown Period cho vi dịch vụ user-auth-service](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/devguard_web_dependency_firewall_overview.png)
+*Hình 10.6: Giao diện quản trị DevGuard Web UI thiết lập Dependency Proxy, quy tắc cấm Blocked Package Rules và thời gian cách ly Cooldown Period cho vi dịch vụ user-auth-service.*
+
+
+---
 
 ## Phần 11: Thực nghiệm 10 - Đánh giá Trụ cột CI/CD Policy Gate & Cổng Kiểm tra An ninh Tập trung (Policy Gate) (Unified Quality Gate)
 
-### 10.1. Đặt vấn đề & Hạn chế khi dùng nhiều script kiểm tra an ninh phân tán (The CI/CD Policy Gate Fragmentation Crisis)
+### 11.1. Đặt vấn đề & Hạn chế khi dùng nhiều script kiểm tra an ninh phân tán (The CI/CD Policy Gate Fragmentation Crisis)
 Trong các kiến trúc CI/CD truyền thống triển khai cho hệ thống Microservices, việc thực thi chính sách an ninh (Security Quality Gate) thường rơi vào tình trạng phân mảnh và thiếu nhất quán nghiêm trọng:
 1. **Khủng hoảng Nhân bản Script (Script Sprawl & Maintenance Overhead):** Trong hệ sinh thái 23 Go microservices của đề tài, mỗi repository dịch vụ sở hữu riêng một bộ script kiểm tra (trung bình 6 scripts/service gồm `check_secrets.sh`, `parse_trivy.py`, `enforce_quality_gate.py`, `verify_cosign.sh`...). Tổng cộng **138 file scripts** phân tán độc lập trên 23 kho mã nguồn. Khi cần thay đổi ngưỡng chặn an ninh (ví dụ: siết chặt CVSS >= 7.0 hoặc chấp thuận tạm thời 1 CVE mới), kỹ sư bảo mật buộc phải sửa đổi, tạo Pull Request và merge thủ công trên toàn bộ 23 repositories.
 2. **Thiếu Ngữ cảnh Khai thác & Bế tắc Cảnh báo Giả (False Positive Deadlock):** Các đoạn script kiểm tra thuần túy trên runner (như `enforce_quality_gate.py` trong workflow cũ `ci-service.yml`) chỉ thực hiện thao tác so sánh thô: đọc file JSON kết quả từ Trivy/Grype và đếm số lượng CVE có severity là `HIGH` hoặc `CRITICAL`. Script trên runner hoàn toàn không có khả năng phân tích ngữ cảnh: liệu hàm bị lỗi có thực sự được mã nguồn Go gọi tới hay không (Call-Graph Reachability)? Hệ quả là trên toàn bộ 23/23 microservices, pipeline đều bị chặn đứng (Build FAILED) bởi 46 CVEs tầng OS packages có sẵn trong base image Debian/Ubuntu, mặc dù ứng dụng hoàn toàn không sử dụng các thư viện hệ thống đó.
@@ -1496,7 +1562,7 @@ Trong các kiến trúc CI/CD truyền thống triển khai cho hệ thống Mic
 
 ---
 
-### 10.2. Kiến trúc Unified Quality Gate: Hợp nhất 6 Trụ cột An ninh qua OASIS SARIF & VEX Engine
+### 11.2. Kiến trúc Unified Quality Gate: Hợp nhất 6 Trụ cột An ninh qua OASIS SARIF & VEX Engine
 DevGuard hiện thực hóa kiến trúc cổng kiểm soát chất lượng an ninh tập trung thông qua bộ đôi công cụ: **`devguard-scanner` CLI Runner** và **Core Control Plane Policy Engine**:
 - **Cơ chế Hợp nhất Kết quả Đa Nguồn (Multi-Pillar SARIF Normalization):**
   Scanner CLI đóng vai trò là một Policy Enforcer duy nhất trên CI/CD runner. Thay vì chạy 6 script phân tán, CLI chuẩn hóa toàn bộ kết quả phát hiện từ 6 động cơ chuyên dụng thành định dạng chuẩn quốc tế **OASIS SARIF v2.1.0** (Static Analysis Results Interchange Format):
@@ -1527,7 +1593,7 @@ DevGuard hiện thực hóa kiến trúc cổng kiểm soát chất lượng an 
 
 ---
 
-### 10.3. Cơ chế Lọc bỏ Cảnh báo Sai (False Positive Mitigation): Distroless Nonroot & VEX Suppression
+### 11.3. Cơ chế Lọc bỏ Cảnh báo Sai (False Positive Mitigation): Distroless Nonroot & VEX Suppression
 Thực nghiệm chuyên sâu đã làm sáng tỏ nguyên nhân gốc rễ và cơ chế giải quyết triệt để vấn đề cảnh báo giả trong pipeline CI/CD:
 1. **Thực trạng Cảnh báo Giả từ Base Image Debian:**
    Khi quét container image truyền thống sử dụng base image Debian 12.13 (`golang:1.22`), Trivy phát hiện **46 CVEs thuộc tầng hệ điều hành** (trong đó có các lỗ hổng Critical/High trong thư viện hệ thống `libc6`, `libssl3`, `coreutils`...). Với script kiểm tra cũ, cả 23/23 services đều bị đánh rớt vì vượt ngưỡng vi phạm (`HIGH/CRITICAL > 0`). Tuy nhiên, vi dịch vụ `user-service` là một ứng dụng Go độc lập, được biên dịch tĩnh (`CGO_ENABLED=0`) và hoàn toàn không sử dụng bất kỳ thư viện C nào của Debian.
@@ -1540,7 +1606,7 @@ Thực nghiệm chuyên sâu đã làm sáng tỏ nguyên nhân gốc rễ và c
 
 ---
 
-### 10.4. Kết quả Thực nghiệm A/B Testing: Kịch bản Chặn Đứng (Exit Code 1) vs Kịch bản Phê duyệt (Exit Code 0)
+### 11.4. Kết quả Thực nghiệm A/B Testing: Kịch bản Chặn Đứng (Exit Code 1) vs Kịch bản Phê duyệt (Exit Code 0)
 Để kiểm chứng năng lực thực thi chính sách của DevGuard Unified Quality Gate, thực nghiệm đối chứng A/B đã được thiết kế và chạy trực tiếp trên môi trường Windows PowerShell thông qua bộ kiểm thử `scripts/run_unified_quality_gate.py`:
 
 1. **Kịch bản A — Phát hiện Lỗ hổng & Chặn Đứng Pipeline (Exit Code 1 - BLOCKED):**
@@ -1565,7 +1631,7 @@ Thực nghiệm chuyên sâu đã làm sáng tỏ nguyên nhân gốc rễ và c
 
 ---
 
-### 10.5. Quản trị Tuân thủ Tập trung và Hiển thị trên DevGuard Web Dashboard
+### 11.5. Quản trị Tuân thủ Tập trung và Hiển thị trên DevGuard Web Dashboard
 Không chỉ hoạt động độc lập ở mức CLI runner, toàn bộ trạng thái chính sách an ninh của vi dịch vụ `user-auth-service` (nhánh `feat/poc-devguard-sscs`) được đồng bộ theo thời gian thực lên giao diện quản trị Web Dashboard tại `http://localhost:3000`:
 - **Giao diện Đánh giá Tư thế Tuân thủ (Compliance Postures Assessment):**
   Hệ thống thiết lập sẵn bảng quản trị tuân thủ tập trung, tự động đánh giá **1,243 posture framework checks** (bao gồm các chuẩn mực quốc tế ISO 27001, BSI IT-Grundschutz, CIS Kubernetes Benchmark, NIST SSDF).
@@ -1575,33 +1641,33 @@ Không chỉ hoạt động độc lập ở mức CLI runner, toàn bộ trạn
   Hỗ trợ nút bấm `Download OSCAL` cho phép trích xuất toàn bộ dữ liệu đánh giá tuân thủ thành định dạng chuẩn machine-readable của NIST, sẵn sàng phục vụ công tác kiểm toán bảo mật độc lập mà không tốn công sức chuẩn bị hồ sơ thủ công.
 
 ![Cửa sổ Windows PowerShell thực tế chạy Unified Security Quality Gate kiểm thử A/B đối chứng](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_policy_gate_run.png)
-*Hình 10.1: Kiểm thử A/B Policy Gate (chặn vs cho phép) trên PowerShell.*
+*Hình 11.1: Kiểm thử A/B Policy Gate (chặn vs cho phép) trên PowerShell.*
 
 ![Giao diện DevGuard Web Dashboard tại localhost:3000 (/compliance-postures) quản trị tập trung 1,243 posture đánh giá tuân thủ](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/devguard_unified_policy_gate.png)
-*Hình 10.2: Quản lý tuân thủ compliance postures trên Dashboard.*
+*Hình 11.2: Quản lý tuân thủ compliance postures trên Dashboard.*
 
 ---
 
-### 10.6. Thực nghiệm Rà soát Điểm Kiểm soát Chất lượng Tập trung (Unified Quality Gate) trong Môi trường Cô lập Mạng 100% (Zero-Trust Air-Gapped Execution)
+### 11.6. Thực nghiệm Rà soát Điểm Kiểm soát Chất lượng Tập trung (Unified Quality Gate) trong Môi trường Cô lập Mạng 100% (Zero-Trust Air-Gapped Execution)
 
 Để kiểm tra khả năng hoạt động khi ngắt hoàn toàn Internet, nhóm nghiên cứu thực hiện bài đo cô lập mạng cho kịch bản Unified Security Policy Gate (kiểm soát tập trung đồng thời 6 trụ cột an ninh: SAST, Secret Scanning, IaC Security, Container Security, DAST và Supply Chain SLSA v1.0) trong điều kiện ngắt kết nối Internet 100% thông qua công cụ điều phối `scripts/run_airgap_policy_gate_experiment.py`.
 
 ![Sơ đồ so sánh cơ chế Policy Gate: Cloud SaaS Webhooks vs DevGuard Unified Air-Gapped OPA Gate](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/airgap_policy_gate_zero_trust_architecture.png)
-*Hình 10.3: So sánh cơ chế Policy Gate: Cloud Webhooks và DevGuard OPA.*
+*Hình 11.3: So sánh cơ chế Policy Gate: Cloud Webhooks và DevGuard OPA.*
 
-#### 10.6.1. Thiết lập & Kiểm chứng Cô lập Mạng Đa tầng Trước khi Thực thi Điểm Chốt An ninh
+#### 11.6.1. Thiết lập & Kiểm chứng Cô lập Mạng Đa tầng Trước khi Thực thi Điểm Chốt An ninh
 Trước khi kích hoạt động cơ đánh giá chính sách tập trung, quy trình tự động kích hoạt bộ kiểm chứng 4 tầng mạng:
 1. **Tầng 1 (ICMP Egress Control):** Ping ra Gateway công cộng `8.8.8.8` -> Xác nhận 100% Packet Loss / Network unreachable.
 2. **Tầng 2 (DNS Blackholing):** Truy vấn DNS tới máy chủ điều phối đám mây `cloud-policy.devguard.io` -> Nhận lỗi SERVFAIL do toàn bộ DNS Resolver bên ngoài đã bị vô hiệu hóa.
 3. **Tầng 3 (TCP Egress Drop):** Cố gắng mở socket TCP tới cổng HTTPS 443 của dịch vụ SaaS đám mây -> Kết nối bị từ chối / timeout tức thì, lưu lượng mạng gửi ra ngoài ghi nhận chính xác 0.00 Bytes outbound.
 4. **Tầng 4 (Local Control Plane):** Kiểm tra trạng thái máy chủ DevGuard nội bộ tại `http://localhost:8080/healthz` -> Phản hồi HTTP 200 OK (PostgreSQL 16 và Echo daemon sẵn sàng nạp dữ liệu chính sách).
 
-#### 10.6.2. Cơ chế Đánh giá Hợp nhất 6 Trụ cột & Khử Cảnh báo giả với OpenVEX Core
+#### 11.6.2. Cơ chế Đánh giá Hợp nhất 6 Trụ cột & Khử Cảnh báo giả với OpenVEX Core
 Khác biệt hoàn toàn so với các pipeline CI/CD truyền thống vốn phụ thuộc vào hàng loạt scripts rời rạc hoặc webhooks gọi ra dịch vụ SaaS của bên thứ ba, DevGuard thực thi toàn bộ logic đánh giá chính sách tại hạ tầng On-Premise:
 - **Hợp nhất 6 Trụ cột An ninh:** Cổng kiểm tra an ninh tập hợp đồng thời kết quả rà quét từ: (1) SAST Opengrep v1.16.0; (2) Secret Scanning Gitleaks v8.30.1; (3) IaC Trivy Config v0.74.0; (4) Container Security Trivy Image v0.74.0; (5) DAST Nuclei v3.11.1; và (6) Supply Chain Cosign v2.4.0 & SLSA v1.0 Provenance.
 - **Loại bỏ Cảnh báo giả OS Packages với OpenVEX Core:** Trong mô hình truyền thống, 46 CVEs tầng hệ điều hành Debian sẽ ngay lập tức kích hoạt lỗi chặn (false block). DevGuard áp dụng hồ sơ VEX chuẩn (`docs/vex_rules.json`) kết hợp kiến trúc Multi-stage Distroless Nonroot, tự động chứng minh 100% các lỗ hổng này không nằm trong mã thực thi (unreachable), qua đó dập tắt cảnh báo giả mà vẫn đảm bảo an toàn tuyệt đối.
 
-#### 10.6.3. Kiểm thử A/B Định lượng: Chặn đứng (Exit Code 1) vs Phê duyệt (Exit Code 0)
+#### 11.6.3. Kiểm thử A/B Định lượng: Chặn đứng (Exit Code 1) vs Phê duyệt (Exit Code 0)
 Bộ điều phối thực nghiệm tiến hành đánh giá đối chiếu qua 2 kịch bản thực tế:
 1. **Kịch bản A (Blocking / Raw Unfiltered Artifacts):**
    - Khi đưa vào các bản dựng cũ chứa lỗi vi phạm nghiêm trọng (thiếu TLS 1.3 trong SAST, rò rỉ secret giả lập, cấu hình K8s chạy quyền root, 46 CVEs Debian và nhị phân bị can thiệp sai lệch mã hash SHA-256), Policy Gate phát hiện tổng cộng **59 active unhandled issues** vượt ngưỡng cho phép (`max_allowed = 0`).
@@ -1611,9 +1677,9 @@ Bộ điều phối thực nghiệm tiến hành đánh giá đối chiếu qua 
    - Kết quả: Hệ thống ban hành thông điệp xanh `[PASS] POLICY GATE APPROVED`, cấp chứng nhận triển khai và **trả về Exit Code 0** trong thời gian **358.31 ms**, RAM tiêu thụ **13.23 MB**, lưu lượng Egress tuyệt đối **0.00 Bytes**.
 
 ![Cửa sổ Windows PowerShell thực tế chạy bộ điều phối kiểm thử Air-Gapped Unified Policy Gate ngắt mạng 100%, đánh giá A/B blocking vs passing](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/airgap_terminal_policy_gate.png)
-*Hình 10.4: Kiểm thử Policy Gate ngắt mạng 100% trên PowerShell.*
+*Hình 11.4: Kiểm thử Policy Gate ngắt mạng 100% trên PowerShell.*
 
-#### 10.6.4. Đánh giá Đối chiếu Hiệu năng Định lượng: Air-Gapped Unified Gate vs Cloud SaaS Webhooks
+#### 11.6.4. Đánh giá Đối chiếu Hiệu năng Định lượng: Air-Gapped Unified Gate vs Cloud SaaS Webhooks
 Toàn bộ thông số đo đạc kỹ thuật đã được kết xuất ra tệp `docs/policy_gate_airgap_verification_telemetry.json` và tổng hợp đối chiếu tại Bảng 11.2 dưới đây:
 
 | Chỉ số Đo lường Kỹ thuật | Cloud SaaS Webhooks Gate | DevGuard Unified Gate (Air-Gapped Native) | Ý nghĩa An ninh & Vận hành Doanh nghiệp |
@@ -1629,14 +1695,14 @@ Toàn bộ thông số đo đạc kỹ thuật đã được kết xuất ra t�
 
 *Bảng 11.2: So sánh hiệu năng Policy Gate: Cloud Webhooks vs DevGuard*
 
-#### 10.6.5. Thực nghiệm Rà soát trên CI/CD Container Runner trong Mạng Docker airgapped-net
+#### 11.6.5. Thực nghiệm Rà soát trên CI/CD Container Runner trong Mạng Docker airgapped-net
 Để kiểm chứng khả năng tích hợp vào các pipeline tự động hóa thực tế của doanh nghiệp, kịch bản kiểm soát chính sách tập trung đã được đóng gói và kích hoạt trực tiếp bên trong Container Runner gắn vào mạng `airgapped-net` (`"Internal": true`, subnet `172.23.0.0/16`):
 - **Cô lập Môi trường Thực thi:** Container runner hoàn toàn không có default gateway ra Internet (lệnh `ping 8.8.8.8` trả về `Network unreachable`, `nc cloud-policy.devguard.io` trả về `bad address`).
 - **Nạp SARIF và Thẩm định OpenVEX Nội bộ:** Runner nạp toàn bộ 5 báo cáo SARIF và hồ sơ SLSA Provenance vào bộ phân tích chính sách, tự động áp dụng rule OpenVEX để loại bỏ 46 cảnh báo giả tầng OS Debian.
 - **Ban hành Quyết định Quality Gate:** Toàn bộ 6 trụ cột đều đạt trạng thái tuân thủ, DevGuard Control Plane nội bộ ghi nhận kết quả và container runner kết thúc thành công với **Exit Code 0**, sẵn sàng cấp phát token cho bước triển khai Kubernetes.
 
 ![Cửa sổ Windows PowerShell thực tế chạy CI/CD Container Runner trong mạng Docker airgapped-net ngắt Internet, thực thi cổng kiểm tra an ninh (Policy Gate)](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/airgap_docker_policy_gate_runner.png)
-*Hình 10.5: Kiểm tra Policy Gate trong container runner airgapped-net.*
+*Hình 11.5: Kiểm tra Policy Gate trong container runner airgapped-net.*
 
 ---
 
@@ -1666,9 +1732,9 @@ sequenceDiagram
     CP-->>K8s: Phê duyệt (Image Verified & No Active Risk)
     K8s-->>K8s: Cho phép Pod khởi chạy
 ```
-*Hình 11.1: Quy trình từ Static Reachability đến K8s Admission Webhook.*
+*Hình 14.1: Quy trình từ Static Reachability đến K8s Admission Webhook.*
 
-### 11.1. Tính năng 1: Static Reachability Analysis tự động sinh OpenVEX
+### 12.1. Tính năng 1: Static Reachability Analysis tự động sinh OpenVEX
 - **Cơ chế:** Tích hợp AST Call-Graph Analyzer (`govulncheck`) vào `devguard-scanner`.
 - **Hiệu quả:** Khi CVE xuất hiện trong thư viện bên thứ ba nhưng mã nguồn microservice không gọi đến hàm lỗi, DevGuard tự động sinh VEX Statement:
 
@@ -1683,14 +1749,14 @@ sequenceDiagram
 
 Nhờ đó pipeline CI/CD tránh bị chặn oan bởi cảnh báo giả, tiết kiệm hơn 80% thời gian xử lý.
 
-### 11.2. Tính năng 2: Kubernetes In-Cluster Agent & Admission Controller
+### 12.2. Tính năng 2: Kubernetes In-Cluster Agent & Admission Controller
 - **Cơ chế:** Triển khai `k8s-agent` làm Validating Admission Webhook trên Kubernetes.
 - **Hoạt động:** Khi một Deployment được tạo, Webhook truy vấn Control Plane để kiểm tra:
   1. Image có chữ ký In-Toto hợp lệ không?
   2. Image còn CVE mức `CRITICAL`/`HIGH` chưa được xác nhận VEX không?
 - Nếu vi phạm, Kubernetes từ chối tạo Pod ngay tại API Server.
 
-### 11.3. So sánh A/B trực tiếp trên GitHub Actions
+### 12.3. So sánh A/B trực tiếp trên GitHub Actions
 
 Chạy A/B Benchmark trên GitHub Actions (`.github/workflows/ab-comparison-poc.yml`, Run ID #34095624461): 2 pipeline chạy song song trên cùng mã nguồn `services/user-service`:
 
@@ -1703,46 +1769,46 @@ Chạy A/B Benchmark trên GitHub Actions (`.github/workflows/ab-comparison-poc.
 | **Job 3** | A/B Benchmark Summary | 3 giây | Tự động thu thập số liệu từ 2 job, kết xuất bảng so sánh vào $GITHUB_STEP_SUMMARY |
 
 ![Kết quả A/B Benchmark trên GitHub Actions](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/github_actions_ab_benchmark_matrix.png)
-*Hình 11.2: Kết quả đối soát A/B Benchmark trên GitHub Actions.*
+*Hình 13.2: Kết quả đối soát A/B Benchmark trên GitHub Actions.*
 
-#### 11.3.1. Phân tích chi tiết quy trình thực thi Pipeline A (Truyền thống - ci-service.yml)
+#### 12.3.1. Phân tích chi tiết quy trình thực thi Pipeline A (Truyền thống - ci-service.yml)
 - **Môi trường thực thi:** GitHub Actions Runner (`ubuntu-latest`, 4 vCPU, 16GB RAM).
 - **Chuỗi công cụ:** Docker Buildx -> Syft (SPDX SBOM) -> Grype (Container Vulnerability Scan) -> Python Security Gate Enforcer.
 - **Thời gian thực thi chi tiết:** Toàn bộ job hoàn thành trong 2 phút 30 giây, trong đó khâu dựng image `Build Docker Image (Thesis Service)` tiêu tốn 1 phút 06 giây, bước tạo SBOM bằng Syft mất 6 giây, và bước quét container image với Grype tiêu tốn 57 giây.
 - **Hiện tượng:** Grype phát hiện CVE mức `HIGH` trong OS packages của base image `golang:1.24-alpine`. Pipeline truyền thống thiếu Reachability Analysis nên Security Gate chặn oan dù mã Go không gọi hàm bị lỗi.
 
 ![Chi tiết các bước thực thi Pipeline A](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/ab_pipeline_a_details.png)
-*Hình 11.3: Chi tiết các bước thực thi của Pipeline A truyền thống.*
+*Hình 13.3: Chi tiết các bước thực thi của Pipeline A truyền thống.*
 
-#### 11.3.2. Phân tích chi tiết quy trình thực thi Pipeline B (DevGuard Control Plane - Hợp nhất)
+#### 12.3.2. Phân tích chi tiết quy trình thực thi Pipeline B (DevGuard Control Plane - Hợp nhất)
 - **Môi trường thực thi:** Cùng chạy trên GitHub Actions Runner (`ubuntu-latest`, 4 vCPU, 16GB RAM) với mã nguồn đối xứng.
 - **Chuỗi công cụ:** Setup Go Runtime -> Cài đặt Trivy v0.74.0 & `devguard-scanner` CLI -> Kiểm tra kết nối Control Plane -> Thực thi quét SCA hợp nhất và Ingestion.
 - **Thời gian thực thi chi tiết:** Tổng thời gian job là 2 phút 38 giây. Đáng chú ý, bước cài đặt môi trường Go, Trivy và biên dịch Scanner CLI chiếm tới 2 phút 23 giây (có thể tối ưu bằng container image đóng gói sẵn); trong khi bước quét SCA mã nguồn và gửi dữ liệu về Control Plane (`Execute Unified SCA Scan & Centralized Ingestion`) chỉ tiêu tốn **9 giây**.
 - **Điểm vượt trội:** Quét trực tiếp AST và `go.mod` — không cần build Docker image, loại bỏ CVE nền không liên quan, gửi SBOM về Control Plane qua Cloudflare Tunnel.
 
 ![Chi tiết các bước thực thi Pipeline B](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/ab_pipeline_b_details.png)
-*Hình 11.4: Chi tiết các bước thực thi của Pipeline B DevGuard.*
+*Hình 13.4: Chi tiết các bước thực thi của Pipeline B DevGuard.*
 
-#### 11.3.3. Đối chứng định lượng thời gian và tài nguyên thực thi (GitHub Actions Usage)
+#### 12.3.3. Đối chứng định lượng thời gian và tài nguyên thực thi (GitHub Actions Usage)
 - **Tổng thời gian Runner:** Cả 2 pipeline tiêu tốn tổng cộng 5 phút 11 giây tài nguyên runner GitHub Actions (Pipeline A: 2m 30s, Pipeline B: 2m 38s, Summary Matrix: 3s).
 - **Phân tích hiệu quả:** Pipeline A tạo ra kết quả hỏng (false positive), cần 2–4 giờ xử lý thủ công. Pipeline B gửi dữ liệu vào DB tập trung, phục vụ tra cứu tức thì cho các lần chạy sau.
 
 ![Thống kê Run time Usage trên GitHub Actions](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/ab_benchmark_usage.png)
-*Hình 11.5: Thống kê thời gian và tài nguyên runner của 2 pipeline.*
+*Hình 13.5: Thống kê thời gian và tài nguyên runner của 2 pipeline.*
 
-#### 11.3.4. Minh chứng thực nghiệm: Dữ liệu SBOM và rủi ro được tiếp nhận thành công vào DevGuard Control Plane
+#### 12.3.4. Minh chứng thực nghiệm: Dữ liệu SBOM và rủi ro được tiếp nhận thành công vào DevGuard Control Plane
 Theo khẳng định tại Step Summary của bài kiểm tra Benchmark: *"Toàn bộ dữ liệu SBOM và rủi ro của services/user-service từ bài test trên đã được tiếp nhận thành công vào DevGuard Control Plane"*, hệ thống quản trị thực tế đã ghi nhận đầy đủ các thông tin sau:
 1. **Quản lý Artifact định danh tập trung:** Control Plane đã tạo và gắn nhãn thành công artifact `pkg:devguard/thesis-microservices/core-services/user-auth-service` thuộc nhánh `feat/poc-devguard-sscs` với 01 nguồn SBOM CycloneDX duy nhất, sẵn sàng cho công tác kiểm định nguồn gốc SLSA.
 2. **Quản lý 44 dependencies:** Toàn bộ 44 package phụ thuộc Go của `user-service` (như `filippo.io/edwards25519`, `github.com/beorn7/perks`, `github.com/cespare/xxhash/v2`...) đã được phân tích rủi ro, phân loại giấy phép (17 BSD, 16 MIT, 10 Apache, 1 ISC) và chấm điểm OpenSSF Scorecard tự động.
 3. **Sẵn sàng VEX & K8s Admission Control:** Nhờ dữ liệu SBOM được lưu trữ dưới dạng quan hệ tại PostgreSQL 16 (extension `pg-semver`), bất kỳ CVE mới nào xuất hiện trong tương lai đều có thể được khoanh vùng ảnh hưởng (Blast Radius) chỉ trong **dưới 1 giây**, mà không cần phải trigger chạy lại toàn bộ pipeline CI/CD.
 
 ![Minh chứng tiếp nhận Artifact trên Control Plane](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/ab_control_plane_artifact.png)
-*Hình 11.6: Control Plane tiếp nhận Artifact và SBOM từ bài test A/B.*
+*Hình 12.6: Control Plane tiếp nhận Artifact và SBOM từ bài test A/B.*
 
 ![Minh chứng 44 dependencies được phân tích](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/ab_control_plane_dependencies.png)
-*Hình 11.7: 44 dependencies Go được phân tích trên Control Plane.*
+*Hình 12.7: 44 dependencies Go được phân tích trên Control Plane.*
 
-#### 11.3.5. Điểm khác biệt cốt lõi giữa hai phương pháp tiếp cận
+#### 12.3.5. Điểm khác biệt cốt lõi giữa hai phương pháp tiếp cận
 - **Phạm vi kiểm soát (Scope of Scan):** Pipeline A quét toàn bộ container image dẫn đến việc "bắt nhầm" hàng loạt CVE của hệ điều hành nền mà ứng dụng Go tĩnh không bao giờ kích hoạt; trong khi Pipeline B tập trung chính xác vào phạm vi phụ thuộc của mã nguồn nghiệp vụ.
 - **Mức độ phụ thuộc trạng thái (Statefulness):** Pipeline A hoàn toàn phi trạng thái, kết quả scan biến mất sau khi runner bị hủy; Pipeline B lưu trữ tập trung dữ liệu vào Control Plane, hình thành một "kho tri thức an ninh" xuyên suốt toàn bộ vòng đời phát triển phần mềm (SDLC).
 
@@ -1764,7 +1830,7 @@ Theo khẳng định tại Step Summary của bài kiểm tra Benchmark: *"Toàn
 | **Quản trị tuân thủ** | Không có | Tích hợp ISO27001, BSI Grundschutz, NIST SP 800-218 | Tự động hóa báo cáo kiểm toán |
 
 ![Giao diện đánh giá tuân thủ tiêu chuẩn trên Control Plane](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/user_auth_compliance.png)
-*Hình 12.1: Đánh giá tuân thủ ISO 27001 và BSI trên Dashboard.*
+*Hình 14.1: Đánh giá tuân thủ ISO 27001 và BSI trên Dashboard.*
 
 ### 12.2. So sánh hiệu quả vận hành
 
@@ -1793,16 +1859,16 @@ Thực nghiệm đã mở rộng phạm vi bằng cách kích hoạt một Pipel
   - **DevGuard Pipeline**: Quá trình quét AST Call-Graph loại trừ triệt để cảnh báo giả, ghi nhận 0 CVE nào thực sự tác động (reachable). Tỷ lệ thành công **100%**, giúp pipeline luôn thông suốt.
 
 ![Quản lý rủi ro IaC Security trên Dashboard](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/benchmark_time_chart.png)
-*Hình 12.2: So sánh thời gian chạy CI/CD khi tải đồng thời 23 services.*
+*Hình 13.2: So sánh thời gian chạy CI/CD khi tải đồng thời 23 services.*
 
 ![So sánh kiến trúc IaC: Checkov Cloud và Trivy Config Offline](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/github_actions_devguard_23s.png)
-*Hình 12.3: DevGuard hoàn thành quét đồng thời 23 services trong 2m45s.*
+*Hình 13.3: DevGuard hoàn thành quét đồng thời 23 services trong 2m45s.*
 
 ![Quét cấu hình Kubernetes với Trivy trong mạng cô lập](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/github_actions_17m45s.png)
-*Hình 12.4: Pipeline cũ mất 17m45s khi ép chạy xanh 23 services.*
+*Hình 13.4: Pipeline cũ mất 17m45s khi ép chạy xanh 23 services.*
 
 ![Chạy Trivy Config trong container runner airgapped-net](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/benchmark_reachability_chart.png)
-*Hình 12.5: So sánh tỷ lệ giảm cảnh báo giả nhờ Reachability Analysis.*
+*Hình 13.5: So sánh tỷ lệ giảm cảnh báo giả nhờ Reachability Analysis.*
 
 ### 12.4. Kết quả A/B Benchmark CI/CD trên GitHub Actions
 
@@ -1843,7 +1909,7 @@ gantt
     section Giai đoạn 2: Kiểm soát Kubernetes
     Triển khai Admission Webhook & Nghiệm thu        :active, p2, 2026-09-15, 2026-09-30
 ```
-*Hình 13.1: Biểu đồ Gantt lộ trình tích hợp an ninh DevGuard cho 23 services.*
+*Hình 14.1: Biểu đồ Gantt lộ trình tích hợp an ninh DevGuard cho 23 services.*
 
 - **Giai đoạn 1 (Tuần 1-2) - Triển khai PoC:** Thiết lập Control Plane (kế thừa DevGuard) và tích hợp quét CI/CD đồng loạt cho toàn bộ 23 microservices. Đánh giá tính chịu tải của DB và API, kích hoạt Static Reachability để giảm cảnh báo giả.
 - **Giai đoạn 2 (Tuần 3-4) - Kiểm soát Kubernetes:** Cài k8s-agent Validating Admission Webhook trên Kubernetes Staging/Production để tự động chặn Pod vi phạm tại runtime, hoàn thành giai đoạn đánh giá và sẵn sàng cho môi trường production.
