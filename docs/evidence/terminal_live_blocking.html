@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Windows PowerShell - Live Firewall Blocking Evidence</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: #0b0f19;
+    font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .window {
+    width: 1240px;
+    background: #0c0c0c;
+    border-radius: 10px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.1);
+    overflow: hidden;
+  }
+  .title-bar {
+    background: #1f1f1f;
+    padding: 8px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2d2d2d;
+    user-select: none;
+  }
+  .tabs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tab {
+    background: #0c0c0c;
+    color: #e5e7eb;
+    padding: 6px 16px;
+    border-radius: 6px 6px 0 0;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-top: 2px solid #0078d4;
+  }
+  .tab-icon {
+    width: 14px;
+    height: 14px;
+    background: #0078d4;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 9px;
+    font-weight: bold;
+  }
+  .controls {
+    display: flex;
+    gap: 16px;
+    color: #888;
+    font-size: 13px;
+  }
+  .terminal-body {
+    padding: 20px 24px;
+    color: #cccccc;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .prompt { color: #60a5fa; font-weight: bold; }
+  .path { color: #34d399; }
+  .cmd { color: #f9fafb; font-weight: bold; }
+  .success-status { color: #22c55e; font-weight: bold; }
+  .error-status { color: #ef4444; font-weight: bold; }
+  .header-name { color: #93c5fd; }
+  .header-val { color: #e2e8f0; }
+  .body-json { color: #fef08a; background: #18181b; padding: 4px 8px; border-radius: 4px; display: block; margin-top: 2px; }
+  .rule-badge { background: #7f1d1d; color: #fecaca; padding: 1px 6px; border-radius: 3px; font-weight: bold; }
+  .malware-badge { background: #991b1b; color: #fef2f2; padding: 1px 6px; border-radius: 3px; font-weight: bold; border: 1px solid #ef4444; }
+  .cache-badge { background: #065f46; color: #a7f3d0; padding: 1px 6px; border-radius: 3px; font-weight: bold; }
+  .section-sep { margin: 14px 0; border-top: 1px dashed #374151; }
+</style>
+</head>
+<body>
+
+<div class="window">
+  <div class="title-bar">
+    <div class="tabs">
+      <div class="tab">
+        <span class="tab-icon">PS</span>
+        <span>Windows PowerShell — user-service Live Verification</span>
+      </div>
+    </div>
+    <div class="controls">
+      <span>&#8212;</span>
+      <span>&#9633;</span>
+      <span>&#10005;</span>
+    </div>
+  </div>
+  <div class="terminal-body">
+    <!-- Test 1: Safe Package -->
+    <span class="path">PS C:\...\services\user-service></span> <span class="cmd">curl.exe -i http://localhost:8080/api/v1/dependency-proxy/4a882f42-bdb4-49a0-b5fe-0509eb92faa0/go/github.com/google/uuid/@v/v1.6.0.info</span><br>
+    <span class="success-status">HTTP/1.1 200 OK</span><br>
+    <span class="header-name">Content-Type:</span> <span class="header-val">application/json</span><br>
+    <span class="header-name">X-Cache:</span> <span class="cache-badge">HIT</span><br>
+    <span class="header-name">X-Proxy-Type:</span> <span class="header-val">go</span><br>
+    <span class="header-name">Date:</span> <span class="header-val">Sun, 20 Sep 2026 10:45:53 GMT</span><br>
+    <span class="body-json">{"Version":"v1.6.0","Time":"2024-01-23T18:54:04Z","Origin":{"VCS":"git","URL":"https://github.com/google/uuid","Ref":"refs/tags/v1.6.0","Hash":"0f11ee6918f41a04c201eceeadf612a377bc7fbc"}}</span>
+
+    <div class="section-sep"></div>
+
+    <!-- Test 2: Forbidden Package by Rule -->
+    <span class="path">PS C:\...\services\user-service></span> <span class="cmd">curl.exe -i http://localhost:8080/api/v1/dependency-proxy/4a882f42-bdb4-49a0-b5fe-0509eb92faa0/go/github.com/sirupsen/logrus/@v/v1.9.3.info</span><br>
+    <span class="error-status">HTTP/1.1 403 Forbidden</span><br>
+    <span class="header-name">Content-Type:</span> <span class="header-val">application/json</span><br>
+    <span class="header-name">X-Not-Allowed-Package:</span> <span class="rule-badge">blocked</span><br>
+    <span class="header-name">Date:</span> <span class="header-val">Sun, 20 Sep 2026 10:45:56 GMT</span><br>
+    <span class="body-json">{"blocked":true,"error":"Forbidden","message":"This package has been blocked by the dependency proxy rules","path":"github.com/sirupsen/logrus/@v/v1.9.3.info/","reason":"Package github.com/sirupsen/logrus is not allowed by rule: pkg:go/github.com/sirupsen/logrus*"}</span>
+
+    <div class="section-sep"></div>
+
+    <!-- Test 3: Malicious Package OSV -->
+    <span class="path">PS C:\...\services\user-service></span> <span class="cmd">curl.exe -i http://localhost:8080/api/v1/dependency-proxy/4a882f42-bdb4-49a0-b5fe-0509eb92faa0/go/github.com/boltdb-go/bolt/@v/v1.3.1.info</span><br>
+    <span class="error-status">HTTP/1.1 403 Forbidden</span><br>
+    <span class="header-name">Content-Type:</span> <span class="header-val">application/json</span><br>
+    <span class="header-name">X-Malicious-Package:</span> <span class="malware-badge">blocked (MAL-2025-2545)</span><br>
+    <span class="header-name">Date:</span> <span class="header-val">Sun, 20 Sep 2026 10:45:57 GMT</span><br>
+    <span class="body-json">{"blocked":true,"error":"Forbidden","message":"This package has been blocked by the malicious package firewall","path":"github.com/boltdb-go/bolt/@v/v1.3.1.info/","reason":"Package github.com/boltdb-go/bolt is flagged as malicious (ID: MAL-2025-2545): Malicious code in github.com/boltdb-go/bolt (Go)"}</span>
+
+    <div class="section-sep"></div>
+
+    <!-- Test 4: Real Go toolchain blocking -->
+    <span class="path">PS C:\...\services\user-service></span> <span class="cmd">$env:GOPROXY = "http://localhost:8080/api/v1/dependency-proxy/4a882f42-bdb4-49a0-b5fe-0509eb92faa0/go,off"</span><br>
+    <span class="path">PS C:\...\services\user-service></span> <span class="cmd">go mod download -x github.com/boltdb-go/bolt@v1.3.1</span><br>
+    <span class="header-val"># get http://localhost:8080/api/v1/dependency-proxy/4a882f42-bdb4-49a0-b5fe-0509eb92faa0/go/github.com/boltdb-go/bolt/@v/v1.3.1.info</span><br>
+    <span class="error-status"># get http://localhost:8080/api/v1/dependency-proxy/4a882f42-bdb4-49a0-b5fe-0509eb92faa0/go/github.com/boltdb-go/bolt/@v/v1.3.1.info: 403 Forbidden (0.023s)</span><br>
+    <span class="error-status">go: github.com/boltdb-go/bolt@v1.3.1: reading http://localhost:8080/api/v1/dependency-proxy/4a882f42-bdb4-49a0-b5fe-0509eb92faa0/go/github.com/boltdb-go/bolt/@v/v1.3.1.info: 403 Forbidden</span><br><br>
+    <span class="path">PS C:\...\services\user-service></span> <span class="cmd">_</span>
+  </div>
+</div>
+
+</body>
+</html>

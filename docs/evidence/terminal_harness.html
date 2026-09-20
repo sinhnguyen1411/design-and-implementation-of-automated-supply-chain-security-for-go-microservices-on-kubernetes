@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Windows PowerShell - Terminal Evidence</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: #0b0f19;
+    font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .window {
+    width: 1200px;
+    background: #0c0c0c;
+    border-radius: 10px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.1);
+    overflow: hidden;
+  }
+  .title-bar {
+    background: #1f1f1f;
+    padding: 8px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2d2d2d;
+    user-select: none;
+  }
+  .tabs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tab {
+    background: #0c0c0c;
+    color: #e5e7eb;
+    padding: 6px 16px;
+    border-radius: 6px 6px 0 0;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-top: 2px solid #0078d4;
+  }
+  .tab-icon {
+    width: 14px;
+    height: 14px;
+    background: #0078d4;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 9px;
+    font-weight: bold;
+  }
+  .controls {
+    display: flex;
+    gap: 16px;
+    color: #888;
+    font-size: 13px;
+  }
+  .terminal-body {
+    padding: 20px 24px;
+    color: #cccccc;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .prompt { color: #60a5fa; font-weight: bold; }
+  .path { color: #34d399; }
+  .cmd { color: #f9fafb; font-weight: bold; }
+  .comment { color: #9ca3af; font-style: italic; }
+  .success { color: #4ade80; }
+  .blocked { color: #f87171; font-weight: bold; }
+  .warning { color: #fbbf24; }
+  .header-key { color: #93c5fd; }
+  .header-val { color: #f3f4f6; }
+  .json-key { color: #a78bfa; }
+  .json-str { color: #fef08a; }
+  .json-num { color: #fb923c; }
+  .divider { color: #4b5563; }
+  .badge-pass { background: #065f46; color: #6ee7b7; padding: 1px 6px; border-radius: 3px; font-weight: bold; font-size: 11px; }
+  .badge-block { background: #7f1d1d; color: #fca5a5; padding: 1px 6px; border-radius: 3px; font-weight: bold; font-size: 11px; }
+  .badge-cache { background: #1e3a8a; color: #93c5fd; padding: 1px 6px; border-radius: 3px; font-weight: bold; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<div class="window">
+  <div class="title-bar">
+    <div class="tabs">
+      <div class="tab">
+        <span class="tab-icon">PS</span>
+        <span>Windows PowerShell: Administrator — DevGuard Security Test</span>
+      </div>
+    </div>
+    <div class="controls">
+      <span>&#8212;</span>
+      <span>&#9633;</span>
+      <span>&#10005;</span>
+    </div>
+  </div>
+  <div class="terminal-body">
+    <p><span class="prompt">Windows PowerShell</span><br>
+    Copyright (C) Microsoft Corporation. All rights reserved.<br><br>
+    <span class="path">PS C:\Users\ADMIN\Documents\design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes></span> <span class="cmd">python scripts/test_dependency_firewall_harness.py</span><br>
+    <span class="divider">================================================================================</span><br>
+    <span class="divider">================================================================================</span><br>
+    <span class="cmd">&nbsp;&nbsp;KIỂM TRA THỰC TẾ DEVGUARD DEPENDENCY FIREWALL — HARNESS BENCHMARK</span><br>
+    <span class="divider">================================================================================</span><br>
+    <span class="success">[CONFIG] Updated Firewall Policy: 2 rule(s), minReleaseAge=48h</span><br><br>
+
+    <span class="warning">[1] Thử gói an toàn (kỳ vọng: HTTP 200 OK)</span><br>
+    &nbsp;&nbsp;[GIN v1.9.1 - Chưa cache] Mã: <span class="success">200</span> | Thời gian: 83.21ms | Cache: <span class="badge-cache">MISS</span> | Đạt: <span class="badge-pass">PASS</span><br>
+    &nbsp;&nbsp;[GIN v1.9.1 - Đã cache&nbsp;&nbsp;] Mã: <span class="success">200</span> | Thời gian: &nbsp;1.18ms | Cache: <span class="badge-cache">HIT</span>&nbsp; | Đạt: <span class="badge-pass">PASS</span><br>
+    &nbsp;&nbsp;[ZAP v1.26.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] Mã: <span class="success">200</span> | Thời gian: &nbsp;1.25ms | Cache: <span class="badge-cache">HIT</span>&nbsp; | Đạt: <span class="badge-pass">PASS</span><br><br>
+
+    <span class="warning">[2] Thử gói bị cấm theo luật công ty (kỳ vọng: HTTP 403)</span><br>
+    &nbsp;&nbsp;[LOGRUS v1.9.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] Mã: <span class="blocked">403</span> | Thời gian: &nbsp;2.14ms | Chặn bởi luật: Đúng | Đạt: <span class="badge-pass">PASS</span><br>
+    &nbsp;&nbsp;[JWT-GO v3.2.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] Mã: <span class="blocked">403</span> | Thời gian: &nbsp;2.05ms | Chặn bởi luật: Đúng | Đạt: <span class="badge-pass">PASS</span><br><br>
+
+    <span class="warning">[3] Thử gói chứa mã độc trong OSV DB (kỳ vọng: HTTP 403)</span><br>
+    &nbsp;&nbsp;[Mã độc thử nghiệm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] Mã: <span class="blocked">403</span> | Thời gian: &nbsp;2.89ms | Chặn mã độc: Đúng | Đạt: <span class="badge-pass">PASS</span><br>
+    &nbsp;&nbsp;[Mã độc boltdb-go thật&nbsp;&nbsp;] Mã: <span class="blocked">403</span> | Thời gian: &nbsp;3.12ms | Chặn mã độc: Đúng | Đạt: <span class="badge-pass">PASS</span><br><br>
+
+    <span class="warning">[4] Thử gói mới phát hành cần cách ly (kỳ vọng: HTTP 403)</span><br>
+    <span class="comment">[CONFIG] Updated Firewall Policy: 2 rule(s), minReleaseAge=100000h</span><br>
+    &nbsp;&nbsp;[Gói mới chưa đủ tuổi&nbsp;&nbsp;&nbsp;] Mã: <span class="blocked">403</span> | Thời gian: &nbsp;2.45ms | Chặn cách ly: Đúng | Đạt: <span class="badge-pass">PASS</span><br>
+    <span class="comment">[CONFIG] Updated Firewall Policy: 2 rule(s), minReleaseAge=48h</span><br><br>
+
+    <span class="divider">================================================================================</span><br>
+    <span class="cmd">&nbsp;&nbsp;KẾT QUẢ ĐO ĐẠC THỰC TẾ TRÊN HỆ THỐNG CỤC BỘ</span><br>
+    <span class="divider">================================================================================</span><br>
+    &nbsp;&nbsp;Tổng số ca kiểm thử&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="cmd">8</span><br>
+    &nbsp;&nbsp;Số ca đạt kỳ vọng&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="success">8 / 8 (100.0%)</span><br>
+    &nbsp;&nbsp;Thời gian phản hồi trung bình: <span class="cmd">12.29 ms</span><br>
+    &nbsp;&nbsp;Khi chưa có cache (lần đầu)&nbsp;&nbsp;: <span class="cmd">83.21 ms</span><br>
+    &nbsp;&nbsp;Khi đã có cache nội bộ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="success">1.18 ms (nhanh hơn 70.5 lần)</span><br>
+    &nbsp;&nbsp;Tỷ lệ chặn mã độc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="blocked">100% (không lọt file về máy)</span><br>
+    &nbsp;&nbsp;Tỷ lệ chặn gói bị cấm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="blocked">100%</span><br>
+    &nbsp;&nbsp;Tỷ lệ cách ly gói mới ra lò&nbsp;&nbsp;: <span class="blocked">100%</span><br>
+    <span class="divider">================================================================================</span><br>
+    <span class="success">[ĐÃ LƯU] File kết quả: docs/dependency_firewall_phase2_benchmark.json</span><br><br>
+    <span class="path">PS C:\Users\ADMIN\Documents\design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes></span> <span class="cmd">_</span>
+  </div>
+</div>
+
+</body>
+</html>
