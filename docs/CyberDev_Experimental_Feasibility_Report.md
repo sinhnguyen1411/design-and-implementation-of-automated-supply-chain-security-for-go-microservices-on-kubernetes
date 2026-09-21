@@ -72,9 +72,9 @@
 | **Hình 4.5** | Quét SAST với Opengrep trong mạng cô lập Air-Gapped |
 | **Hình 4.6** | Chạy Opengrep trong container runner airgapped-net |
 | **Hình 5.1** | Quét secret với Gitleaks và tự động che giấu chuỗi bí mật |
-| **Hình 5.2** | Quản lý rủi ro lộ lọt secret trên Dashboard |
+| **Hình 5.2** | Quản lý rủi ro rò rỉ secret trên Dashboard |
 | **Hình 5.3** | So sánh kiến trúc Secret Scanning: Cloud và Gitleaks Offline |
-| **Hình 5.4** | Quét lộ lọt secret với Gitleaks trong mạng cô lập |
+| **Hình 5.4** | Quét rò rỉ secret với Gitleaks trong mạng cô lập |
 | **Hình 5.5** | Chạy Gitleaks trong container runner airgapped-net |
 | **Hình 6.1** | Quét cấu hình Kubernetes manifests với Trivy trên PowerShell |
 | **Hình 6.2** | Quản lý rủi ro IaC Security trên Dashboard |
@@ -119,7 +119,7 @@
 | **Hình 13.1** | Đánh giá tuân thủ ISO 27001 và BSI trên Dashboard |
 | **Hình 13.2** | So sánh thời gian chạy CI/CD khi tải đồng thời 23 services |
 | **Hình 13.3** | DevGuard hoàn thành quét đồng thời 23 services trong 2m45s |
-| **Hình 13.4** | Pipeline cũ mất 17m45s khi ép chạy xanh 23 services |
+| **Hình 13.4** | Pipeline cũ mất 17m45s khi bỏ qua kiểm tra an ninh trên 23 services |
 | **Hình 13.5** | So sánh tỷ lệ giảm cảnh báo giả nhờ Reachability Analysis |
 | **Hình 14.1** | Biểu đồ Gantt lộ trình tích hợp an ninh DevGuard cho 23 services |
 
@@ -179,22 +179,22 @@
 
 ### ĐÁNH GIÁ TỔNG QUAN: KHẢ NĂNG ĐÁP ỨNG KỸ THUẬT CỦA DEVGUARD THEO YÊU CẦU ĐỀ TÀI
 
-Để định hướng và đánh giá đầy đủ khả năng của DevGuard trong việc đáp ứng mục tiêu xây dựng nền tảng an ninh chuỗi cung ứng phần mềm (thay thế cho chuỗi công cụ rời rạc), bảng dưới đây phân tích chi tiết hiện trạng năng lực của DevGuard và phương hướng phát triển, tích hợp mở rộng cho đề tài nghiên cứu theo 9 trụ cột an ninh bắt buộc:
+Để định hướng và đánh giá đầy đủ khả năng của DevGuard trong việc đáp ứng mục tiêu xây dựng nền tảng an ninh chuỗi cung ứng phần mềm (thay thế cho chuỗi công cụ rời rạc), bảng dưới đây phân tích chi tiết hiện trạng năng lực của DevGuard và phương hướng phát triển, tích hợp mở rộng cho đề tài nghiên cứu theo 10 trụ cột an ninh bắt buộc:
 
 *Bảng 2: Đánh giá tính năng DevGuard theo 10 trụ cột an ninh*
 
 | Hạng mục An ninh | Khả năng hiện có của DevGuard | Kết quả kiểm thử thực tế trong đề tài |
 | :--- | :--- | :--- |
-| **1. SAST (Phân tích mã nguồn)** | Hỗ trợ nạp báo cáo SARIF từ các công cụ phân tích tĩnh. | **Đạt yêu cầu:** Tích hợp Opengrep chạy offline 100%. Đã thử trên `user-service` bắt được lỗi cấu hình TLS 1.3, xuất file SARIF chuẩn OASIS v2.1.0 và chặn pipeline đúng lúc (Exit Code 1). |
-| **2. SCA (Quét lỗ hổng thư viện)** | Tự động phát hiện CVE trong thư viện, sinh và quản lý SBOM cùng tài liệu VEX. | **Đạt yêu cầu:** Tự sinh SBOM CycloneDX v1.6 cho 44 thư viện của `user-service`, tra cứu CVE bằng PostgreSQL nội bộ, dùng OpenVEX lọc bỏ cảnh báo sai cho các hàm không bị gọi đến (tiết kiệm thời gian sửa lỗi). |
-| **3. Dependency Firewall** | Đứng làm proxy ở giữa (`GOPROXY`), kiểm tra gói khi tải về, chặn theo luật và cách ly gói mới phát hành. | **Đạt yêu cầu:** Chặn đứng 100% gói mã độc và gói cấm; cách ly gói mới dưới 48 giờ để phòng ngừa tấn công chiếm quyền maintainer; có bộ nhớ tạm (cache) giúp tải nhanh gấp 27-40 lần so với Internet; kiểm tra 23 microservices đạt chuẩn 100%. |
-| **4. Secret Scanning (Quét lộ khóa)** | Có sẵn engine tìm token, mật khẩu và API key trong mã nguồn. | **Đạt yêu cầu:** Tích hợp Gitleaks v8.30.1. Quét sạch 522 commit cũ, bắt đúng các token Slack và khóa riêng RSA bị lộ, tự che giấu mật khẩu (`***`) và chặn đẩy code lên (Exit Code 1). |
-| **5. IaC Security (Quét cấu hình hạ tầng)** | Kiểm tra lỗi bảo mật trong file Kubernetes manifests, Dockerfile và Terraform. | **Đạt yêu cầu:** Tích hợp Trivy Config và Hadolint chạy offline. Bắt đúng lỗi chạy quyền root trong Dockerfile và lỗi thiếu namespace/lộ secret trong Kubernetes manifest của `user-service`, chặn kịp thời trước khi deploy. |
-| **6. Container Security (Quét image)** | Quét lỗ hổng hệ điều hành và các tầng bên trong container image. | **Đạt yêu cầu:** Tích hợp Trivy Image. Chứng minh base image Debian cũ dính tới 46 CVE, chuyển sang dùng Distroless Nonroot thì sạch 100% không còn lỗ hổng hệ điều hành nào. |
-| **7. DAST (Kiểm thử động API)** | Hỗ trợ nạp kết quả kiểm thử động từ các scanner bên ngoài thông qua chuẩn SARIF. | **Đạt yêu cầu:** Tích hợp Nuclei v3.11.1 (file chạy Go nhẹ 44 MB). Bắn thử API `user-service` (:8081) chỉ mất 3.17 ms bắt được 3 lỗi: thiếu HTTP header an toàn, lộ endpoint debug và cấu hình CORS lỏng lẻo. |
-| **8. Supply Chain & SLSA (Ký số)** | Quản lý vòng đời SBOM, VEX và tuân thủ các nguyên tắc của tiêu chuẩn SLSA. | **Đạt yêu cầu:** Dùng Cosign v2.4.0 ký số file nhị phân Go (ECDSA P-256), bắt được ngay nếu file bị chỉnh sửa lén 1 byte. Tự sinh bản ghi nguồn gốc SLSA v1.0 Provenance và dùng OPA Rego để kiểm duyệt trước khi release. |
-| **9. CI/CD Policy Gate (Cổng kiểm soát)** | Cung cấp CLI runner và GitHub Action, trả về mã trạng thái (Exit Code) để dừng pipeline khi vi phạm. | **Đạt yêu cầu:** Hợp nhất kết quả từ tất cả các trụ cột về một chỗ. Thay thế 138 script rời rạc trên 23 service bằng 1 cổng kiểm soát duy nhất; chỉ cho phép release khi toàn bộ tiêu chí an ninh đạt chuẩn (Exit Code 0). |
-| **10. Triển khai Độc lập (On-premise)** | Hệ thống tự lưu trữ hoàn toàn (Go + Next.js + PostgreSQL + Docker). | **Đạt yêu cầu:** Triển khai Full-Stack nội bộ không phụ thuộc đám mây bên ngoài. Thử nghiệm ngắt mạng 100% (Air-Gapped) vẫn quét, nạp dữ liệu và kiểm tra bình thường, không lo rò rỉ mã nguồn ra Internet. |
+| **1. SAST (Phân tích mã nguồn tĩnh)** | Hỗ trợ nạp và trực quan hóa báo cáo theo chuẩn quốc tế OASIS SARIF từ các công cụ phân tích tĩnh. | **Đạt yêu cầu:** Tích hợp thành công Opengrep vận hành trong môi trường cô lập 100%. Thực nghiệm trên `user-service` nhận diện chính xác cấu hình TLS 1.3 không an toàn, xuất báo cáo SARIF v2.1.0 chuẩn hóa và kích hoạt dừng pipeline kịp thời (Exit Code 1). |
+| **2. SCA (Quét thành phần phụ thuộc)** | Tự động phân tích các thành phần phụ thuộc, đối soát CVE, khởi tạo và quản lý đặc tả SBOM cùng tài liệu VEX. | **Đạt yêu cầu:** Tự động sinh đặc tả SBOM CycloneDX v1.6 cho toàn bộ 44 thư viện phụ thuộc của `user-service`, tra cứu cơ sở dữ liệu CVE nội bộ trên PostgreSQL, kết hợp OpenVEX Rule Engine loại bỏ cảnh báo giả đối với các hàm không khả dụng thực thi (Unreachable Code). |
+| **3. Dependency Firewall** | Đóng vai trò In-line Proxy trung gian (`GOPROXY`), kiểm soát luồng dữ liệu thời gian thực, thực thi chính sách cấm và kích ly gói mới. | **Đạt yêu cầu:** Chặn đứng 100% gói mã độc và gói cấm theo chính sách; kích hoạt cơ chế cách ly (Cooldown Period 48 giờ) đối với gói mới nhằm phòng ngừa tấn công chiếm đoạt tài khoản duy trì; tích hợp bộ đệm nội bộ (LRU Cache) giúp tăng tốc độ phản hồi 44.6 lần; kiểm toán 23 microservices đạt chuẩn an toàn 100%. |
+| **4. Secret Scanning (Rà soát bí mật)** | Tích hợp engine chuyên dụng nhận diện khóa bí mật, token, mật khẩu và khóa riêng tư trong lịch sử mã nguồn. | **Đạt yêu cầu:** Tích hợp Gitleaks v8.30.1. Rà soát toàn bộ lịch sử 522 commit, phát hiện chính xác các API token và khóa riêng RSA bị lộ, tự động che giấu chuỗi nhạy cảm (Secret Masking) và ngăn chặn mã nguồn vi phạm (Exit Code 1). |
+| **5. IaC Security (An ninh hạ tầng)** | Thẩm định các lỗ hổng cấu hình trong Kubernetes manifests, Dockerfile và hạ tầng định nghĩa dưới dạng mã (IaC). | **Đạt yêu cầu:** Tích hợp Trivy Config và Hadolint vận hành offline. Phát hiện chính xác cấu hình thực thi với đặc quyền root trong Dockerfile và lỗi thiếu khai báo Namespace / bảo mật Secret trong Kubernetes manifest của `user-service`, ngăn chặn rủi ro trước khi triển khai. |
+| **6. Container Security (Quét image)** | Phân tích chuyên sâu các tầng (layers) container image nhằm phát hiện lỗ hổng hệ điều hành và gói phần mềm. | **Đạt yêu cầu:** Tích hợp Trivy Image. Thực nghiệm chứng minh base image Debian truyền thống tồn tại 46 CVEs; khi chuyển đổi sang mô hình Distroless Nonroot, toàn bộ lỗ hổng cấp hệ điều hành bị triệt tiêu hoàn toàn (0 CVE). |
+| **7. DAST (Kiểm thử động runtime)** | Hỗ trợ tiếp nhận kết quả kiểm thử động từ các scanner bên ngoài thông qua chuẩn trao đổi SARIF. | **Đạt yêu cầu:** Tích hợp Nuclei v3.11.1 (Go binary độc lập dung lượng tối ưu 44 MB). Kiểm thử endpoint runtime của `user-service` (:8081) với độ trễ chỉ 3.17 ms, phát hiện 3 điểm yếu: thiếu HTTP Header an toàn, lộ endpoint debug và chính sách CORS chưa thắt chặt. |
+| **8. Supply Chain & SLSA (Ký số)** | Quản lý vòng đời SBOM, tài liệu VEX và kiểm chứng tính toàn vẹn theo khuôn khổ bảo đảm chuỗi cung ứng SLSA. | **Đạt yêu cầu:** Ứng dụng Cosign v2.4.0 ký số tệp nhị phân Go (thuật toán ECDSA P-256), nhận diện tức thì mọi hành vi can thiệp trái phép dù chỉ 1 byte; tự động khởi tạo chứng thực nguồn gốc SLSA v1.0 Provenance và thẩm định bằng OPA Rego Policy Gate. |
+| **9. CI/CD Policy Gate (Cổng kiểm soát)** | Cung cấp CLI runner và GitHub Action, trả về mã trạng thái chuẩn mực để kiểm soát điều kiện phát hành phần mềm. | **Đạt yêu cầu:** Hợp nhất kết quả kiểm định từ toàn bộ các trụ cột phân tích vào một cổng kiểm soát duy nhất; thay thế 138 kịch bản phân mảnh trên 23 vi dịch vụ, bảo đảm chỉ các bản dựng đáp ứng toàn diện tiêu chuẩn an ninh mới được cấp phép phát hành (Exit Code 0). |
+| **10. Triển khai On-Premise Độc lập** | Kiến trúc tự lưu trữ hoàn toàn (Go Backend + Next.js Web + PostgreSQL + Docker / Kubernetes). | **Đạt yêu cầu:** Triển khai Full-Stack On-Premise hoàn toàn độc lập với các dịch vụ SaaS bên thứ ba. Thực nghiệm trong môi trường mạng cô lập 100% (Air-Gapped) chứng minh hệ thống vận hành liên tục, bảo vệ tuyệt đối bí mật công nghệ lõi khỏi nguy cơ rò rỉ ra Internet. |
 
 ---
 
@@ -255,29 +255,29 @@ flowchart TD
 
 ---
 
-### 1.2 Setup môi trường đóng gói & dựng Control Plane
+### 1.2. Thiết lập Môi trường Đóng gói và Khởi tạo Hạ tầng Control Plane
 
-Khi dựng Control Plane, gặp 2 vấn đề cần xử lý:
+Trong quá trình thiết lập và vận hành hạ tầng DevGuard Control Plane trên môi trường On-Premise, nhóm nghiên cứu đã ghi nhận và giải quyết 2 thách thức kỹ thuật cốt lõi:
 
-#### Vấn đề 1: Image Registry upstream không truy cập được và thiếu extension `pg-semver`
-- *Hiện tượng:* Các image `ghcr.io/l3montree-dev/...` từ upstream trả về lỗi `denied`. PostgreSQL chuẩn thiếu extension `pg-semver` khiến file migration SQL của Control Plane bị lỗi.
-- *Cách xử lý:* Viết `Dockerfile.postgres` trên nền `postgres:16-alpine`, tải mã nguồn `theory/pg-semver` từ GitHub và biên dịch native extension:
+#### Thách thức 1: Rào cản phân phối Container Image từ Registry thượng nguồn và yêu cầu Extension `pg-semver`
+- *Hiện tượng kỹ thuật:* Các container image từ kho lưu trữ thượng nguồn `ghcr.io/l3montree-dev/...` phản hồi mã lỗi phân quyền `denied` khi tải về. Đồng thời, bản phân phối chuẩn của PostgreSQL thiếu hụt extension `pg-semver`, khiến các tệp migration SQL định nghĩa cấu trúc cơ sở dữ liệu của Control Plane bị gián đoạn.
+- *Giải pháp kỹ thuật:* Xây dựng tệp `Dockerfile.postgres` tùy biến trên nền tảng `postgres:16-alpine`, tự động kéo mã nguồn `theory/pg-semver` từ GitHub và biên dịch trực tiếp native extension vào nhân PostgreSQL:
 
 ![Ảnh chụp cửa sổ Windows PowerShell thực tế hiển thị core/Dockerfile.postgres](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_dockerfile_postgres.png)
 *Hình 1.2: Biên dịch extension pg-semver trong Dockerfile.postgres.*
 
-#### Vấn đề 2: Khởi tạo schema cơ sở dữ liệu IAM Ory Kratos tự động
-- *Hiện tượng:* Ory Kratos yêu cầu database schema riêng và DSN kết nối độc lập đến database `kratos`.
-- *Cách xử lý:* Thêm file `initdb.sql` tự động tạo database `kratos`, phân quyền user, và bổ sung container `kratos-migrate` trong Docker Compose để tự động hoàn thành migration trước khi khởi động `kratos serve`.
+#### Thách thức 2: Tự động hóa Khởi tạo Schema Cơ sở Dữ liệu Phân hệ IAM Ory Kratos
+- *Hiện tượng kỹ thuật:* Hệ thống quản trị định danh Ory Kratos yêu cầu một schema cơ sở dữ liệu độc lập cùng chuỗi kết nối DSN riêng biệt tới cơ sở dữ liệu `kratos`.
+- *Giải pháp kỹ thuật:* Bổ sung kịch bản `initdb.sql` tự động tạo cơ sở dữ liệu `kratos`, phân bổ quyền người dùng hợp thức và tích hợp service container `kratos-migrate` vào tệp Docker Compose để tự động hoàn thành chu trình database migration trước khi kích hoạt `kratos serve`.
 
 ---
 
-### 1.3. Môi trường quản trị & cấp phát Personal Access Token (PAT)
-Sau khi xử lý xong, Control Plane hoạt động ổn định:
-- **PostgreSQL Database:** Tạo thành công 2 database `devguard` và `kratos`, nạp 994 Grundschutz++ controls, 93 ISO27001 controls, 146 Lieferkettensicherheit controls.
-- **Core API Server:** Endpoint `/api/v1/health/` phản hồi `{"status": "healthy"}` tại cổng `8080`.
-- **Web Dashboard:** Khởi chạy trên cổng `3000` với Turbopack trong 469ms, giao diện sẵn sàng quản trị.
-- **Ory Kratos IAM:** Đăng ký tài khoản quản trị và cấp phát thành công Personal Access Token (PAT) để các CI/CD Runner kết nối vào API.
+### 1.3. Môi trường Quản trị & Cơ chế Cấp phát Personal Access Token (PAT)
+Sau khi hoàn tất cấu hình kỹ thuật và các bản vá tương thích, hạ tầng Control Plane đã đạt trạng thái vận hành ổn định và sẵn sàng phục vụ:
+- **Cơ sở Dữ liệu PostgreSQL:** Khởi tạo thành công 2 cơ sở dữ liệu độc lập `devguard` và `kratos`, nạp đầy đủ 994 Grundschutz++ controls, 93 ISO27001 controls và 146 Lieferkettensicherheit controls.
+- **Core API Server:** Điểm cuối `/api/v1/health/` phản hồi trạng thái sẵn sàng `{"status": "healthy"}` tại cổng `8080`.
+- **Web Dashboard:** Khởi chạy thành công trên cổng `3000` thông qua trình biên dịch Turbopack trong 469 ms, giao diện sẵn sàng cho các tác vụ quản trị.
+- **Phân hệ IAM Ory Kratos:** Thiết lập thành công tài khoản quản trị hệ thống và cấp phát Personal Access Token (PAT) phục vụ việc xác thực bảo mật cho các tác vụ CI/CD Runner kết nối về Core API.
 
 **Thông tin không gian quản trị & Token phục vụ kiểm thử:**
 - **Email quản trị:** admin@devguard.local
@@ -298,21 +298,21 @@ Sau khi xử lý xong, Control Plane hoạt động ổn định:
 ## Phần 2: Tích hợp Control Plane vào Pipeline Hybrid Cloud CI/CD (GitHub Actions)
 
 > [!NOTE]
-> **Lưu ý:** Bài thực nghiệm chạy trên GitHub Actions Runner (`ubuntu-latest`) trên đám mây. Runner cần Internet để tải công cụ (Trivy, devguard-scanner), sau đó gửi kết quả về Control Plane qua Cloudflare Tunnel.
+> **Bối cảnh Thực nghiệm:** Kịch bản thực nghiệm được triển khai trên hạ tầng điện toán đám mây GitHub Actions Hosted Runner (`ubuntu-latest`). Runner yêu cầu kết nối Internet để nạp các công cụ bảo mật (Trivy Engine, `devguard-scanner`), sau đó truyền tải an toàn các bản ghi SBOM và dữ liệu phân tích về DevGuard Control Plane On-Premise thông qua đường hầm mã hóa Cloudflare Quick Tunnel.
 
-### 2.1. Hiện trạng pipeline bảo mật nguyên bản (`ci-service.yml`)
+### 2.1. Hiện trạng chuỗi pipeline an ninh nguyên bản (`ci-service.yml`)
 
-Pipeline bảo mật hiện tại được cấu hình trong `.github/workflows/ci-service.yml` (757 dòng), gồm các bước nối tiếp:
-- **Tạo SBOM (Syft / `anchore/sbom-action`):** Sinh file `sbom.spdx.json` và upload lên GitHub Artifacts. Dữ liệu phân tán theo từng lần chạy, không có database tập trung để truy vấn.
-- **Quét lỗ hổng (Grype / `anchore/scan-action`):** Quét container image và xuất `grype-report.json`. Không phân tích được hàm lỗi có thực sự được gọi trong mã nguồn hay không.
-- **Security Gate (Python Script):** Đọc `security-gate-findings.json` và chặn build (`raise SystemExit`) khi có CVE fixable mức High/Critical. Gây cảnh báo giả (false positive) khi mã nguồn không dùng hàm lỗi, làm chặn quy trình phát hành.
-- **Ký số & Chứng thực (Cosign / SLSA Attestation):** Ký và đẩy attestation lên OCI Registry, nhưng thiếu Admission Webhook để kiểm tra tại Kubernetes runtime.
+Chuỗi kiểm thử an ninh ban đầu của hệ thống được định nghĩa trong tệp `.github/workflows/ci-service.yml` (757 dòng cấu hình), bao gồm 4 giai đoạn tuần tự:
+- **Khởi tạo SBOM (Syft / `anchore/sbom-action`):** Xuất tệp đặc tả `sbom.spdx.json` và lưu trữ phân tán trên GitHub Artifacts. Dữ liệu bị phân mảnh theo từng lần chạy riêng lẻ, thiếu vắng cơ sở dữ liệu tập trung để phục vụ truy vấn và đối soát chéo.
+- **Rà quét Lỗ hổng Bảo mật (Grype / `anchore/scan-action`):** Phân tích container image và kết xuất báo cáo `grype-report.json`. Hạn chế lớn nhất là công cụ không thể đánh giá được hàm chứa mã lỗi có thực sự được kích hoạt trong luồng thực thi của mã nguồn hay không.
+- **Cổng Kiểm soát An ninh (Security Gate - Python Script):** Phân tích tệp `security-gate-findings.json` và kích hoạt lệnh dừng chuỗi (`raise SystemExit`) khi phát hiện CVE có khả năng khắc phục (fixable) ở mức độ nghiêm trọng High hoặc Critical. Cơ chế này thường xuyên gây ra cảnh báo giả (False Positives) đối với các đoạn mã không khả dụng thực thi (Unreachable Code), dẫn tới đình trệ bất hợp lý quy trình phát hành phần mềm.
+- **Ký số & Chứng thực Nguồn gốc (Cosign / SLSA Attestation):** Thực hiện ký số và đẩy bản ghi chứng thực lên OCI Registry, tuy nhiên thiếu vắng chốt chặn Admission Webhook để kiểm soát điều kiện nạp tại môi trường Kubernetes runtime.
 
 ---
 
-### 2.2. Thực nghiệm PoC: Pipeline CI/CD kết nối DevGuard Control Plane
+### 2.2. Thực nghiệm PoC: Chuỗi Pipeline CI/CD Kết nối DevGuard Control Plane
 
-Đã cấu hình pipeline GitHub Actions trên nhánh `feat/poc-devguard`. GitHub Cloud Runner (`ubuntu-latest`) kết nối về DevGuard Control Plane local qua Cloudflare Quick Tunnel:
+Nhóm đề tài đã cấu hình quy trình CI/CD tích hợp trên nhánh `feat/poc-devguard`. GitHub Actions Runner (`ubuntu-latest`) kết nối trực tiếp về DevGuard Control Plane On-Premise thông qua Cloudflare Quick Tunnel:
 
 *Bảng 2.1: Cấu hình và các bước thực thi pipeline CI/CD DevGuard*
 
@@ -323,7 +323,7 @@ Pipeline bảo mật hiện tại được cấu hình trong `.github/workflows/
 | **Cung ứng Scanner CLI** (Scanner Tooling) | `devguard-scanner` CLI (`cmd/devguard-scanner@latest`) | Biên dịch Go static binary trực tiếp trên GitHub Runner từ repo `l3montree-dev/devguard` | **Hoàn thành (2m15s)** |
 | **Quét SCA & Nạp SBOM** (SCA Scan & Ingestion) | `devguard-scanner sca` | Tham số: `--path services/user-service`, `--assetName thesis-microservices/core-services/user-auth-service`. Nạp CycloneDX SBOM về `--apiUrl` qua Cloudflare Tunnel với PAT Token | **Hoàn tất (9s)**<br>0 CVE phát hiện |
 
-Pipeline hoàn thành trong 3m09s (Run ID #34029163675). Scanner phân tích SCA trên `services/user-service` và gửi SBOM CycloneDX về Control Plane, phát hiện 0 lỗ hổng (Hình 2.1).
+Toàn bộ chuỗi pipeline hoàn thành trong 3 phút 09 giây (Run ID #34029163675). Công cụ scanner hoàn tất quy trình phân tích SCA trên `services/user-service` và truyền nạp tệp đặc tả CycloneDX SBOM về Control Plane, ghi nhận 0 lỗ hổng tồn đọng (Hình 2.1).
 
 ---
 
@@ -367,29 +367,29 @@ Mỗi bản build được gán định danh PackageURL, hỗ trợ truy xuất 
 
 ---
 
-## Phần 3: Thực nghiệm 2 - Vận hành DevGuard trong môi trường Air-Gapped 100% (Zero-Trust On-Premise)
+## Phần 3: Vận hành Nền tảng DevGuard trong Môi trường Mạng Cô lập 100% (Air-Gapped Zero-Trust)
 
-### 3.1. Đặt vấn đề, Tiêu chuẩn Phòng thủ Zero-Trust & Yêu cầu Mạng Cô lập 100% Air-Gapped
-Trong các tổ chức tài chính, ngân hàng, cơ quan chính phủ và các hạ tầng an ninh thông tin trọng yếu quốc gia, quy trình phát triển và vận hành phần mềm (DevSecOps) bắt buộc phải tuân thủ nghiêm ngặt các quy định về an toàn mạng cách ly:
-1. **Kiến trúc Phòng thủ Không Tin cậy (Zero Trust Architecture - NIST SP 800-207):** Giả định rằng mọi mạng bên ngoài đều tiềm ẩn nguy cơ bị xâm nhập. Dữ liệu mã nguồn, logic nghiệp vụ vi mô và danh mục phụ thuộc phần mềm (SBOM) tuyệt đối không được phép truyền qua các kênh mạng công cộng hoặc lưu trữ trên các máy chủ SaaS của bên thứ ba.
-2. **Tiêu chuẩn An ninh Quốc tế Khắt khe:** Tiêu chuẩn **PCI-DSS v4.0** (Requirement 6.4 về bảo vệ mã nguồn ứng dụng thanh toán), tiêu chuẩn **ISO/IEC 27001:2022** (Điều khoản A.8.20 về Kiểm soát An ninh Mạng và Phân tách Mạng Cô lập), và **Luật An toàn Thông tin Mạng Việt Nam** đều quy định các hệ thống xử lý giao dịch tài chính phải được vận hành trong phân vùng mạng cô lập (Air-Gapped / Isolated DMZ) không có đường định tuyến trực tiếp ra Internet.
-3. **Thách thức Tê liệt của các Chuỗi CI/CD Truyền thống:** Khi môi trường ngắt mạng hoàn toàn:
-   - *GitHub Actions hosted runners* hoàn toàn không thể khởi chạy vì yêu cầu kết nối liên tục ra máy chủ đám mây của Microsoft/GitHub để điều phối luồng và kéo runner actions.
-   - *Các công cụ scanner truyền thống (Grype, Syft, Trivy mặc định, Snyk, Semgrep)* bị tê liệt do cố gắng truy vấn các máy chủ dữ liệu CVE trực tuyến (`toolbox-data.anchore.io`, `grype.anchore.io`, `registry.npmjs.org`, `semgrep.dev`). Khi không thể tải cơ sở dữ liệu lỗ hổng, pipeline lập tức bị dừng khẩn cấp với mã lỗi kết nối, gây ách tắc toàn bộ tiến trình đóng gói và phát hành phần mềm.
+### 3.1. Đặt vấn đề, Tiêu chuẩn Phòng thủ Zero-Trust & Yêu cầu Môi trường Mạng Cô lập Air-Gapped
+Trong các tổ chức tài chính, ngân hàng, cơ quan chính phủ và các hệ thống hạ tầng thông tin trọng yếu quốc gia, quy trình phát triển và vận hành an ninh phần mềm (DevSecOps) bắt buộc phải tuân thủ nghiêm ngặt các quy chuẩn về phân vùng mạng cô lập:
+1. **Kiến trúc Phòng thủ Không Tin cậy (Zero Trust Architecture - NIST SP 800-207):** Giả định rằng mọi mạng bên ngoài đều tiềm ẩn nguy cơ bị xâm nhập. Dữ liệu mã nguồn, logic nghiệp vụ vi mô và danh mục thành phần phần mềm (SBOM) tuyệt đối không được phép truyền qua các kênh mạng công cộng hoặc lưu trữ trên các máy chủ SaaS của bên thứ ba.
+2. **Tiêu chuẩn An ninh Quốc tế Khắt khe:** Tiêu chuẩn **PCI-DSS v4.0** (Requirement 6.4 về bảo vệ mã nguồn ứng dụng thanh toán), tiêu chuẩn **ISO/IEC 27001:2022** (Điều khoản A.8.20 về Kiểm soát An ninh Mạng và Phân tách Mạng Cô lập), và **Luật An toàn Thông tin Mạng Việt Nam** đều quy định các hệ thống xử lý giao dịch trọng yếu phải được vận hành trong phân vùng mạng cô lập (Air-Gapped / Isolated DMZ) không có đường định tuyến trực tiếp ra Internet.
+3. **Thách thức Gián đoạn của Chuỗi CI/CD Truyền thống:** Khi môi trường ngắt kết nối Internet hoàn toàn:
+   - *GitHub Actions hosted runners* hoàn toàn không thể khởi chạy do đòi hỏi kết nối liên tục ra máy chủ đám mây của nhà cung cấp để điều phối luồng và kéo runner actions.
+   - *Các công cụ scanner truyền thống (Grype, Syft, Trivy mặc định, Snyk, Semgrep)* rơi vào trạng thái tê liệt do cố gắng truy vấn các máy chủ dữ liệu CVE trực tuyến (`toolbox-data.anchore.io`, `grype.anchore.io`, `registry.npmjs.org`, `semgrep.dev`). Khi không thể cập nhật cơ sở dữ liệu lỗ hổng, pipeline lập tức bị dừng khẩn cấp với mã lỗi kết nối, gây ách tắc toàn bộ tiến trình đóng gói và phát hành phần mềm.
 
 ---
 
 ### 3.2. Kiến trúc Phòng vệ Mạng Đa tầng & Bộ Công cụ Kiểm chứng Chuẩn hóa (`airgap_network_harness.py`)
-Nhằm chứng minh tính xác thực khoa học và đảm bảo không có bất kỳ "lỗ hổng rò rỉ ngầm" nào trong quá trình thực nghiệm, nhóm đề tài đã thiết kế mô hình phòng vệ 4 tầng mạng và xây dựng bộ kiểm chứng số liệu telemetry tự động tại [`scripts/airgap_network_harness.py`](scripts/airgap_network_harness.py).
+Nhằm chứng minh tính xác thực khoa học và bảo đảm không phát sinh bất kỳ luồng rò rỉ dữ liệu ngầm nào trong quá trình thực nghiệm, nhóm đề tài đã thiết kế mô hình phòng vệ 4 tầng mạng và xây dựng bộ kiểm chứng số liệu telemetry tự động tại [`scripts/airgap_network_harness.py`](scripts/airgap_network_harness.py).
 
 ![Kiến trúc phòng vệ cô lập mạng đa tầng Air-Gapped 100% và kết quả đo đạc định lượng thực nghiệm](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/airgap_zero_trust_topology.png)
 *Hình 3.1: Sơ đồ cô lập mạng Air-Gapped và thông số đo đạc.*
 
 Hệ thống kiểm chứng thực nghiệm tự động đánh giá môi trường qua 4 tầng kiểm tra độc lập:
-- **Tầng 1 - Lớp Mạng Layer 3 (ICMP Egress Control):** Kiểm tra định tuyến tới các địa chỉ IP công cộng (Public Anycast DNS: `8.8.8.8`, `1.1.1.1`, `208.67.222.222`). Kết quả ghi nhận **100% Packet Loss** (`ping: sendto: Network unreachable`), chứng minh tầng mạng trần không có cổng thoát (Default Gateway) ra Internet.
-- **Tầng 2 - Lớp Dịch vụ Phân giải Tên miền Layer 4/7 (DNS Blackholing):** Kiểm tra phân giải tên miền đối với các dịch vụ công cộng phổ biến (`google.com`, `github.com`, `metrics.semgrep.dev`, `ghcr.io`, `registry.npmjs.org`). Do trong subnet cô lập không cấu hình upstream DNS resolver công cộng, toàn bộ truy vấn đều nhận mã lỗi **SERVFAIL / Name Resolution Failure**, ngăn chặn nguy cơ rò rỉ dữ liệu qua kỹ thuật DNS Tunneling Exfiltration.
-- **Tầng 3 - Kiểm soát luồng mạng gửi ra ngoài Layer 4/7 (TCP Egress Drop):** Thử nghiệm mở kết nối socket TCP/TLS qua cổng 443 tới các dịch vụ thu thập số liệu telemetry đám mây (`metrics.semgrep.dev:443`, `api.github.com:443`, `telemetry.devguard.org:443`). Toàn bộ kết nối đều bị từ chối kết nối hoặc timeout ngay lập tức (`Command timed out / No route to host`), đảm bảo **0.00 Bytes** dữ liệu thoát ra bên ngoài.
-- **Tầng 4 - Lớp Vận hành Nội bộ (Local Intranet Loopback Functional):** Kiểm chứng tính sẵn sàng cao của các dịch vụ On-Premise nội bộ: DevGuard Core API (`http://localhost:8080/healthz`) phản hồi **HTTP 200 OK** (PostgreSQL 16 & Echo Daemon hoạt động hoàn hảo) và Web Dashboard (`http://localhost:3000`) phản hồi **HTTP 200 OK**.
+- **Tầng 1 - Lớp Mạng Layer 3 (ICMP Egress Control):** Kiểm tra định tuyến tới các địa chỉ IP công cộng (Public Anycast DNS: `8.8.8.8`, `1.1.1.1`, `208.67.222.222`). Kết quả ghi nhận **100% Packet Loss** (`ping: sendto: Network unreachable`), chứng minh tầng mạng trần không tồn tại cổng thoát (Default Gateway) ra Internet.
+- **Tầng 2 - Lớp Phân giải Tên miền Layer 4/7 (DNS Blackholing):** Kiểm tra phân giải tên miền đối với các dịch vụ công cộng phổ biến (`google.com`, `github.com`, `metrics.semgrep.dev`, `ghcr.io`, `registry.npmjs.org`). Do trong subnet cô lập không cấu hình upstream DNS resolver công cộng, toàn bộ truy vấn đều nhận mã lỗi **SERVFAIL / Name Resolution Failure**, ngăn chặn triệt để nguy cơ rò rỉ dữ liệu qua kỹ thuật DNS Tunneling Exfiltration.
+- **Tầng 3 - Kiểm soát Luồng Mạng Thoát ra Ngoài Layer 4/7 (TCP Egress Drop):** Thử nghiệm mở kết nối socket TCP/TLS qua cổng 443 tới các dịch vụ thu thập số liệu telemetry đám mây (`metrics.semgrep.dev:443`, `api.github.com:443`, `telemetry.devguard.org:443`). Toàn bộ kết nối đều bị từ chối hoặc hết thời gian chờ (`Command timed out / No route to host`), đảm bảo **0.00 Bytes** dữ liệu thất thoát ra bên ngoài.
+- **Tầng 4 - Lớp Vận hành Dịch vụ Nội bộ (Local Intranet Functional):** Kiểm chứng tính sẵn sàng cao của các dịch vụ On-Premise nội bộ: DevGuard Core API (`http://localhost:8080/healthz`) phản hồi **HTTP 200 OK** (PostgreSQL 16 & Echo Daemon hoạt động hoàn hảo) và Web Dashboard (`http://localhost:3000`) phản hồi **HTTP 200 OK**.
 
 ![Ảnh chụp màn hình cửa sổ Windows PowerShell thực tế chạy bộ công cụ kiểm chứng ngắt mạng đa tầng](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_airgap_multitier_verification.png)
 *Hình 3.2: Kiểm tra ngắt kết nối mạng 4 tầng trên PowerShell.*
@@ -403,51 +403,51 @@ Trong môi trường thực nghiệm thực tế, nhóm đề tài thiết lập
 ```bash
 docker network create --internal --subnet=172.23.0.0/16 airgapped-net
 ```
-Cờ cấu hình `--internal` (tương ứng với trường `"Internal": true` trong Docker engine daemon) là một rào chắn an ninh vật lý/logic: Docker daemon sẽ cấu hình các quy tắc `iptables` / Windows Filtering Platform (WFP) cấm tuyệt đối mọi gói tin có địa chỉ đích nằm ngoài dải mạng con `172.23.0.0/16`, không tạo cổng NAT (Network Address Translation) và không gán default gateway định tuyến Internet:
+Cờ cấu hình `--internal` (tương ứng với trường `"Internal": true` trong Docker engine daemon) là một rào chắn an ninh vật lý/logic: Docker daemon cấu hình các quy tắc `iptables` / Windows Filtering Platform (WFP) cấm tuyệt đối mọi gói tin có địa chỉ đích nằm ngoài dải mạng con `172.23.0.0/16`, không tạo cổng NAT (Network Address Translation) và không gán default gateway định tuyến Internet:
 
 ![Cấu hình Docker Network airgapped-net với thuộc tính Internal true](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_airgap_docker_network.png)
 *Hình 3.3: Cấu hình mạng Docker airgapped-net (Internal).*
 
 ---
 
-### 3.4. Cơ chế Cung ứng Công cụ Offline (Loại bỏ 100% `curl` & `go install`) & Vá lỗi Đường dẫn Windows
-Trong các hệ thống mạng cô lập, các lệnh phổ biến như `curl -sSfL https://... | sh` hoặc `go install github.com/...@latest` hoàn toàn không thể thực thi. Để giải quyết triệt để vấn đề cung ứng công cụ (Tooling Provisioning), kiến trúc giải pháp đề tài áp dụng 2 nguyên tắc chuẩn hóa:
+### 3.4. Cơ chế Cung ứng Công cụ Offline (Loại bỏ 100% `curl` & `go install`) & Bản vá Đường dẫn Windows
+Trong các hệ thống mạng cô lập, các câu lệnh cài đặt động phổ biến như `curl -sSfL https://... | sh` hoặc `go install github.com/...@latest` hoàn toàn không thể thực thi. Để giải quyết triệt để bài toán cung ứng công cụ (Tooling Provisioning), kiến trúc giải pháp đề tài áp dụng 2 nguyên tắc chuẩn hóa:
 
-1. **Đóng gói Static Binary Độc lập & Khắc phục Tương thích Windows/Linux:**
-   - File nhị phân `devguard-scanner` được biên dịch tĩnh hoàn toàn (Self-contained statically linked Go binary), vận hành trực tiếp trên máy chủ hoặc container runner mà không phụ thuộc bất kỳ runtime Python, Node.js hay thư viện chia sẻ ngoài nào.
-   - *Khắc phục lỗi logic đường dẫn Windows từ upstream:* Khi chạy `devguard-scanner.exe` trên môi trường local Windows, xảy ra lỗi panic:
+1. **Đóng gói Static Binary Độc lập & Khắc phục Tương thích Nền tảng:**
+   - Tệp nhị phân `devguard-scanner` được biên dịch tĩnh hoàn toàn (Self-contained statically linked Go binary), vận hành trực tiếp trên máy chủ hoặc container runner mà không phụ thuộc bất kỳ runtime Python, Node.js hay thư viện liên kết động bên ngoài nào.
+   - *Khắc phục lỗi logic đường dẫn Windows từ upstream:* Khi thực thi `devguard-scanner.exe` trên môi trường cục bộ Windows, tiến trình phát sinh lỗi ngắt đột ngột (panic):
      ```text
      panic: invalid character ':' in path
      github.com/l3montree-dev/devguard/cmd/devguard-scanner/config.ParseBaseConfig
      ```
-   - *Nguyên nhân & Xử lý:* Hàm `isValidPath` trong mã nguồn upstream ban đầu cấm ký tự `:` và `\`, gây lỗi khi nhận đường dẫn tuyệt đối chuẩn Windows (ví dụ `C:\Users\...`). Nhóm đề tài đã tái cấu trúc lại tập tin [`core/cmd/devguard-scanner/config/validators.go`](core/cmd/devguard-scanner/config/validators.go), chuẩn hóa bằng thư viện `filepath.Abs()` và `os.Stat()` của Go, đảm bảo tương thích 100% cả Windows lẫn Linux.
+   - *Nguyên nhân & Giải pháp:* Hàm `isValidPath` trong mã nguồn upstream ban đầu loại trừ ký tự `:` và `\`, dẫn tới xung đột khi xử lý đường dẫn tuyệt đối chuẩn Windows (ví dụ `C:\Users\...`). Nhóm đề tài đã tái cấu trúc tập tin [`core/cmd/devguard-scanner/config/validators.go`](core/cmd/devguard-scanner/config/validators.go), chuẩn hóa bằng các hàm `filepath.Abs()` và `os.Stat()` của Go, đảm bảo tương thích 100% trên cả Windows và Linux.
 
 ![Ảnh chụp cửa sổ Windows PowerShell thực tế hiển thị git diff validators.go](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_git_diff_validator.png)
 *Hình 3.5: Bản vá tương thích đường dẫn Windows trong validators.go.*
 
-2. **Tích hợp Offline Engine & Pre-baked Runner Image:**
-   - Thay vì kéo công cụ qua mạng mỗi lần chạy CI, các file thực thi nhị phân độc lập (`opengrep.exe`, `gitleaks.exe`, `trivy.exe`, `nuclei.exe`, `cosign.exe`) được tích hợp sẵn vào thư mục `core/bin/` hoặc nạp sẵn vào Runner Image nội bộ.
-   - Khi pipeline kích hoạt, runner nạp trực tiếp công cụ từ bộ nhớ cục bộ mà không cần tải bất kỳ tệp tin nào qua mạng, đảm bảo tính sẵn sàng tối đa (100% High Availability).
+2. **Tích hợp Offline Engine & Runner Image Đóng gói Sẵn (Pre-baked):**
+   - Thay vì tải công cụ qua mạng mỗi lần chạy CI, các tệp thực thi nhị phân độc lập (`opengrep.exe`, `gitleaks.exe`, `trivy.exe`, `nuclei.exe`, `cosign.exe`) được tích hợp sẵn vào thư mục `core/bin/` hoặc đóng gói trực tiếp vào Runner Image nội bộ.
+   - Khi pipeline kích hoạt, runner nạp công cụ trực tiếp từ bộ nhớ cục bộ mà không phát sinh bất kỳ yêu cầu mạng nào, bảo đảm tính sẵn sàng cao (High Availability) tuyệt đối.
 
 ---
 
 ### 3.5. Kết quả Thử nghiệm So sánh A/B khi Ngắt Kết nối Internet
 
-#### A. Công cụ quét truyền thống (Grype v0.80+ / Syft): Thất bại hoàn toàn (Exit Code 1)
-Khi kích hoạt lệnh quét mã nguồn trong mạng cô lập `airgapped-net`, Grype cố gắng kết nối ra ngoài để tải cơ sở dữ liệu lỗ hổng mới nhất từ `toolbox-data.anchore.io`. Do không có cổng ra Internet, tiến trình bị lỗi `ERROR failed to load vulnerability db: database does not exist` và thoát với **Exit Code 1** (minh chứng thực tế tại Hình 3.4). Chuỗi pipeline CI/CD bị sập hoàn toàn.
+#### A. Công cụ quét truyền thống (Grype v0.80+ / Syft): Đình trệ hoàn toàn (Exit Code 1)
+Khi kích hoạt lệnh quét mã nguồn trong mạng cô lập `airgapped-net`, Grype cố gắng kết nối ra ngoài để tải cơ sở dữ liệu lỗ hổng mới nhất từ `toolbox-data.anchore.io`. Do không có cổng ra Internet, tiến trình nhận lỗi `ERROR failed to load vulnerability db: database does not exist` và thoát với **Exit Code 1** (minh chứng thực tế tại Hình 3.4). Chuỗi pipeline CI/CD bị đình trệ hoàn toàn.
 
 ![Ảnh chụp màn hình PowerShell thực tế xác thực mạng cô lập và Grype thất bại](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/airgap_terminal_verification.png)
 *Hình 3.4: Grype thất bại khi quét offline không có Internet.*
 
-#### B. DevGuard Scanner CLI: Thành công 100% (Exit Code 0)
-Dưới cùng điều kiện ngắt mạng 100%, `devguard-scanner` tiến hành phân tích AST trực tiếp trên mã nguồn Go của microservice `user-service`:
+#### B. DevGuard Scanner CLI: Hoàn thành 100% (Exit Code 0)
+Dưới cùng điều kiện ngắt mạng 100%, `devguard-scanner` tiến hành phân tích cú pháp AST trực tiếp trên mã nguồn Go của microservice `user-service`:
 
 ![Ảnh chụp màn hình PowerShell thực tế chạy devguard-scanner SCA](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_devguard_scanner_run.png)
 *Hình 3.6: Quét SCA với devguard-scanner trong mạng cô lập.*
 
 *Kết quả Đạt được:*
-1. **Thời gian Xử lý Siêu tốc:** Hoàn tất toàn bộ quy trình bóc tách cây phụ thuộc chỉ trong **2.12 giây**.
-2. **Tạo lập SBOM CycloneDX v1.7 Chuẩn Quốc tế:** Tự động sinh file [`docs/airgap_user_service_sbom.json`](docs/airgap_user_service_sbom.json) (28.2 KB) bóc tách đầy đủ 48 components (bao gồm cả thư viện trực tiếp và phụ thuộc bắc cầu).
+1. **Thời gian Xử lý Tối ưu:** Hoàn tất toàn bộ quy trình bóc tách cây phụ thuộc chỉ trong **2.12 giây**.
+2. **Tạo lập SBOM CycloneDX v1.7 Chuẩn Quốc tế:** Tự động sinh tệp đặc tả [`docs/airgap_user_service_sbom.json`](docs/airgap_user_service_sbom.json) (28.2 KB) bóc tách đầy đủ 48 components (bao gồm cả thư viện trực tiếp và phụ thuộc bắc cầu).
 3. **Nạp Dữ liệu Nội bộ Tức thì:** Bản ghi SBOM và metadata được đồng bộ trực tiếp vào cơ sở dữ liệu PostgreSQL On-Premise qua Core API (:8080) nội bộ mà không cần bất kỳ luồng dữ liệu nào gửi ra Internet.
 
 ---
@@ -461,9 +461,9 @@ Dưới cùng điều kiện ngắt mạng 100%, `devguard-scanner` tiến hành
 | **1. Phụ thuộc Kết nối Internet** | Bắt buộc 100% (cần mạng để tải Actions, Runner và CVE DB) | **Hoàn toàn 0% (Offline 100%)** | Đảm bảo tính sẵn sàng tối đa (High Availability), không bao giờ bị dừng vì sự cố đường truyền mạng. |
 | **2. Chống Rò rỉ Dữ liệu (Telemetry Exfiltration)** | Kém (nhiều scanner ngầm gửi metadata, mã băm về cloud) | **0.00 Bytes Outbound** (được kiểm chứng qua Packet Sniffer) | Tuân thủ tuyệt đối chuẩn PCI-DSS v4.0, ISO 27001, Zero-Trust; bảo vệ bí mật công nghệ lõi. |
 | **3. Khả năng Chạy trên Hạ tầng Nội bộ (On-Premise)** | Kém (phụ thuộc GitHub Actions hosted runner và cloud registry) | **Xuất sắc** (vận hành trên Local GitLab, Gitea, hoặc Shell runner) | Phù hợp triển khai tại hạ tầng mạng cô lập của ngân hàng, viễn thông, quân sự. |
-| **4. Cơ chế Cung ứng Công cụ Scanner** | Chạy lệnh `curl` / `go install` qua Internet mỗi lần chạy | **Pre-baked Runner Image hoặc Local Static Binary** nạp sẵn | Tuân thủ tuyệt đối quy tắc Zero-Trust, loại trừ nguy cơ bị đầu độc chuỗi cung ứng khi kéo script. |
+| **4. Cơ chế Cung ứng Công cụ Scanner** | Chạy lệnh `curl` / `go install` qua Internet mỗi lần chạy | **Pre-baked Runner Image hoặc Local Static Binary** nạp sẵn | Tuân thủ tuyệt đối quy tắc Zero-Trust, loại trừ nguy cơ bị đầu độc chuỗi cung ứng khi tải kịch bản thực thi qua mạng. |
 | **5. Cơ chế Phân tích Phụ thuộc** | Tải và so khớp cơ sở dữ liệu lỗ hổng trực tuyến | Phân tích cú pháp AST cục bộ, quản lý CVE tập trung trên Control Plane | Không bao giờ bị chặn quét vì lỗi timeout hoặc máy chủ CVE quốc tế bị chặn tường lửa. |
-| **6. Khả năng Phục hồi khi DNS / Gateway Sự cố** | Pipeline sập hoàn toàn (Exit Code 1) | **Hoạt động bình thường** (nhờ DNS Blackholing & Internal Routing) | Chống gián đoạn chuỗi phân phối phần mềm trong các tình huống khẩn cấp hoặc đứt cáp quang biển. |
+| **6. Khả năng Phục hồi khi DNS / Gateway Sự cố** | Pipeline đình trệ hoàn toàn (Exit Code 1) | **Hoạt động bình thường** (nhờ DNS Blackholing & Internal Routing) | Chống gián đoạn chuỗi phân phối phần mềm trong các tình huống khẩn cấp hoặc đứt cáp quang biển. |
 | **7. Định dạng SBOM Đầu ra** | Tệp SPDX / JSON rời rạc lưu tạm trên runner | **CycloneDX v1.7 Chuẩn hóa** nạp thẳng vào PostgreSQL nội bộ | Dễ dàng tra cứu, truy xuất nguồn gốc và phục vụ kiểm toán bảo mật độc lập tức thì. |
 | **8. Giao diện Quản trị & Báo cáo** | Phải dựa vào dịch vụ Web SaaS đám mây bên ngoài | **Dashboard Nội bộ Hoạt động tại `http://localhost:3000`** | Toàn quyền kiểm soát và lưu trữ dữ liệu an ninh thông tin trong lãnh thổ quản lý của tổ chức. |
 
@@ -487,7 +487,7 @@ Quyết định chuyển đổi chiến lược này được xác lập dựa t
 #### 4.1.1. Khủng hoảng Giấy phép Bản quyền (Licensing Shift) và Nguy cơ Khóa Chặt Nhà Cung cấp (Vendor Lock-in)
 - Kể từ bản phát hành v1.38.0, công ty chủ quản Semgrep (Semgrep Inc.) đã quyết định thay đổi giấy phép phần mềm của động cơ cốt lõi (Core Engine) từ giấy phép nguồn mở chuẩn mực **LGPL-2.1** sang điều khoản thương mại hạn chế **Commons Clause** kết hợp mô hình độc quyền **Semgrep Pro Engine**.
 - Thay đổi này đồng nghĩa với việc các thuật toán phân tích tĩnh nâng cao—đặc biệt là phân tích luồng dữ liệu ô nhiễm liên tập tin (Inter-file & Inter-procedural Taint Analysis), phân tích ngữ nghĩa sâu giữa các hàm và hỗ trợ mở rộng ruleset độc lập—đã bị khóa hoàn toàn sau bức tường trả phí (Commercial Paywall).
-- Đối với các hệ thống phòng thủ phần mềm quốc gia, cơ quan chính phủ hoặc tổ chức tài chính/ngân hàng, việc xây dựng giải pháp DevSecOps dựa trên một công cụ phụ thuộc vào giấy phép thương mại đóng tiềm ẩn nguy cơ bị "bắt chẹt" bản quyền, mất quyền tự do kiểm tra mã nguồn độc lập và vi phạm các chuẩn mực kiểm toán bảo mật phần mềm mở.
+- Đối với các hệ thống phòng thủ phần mềm quốc gia, cơ quan chính phủ hoặc tổ chức tài chính/ngân hàng, việc xây dựng giải pháp DevSecOps dựa trên một công cụ phụ thuộc vào giấy phép thương mại đóng tiềm ẩn rủi ro chi phí bản quyền thương mại leo thang, mất quyền tự do kiểm tra mã nguồn độc lập và vi phạm các chuẩn mực kiểm toán bảo mật phần mềm mở.
 
 #### 4.1.2. Nguy cơ Rò rỉ Dữ liệu qua Đo lường Từ xa Ngầm (Implicit Telemetry Data Exfiltration)
 - Semgrep được thiết kế với cơ chế thu thập dữ liệu đo lường từ xa (telemetry) được kích hoạt theo mặc định. Trong mỗi lần thực thi quét mã nguồn, tiến trình Semgrep tự động thiết lập kết nối mã hóa HTTPS và gửi các gói tin telemetry về máy chủ đám mây của hãng (`metrics.semgrep.dev` và `semgrep.app`).
@@ -496,12 +496,12 @@ Quyết định chuyển đổi chiến lược này được xác lập dựa t
 
 #### 4.1.3. Sự cố Treo Tiến trình & Bất khả thi Vận hành trong Môi trường Mạng Cô lập (Air-Gapped Breakdown)
 - Trong các hạ tầng an ninh trọng yếu được cách ly vật lý hoặc phân tách mạng logic 100% (Air-Gapped / Isolated Demilitarized Zone), hệ thống hoàn toàn không có cổng kết nối Internet trực tiếp.
-- Khi khởi chạy Semgrep trong môi trường này, scanner mặc định cố gắng thực hiện truy vấn phân giải tên miền (DNS lookup) và kết nối tới Semgrep Registry đám mây (`semgrep.dev/c/p/...`) cũng như kiểm tra trạng thái tài khoản đăng nhập (`semgrep login`). Do không thể định tuyến ra ngoài, tiến trình quét bị rơi vào trạng thái chờ kết nối mạng (network timeout), dẫn đến hiện tượng trễ nghiêm trọng kéo dài (thực nghiệm đo được trễ tới 4,250 ms) hoặc thậm chí làm sập toàn bộ luồng tự động hóa CI/CD pipeline do hết hạn thời gian chờ (timeout failure).
+- Khi khởi chạy Semgrep trong môi trường này, scanner mặc định cố gắng thực hiện truy vấn phân giải tên miền (DNS lookup) và kết nối tới Semgrep Registry đám mây (`semgrep.dev/c/p/...`) cũng như kiểm tra trạng thái tài khoản đăng nhập (`semgrep login`). Do không thể định tuyến ra ngoài, tiến trình quét bị rơi vào trạng thái chờ kết nối mạng (network timeout), dẫn đến hiện tượng trễ nghiêm trọng kéo dài (thực nghiệm đo được trễ tới 4,250 ms) hoặc thậm chí làm gián đoạn toàn bộ luồng tự động hóa CI/CD pipeline do hết hạn thời gian chờ (timeout failure).
 
 #### 4.1.4. Opengrep - Động cơ Native Độc lập & Giải pháp FOSS Thực thụ
 - Nhằm giải quyết triệt để cuộc khủng hoảng cấp phép và bảo mật nêu trên, cộng đồng mã nguồn mở quốc tế đã thành lập dự án **Opengrep** (https://github.com/opengrep/opengrep)—một bản rẽ nhánh độc lập (fork) được tạo ra từ commit cuối cùng còn giữ nguyên giấy phép chuẩn **LGPL-2.1**.
 - Opengrep cam kết duy trì triết lý mã nguồn mở 100%, loại bỏ hoàn toàn các đoạn mã telemetry gửi dữ liệu ra bên ngoài, không yêu cầu bất kỳ tài khoản đăng nhập đám mây nào, và mở khóa toàn bộ năng lực phân tích nâng cao vốn bị Semgrep thương mại hóa.
-- Đặc biệt, Opengrep cung cấp gói nhị phân độc lập native (`opengrep.exe` trên Windows với dung lượng 51.2 MB và `opengrep` trên Linux) được biên dịch sẵn, cho phép chạy trực tiếp trên mọi hệ điều hành trần mà không cần cài đặt Python runtime, Node.js hay bất kỳ môi trường ảo phụ trợ nào.
+- Đặc biệt, Opengrep cung cấp gói nhị phân độc lập native (`opengrep.exe` trên Windows với dung lượng 51.2 MB và `opengrep` trên Linux) được biên dịch sẵn, cho phép chạy trực tiếp trên các môi trường máy chủ vật lý lẫn máy ảo (Bare-metal / VM) mà không cần cài đặt Python runtime, Node.js hay bất kỳ môi trường ảo phụ trợ nào.
 
 *Bảng 5: So sánh tính năng Semgrep Upstream và Opengrep*
 
@@ -583,7 +583,7 @@ Toàn bộ các vi phạm này được cấu trúc trong tập tin mã nguồn 
    - *Khắc phục:* Áp dụng cơ chế tham số hóa truy vấn chuẩn (Parameterized Query): `db.Query("SELECT ... WHERE username = ?", username)`.
 3. **Kịch bản PoC 3 - Lỗ hổng Xác thực JWT Thuật toán 'None' (`go-jwt-none-algorithm-hardcoded-secret`):**
    - *Bản chất kỹ thuật:* Hàm `GenerateInsecureToken()` cấp phát JWT token sử dụng phương thức ký `jwt.SigningMethodNone`. Khi dịch vụ giải mã token này mà không kiểm tra thuật toán, kẻ tấn công có thể tự tạo một payload chứa đặc quyền quản trị viên (`role: admin`) và ký bằng chuỗi rỗng mà vẫn được hệ thống chấp nhận hợp lệ.
-   - *Quy tắc Opengrep:* Bắt trúng việc sử dụng hằng số `jwt.SigningMethodNone` trong toàn bộ mã nguồn Go.
+   - *Quy tắc Opengrep:* Nhận diện chính xác việc sử dụng hằng số `jwt.SigningMethodNone` trong toàn bộ mã nguồn Go.
    - *Khắc phục:* Ép buộc sử dụng thuật toán ký bất đối xứng an toàn (như `jwt.SigningMethodRS256` hoặc `jwt.SigningMethodEdDSA`) và cấm hoàn toàn thuật toán `None`.
 4. **Kịch bản PoC 4 - Duyệt Đường dẫn Tập tin Tùy ý (`go-path-traversal-arbitrary-read`):**
    - *Bản chất kỹ thuật:* Hàm `ReadUserAvatarUnsafe()` nhận tham số `filename` và ghép nối với thư mục gốc bằng `filepath.Join()`, sau đó trực tiếp đọc dữ liệu bằng `os.ReadFile()`. Do `filepath.Join` không ngăn chặn ký tự lùi thư mục `../`, kẻ tấn công có thể truyền `../../etc/passwd` hoặc `../../var/run/secrets/kubernetes.io/serviceaccount/token` để đánh cắp ServiceAccount Token của Kubernetes Pod.
@@ -619,7 +619,7 @@ Nhóm đề tài đã thực thi kịch bản đo đạc định lượng thực
 #### Chuẩn hóa Báo cáo OASIS SARIF v2.1.0 và Cơ chế Security Policy Gate:
 - Toàn bộ 5 phát hiện vi phạm được Opengrep kết xuất tự động thành tập tin chuẩn quốc tế [`docs/sast_deep_detected_poc.sarif`](docs/sast_deep_detected_poc.sarif) (dung lượng 12.5 KB).
 - Báo cáo SARIF được Scanner CLI tự động ký số bằng Personal Access Token (PAT) và đẩy lên DevGuard Control Plane (`http://localhost:8080/api/v2/sarif-scan/`) với mã định danh Scanner ID `opengrep-sast` gắn với tài sản `thesis-microservices/core-services/user-auth-service`.
-- **Kích hoạt Điểm kiểm soát Chất lượng An ninh (Security Policy Gate):** Do tồn tại 2 lỗ hổng Critical (SQL Injection, JWT None) và 2 lỗ hổng High (Weak TLS, Path Traversal), lệnh quét lập tức thoát với **Exit Code 1** (`Error: found 5 unhandled vulnerabilities`), tự động bẻ gãy chu trình triển khai CI/CD và ngăn chặn tuyệt đối mã nguồn có lỗi lọt vào nhánh phát hành chính.
+- **Kích hoạt Điểm kiểm soát Chất lượng An ninh (Security Policy Gate):** Do tồn tại 2 lỗ hổng Critical (SQL Injection, JWT None) và 2 lỗ hổng High (Weak TLS, Path Traversal), lệnh quét lập tức thoát với **Exit Code 1** (`Error: found 5 unhandled vulnerabilities`), tự động ngắt chu trình triển khai CI/CD và ngăn chặn tuyệt đối mã nguồn có lỗ hổng lọt vào nhánh phát hành chính.
 
 ![Giao diện Web Dashboard tại localhost:3000 hiển thị danh mục lỗ hổng SAST](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/devguard_sast_code_risks.png)
 *Hình 4.3: Quản lý rủi ro mã nguồn SAST trên Dashboard.*
@@ -672,8 +672,8 @@ Khác với Semgrep CLI mặc định luôn cố gắng kết nối tới Semgre
 | **3. Dữ liệu Gửi ra Internet (Egress)** | **~142.5 KB** (Mã băm tập tin, tên hàm, code snippet) | **0.00 Bytes** (Tuyệt đối không có gói tin rò rỉ) | Tuân thủ tuyệt đối chuẩn PCI-DSS v4.0, ISO/IEC 27001, Zero-Trust Architecture. |
 | **4. Thời gian Quét Khởi động Nguội** | **4,250 ms** (Do thời gian chờ timeout kết nối cloud) | **2,391.3 ms** (Nhanh gấp 1.8 lần) | Tối ưu hóa chu trình phản hồi nhanh cho lập trình viên trong CI/CD pipeline. |
 | **5. Mức Tiêu thụ Bộ nhớ RAM Đỉnh** | **128.5 MB** (Overhead của Python Virtual Machine) | **33.84 MB** (Tiết kiệm **73.7% bộ nhớ RAM**) | Cho phép chạy song song hàng chục container scanner trên Kubernetes Node. |
-| **6. Số Lỗ hổng PoC Phát hiện** | **0 / 5** (Do pipeline bị sập ngay từ bước kéo luật) | **5 / 5** (Bao phủ **100% các vi phạm trọng yếu**) | Bảo vệ an toàn cho mã nguồn Go microservices trước các nguy cơ khai thác thực tế. |
-| **7. Trạng thái Security Quality Gate** | Thoát lỗi hệ thống không kiểm soát (Exit Code 127) | **Kích hoạt Chặn Chuẩn xác (Exit Code 1)** | Tự động bẻ gãy chu trình phân phối khi phát hiện mã nguồn có rủi ro nghiêm trọng. |
+| **6. Số Lỗ hổng PoC Phát hiện** | **0 / 5** (Do pipeline bị đình trệ ngay từ bước nạp tập quy tắc) | **5 / 5** (Bao phủ **100% các vi phạm trọng yếu**) | Bảo vệ an toàn cho mã nguồn Go microservices trước các nguy cơ khai thác thực tế. |
+| **7. Trạng thái Security Quality Gate** | Thoát lỗi hệ thống không kiểm soát (Exit Code 127) | **Kích hoạt Chặn Chuẩn xác (Exit Code 1)** | Tự động đình chỉ chu trình phân phối khi phát hiện mã nguồn có rủi ro nghiêm trọng. |
 
 ---
 
@@ -681,9 +681,9 @@ Khác với Semgrep CLI mặc định luôn cố gắng kết nối tới Semgre
 
 ### 5.1. Đặt vấn đề & Thách thức An ninh Rò rỉ Thông tin Xác thực (Secret Leaks)
 Rò rỉ khóa bí mật (API Keys, Token truy cập, Mật khẩu cơ sở dữ liệu, Private Keys) trong mã nguồn là một trong những nguyên nhân hàng đầu dẫn đến các vụ xâm nhập hệ thống nghiêm trọng (OWASP Top 10 - A07: Identification and Authentication Failures). Trong kiến trúc Microservices với 23 dịch vụ phân tán, nguy cơ này càng tăng cao:
-1. **Lọt lộ vào lịch sử phiên bản (Git History):** Lập trình viên có thể vô tình commit các credential tạm thời phục vụ kiểm thử cục bộ. Ngay cả khi đã xóa dòng code ở commit tiếp theo, khóa bí mật vẫn tồn tại vĩnh viễn trong git tree và commit graph nếu không được rà quét kỹ lịch sử git.
+1. **Rò rỉ vào lịch sử phiên bản (Git History):** Lập trình viên có thể vô tình commit các credential tạm thời phục vụ kiểm thử cục bộ. Ngay cả khi đã xóa dòng code ở commit tiếp theo, khóa bí mật vẫn tồn tại vĩnh viễn trong git tree và commit graph nếu không được rà quét kỹ lịch sử git.
 2. **Cảnh báo giả từ các mẫu tài liệu (High False Positive Rate):** Nhiều công cụ regex đơn giản phát hiện nhầm các chuỗi mẫu trong tài liệu (như `AKIAIOSFODNN7EXAMPLE`) hoặc chuỗi ngẫu nhiên trong test fixture, gây nhiễu và làm nản lòng đội ngũ phát triển.
-3. **Nguy cơ lộ lọt thêm lần nữa qua file log khi gửi báo cáo (Secondary Leakage via SARIF):** Khi phát hiện khóa bí mật, nếu scanner không thực hiện cơ chế che giấu (masking/obfuscation) mà gửi nguyên văn chuỗi bí mật lên Control Plane hoặc lưu vào cơ sở dữ liệu trung tâm, chính hệ thống bảo mật lại trở thành nguồn rò rỉ credential thứ cấp.
+3. **Nguy cơ rò rỉ thứ cấp qua tệp nhật ký khi gửi báo cáo (Secondary Leakage via SARIF):** Khi phát hiện khóa bí mật, nếu scanner không thực hiện cơ chế che giấu (masking/obfuscation) mà gửi nguyên văn chuỗi bí mật lên Control Plane hoặc lưu vào cơ sở dữ liệu trung tâm, chính hệ thống bảo mật lại trở thành nguồn rò rỉ credential thứ cấp.
 
 ---
 
@@ -699,7 +699,7 @@ Nhằm khắc phục triệt để các hạn chế trên, DevGuard Scanner đã
 
 | Tiêu chí kỹ thuật | Cơ chế thực thi (Gitleaks Engine) | Cơ chế DevGuard Adapter & Control Plane | Ý nghĩa an ninh thực tiễn |
 | :--- | :--- | :--- | :--- |
-| **Chế độ quét (Scan Modes)** | Hỗ trợ cả `git` (toàn bộ lịch sử commit, branches, PR diffs) và `dir` (working directory, uncommitted files) | DevGuard Scanner CLI điều phối linh hoạt qua cờ `--dir` hoặc mặc định quét git repository | Ngăn ngừa lọt lộ khóa bí mật trong cả lịch sử commit cũ lẫn mã nguồn đang viết dở |
+| **Chế độ quét (Scan Modes)** | Hỗ trợ cả `git` (toàn bộ lịch sử commit, branches, PR diffs) và `dir` (working directory, uncommitted files) | DevGuard Scanner CLI điều phối linh hoạt qua cờ `--dir` hoặc mặc định quét git repository | Ngăn ngừa rò rỉ khóa bí mật trong cả lịch sử commit cũ lẫn mã nguồn đang chỉnh sửa |
 | **Bộ quy tắc & Entropy (Rules & Shannon Entropy)** | 160+ regex patterns chuẩn cho AWS, GitHub PAT, Slack, Stripe, RSA Private Keys kèm ngưỡng Shannon Entropy | Tự động loại trừ các token mẫu tài liệu (documentation placeholders) để giảm false positive | Chỉ cảnh báo các token thực sự có nguy cơ rò rỉ, tránh làm phiền lập trình viên |
 | **Che giấu chuỗi bí mật (Secret Obfuscation)** | Gitleaks hỗ trợ cờ `--redact` che bớt ký tự | DevGuard Adapter tự động bóc tách 5 dòng ngữ cảnh và thay thế chuỗi bí mật bằng ký tự `*` trước khi lưu trữ hoặc gửi mạng | Tuân thủ tuyệt đối quy định không lưu plaintext secret trong cơ sở dữ liệu và log kiểm toán |
 | **Chuẩn hóa báo cáo (Report Standardization)** | Xuất trực tiếp định dạng OASIS SARIF v2.1.0 với đầy đủ ruleID, physicalLocation và snippet | DevGuard Control Plane phân tích SARIF và lưu vào bảng `code_risks` với mã băm fingerprint độc nhất | Dễ dàng quản trị tập trung, tra cứu theo thời gian thực và theo dõi tiến độ khắc phục |
@@ -728,7 +728,7 @@ Thực nghiệm rà soát Secret Scanning đã được tiến hành qua 2 kịc
 ### 5.4. Cơ chế Obfuscation Chuỗi Nhạy cảm, Nạp SARIF và Quản trị Rủi ro Tập trung
 1. **Cơ chế Che giấu Dữ liệu Tự động (Context Extraction & Obfuscation):**
    - Khi phát hiện rò rỉ, DevGuard Scanner CLI tự động bóc tách 5 dòng mã nguồn xung quanh vị trí vi phạm nhằm cung cấp ngữ cảnh sửa lỗi cho lập trình viên.
-   - Để ngăn ngừa lộ lọt thêm lần nữa qua file log, scanner thực hiện thuật toán thay thế chuỗi bí mật bằng chuỗi ký tự hoa thị (ví dụ: `https://hooks.slack.****************************************************************` và `-----BEGIN RSA PRIVA********************************************************`). Chuỗi nhạy cảm thực tế tuyệt đối không bị ghi ra file SARIF hay truyền qua mạng.
+   - Để ngăn ngừa nguy cơ rò rỉ thứ cấp qua tệp nhật ký, scanner thực hiện thuật toán thay thế chuỗi bí mật bằng chuỗi ký tự hoa thị (ví dụ: `https://hooks.slack.****************************************************************` và `-----BEGIN RSA PRIVA********************************************************`). Chuỗi nhạy cảm thực tế tuyệt đối không bị ghi ra file SARIF hay truyền qua mạng.
 2. **Ký số và Nạp Dữ liệu Tập trung về Control Plane:**
    - Bản ghi SARIF chuẩn hóa (`docs/secrets_detected_poc.sarif`) được ký bằng Personal Access Token (PAT) và nạp tự động lên Core API (`:8080`) qua endpoint `/api/v2/sarif-scan/`.
    - Control Plane phân tách và phân loại các mục rủi ro vào nhóm Scanner ID `secret-scanning`.
@@ -737,7 +737,7 @@ Thực nghiệm rà soát Secret Scanning đã được tiến hành qua 2 kịc
    - Giao diện web hiển thị đồng thời cả các phát hiện tĩnh từ SAST (`opengrep-sast`) lẫn các phát hiện rò rỉ từ `secret-scanning` (`private-key`, `slack-webhook-url`), hỗ trợ lọc kết quả, tra cứu file, dòng code vi phạm và xem hướng dẫn khắc phục.
 
 ![Giao diện Web Dashboard tại localhost:3000 hiển thị và phân loại danh mục rò rỉ mã bí mật](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/devguard_secret_risks.png)
-*Hình 5.2: Quản lý rủi ro lộ lọt secret trên Dashboard.*
+*Hình 5.2: Quản lý rủi ro rò rỉ secret trên Dashboard.*
 
 ---
 
@@ -759,10 +759,10 @@ Trước khi khởi động bộ quét Gitleaks, kịch bản tự động kích
 Khác với các công cụ SaaS rà quét bí mật trên đám mây đòi hỏi gửi dữ liệu mã nguồn hoặc chuỗi token lên máy chủ bên ngoài để phân tích:
 - Gitleaks Native Engine trong giải pháp DevGuard nạp trực tiếp toàn bộ 160+ biểu thức chính quy (Regex Rules) và thuật toán tính toán độ hỗn loạn Shannon Entropy cục bộ từ file thực thi nhị phân tĩnh [`core/bin/gitleaks.exe`](core/bin/gitleaks.exe) (21.5 MB).
 - Quá trình phân tích hoàn toàn ngoại tuyến, không gửi bất kỳ gói tin dữ liệu nào ra ngoài (**0.00 Bytes Egress**).
-- **Bảo vệ chống lộ lọt thêm lần nữa qua file log:** Khi phát hiện credential, công cụ tự động áp dụng mặt nạ che giấu (Masking), thay thế toàn bộ ký tự nhạy cảm bằng ký tự hoa thị `***` (ví dụ `testSlackWebhook = "https://hooks.slack.********************"` và `testPrivateKey = "-----BEGIN RSA PRIVA****************"`). Tuyệt đối không lưu chuỗi bí mật dạng Plaintext trong file SARIF hay cơ sở dữ liệu.
+- **Bảo vệ chống rò rỉ thứ cấp qua tệp nhật ký:** Khi phát hiện credential, công cụ tự động áp dụng mặt nạ che giấu (Masking), thay thế toàn bộ ký tự nhạy cảm bằng ký tự hoa thị `***` (ví dụ `testSlackWebhook = "https://hooks.slack.********************"` và `testPrivateKey = "-----BEGIN RSA PRIVA****************"`). Tuyệt đối không lưu chuỗi bí mật dạng Plaintext trong file SARIF hay cơ sở dữ liệu.
 
 ![Ảnh chụp cửa sổ Windows PowerShell thực tế chạy bộ điều phối kiểm thử Air-Gapped Secret Scanning](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/airgap_terminal_secret_gitleaks.png)
-*Hình 5.4: Quét lộ lọt secret với Gitleaks trong mạng cô lập.*
+*Hình 5.4: Quét rò rỉ secret với Gitleaks trong mạng cô lập.*
 
 #### 5.5.3. Thực nghiệm Rà soát trên CI/CD Container Runner trong Mạng Docker `airgapped-net`
 Để kiểm chứng tính sẵn sàng trong chuỗi CI/CD của hạ tầng ngân hàng, nhóm đề tài khởi tạo container runner chuyên dụng gắn kết vào mạng Docker cô lập `airgapped-net` (Subnet `172.23.0.0/16`, thuộc tính `"Internal": true`):
@@ -782,7 +782,7 @@ Khác với các công cụ SaaS rà quét bí mật trên đám mây đòi hỏ
 | **2. Dữ liệu Gửi ra Internet (Egress)** | **~85.2 KB** (Gửi tokens, metadata, snippet) | **0.00 Bytes** (Tuyệt đối không rò rỉ gói tin) | Tuân thủ tuyệt đối chuẩn PCI-DSS v4.0, ISO/IEC 27001, Zero-Trust Architecture. |
 | **3. Thời gian Quét Toàn bộ Dự án** | **3,800 ms** (Trễ do kết nối API cloud) | **327.3 ms** (Nhanh gấp 4.5 lần) | Không gây gián đoạn hoặc làm chậm chu trình build của lập trình viên. |
 | **4. Mức Tiêu thụ Bộ nhớ RAM Đỉnh** | **96.0 MB** (Overhead của JVM hoặc Python) | **18.50 MB** (Tiết kiệm **80% bộ nhớ RAM**) | Tối ưu hóa tuyệt đối cho Kubernetes Runner Pods có tài nguyên hạn chế. |
-| **5. Cơ chế Che giấu Bí mật (Obfuscation)** | Tùy chọn (Nguy cơ lưu Plaintext trong log) | **Bắt buộc 100%** (Tự động thay bằng `***`) | Loại bỏ hoàn toàn nguy cơ lộ lọt thêm lần nữa qua file log qua báo cáo SARIF và log hệ thống. |
+| **5. Cơ chế Che giấu Bí mật (Obfuscation)** | Tùy chọn (Nguy cơ lưu Plaintext trong log) | **Bắt buộc 100%** (Tự động thay bằng `***`) | Loại bỏ hoàn toàn nguy cơ rò rỉ thứ cấp qua báo cáo SARIF và tệp nhật ký hệ thống. |
 | **6. Trạng thái Security Quality Gate** | Phụ thuộc Webhook SaaS gửi về chậm | **Kích hoạt Chặn Chuẩn xác Tức thì (Exit Code 1)** | Ngăn chặn tuyệt đối việc phát hành mã nguồn chứa credential lên môi trường Staging/Prod. |
 
 ---
@@ -826,7 +826,7 @@ Thực nghiệm rà quét IaC Security đã được thực thi trực tiếp tr
   1. **KSV-01010 (deploy/kubernetes/base/configmap.yaml):** *Storing sensitive content such as usernames and email addresses in unsafe ConfigMap.* Cảnh báo việc khai báo thông tin người dùng và email quản trị trong ConfigMap thay vì mã hóa trong Kubernetes Secret.
   2. **KSV-0110 (deploy/kubernetes/base/deployment.yaml):** *Workload is running in the default namespace.* Khối lượng công việc (Workload) không khai báo namespace định danh, dẫn đến nguy cơ Pod chạy trong namespace mặc định của cluster.
   3. **KSV-0125 (deploy/kubernetes/base/deployment.yaml):** *Ensure that all containers use images only from trusted registry domains.* Container image `ghcr.io/sinhnguyen1411/user-service:v1.0.0` chưa được gắn nhãn tin cậy trong danh sách OCI Registry nội bộ được phê duyệt.
-- **Kích hoạt Security Policy Gate (Chặn Pipeline):** DevGuard Scanner phát hiện 3 lỗ hổng chưa được xử lý (`found 3 unhandled vulnerabilities`), hiển thị bảng tổng hợp trên terminal và lập tức **trả về Exit Code 1**, chặn đứng tiến trình release cấu hình lỗi lên Kubernetes cluster.
+- **Kích hoạt Security Policy Gate (Chặn Pipeline):** DevGuard Scanner phát hiện 3 lỗ hổng chưa được xử lý (`found 3 unhandled vulnerabilities`), hiển thị bảng tổng hợp trên terminal và lập tức **trả về Exit Code 1**, chặn đứng tiến trình phát hành cấu hình lỗi lên cụm Kubernetes.
 
 ![Ảnh chụp màn hình cửa sổ Windows PowerShell thực tế chạy devguard-scanner iac với Trivy](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_iac_run.png)
 *Hình 6.1: Quét cấu hình Kubernetes manifests với Trivy trên PowerShell.*
@@ -838,7 +838,7 @@ Thực nghiệm rà quét IaC Security đã được thực thi trực tiếp tr
    - Kết quả rà quét được lưu tại `docs/iac_detected_poc.sarif` theo đúng chuẩn OASIS SARIF v2.1.0.
    - DevGuard Scanner sử dụng PAT xác thực và nạp tự động lên Core API (`:8080`) qua endpoint `/api/v2/sarif-scan/` với định danh Scanner ID `iac`.
 2. **Bóc tách Ngữ cảnh và An toàn Dữ liệu (Nil-Safety & Obfuscation):**
-   - Bộ phân giải SARIF phía client và Control Plane tự động ánh xạ vị trí vi phạm vào tệp manifest cục bộ, hiển thị 5 dòng ngữ cảnh trước và sau lỗi để lập trình viên DevOps có thể sửa chữa trực tiếp.
+   - Bộ phân giải SARIF phía client và Control Plane tự động ánh xạ vị trí vi phạm vào tệp manifest cục bộ, hiển thị 5 dòng ngữ cảnh trước và sau lỗi để kỹ sư DevOps có thể xử lý khắc phục trực tiếp.
    - Cơ chế nil-safety được hoàn thiện trong `commands/sarif.go`, đảm bảo tương thích với cả các bộ sinh SARIF không cung cấp trường `snippet` văn bản.
 3. **Quản trị Rủi ro Tập trung Đa Trụ cột trên Web Dashboard:**
    - Trên Web Dashboard tại `http://localhost:3000/thesis-microservices/projects/core-services/assets/user-auth-service/refs/main/code-risks/`, tab Code Risks giờ đây quản lý hợp nhất cả 3 trụ cột an ninh:
@@ -926,10 +926,10 @@ DevGuard Scanner CLI đã được nâng cấp kiến trúc tích hợp sâu v�
 | Tiêu chí kỹ thuật | Base Image Truyền thống (Debian/Ubuntu) | Multi-stage Distroless Nonroot (Google Distroless) | Ý nghĩa an ninh thực tiễn |
 | :--- | :--- | :--- | :--- |
 | **Bề mặt tấn công (OS Packages)** | Mang theo 200+ gói OS (`libc6`, `apt`, `systemd`...) | Chỉ giữ lại binary Go và `ca-certificates` | Loại bỏ 100% các lỗ hổng tầng hệ điều hành không liên quan |
-| **Số lượng CVEs tầng OS** | 46 CVEs (nhiều lỗ hổng mức High/Medium trong `libc6`) | 0 CVEs tầng OS packages | Tránh gây nhiễu cho đội ngũ phát triển và không chặn oan CI/CD |
+| **Số lượng CVEs tầng OS** | 46 CVEs (nhiều lỗ hổng mức High/Medium trong `libc6`) | 0 CVEs tầng OS packages | Tránh phát sinh cảnh báo giả và gián đoạn sai lệch quy trình CI/CD |
 | **Công cụ Shell & Package Manager** | Có sẵn `/bin/sh`, `/bin/bash`, `apt`, `dpkg`, `curl` | Hoàn toàn không có shell, không có package manager | Ngăn chặn kẻ tấn công tải mã độc và khai thác tương tác khi có RCE |
 | **Quyền thực thi Runtime (User ID)** | Mặc định chạy dưới quyền `root` (UID 0) | Ép buộc chạy non-root (`UID 65532:65532`) | Ngăn ngừa triệt để nguy cơ leo thang đặc quyền và Container Breakout |
-| **Dung lượng Image kích thước** | Thường từ 150 MB đến 400 MB | Siêu nhẹ, chỉ từ 15 MB đến 25 MB (giảm 10 - 15 lần) | Tối ưu hóa tốc độ kéo image (pull time) và triển khai trên cụm K8s |
+| **Dung lượng Image kích thước** | Thường từ 150 MB đến 400 MB | Siêu nhẹ, chỉ từ 15 MB đến 25 MB (giảm 10 - 15 lần) | Tối ưu hóa tốc độ tải image (pull time) và triển khai trên cụm K8s |
 | **Khả năng quét với DevGuard** | Phát hiện hàng loạt CVEs OS lẫn CVEs Go binary | Chỉ tập trung cảnh báo các CVEs thực sự trong mã nguồn Go | Quản trị chính xác phạm vi rủi ro phần mềm (Software Blast Radius) |
 
 ---
@@ -1017,7 +1017,7 @@ Khác với các công cụ rà quét image SaaS (như Clair hoặc Snyk đòi h
 | :--- | :--- | :--- | :--- |
 | **1. Nền tảng Thực thi (Runtime)** | Cần Cloud Agent hoặc Docker Daemon cồng kềnh | **Go Native Standalone Binary** (Độc lập 100%) | Đơn giản hóa triển khai trên mọi môi trường hạ tầng. |
 | **2. Cơ sở Dữ liệu Lỗ hổng (Vulnerability DB)** | Đòi hỏi kết nối Internet định kỳ để đồng bộ | **Bộ đệm Offline Cục bộ 1.37 GB** (`trivy.db`) | Hoạt động tin cậy trong trung tâm dữ liệu quân sự, tài chính. |
-| **3. Dữ liệu Gửi ra Internet (Egress)** | **~145.0 KB** (Gửi image digest, package manifest) | **0.00 Bytes** (Tuyệt đối không rò rỉ gói tin) | Loại bỏ hoàn toàn nguy cơ lộ lọt cấu trúc container ra ngoài. |
+| **3. Dữ liệu Gửi ra Internet (Egress)** | **~145.0 KB** (Gửi image digest, package manifest) | **0.00 Bytes** (Tuyệt đối không rò rỉ gói tin) | Loại bỏ hoàn toàn nguy cơ rò rỉ cấu trúc container ra ngoài. |
 | **4. Thời gian Quét Toàn bộ Image Layers** | **5,800 ms** (Trễ do kiểm tra và nạp dữ liệu cloud) | **1,248 ms** (Nhanh gấp **4.6 lần**) | Đảm bảo tốc độ đóng gói và phát hành container trong CI/CD. |
 | **5. Mức Tiêu thụ Bộ nhớ RAM Đỉnh** | **210.0 MB** (Overhead của JVM hoặc Node.js engine) | **88.50 MB** (Tiết kiệm **58% bộ nhớ RAM**) | Tối ưu hóa tuyệt đối tài nguyên cho các máy trạm và runner pod. |
 | **6. Khả năng Nhận diện Lỗ hổng OS (Debian)** | Phụ thuộc vào trạng thái kết nối máy chủ SaaS | **Phát hiện Đầy đủ 98 CVEs (46 OS CVEs)** | Phản ánh chính xác rủi ro từ base image cồng kềnh. |
@@ -1086,7 +1086,7 @@ Hệ thống thiết lập tệp cấu hình chuẩn hóa `.hadolint.yaml` đặ
 | **Số cảnh báo an ninh (Warnings)** | **6 cảnh báo** (`DL3007`, `DL3009`, `DL3015`, `DL3020`) | **0 cảnh báo** | Tuân thủ đúng các quy chuẩn đóng gói sạch |
 | **Số lưu ý phong cách (Style/Notes)** | **1 lưu ý** (`DL3025`) | **0 lưu ý** | Đảm bảo tín hiệu ngắt (SIGTERM/SIGINT) truyền trực tiếp |
 | **Quyền thực thi Runtime (User Privilege)** | `root` (UID 0) | `nonroot` (UID 65532:65532) | Ngăn ngừa triệt để nguy cơ Container Breakout |
-| **Môi trường Shell trong Runtime Image** | Có sẵn (`/bin/sh`, `/bin/bash`, `curl`) | Hoàn toàn không có shell | Vô hiệu hóa khả năng tương tác của hacker khi có RCE |
+| **Môi trường Shell trong Runtime Image** | Có sẵn (`/bin/sh`, `/bin/bash`, `curl`) | Hoàn toàn không có shell | Vô hiệu hóa khả năng khai thác tương tác của kẻ tấn công khi phát sinh lỗ hổng RCE |
 | **Dung lượng Container Image** | **148.0 MB** | **16.2 MB** | **Giảm 9.1 lần**, tăng tốc độ phân phối và nạp image |
 | **Thời gian Phân tích AST (Latency)** | **115.59 ms** | **112.61 ms** | Tốc độ quét cực nhanh (~0.11s), không gây trễ CI/CD |
 | **Trạng thái Quality Gate** | **BLOCKED (Exit Code 1)** | **APPROVED (Exit Code 0)** | Tự động ngăn chặn đẩy image rủi ro lên registry |
@@ -1240,7 +1240,7 @@ Khác với các công cụ DAST truyền thống như OWASP ZAP (đòi hỏi Ja
 Để chứng minh tính ứng dụng thực tế trong chuỗi cung ứng phần mềm biệt lập của ngân hàng, nhóm đề tài triển khai container runner chuyên dụng gắn kết trực tiếp vào mạng Docker cô lập `airgapped-net` (Subnet `172.23.0.0/16`, cấm hoàn toàn Internet Gateway):
 - Container runner thực thi lệnh quét DAST nhắm vào live endpoint của `user-service` tại `http://172.23.0.5:8081`:
   1. **`missing-security-headers` (Medium, CVSS 5.3):** Tại `/api/v1/users`, máy chủ thiếu hoàn toàn `Content-Security-Policy`, `X-Frame-Options` và `X-Content-Type-Options: nosniff`.
-  2. **`debug-endpoint-exposure` (Medium, CVSS 5.3):** Tại `/debug/vars`, lộ lọt thông tin runtime nhạy cảm (Go version, kiến trúc phần cứng, thống kê bộ nhớ RAM).
+  2. **`debug-endpoint-exposure` (Medium, CVSS 5.3):** Tại `/debug/vars`, rò rỉ thông tin runtime nhạy cảm (Go version, kiến trúc phần cứng, thống kê bộ nhớ RAM).
   3. **`cors-misconfiguration` (High, CVSS 8.1):** Tại `/api/v1/users`, cấu hình nguy hiểm `Access-Control-Allow-Origin: *` kết hợp `Access-Control-Allow-Credentials: true`.
 - Báo cáo kết quả được xuất ra định dạng tiêu chuẩn OASIS SARIF v2.1.0 ([`docs/dast_airgap_detected_poc.sarif`](docs/dast_airgap_detected_poc.sarif) - 18.2 KB) và nạp thẳng lên DevGuard Control Plane (`:8080`).
 - DevGuard Scanner kích hoạt Security Policy Gate và trả về **Exit Code 1**, chặn đứng quá trình gắn cờ release và triển khai vi dịch vụ lên môi trường Production.
@@ -1271,7 +1271,7 @@ Trong chuỗi cung ứng phần mềm Cloud-Native hiện đại, các cuộc t�
 1. **Nguy cơ Tấn công Chèn Mã độc vào File Build (Build Pipeline Poisoning):** Kẻ tấn công can thiệp vào môi trường build hoặc sửa đổi trực tiếp các file nhị phân sau khi biên dịch mà mã nguồn gốc vẫn nguyên vẹn. Khi triển khai lên cụm Kubernetes, các hệ thống không có cơ chế xác thực mật mã sẽ không thể phân biệt được đâu là bản dựng chính thống và đâu là bản dựng độc hại (điển hình như các sự cố an ninh SolarWinds, Codecov).
 2. **Thiếu Chứng thực Nguồn gốc Minh bạch (Lack of Verifiable Provenance):** Các quy trình CI/CD truyền thống chỉ tạo ra file artifact mà không lưu lại ngữ cảnh xuất xưởng: Bản dựng này được biên dịch từ commit git nào? Do builder nào thực hiện? Cờ biên dịch có bảo đảm tính tái lặp (reproducible build) và loại bỏ đường dẫn gỡ lỗi (`-trimpath -ldflags="-s -w"`) hay không?
 3. **Giới hạn của Ký số Thủ công (GPG / Checksum MD5/SHA256):** Ký GPG truyền thống hoặc chia sẻ file mã băm checksum phân tán thiếu sự gắn kết với danh tính container/artifact, không thể tích hợp tự động vào OCI Registry và không hỗ trợ cơ chế xác thực chính sách Admission Control trên Kubernetes.
-4. **Tiêu chuẩn SLSA v1.0 & in-toto Attestations:** Tiêu chuẩn SLSA (Supply-chain Levels for Software Artifacts) do OpenSSF và Google đề xuất yêu cầu sinh hồ sơ nguồn gốc SLSA (Provenance) (Provenance) theo định dạng in-toto Statement chuẩn hóa, được ký số file nhị phân để chứng minh tính toàn vẹn và nguồn gốc bất biến của phần mềm từ mã nguồn đến môi trường thực thi.
+4. **Tiêu chuẩn SLSA v1.0 & in-toto Attestations:** Tiêu chuẩn SLSA (Supply-chain Levels for Software Artifacts) do OpenSSF và Google đề xuất yêu cầu sinh hồ sơ nguồn gốc SLSA Provenance theo định dạng in-toto Statement chuẩn hóa, được ký số file nhị phân để chứng minh tính toàn vẹn và nguồn gốc bất biến của phần mềm từ mã nguồn đến môi trường thực thi.
 
 ---
 
@@ -1352,14 +1352,14 @@ Thực nghiệm rà quét và ký số chuỗi cung ứng đã được tiến h
 ![Cửa sổ Windows PowerShell thực tế chạy Cosign ký số nhị phân và kiểm chứng Policy Gate](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_supply_chain_run.png)
 *Hình 9.1: Ký số Cosign và kiểm tra OPA Policy Gate trên PowerShell.*
 
-![Giao diện DevGuard Web Dashboard tại localhost:3000 quản trị định danh Artifact và các hồ sơ nguồn gốc SLSA (Provenance)](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/devguard_supply_chain_attestations.png)
+![Giao diện DevGuard Web Dashboard tại localhost:3000 quản trị định danh Artifact và hồ sơ nguồn gốc SLSA Provenance](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/devguard_supply_chain_attestations.png)
 *Hình 9.2: Quản lý định danh Artifact và Attestation trên Dashboard.*
 
 ---
 
 ### 9.6. Thực nghiệm Ký số Cosign & Tạo Chứng thực SLSA v1.0 Độc lập trong Môi trường Cô lập Mạng 100% (Zero-Trust Air-Gapped Execution)
 
-Để kiểm tra khả năng hoạt động khi ngắt hoàn toàn Internet, nhóm nghiên cứu thực hiện bài đo cô lập mạng cho kịch bản Supply Chain Security (ký số file nhị phân, xác thực tính toàn vẹn nhị phân và kiểm tra chứng chỉ nguồn gốc SLSA (Provenance) v1.0 Provenance) trong điều kiện **ngắt kết nối Internet 100%** thông qua công cụ điều phối [`scripts/run_airgap_supply_chain_experiment.py`](scripts/run_airgap_supply_chain_experiment.py).
+Để kiểm tra khả năng hoạt động khi ngắt hoàn toàn Internet, nhóm nghiên cứu thực hiện bài đo cô lập mạng cho kịch bản Supply Chain Security (ký số file nhị phân, xác thực tính toàn vẹn nhị phân và kiểm tra chứng chỉ nguồn gốc SLSA v1.0 Provenance) trong điều kiện **ngắt kết nối Internet 100%** thông qua công cụ điều phối [`scripts/run_airgap_supply_chain_experiment.py`](scripts/run_airgap_supply_chain_experiment.py).
 
 ![Sơ đồ so sánh kiến trúc Supply Chain Security Public Sigstore SaaS vs DevGuard Air-Gapped Cosign Native](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/airgap_supply_chain_zero_trust_architecture.png)
 *Hình 9.3: So sánh cơ chế ký số: Sigstore Cloud và Cosign Offline.*
@@ -1367,14 +1367,14 @@ Thực nghiệm rà quét và ký số chuỗi cung ứng đã được tiến h
 #### 9.6.1. Thiết lập & Kiểm chứng Cô lập Mạng Đa tầng Trước khi Quét (Air-Gapped Pre-flight Audit)
 Trước khi kích hoạt động cơ xác thực Cosign và kiểm tra SLSA Provenance, quy trình tự động kích hoạt bộ kiểm chứng 4 tầng mạng (Harness):
 1. **Kiểm soát Định tuyến ICMP (Layer 3):** Gửi gói tin ping tới Anycast IP `8.8.8.8` -> Nhận kết quả `100% Packet Loss` (`Network unreachable`), xác nhận hệ thống không có Gateway định tuyến ra mạng ngoài.
-2. **Vô hiệu hóa Tra cứu DNS (DNS Blackholing):** Thử nghiệm phân giải tên miền máy chủ nhật ký minh bạch bên ngoài `rekor.sigstore.dev` -> Nhận mã lỗi `SERVFAIL` (Resolver Disabled), loại bỏ hoàn toàn rủi ro lộ lọt băm nhị phân qua DNS.
+2. **Vô hiệu hóa Tra cứu DNS (DNS Blackholing):** Thử nghiệm phân giải tên miền máy chủ nhật ký minh bạch bên ngoài `rekor.sigstore.dev` -> Nhận mã lỗi `SERVFAIL` (Resolver Disabled), loại bỏ hoàn toàn rủi ro rò rỉ mã băm nhị phân qua DNS.
 3. **Chặn Đứng Kết nối Egress (TCP Egress Drop):** Thử nghiệm mở kết nối TCP tới `rekor.sigstore.dev:443` -> Bị từ chối (`Connection Dropped / Refused`), bảo đảm **0.00 Bytes** dữ liệu có thể thoát ra Internet.
 4. **Kiểm tra Tính sẵn sàng Dịch vụ Nội bộ:** DevGuard Control Plane (`http://localhost:8080/healthz`) phản hồi **HTTP 200 OK**, sẵn sàng lưu trữ bản ghi chứng thực.
 
 #### 9.6.2. Cơ chế Ký số ECDSA P-256 Ngoại tuyến & Bỏ qua Phụ thuộc Rekor Transparency Log
 Khác với mô hình Sigstore Cloud SaaS công cộng (phụ thuộc vào máy chủ cấp chứng chỉ tạm thời Fulcio và bắt buộc ghi nhật ký minh bạch Rekor qua Internet, dẫn đến lỗi nghiêm trọng `signature not found in transparency log` khi ngắt mạng):
 - DevGuard tích hợp Cosign Engine dưới dạng **Go native single binary** tĩnh [`core/bin/cosign.exe`](core/bin/cosign.exe) (112.7 MB) kết hợp với **cặp khóa mật mã nội bộ (On-Premise Keypair)** theo chuẩn ECDSA P-256 NIST Curve: khóa riêng [`docs/cosign_keys/devguard-cosign.key`](docs/cosign_keys/devguard-cosign.key) được lưu trữ an toàn trong Secret Manager nội bộ và khóa công khai [`docs/cosign_keys/devguard-cosign.pub`](docs/cosign_keys/devguard-cosign.pub) được nhúng sẵn vào Control Plane.
-- Nhờ áp dụng cờ ngoại tuyến `--insecure-ignore-tlog=true`, Cosign thực thi xác thực trực tiếp dựa trên mã hash SHA-256 SHA-256 và thuật toán mật mã bất đối xứng của cặp khóa nội bộ, hoàn toàn không gửi request ra Rekor (**0.00 Bytes Egress**).
+- Nhờ áp dụng cờ ngoại tuyến `--insecure-ignore-tlog=true`, Cosign thực thi xác thực trực tiếp dựa trên mã băm SHA-256 và thuật toán mật mã bất đối xứng của cặp khóa nội bộ, hoàn toàn không gửi request ra Rekor (**0.00 Bytes Egress**).
 - Tốc độ xác thực nhị phân `user_service_release.exe` (dung lượng 19.06 MB) hoàn thành nhanh chóng chỉ trong **61.01 mili-giây** (nhanh gấp 38 lần so với kiểm tra qua Rekor Cloud) với mức tiêu thụ RAM đỉnh chỉ **28.50 MB** (tiết kiệm 56% RAM).
 
 ![Ảnh chụp cửa sổ Windows PowerShell thực tế chạy bộ điều phối kiểm thử Air-Gapped Supply Chain](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/airgap_terminal_supply_chain_cosign.png)
@@ -1384,7 +1384,7 @@ Khác với mô hình Sigstore Cloud SaaS công cộng (phụ thuộc vào máy 
 Để chứng minh tính ứng dụng thực tế trong quy trình phân phối phần mềm biệt lập của ngân hàng, nhóm đề tài triển khai container runner chuyên dụng gắn kết trực tiếp vào mạng Docker cô lập `airgapped-net` (Subnet `172.23.0.0/16`, cấm hoàn toàn Internet Gateway):
 - Container runner thực thi 3 kịch bản kiểm tra đầy đủ:
   1. **Xác thực Bản dựng Hợp lệ:** Kiểm chứng chữ ký số [`docs/user_service_release.sig`](docs/user_service_release.sig) trên file nhị phân chính thống -> Trả về `Verified OK`.
-  2. **Thử nghiệm Can thiệp Giả mạo (Tamper Simulation):** Khi can thiệp sai lệch đúng **1 byte** trong file nhị phân thực thi, hệ thống lập tức phát hiện sai lệch mã hash SHA-256 SHA-256, Cosign từ chối xác thực (`Invalid Signature`) và trả về **Exit Code 1**, ngăn chặn 100% mã độc xâm nhập.
+  2. **Thử nghiệm Can thiệp Giả mạo (Tamper Simulation):** Khi can thiệp sai lệch đúng **1 byte** trong file nhị phân thực thi, hệ thống lập tức phát hiện sai lệch mã băm SHA-256, Cosign từ chối xác thực (`Invalid Signature`) và trả về **Exit Code 1**, ngăn chặn 100% mã độc xâm nhập.
   3. **Xác thực Chứng thực Xuất xưởng In-Toto SLSA v1.0 Provenance:** Thẩm định file [`docs/slsa_provenance_user_service.json`](docs/slsa_provenance_user_service.json) đáp ứng đầy đủ tiêu chuẩn **SLSA Build Level 3** (Hermetic, Isolated, Reproducible với cờ `-trimpath -ldflags="-s -w"`).
 - Toàn bộ dữ liệu chứng thực được nạp lên DevGuard Control Plane (`:8080`), OPA Rego Policy Gate phê duyệt hợp lệ (**Exit Code 0**) cho phép chuyển tiếp sang giai đoạn đóng gói container.
 - Toàn bộ thông số đo đạc kỹ thuật được lưu trữ tại [`docs/supply_chain_airgap_verification_telemetry.json`](docs/supply_chain_airgap_verification_telemetry.json).
@@ -1413,13 +1413,13 @@ Khác với mô hình Sigstore Cloud SaaS công cộng (phụ thuộc vào máy 
 ## Phần 10: Thực nghiệm PoC Trụ cột Dependency Firewall & Ngăn chặn Mã độc Chủ động
 
 ### 10.1. Tại sao cần Dependency Firewall thay vì chỉ quét sau khi tải?
-Trước đây, các công cụ quét an toàn thư viện (SCA) thường hoạt động theo cơ chế "hậu kiểm": lập trình viên hoặc máy chủ CI chạy lệnh `go get` hoặc `go mod download` để kéo toàn bộ mã nguồn thư viện về máy trạm trước, sau đó mới tiến hành quét tệp `go.sum` hoặc SBOM để đối soát lỗ hổng CVE.
+Trước đây, các công cụ quét an toàn thư viện (SCA) thường hoạt động theo cơ chế "hậu kiểm": lập trình viên hoặc máy chủ CI chạy lệnh `go get` hoặc `go mod download` để tải toàn bộ mã nguồn thư viện về máy trạm trước, sau đó mới tiến hành quét tệp `go.sum` hoặc SBOM để đối soát lỗ hổng CVE.
 
 Phương thức truyền thống này bộc lộ hai bất cập an ninh đặc biệt nghiêm trọng trong môi trường doanh nghiệp:
-1. **Mã độc đã lọt vào máy tính (Pre-Execution Infection):** Nếu thư viện bị cài cắm mã độc (như mã đánh cắp token, mở backdoor ngầm, kích hoạt init script độc hại), payload độc hại đã nằm sẵn trên ổ đĩa của máy trạm lập trình viên hoặc runner CI ngay khi lệnh tải hoàn tất, trước cả khi công cụ SCA kịp phân tích.
+1. **Mã độc đã xâm nhập máy trạm phát triển (Pre-Execution Infection):** Nếu thư viện bị cài cắm mã độc (như mã đánh cắp token, mở backdoor ngầm, kích hoạt init script độc hại), payload độc hại đã nằm sẵn trên ổ đĩa của máy trạm lập trình viên hoặc runner CI ngay khi lệnh tải hoàn tất, trước cả khi công cụ SCA kịp phân tích.
 2. **Không chặn được tấn công chiếm quyền tác giả (Hijacked Maintainer / Zero-Day Supply Chain Attack):** Kẻ tấn công chiếm đoạt tài khoản tác giả và đẩy lên phiên bản chứa mã độc (điển hình như sự cố XZ Utils CVE-2024-3094 hay sự cố độc hại `event-stream`). Tại thời điểm phát hành, các cơ sở dữ liệu NVD/CVE hoàn toàn chưa có bản ghi cảnh báo. Các công cụ quét thụ động sẽ báo cáo "sạch" và cho phép đưa mã độc vào hệ thống.
 
-Vì vậy, giải pháp bảo vệ chủ động và triệt để là phải thiết lập **Dependency Firewall** đứng chốt chặn ở giữa máy phát triển/CI và Internet công cộng, thực thi nhiệm vụ kiểm soát an ninh ngay trong lúc tải gói (In-line Proxy). Nếu gói vi phạm bất kỳ tiêu chí an toàn nào, Dependency Firewall sẽ trả về mã lỗi `HTTP 403 Forbidden` và chặn đứng luồng truyền dữ liệu tức thì, không để một byte mã độc nào chạm tới ổ đĩa máy tính.
+Vì vậy, giải pháp bảo vệ chủ động và triệt để là phải thiết lập **Dependency Firewall** đứng ở vị trí chốt chặn trung gian giữa máy trạm phát triển/CI và Internet công cộng, thực thi nhiệm vụ kiểm soát an ninh ngay trong lúc tải gói (In-line Proxy). Nếu gói vi phạm bất kỳ tiêu chí an toàn nào, Dependency Firewall sẽ trả về mã lỗi `HTTP 403 Forbidden` và chặn đứng luồng truyền dữ liệu tức thì, không để mã độc tiếp cận ổ đĩa máy trạm phát triển.
 
 ---
 
@@ -1435,9 +1435,9 @@ Mọi yêu cầu truy vấn siêu dữ liệu (`.info`, `.mod`) và tệp nén m
 
 Hệ thống Dependency Firewall thực thi quy trình 4 chốt chặn nối tiếp:
 1. **Kiểm tra Danh sách Luật Cấm Nội bộ (`rules`):** DevGuard so khớp đường dẫn gói với danh mục quy tắc do quản trị viên ban hành (hỗ trợ wildcard `*` và toán tử phủ định `!`). Ví dụ: tổ chức cấm sử dụng thư viện logging lỗi thời `github.com/sirupsen/logrus` (yêu cầu chuyển sang `uber-go/zap`), proxy sẽ chặn đứng ngay tại bước này và gửi kèm HTTP Header `X-Not-Allowed-Package: blocked`.
-2. **Kiểm tra Thời gian Cách ly Gói Mới Phát hành (`minReleaseAge`):** DevGuard tự động kiểm tra mốc thời gian release của phiên bản trên upstream. Nếu gói mới phát hành dưới 48 giờ (hoặc số giờ do dự án quy định), proxy kích hoạt cơ chế cách ly tự động (Quarantine), trả về `HTTP 403 Forbidden` kèm header `X-Too-New-Package: blocked`. Cơ chế này tạo ra "vùng đệm an toàn 48 giờ" để cộng đồng an ninh phát hiện và xử lý nếu đó là bản phát hành bị tấn công chiếm quyền maintainer.
-3. **Đối soát Danh sách Mã độc Toàn cầu (`checkMaliciousPackage`):** DevGuard đối soát tên gói trong bảng dữ liệu mã độc `malicious_packages` (đồng bộ trực tiếp từ cơ sở dữ liệu OSV quốc tế). Nếu phát hiện gói bị gắn mã định danh mã độc (mã `MAL-*`), proxy chặn đứng tức thì với header `X-Malicious-Package: blocked` và trả về payload chi tiết ID mã độc.
-4. **Bộ nhớ Đệm Tăng tốc Cục bộ (Local LRU Cache):** Nếu gói vượt qua cả 3 chốt chặn an ninh, DevGuard tải gói từ upstream, lưu tạm vào ổ đĩa nội bộ theo thuật toán LRU (Least Recently Used) và trả về cho máy dev. Lần sau nếu cần tải lại gói đó, proxy trả về trực tiếp từ cache nội bộ với độ trễ vài mili-giây, đồng thời bảo đảm các bản dựng vẫn thực thi mượt mà ngay cả khi môi trường mất mạng hoàn toàn (Air-Gapped).
+2. **Kiểm tra Thời gian Cách ly Gói Mới Phát hành (`minReleaseAge`):** DevGuard tự động kiểm tra mốc thời gian phát hành của phiên bản trên upstream. Nếu gói mới phát hành dưới 48 giờ (hoặc số giờ do dự án quy định), proxy kích hoạt cơ chế cách ly tự động (Quarantine), trả về mã `HTTP 403 Forbidden` kèm header `X-Too-New-Package: blocked`. Cơ chế này tạo ra "vùng đệm an toàn 48 giờ" để cộng đồng an ninh phát hiện và xử lý nếu phiên bản phát hành bị chiếm đoạt tài khoản duy trì (Repojacking / Compromised Account).
+3. **Đối soát Danh sách Mã độc Toàn cầu (`checkMaliciousPackage`):** DevGuard đối soát tên gói trong bảng dữ liệu mã độc `malicious_packages` (đồng bộ trực tiếp từ cơ sở dữ liệu OSV quốc tế). Nếu phát hiện gói bị gắn mã định danh mã độc (tiền tố `MAL-*`), proxy chặn đứng tức thì với header `X-Malicious-Package: blocked` và trả về payload chi tiết ID mã độc.
+4. **Bộ nhớ Đệm Tăng tốc Cục bộ (Local LRU Cache):** Nếu gói vượt qua cả 3 chốt chặn an ninh, DevGuard tải gói từ upstream, lưu vào bộ đệm nội bộ theo thuật toán LRU (Least Recently Used) và trả về cho máy trạm phát triển. Lần sau nếu cần tải lại gói đó, proxy phục vụ trực tiếp từ cache nội bộ với độ trễ vài mili-giây, đồng thời bảo đảm các bản dựng vẫn thực thi ổn định ngay cả trong môi trường mạng cô lập (Air-Gapped).
 
 ![Cửa sổ Windows PowerShell thực tế chạy Harness Benchmark kiểm thử 4 kịch bản quy chuẩn của Dependency Firewall](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_dependency_firewall_harness.png)
 *Hình 10.2: Cửa sổ Windows PowerShell thực tế chạy Harness Benchmark kiểm thử 4 kịch bản quy chuẩn của Dependency Firewall.*
@@ -1471,22 +1471,22 @@ Content-Length: 303
 
 #### 10.3.2. Đo đạc Đối chứng 3 Kịch bản Thực tế (A / B / C Matrix)
 Thực nghiệm so sánh đối chứng được tiến hành trên 5 nhóm gói thư viện đại diện (gói sạch, gói cấm theo luật, gói mã độc thử nghiệm, gói mã độc OSV thật `boltdb-go`, và gói mới cần cách ly) qua 3 kịch bản:
-- **Kịch bản A (Tải thẳng từ Internet):** Máy dev trỏ trực tiếp ra `proxy.golang.org`, không kích hoạt Dependency Firewall.
-- **Kịch bản B (Tải qua DevGuard Firewall):** Máy dev bắt buộc phải đi qua DevGuard Dependency Proxy.
-- **Kịch bản C (Mất mạng hoàn toàn):** Môi trường ngắt kết nối Internet, máy dev tải lại các gói đã được lưu tạm trong cache của DevGuard.
+- **Kịch bản A (Tải trực tiếp Internet):** Máy trạm phát triển trỏ trực tiếp ra `proxy.golang.org`, không kích hoạt Dependency Firewall.
+- **Kịch bản B (Tải qua DevGuard Dependency Firewall):** Máy trạm phát triển bắt buộc phải định tuyến qua DevGuard Dependency Proxy.
+- **Kịch bản C (Môi trường mạng cô lập Air-Gapped):** Ngắt hoàn toàn kết nối Internet, máy trạm phát triển tải lại các gói đã được lưu trong bộ nhớ đệm nội bộ của DevGuard.
 
 Toàn bộ thông số đo đạc kỹ thuật được ghi nhận độc lập tại tệp `docs/dependency_firewall_phase3_comparative.json`:
 
 *Bảng 10.1: Kết quả đo đạc thực tế đối chứng 3 kịch bản tải thư viện Go (A / B / C)*
 
-| Nhóm gói kiểm thử | Đường dẫn gói Go | Kịch bản A (Internet trực tiếp) | Kịch bản B (DevGuard Firewall) | Kịch bản C (Cache nội bộ khi mất mạng) |
+| Nhóm gói kiểm thử | Đường dẫn gói Go | Kịch bản A (Internet trực tiếp) | Kịch bản B (DevGuard Firewall) | Kịch bản C (Cache nội bộ Air-Gapped) |
 | :--- | :--- | :--- | :--- | :--- |
-| **Gói chuẩn (Sạch)** | `github.com/google/uuid` | Mã 200, 361.22 ms (Lọt vào máy) | Mã 200, 5.06 ms (Cho phép) | Mã 200, 5.85 ms (Lấy từ cache offline) |
-| **Gói bị cấm theo luật** | `github.com/sirupsen/logrus` | Mã 200, 341.90 ms (**Lọt vào máy trạm**) | Mã 403, 27.57 ms (**Chặn theo luật**) | Không áp dụng (đã bị chặn từ trước) |
+| **Gói chuẩn (Sạch)** | `github.com/google/uuid` | Mã 200, 361.22 ms (Cho phép) | Mã 200, 5.06 ms (Cho phép) | Mã 200, 5.85 ms (Lấy từ cache nội bộ) |
+| **Gói bị cấm theo luật** | `github.com/sirupsen/logrus` | Mã 200, 341.90 ms (**Lọt vào mã nguồn**) | Mã 403, 27.57 ms (**Chặn theo luật**) | Không áp dụng (đã bị chặn từ trước) |
 | **Mã độc thử nghiệm** | `fake-org/malicious-package` | Mã 404, 402.78 ms (**Không chặn được**) | Mã 403, 29.36 ms (**Chặn mã độc**) | Không áp dụng (đã bị chặn từ trước) |
 | **Mã độc OSV thật** | `github.com/boltdb-go/bolt` | Mã 403, 591.60 ms (Upstream chặn muộn) | Mã 403, 5.81 ms (**Chặn tức thì**) | Không áp dụng (đã bị chặn từ trước) |
-| **Gói mới cần cách ly** | `golang.org/x/sync` | Mã 200, 316.96 ms (**Lọt vào máy trạm**) | Mã 403, 82.20 ms (**Chặn cách ly 48h**) | Không áp dụng (đã bị chặn từ trước) |
-| **Tỷ lệ chặn gói nguy hiểm** | **Đánh giá tổng thể** | **0.0%** (3/4 gói nguy hiểm lọt vào máy) | **100.0%** (Chặn đứng 4/4 gói nguy hiểm) | **100.0% lấy từ cache** (Chạy offline mượt mà) |
+| **Gói mới cần cách ly** | `golang.org/x/sync` | Mã 200, 316.96 ms (**Lọt vào mã nguồn**) | Mã 403, 82.20 ms (**Chặn cách ly 48h**) | Không áp dụng (đã bị chặn từ trước) |
+| **Tỷ lệ chặn gói nguy hiểm** | **Đánh giá tổng thể** | **0.0%** (3/4 gói nguy hiểm lọt vào mã nguồn) | **100.0%** (Chặn đứng 4/4 gói nguy hiểm) | **100.0% lấy từ cache** (Vận hành offline hoàn toàn) |
 | **Thời gian phản hồi TB** | **Đo đạc độ trễ** | **402.89 ms** | **27.57 ms** (Chặn nhanh) | **8.09 ms** (Nhanh hơn **44.6 lần**) |
 
 ![Cửa sổ Windows PowerShell thực tế hiển thị Bảng tổng hợp so sánh đối chứng 3 kịch bản A / B / C](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_dependency_firewall_phase3_matrix.png)
@@ -1496,8 +1496,8 @@ Toàn bộ thông số đo đạc kỹ thuật được ghi nhận độc lập 
 *Hình 10.5: Chi tiết nhật ký thực thi Kịch bản A (tải trực tiếp không qua Dependency Firewall) và Kịch bản B (chặn qua DevGuard Dependency Firewall).*
 
 **Phân tích Kết quả Thực nghiệm Định lượng:**
-1. **Ngăn chặn Rò rỉ Tuyệt đối (Zero Leakage):** Khi tải trực tiếp không qua Dependency Firewall (Kịch bản A), gói cấm `logrus` và gói mới trong diện cách ly lọt thẳng vào ổ đĩa. Khi kích hoạt Dependency Firewall (Kịch bản B), **100.0% các gói vi phạm bị chặn đứng ngay từ tầng mạng** với mã HTTP 403, bảo đảm tính toàn vẹn của máy trạm phát triển.
-2. **Hiệu năng Tăng tốc 44.6 lần với Bộ nhớ đệm Nội bộ:** Khi hoạt động qua Cache nội bộ (Kịch bản C), độ trễ phản hồi trung bình chỉ đạt **8.09 ms**, nhanh hơn 44.6 lần so với kéo trực tiếp từ Internet (`proxy.golang.org` đạt 361.22 ms), giúp giải quyết bài toán build nhanh trong các pipeline CI/CD quy mô lớn.
+1. **Ngăn chặn Rò rỉ Tuyệt đối (Zero Leakage):** Khi tải trực tiếp không qua Dependency Firewall (Kịch bản A), gói cấm `logrus` và gói mới trong diện cách ly lọt thẳng vào ổ đĩa và mã nguồn. Khi kích hoạt Dependency Firewall (Kịch bản B), **100.0% các gói vi phạm bị chặn đứng ngay từ tầng mạng** với mã HTTP 403, bảo đảm tính toàn vẹn của máy trạm phát triển và chuỗi cung ứng phần mềm.
+2. **Hiệu năng Tăng tốc 44.6 lần với Bộ nhớ đệm Nội bộ:** Khi hoạt động qua Cache nội bộ (Kịch bản C), độ trễ phản hồi trung bình chỉ đạt **8.09 ms**, nhanh hơn 44.6 lần so với tải trực tiếp từ Internet (`proxy.golang.org` đạt 361.22 ms), giúp giải quyết triệt để bài toán tăng tốc thời gian build trong các pipeline CI/CD quy mô lớn.
 
 ---
 
@@ -1551,13 +1551,13 @@ Không chỉ vận hành ở mức in-line proxy dòng lệnh qua biến môi tr
 
 ---
 
-## Phần 11: Thực nghiệm 10 - Đánh giá Trụ cột CI/CD Policy Gate & Cổng Kiểm tra An ninh Tập trung (Policy Gate) (Unified Quality Gate)
+## Phần 11: Thực nghiệm 10 - Đánh giá Trụ cột CI/CD Policy Gate & Cổng Kiểm tra An ninh Tập trung (Unified Quality Gate)
 
 ### 11.1. Đặt vấn đề & Hạn chế khi dùng nhiều script kiểm tra an ninh phân tán (The CI/CD Policy Gate Fragmentation Crisis)
 Trong các kiến trúc CI/CD truyền thống triển khai cho hệ thống Microservices, việc thực thi chính sách an ninh (Security Quality Gate) thường rơi vào tình trạng phân mảnh và thiếu nhất quán nghiêm trọng:
 1. **Khủng hoảng Nhân bản Script (Script Sprawl & Maintenance Overhead):** Trong hệ sinh thái 23 Go microservices của đề tài, mỗi repository dịch vụ sở hữu riêng một bộ script kiểm tra (trung bình 6 scripts/service gồm `check_secrets.sh`, `parse_trivy.py`, `enforce_quality_gate.py`, `verify_cosign.sh`...). Tổng cộng **138 file scripts** phân tán độc lập trên 23 kho mã nguồn. Khi cần thay đổi ngưỡng chặn an ninh (ví dụ: siết chặt CVSS >= 7.0 hoặc chấp thuận tạm thời 1 CVE mới), kỹ sư bảo mật buộc phải sửa đổi, tạo Pull Request và merge thủ công trên toàn bộ 23 repositories.
 2. **Thiếu Ngữ cảnh Khai thác & Bế tắc Cảnh báo Giả (False Positive Deadlock):** Các đoạn script kiểm tra thuần túy trên runner (như `enforce_quality_gate.py` trong workflow cũ `ci-service.yml`) chỉ thực hiện thao tác so sánh thô: đọc file JSON kết quả từ Trivy/Grype và đếm số lượng CVE có severity là `HIGH` hoặc `CRITICAL`. Script trên runner hoàn toàn không có khả năng phân tích ngữ cảnh: liệu hàm bị lỗi có thực sự được mã nguồn Go gọi tới hay không (Call-Graph Reachability)? Hệ quả là trên toàn bộ 23/23 microservices, pipeline đều bị chặn đứng (Build FAILED) bởi 46 CVEs tầng OS packages có sẵn trong base image Debian/Ubuntu, mặc dù ứng dụng hoàn toàn không sử dụng các thư viện hệ thống đó.
-3. **Hiện tượng "Gate Fatigue" và Xu hướng Tắt Kiểm tra An ninh:** Khi đối mặt với việc pipeline liên tục bị chặn oan, các đội ngũ phát triển thường có xu hướng thêm cờ `|| true` hoặc cấu hình `exit 0` bỏ qua kiểm tra an ninh trong CI. Điều này làm mất đi hoàn toàn ý nghĩa của cổng kiểm soát chất lượng phần mềm.
+3. **Hiện tượng "Gate Fatigue" và Xu hướng Tắt Kiểm tra An ninh:** Khi đối mặt với việc pipeline liên tục bị gián đoạn do cảnh báo giả, các đội ngũ phát triển thường có xu hướng thêm cờ `|| true` hoặc cấu hình `exit 0` bỏ qua kiểm tra an ninh trong CI. Điều này làm mất đi hoàn toàn ý nghĩa của cổng kiểm soát chất lượng phần mềm.
 4. **Yêu cầu Cốt lõi của Unified Security Quality Gate:** Cần một điểm kiểm soát chất lượng an ninh tập trung (Centralized Policy Enforcement Point), có khả năng hợp nhất kết quả rà quét từ mọi công cụ an ninh (SCA, SAST, Secret Scanning, IaC, Container, DAST) qua một chuẩn giao tiếp mở (OASIS SARIF v2.1.0), kết nối trực tiếp với VEX Rule Engine để loại bỏ cảnh báo giả trước khi ra quyết định dừng (Exit Code 1) hoặc cho phép (Exit Code 0) pipeline CI/CD.
 
 ---
@@ -1747,7 +1747,7 @@ sequenceDiagram
 | `justification` | VEX Justification Enum | `code_not_reachable` | Mã nguồn microservice không hề gọi đến hàm hoặc symbol chứa mã lỗi (kiểm chứng qua đồ thị gọi AST) |
 | `impact_statement` | String (Báo cáo tác động) | `Automated AST call-graph analysis verified zero execution paths to vulnerable symbol.` | Cung cấp bằng chứng kiểm toán máy (Machine-readable audit trail) phục vụ Kubernetes Admission Controller |
 
-Nhờ đó pipeline CI/CD tránh bị chặn oan bởi cảnh báo giả, tiết kiệm hơn 80% thời gian xử lý.
+Nhờ đó pipeline CI/CD tránh bị đình trệ do cảnh báo giả, tiết kiệm hơn 80% thời gian xử lý.
 
 ### 12.2. Tính năng 2: Kubernetes In-Cluster Agent & Admission Controller
 - **Cơ chế:** Triển khai `k8s-agent` làm Validating Admission Webhook trên Kubernetes.
@@ -1775,7 +1775,7 @@ Chạy A/B Benchmark trên GitHub Actions (`.github/workflows/ab-comparison-poc.
 - **Môi trường thực thi:** GitHub Actions Runner (`ubuntu-latest`, 4 vCPU, 16GB RAM).
 - **Chuỗi công cụ:** Docker Buildx -> Syft (SPDX SBOM) -> Grype (Container Vulnerability Scan) -> Python Security Gate Enforcer.
 - **Thời gian thực thi chi tiết:** Toàn bộ job hoàn thành trong 2 phút 30 giây, trong đó khâu dựng image `Build Docker Image (Thesis Service)` tiêu tốn 1 phút 06 giây, bước tạo SBOM bằng Syft mất 6 giây, và bước quét container image với Grype tiêu tốn 57 giây.
-- **Hiện tượng:** Grype phát hiện CVE mức `HIGH` trong OS packages của base image `golang:1.24-alpine`. Pipeline truyền thống thiếu Reachability Analysis nên Security Gate chặn oan dù mã Go không gọi hàm bị lỗi.
+- **Hiện tượng:** Grype phát hiện CVE mức `HIGH` trong OS packages của base image `golang:1.24-alpine`. Pipeline truyền thống thiếu Reachability Analysis nên Security Gate đình trệ quy trình phân phối dù mã Go không kích hoạt hàm bị lỗi.
 
 ![Chi tiết các bước thực thi Pipeline A](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/ab_pipeline_a_details.png)
 *Hình 13.3: Chi tiết các bước thực thi của Pipeline A truyền thống.*
@@ -1816,7 +1816,7 @@ Theo khẳng định tại Step Summary của bài kiểm tra Benchmark: *"Toàn
 
 ## Phần 13: So sánh định lượng & Hiệu năng
 
-### 12.1. So sánh tính năng
+### 13.1. So sánh tính năng
 
 *Bảng 13: So sánh tính năng pipeline cũ và DevGuard Control Plane*
 
@@ -1832,7 +1832,7 @@ Theo khẳng định tại Step Summary của bài kiểm tra Benchmark: *"Toàn
 ![Giao diện đánh giá tuân thủ tiêu chuẩn trên Control Plane](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/user_auth_compliance.png)
 *Hình 14.1: Đánh giá tuân thủ ISO 27001 và BSI trên Dashboard.*
 
-### 12.2. So sánh hiệu quả vận hành
+### 13.2. So sánh hiệu quả vận hành
 
 *Bảng 14: So sánh chỉ số hiệu quả vận hành*
 
@@ -1845,13 +1845,13 @@ Theo khẳng định tại Step Summary của bài kiểm tra Benchmark: *"Toàn
 
 ---
 
-### 12.3. Benchmark chuyên sâu: Khả năng chịu tải (Load Test) với 23 Services
+### 13.3. Benchmark chuyên sâu: Khả năng chịu tải (Load Test) với 23 Services
 
 Thực nghiệm đã mở rộng phạm vi bằng cách kích hoạt một Pipeline Matrix song song trên toàn bộ 23 microservices của hệ sinh thái để ép tải hệ thống DevGuard (Run ID #34103301097), và đồng thời chạy lại toàn bộ CI cũ `ci-service.yml` trên 23 services (Run ID #34104255412) để đối chiếu A/B. Kết quả:
 
 - **Hiệu suất CI/CD & Mạng (Concurrency)**:
   - **Kịch bản thực tế (Pipeline cũ thất bại do rào cản cảnh báo giả)**: Mất **hơn 7 phút** (dù đã có cache Docker layers) vì phải build image trước khi quét. Quá trình xử lý cồng kềnh và tốn tài nguyên.
-  - **Kịch bản lý tưởng (Cả 2 cùng Xanh - All Green)**: Khi cấu hình ép Pipeline cũ bỏ qua lỗi (Warning Mode) để pass 100%, thời gian chạy toàn hệ thống vọt lên tới **17 phút 45 giây** (Run ID #34105605094, do phải đợi hàng đợi, overhead tải các artifact và attestations cuối cùng).
+  - **Kịch bản lý tưởng (Cả hai cùng vượt qua kiểm tra - All Green)**: Khi cấu hình chấp thuận cho Pipeline cũ bỏ qua lỗi (Warning Mode) để vượt qua 100%, thời gian chạy toàn hệ thống lên tới **17 phút 45 giây** (Run ID #34105605094, do phải xếp hàng đợi tài nguyên và chi phí tải các artifact, attestations).
   - **DevGuard Pipeline**: 23 runners quét độc lập mã nguồn (AST) và gửi SBOM về Control Plane. Thời gian hoàn thành chỉ mất **~2 phút 45 giây** (Nhanh gấp **~6.4 lần** so với kịch bản xanh của pipeline cũ). API Control Plane không gặp tình trạng thắt nút cổ chai (bottleneck).
 - **Dung lượng & Truy vấn Database**: PostgreSQL 16 phình lên khoảng 2.37 GB sau khi nhận toàn bộ dữ liệu phụ thuộc và PURL của 23 services. Nhờ extension pg-semver, tốc độ truy vấn lỗ hổng (Zero-Day) cho toàn hệ sinh thái vẫn đạt phản hồi < 1 giây.
 - **Tỷ lệ giảm cảnh báo giả (Reachability)**: 
@@ -1865,12 +1865,12 @@ Thực nghiệm đã mở rộng phạm vi bằng cách kích hoạt một Pipel
 *Hình 13.3: DevGuard hoàn thành quét đồng thời 23 services trong 2m45s.*
 
 ![Quét cấu hình Kubernetes với Trivy trong mạng cô lập](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/github_actions_17m45s.png)
-*Hình 13.4: Pipeline cũ mất 17m45s khi ép chạy xanh 23 services.*
+*Hình 13.4: Pipeline cũ mất 17m45s khi bỏ qua kiểm tra an ninh trên 23 services.*
 
 ![Chạy Trivy Config trong container runner airgapped-net](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/benchmark_reachability_chart.png)
 *Hình 13.5: So sánh tỷ lệ giảm cảnh báo giả nhờ Reachability Analysis.*
 
-### 12.4. Kết quả A/B Benchmark CI/CD trên GitHub Actions
+### 13.4. Kết quả A/B Benchmark CI/CD trên GitHub Actions
 
 Bảng so sánh kỹ thuật chi tiết giữa 2 pipeline:
 
@@ -1892,13 +1892,13 @@ Bảng so sánh kỹ thuật chi tiết giữa 2 pipeline:
 
 ## Phần 14: Kết luận và lộ trình triển khai
 
-### 13.1. Kết luận
+### 14.1. Kết luận
 Thực nghiệm cho thấy:
 1. DevGuard hoạt động ổn định, tương thích với kiến trúc 23 Go Microservices hiện tại.
 2. Việc thay thế chuỗi công cụ rời rạc bằng Control Plane tập trung giúp nâng cao mức độ bảo mật chuỗi cung ứng và giải quyết được vấn đề cảnh báo giả (false positive) - nguyên nhân chính gây chặn pipeline phát hành.
 3. Đề tài kế thừa và vận dụng hiệu quả các tính năng của DevGuard, hoàn thiện quy trình kiểm soát an ninh tự động cho 23 Go microservices trên Kubernetes.
 
-### 13.2. Lộ trình triển khai
+### 14.2. Lộ trình triển khai
 
 ```mermaid
 gantt
