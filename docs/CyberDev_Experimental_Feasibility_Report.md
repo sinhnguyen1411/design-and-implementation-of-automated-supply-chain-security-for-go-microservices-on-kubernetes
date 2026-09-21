@@ -2,7 +2,7 @@
 
 # BÁO CÁO KHẢO SÁT & THỰC NGHIỆM DEVGUARD
 
-## ĐÁNH GIÁ NĂNG LỰC & ĐỊNH HƯỚNG MỞ RỘNG DEVGUARD CONTROL PLANE
+## ĐÁNH GIÁ & ĐỊNH HƯỚNG MỞ RỘNG DEVGUARD CONTROL PLANE
 
 ### Khảo sát kiến trúc DevGuard Control Plane và thực nghiệm ứng dụng an ninh chuỗi cung ứng trên hệ sinh thái 23 Go Microservices trên Kubernetes
 
@@ -39,7 +39,7 @@
 | **Phần 11** | **Thực nghiệm Cổng Kiểm soát Chất lượng An ninh Tập trung (Unified Quality Gate)**<br>11.1. Đặt vấn đề phân mảnh CI scripts \| 11.2. Cấu trúc Unified Quality Gate: Hợp nhất Kết quả Kiểm tra qua OASIS SARIF & VEX Engine \| 11.3. Cơ chế Triệt tiêu Cảnh báo Sai lệch (False Positive Mitigation): Distroless Nonroot & VEX Suppression \| 11.4. Kết quả Thực nghiệm A/B: Kịch bản Chặn Vi phạm (Exit Code 1) vs Kịch bản Cho phép (Exit Code 0) \| 11.5. Quản trị Tuân thủ Tập trung và Tích hợp Toàn diện trên DevGuard Web Dashboard \| 11.6. Thực nghiệm Rà soát Điểm Kiểm soát Chất lượng Tập trung trong Môi trường Cô lập Mạng 100% |
 | **Phần 12** | **Kiến trúc DevGuard và Định hướng Mở rộng Hệ sinh thái Microservices**<br>12.1. Tính năng 1: Static Reachability Analysis tự động sinh OpenVEX \| 12.2. Tính năng 2: Kubernetes In-Cluster Agent & Admission Controller \| 12.3. So sánh A/B trực tiếp trên GitHub Actions |
 | **Phần 13** | **So sánh Định lượng & Đánh giá Hiệu năng Hệ thống trên 23 Go Microservices**<br>13.1. So sánh tính năng \| 13.2. So sánh hiệu quả vận hành \| 13.3. Benchmark chuyên sâu: Khả năng chịu tải (Load Test) với 23 Services \| 13.4. Kết quả A/B Benchmark CI/CD trên GitHub Actions |
-| **Phần 14** | **Kết luận và Định hướng Phát triển (Conclusion & Future Work)**<br>14.1. Tổng kết 5 Thành tựu Kỹ thuật Cốt lõi \| 14.2. Đánh giá Giá trị Đóng góp Kỹ thuật của Đề tài \| 14.3. Định hướng Phát triển & Mở rộng Kế tiếp (Future Work) |
+| **Phần 14** | **Kết luận và Định hướng Phát triển (Conclusion & Future Work)**<br>14.1. Tổng kết Thành quả Thực nghiệm Toàn diện \| 14.2. Đánh giá Giá trị Đóng góp Kỹ thuật của Đề tài \| 14.3. Định hướng Phát triển & Mở rộng Kế tiếp (Future Work) |
 | | **Tài liệu tham khảo chuyên ngành (NIST SP 800-218 SSDF, SLSA v1.0, In-Toto, CycloneDX, OpenVEX, NTIA)** |
 
 ---
@@ -1897,16 +1897,16 @@ Bảng so sánh kỹ thuật chi tiết giữa 2 pipeline:
 
 ## Phần 14: Kết luận và Định hướng Phát triển (Conclusion & Future Work)
 
-### 14.1. Tổng kết 5 Thành tựu Kỹ thuật Cốt lõi
-Nghiên cứu đã hiện thực hóa thành công và kiểm chứng định lượng toàn diện nền tảng an ninh chuỗi cung ứng phần mềm (SSCS) dựa trên DevGuard Control Plane cho kiến trúc 23 Go Microservices trên Kubernetes. Báo cáo ghi nhận 5 thành tựu kỹ thuật cốt lõi:
-- **Hiện thực hóa trọn vẹn 10 trụ cột an ninh:** Tích hợp đồng bộ từ SCA, SAST (Opengrep native), Secret Scanning (Gitleaks native), IaC Security (Trivy Config), Container Security (Trivy Image & Hadolint Dockerfile AST), DAST (Nuclei runtime), Chữ ký số Cosign & Tiêu chuẩn SLSA v1.0, In-line Dependency Firewall Proxy, cho tới Cổng chính sách tập trung Unified Quality Gate.
+### 14.1. Tổng kết Thành quả Thực nghiệm Toàn diện
+Đã kiểm chứng định lượng toàn diện nền tảng an ninh chuỗi cung ứng phần mềm (SSCS) dựa trên DevGuard Control Plane cho kiến trúc 23 Go Microservices trên Kubernetes. Báo cáo ghi nhận 5 thành tựu kỹ thuật cốt lõi:
+- **Hiện thực 10 trụ cột an ninh:** Tích hợp đồng bộ từ SCA, SAST (Opengrep native), Secret Scanning (Gitleaks native), IaC Security (Trivy Config), Container Security (Trivy Image & Hadolint Dockerfile AST), DAST (Nuclei runtime), Chữ ký số Cosign & Tiêu chuẩn SLSA v1.0, In-line Dependency Firewall Proxy, cho tới Cổng chính sách tập trung Unified Quality Gate.
 - **Khả năng vận hành độc lập trong mạng cô lập (Air-Gapped Zero-Trust):** 100% các công cụ kiểm tra và Control Plane đều hoạt động ngoại tuyến, sử dụng cơ sở dữ liệu lỗ hổng và bộ quy tắc offline được đóng gói sẵn, không gửi dữ liệu ra Internet và bảo đảm an toàn tuyệt đối cho môi trường nội bộ doanh nghiệp.
 - **Đột phá phòng thủ chủ động với In-line Dependency Firewall Proxy:** Chuyển dịch thành công từ cơ chế hậu kiểm sang tiền kiểm, chặn đứng 100% mã độc thực tế (OSV MAL-*) ngay khi lệnh tải phát sinh, loại bỏ hoàn toàn rủi ro xâm nhập của tệp độc hại về máy trạm phát triển (Pre-Execution Infection) kết hợp cơ chế cách ly gói thư viện mới phát hành 48 giờ chống Repojacking.
 - **Triệt tiêu triệt để cảnh báo sai lệch (False Positives):** Sự phối hợp giữa Distroless Nonroot base image, Reachability Analysis và VEX Rule Engine đã giải quyết bài toán nhức nhối nhất của quy trình CI/CD truyền thống, giữ tỷ lệ vượt qua cổng an ninh đạt 100% trên các bản dựng hợp lệ mà không thỏa hiệp an ninh.
 - **Tối ưu hóa tài nguyên và hiệu năng vượt trội:** Rút ngắn thời gian kiểm tra đồng thời toàn bộ 23 microservices từ 17 phút 45 giây xuống còn 2 phút 45 giây (nhanh gấp ~6.4 lần), tiết kiệm đáng kể thời gian và chi phí vận hành hạ tầng CI/CD.
 
 ### 14.2. Đánh giá Giá trị Đóng góp Kỹ thuật của Đề tài
-Đề tài không dừng lại ở việc áp dụng công cụ đơn lẻ mà đã xây dựng một kiến trúc tham chiếu hoàn chỉnh cho an ninh phần mềm doanh nghiệp: (1) Thay thế chuỗi script phân mảnh bằng Control Plane tập trung chuẩn hóa OASIS SARIF và CycloneDX SBOM; (2) Thiết lập bộ kiểm thử tự động hóa (Test Harness) với 11 tệp dữ liệu đo đạc định lượng JSON và minh chứng thực tế 100% có thể kiểm chứng độc lập.
+Không dừng lại ở việc áp dụng công cụ đơn lẻ mà đã xây dựng một kiến trúc tham chiếu hoàn chỉnh cho an ninh phần mềm doanh nghiệp: (1) Thay thế chuỗi script phân mảnh bằng Control Plane tập trung chuẩn hóa OASIS SARIF và CycloneDX SBOM; (2) Thiết lập bộ kiểm thử tự động hóa (Test Harness) với 11 tệp dữ liệu đo đạc định lượng JSON và minh chứng thực tế 100% có thể kiểm chứng độc lập.
 
 ### 14.3. Định hướng Phát triển & Mở rộng Kế tiếp (Future Work)
 Từ nền tảng thực nghiệm vững chắc đã đạt được, hệ thống mở ra các hướng phát triển chuyên sâu tiếp theo:
