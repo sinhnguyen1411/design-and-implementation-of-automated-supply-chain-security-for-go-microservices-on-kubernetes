@@ -1,0 +1,38 @@
+#!/bin/sh
+# DevGuard Git Pre-commit Hook for Vietnamese Technical Documentation
+
+echo "================================================================================"
+echo " [DevGuard Quality Gate] Kiểm tra Văn phong Kỹ thuật & Thuật ngữ Tiếng Việt..."
+echo "================================================================================"
+
+# Lấy danh sách các tệp Markdown đang được stage trong thư mục docs/
+STAGED_DOCS=$(git diff --cached --name-only --diff-filter=ACM | grep -E '^docs/.*\.md$')
+
+if [ -z "$STAGED_DOCS" ]; then
+    echo " [+] Không có tài liệu markdown nào trong docs/ thay đổi. Bỏ qua kiểm tra."
+    exit 0
+fi
+
+FAILED=0
+for file in $STAGED_DOCS; do
+    if [ -f "$file" ]; then
+        echo " -> Đang kiểm tra: $file"
+        python scripts/lint_vietnamese_report.py "$file"
+        if [ $? -ne 0 ]; then
+            FAILED=1
+        fi
+    fi
+done
+
+if [ $FAILED -ne 0 ]; then
+    echo ""
+    echo " [LỖI NGHIÊM TRỌNG] Commit bị từ chối do vi phạm quy chuẩn văn phong tiếng Việt!"
+    echo " Vui lòng xem dòng vi phạm chi tiết ở trên và sửa lại, hoặc chạy lệnh sau để tự động sửa:"
+    echo "   python scripts/lint_vietnamese_report.py docs/CyberDev_Experimental_Feasibility_Report.md --fix"
+    echo "================================================================================"
+    exit 1
+fi
+
+echo " [+] TẤT CẢ TÀI LIỆU TIẾNG VIỆT ĐỀU ĐẠT CHUẨN HỌC THUẬT DEVGUARD (0 LỖI)!"
+echo "================================================================================"
+exit 0

@@ -1,0 +1,45 @@
+name: DevGuard Documentation & Vietnamese Prose Quality Gate
+
+on:
+  push:
+    branches:
+      - main
+      - 'feat/**'
+      - 'feature/**'
+    paths:
+      - 'docs/**'
+      - 'scripts/lint_vietnamese_report.py'
+      - 'scripts/verify_multi_format_sync.py'
+      - '.github/workflows/docs-vietnamese-quality-gate.yml'
+  pull_request:
+    branches:
+      - main
+      - 'feat/**'
+    paths:
+      - 'docs/**'
+      - 'scripts/lint_vietnamese_report.py'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint-vietnamese-prose:
+    name: Lint Vietnamese Technical Prose & Typography
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run DevGuard Vietnamese Academic Prose Linter
+        run: |
+          python scripts/lint_vietnamese_report.py docs/CyberDev_Experimental_Feasibility_Report.md --github-annotation
+
+      - name: Verify Multi-Format & Telemetry Integrity
+        run: |
+          python scripts/verify_multi_format_sync.py
