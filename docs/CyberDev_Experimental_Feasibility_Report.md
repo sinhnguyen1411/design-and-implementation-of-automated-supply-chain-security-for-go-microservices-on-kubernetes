@@ -28,18 +28,18 @@
 | :--- | :--- |
 | **Phần 1** | **Thiết lập hạ tầng máy chủ Control Plane tập trung (On-Premise Server)**<br>1.1. Kiến trúc nền tảng DevGuard (upstream) \| 1.2. Thiết lập Môi trường Đóng gói và Khởi tạo Hạ tầng Control Plane \| 1.3. Môi trường Quản trị & Cơ chế Cấp phát Personal Access Token (PAT) |
 | **Phần 2** | **Tích hợp Control Plane vào Pipeline Hybrid Cloud CI/CD (GitHub Actions)**<br>2.1. Hiện trạng chuỗi pipeline an ninh nguyên bản (ci-service.yml) \| 2.2. Thực nghiệm PoC: Chuỗi Pipeline CI/CD Kết nối DevGuard Control Plane \| 2.3. Kết quả thực nghiệm trên GitHub Actions và Dashboard |
-| **Phần 3** | **Kiểm chứng vận hành Scanner trong Môi trường Air-Gapped 100% (Zero-Trust)**<br>3.1. Đặt vấn đề & Tiêu chuẩn Zero-Trust \| 3.2. Kiến trúc Phòng vệ Đa tầng & Harness Kiểm chứng \| 3.3. Cấu hình Docker Internal \| 3.4. Cung ứng Binary Offline \| 3.5. Thử nghiệm So sánh A/B khi Ngắt mạng \| 3.6. Bảng ma trận đối chiếu \| 3.7. Dashboard Offline |
-| **Phần 4** | **Thực nghiệm PoC Trụ cột SAST & Tích hợp Opengrep Engine**<br>4.1. Vấn đề bản quyền Semgrep và lý do chọn Opengrep \| 4.2. Kiến trúc Adapter DevGuard Scanner \| 4.3. Bộ 5 kịch bản PoC Go Microservices \| 4.4. Đo đạc định lượng, Chuẩn hóa SARIF & Policy Gate |
-| **Phần 5** | **Thực nghiệm PoC Trụ cột Secret Scanning & Tích hợp Gitleaks Engine**<br>5.1. Thách thức rò rỉ secret \| 5.2. Kiến trúc Adapter Gitleaks \| 5.3. Quét baseline & rò rỉ \| 5.4. Obfuscation & Policy Gate |
-| **Phần 6** | **Thực nghiệm PoC Trụ cột IaC Security & Tích hợp Trivy Config Engine**<br>6.1. Nguy cơ lỗi cấu hình K8s \| 6.2. Kiến trúc Adapter Trivy & Checkov \| 6.3. Quét K8s manifests \| 6.4. SARIF & Dashboard \| 6.5. Thực nghiệm Rà soát IaC Security Độc lập trong Môi trường Cô lập Mạng 100% |
-| **Phần 7** | **Thực nghiệm PoC Trụ cột Container Security: Trivy Image Engine & Hadolint Dockerfile AST Linter**<br>7.1. Bề mặt tấn công OS packages \| 7.2. Kiến trúc Adapter Container Scanning \| 7.3. Quét đối chứng Debian vs Distroless \| 7.4. SARIF & Dashboard \| 7.5. Môi trường Mạng Cô lập 100% \| 7.6. Tích hợp Hadolint AST Dockerfile Linter & Thực nghiệm A/B trên 23 Go Microservices |
-| **Phần 8** | **Thực nghiệm PoC Trụ cột DAST & Tích hợp Nuclei Engine**<br>8.1. Giới hạn kiểm thử tĩnh & Nhu cầu DAST \| 8.2. Kiến trúc Adapter Nuclei \| 8.3. Quét runtime user-service (:8081) \| 8.4. SARIF, Dashboard & So sánh ZAP \| 8.5. Thực nghiệm Rà soát DAST Độc lập trong Môi trường Cô lập Mạng 100% |
-| **Phần 9** | **Thực nghiệm PoC Trụ cột Supply Chain Security, Tiêu chuẩn SLSA v1.0 & Chữ ký số Cosign**<br>9.1. Đặt vấn đề nguy cơ chuỗi cung ứng \| 9.2. Kiến trúc Cosign & SLSA v1.0 \| 9.3. Ký số binary & Phát hiện giả mạo \| 9.4. Nạp Attestation lên Control Plane \| 9.5. OPA Rego Policy Gate \| 9.6. Thực nghiệm Ký số Cosign & Tạo Chứng thực SLSA v1.0 Độc lập trong Môi trường Cô lập Mạng 100% |
-| **Phần 10** | **Thực nghiệm PoC Trụ cột Dependency Firewall & Ngăn chặn Mã độc Chủ động**<br>10.1. Tại sao cần Dependency Firewall thay vì chỉ quét sau khi tải? \| 10.2. Cơ chế Hoạt động của DevGuard Dependency Firewall In-line Proxy \| 10.3. Kết quả Thực nghiệm: Chặn Trực tiếp Gói Độc hại & So sánh Đối chứng 3 Kịch bản (A / B / C) \| 10.4. Ma trận Kiểm tra An ninh Thư viện trên Toàn bộ 23 Go Microservices \| 10.5. Quản trị Cấu hình Proxy và Giám sát Rủi ro Thư viện trên DevGuard Web UI |
-| **Phần 11** | **Thực nghiệm PoC Trụ cột CI/CD Policy Gate & Cổng Kiểm tra An ninh Tập trung (Unified Quality Gate)**<br>11.1. Đặt vấn đề phân mảnh CI scripts \| 11.2. Cấu trúc Unified Quality Gate: Hợp nhất Kết quả Kiểm tra qua OASIS SARIF & VEX Engine \| 11.3. Cơ chế Triệt tiêu Cảnh báo Sai lệch (False Positive Mitigation): Distroless Nonroot & VEX Suppression \| 11.4. Kết quả Thực nghiệm A/B: Kịch bản Chặn Vi phạm (Exit Code 1) vs Kịch bản Cho phép (Exit Code 0) \| 11.5. Quản trị Tuân thủ Tập trung và Tích hợp Toàn diện trên DevGuard Web Dashboard \| 11.6. Thực nghiệm Rà soát Điểm Kiểm soát Chất lượng Tập trung trong Môi trường Cô lập Mạng 100% |
-| **Phần 12** | **Kiến trúc DevGuard và Định hướng Mở rộng Microservices**<br>12.1. Tính năng 1: Static Reachability Analysis tự động sinh OpenVEX \| 12.2. Tính năng 2: Kubernetes In-Cluster Agent & Admission Controller \| 12.3. So sánh A/B trực tiếp trên GitHub Actions |
-| **Phần 13** | **So sánh định lượng & Hiệu năng hệ thống**<br>13.1. So sánh tính năng \| 13.2. So sánh hiệu quả vận hành \| 13.3. Benchmark chuyên sâu: Khả năng chịu tải (Load Test) với 23 Services \| 13.4. Kết quả A/B Benchmark CI/CD trên GitHub Actions |
-| **Phần 14** | **Kết luận và Lộ trình triển khai**<br>14.1. Kết luận kỹ thuật \| 14.2. Lộ trình triển khai Giai đoạn 1 & Giai đoạn 2 |
+| **Phần 3** | **Thực nghiệm Vận hành Nền tảng DevGuard trong Môi trường Cô lập Mạng 100% (Air-Gapped Zero-Trust)**<br>3.1. Đặt vấn đề & Tiêu chuẩn Zero-Trust \| 3.2. Kiến trúc Phòng vệ Đa tầng & Harness Kiểm chứng \| 3.3. Cấu hình Docker Internal \| 3.4. Cung ứng Binary Offline \| 3.5. Thử nghiệm So sánh A/B khi Ngắt mạng \| 3.6. Bảng ma trận đối chiếu \| 3.7. Dashboard Offline |
+| **Phần 4** | **Thực nghiệm An toàn Mã nguồn Tĩnh (SAST) với Opengrep Native**<br>4.1. Vấn đề bản quyền Semgrep và lý do chọn Opengrep \| 4.2. Kiến trúc Adapter DevGuard Scanner \| 4.3. Bộ 5 kịch bản PoC Go Microservices \| 4.4. Đo đạc định lượng, Chuẩn hóa SARIF & Policy Gate |
+| **Phần 5** | **Thực nghiệm Quét Rò rỉ Thông tin Bí mật (Secret Scanning) với Gitleaks Native**<br>5.1. Thách thức rò rỉ secret \| 5.2. Kiến trúc Adapter Gitleaks \| 5.3. Quét baseline & rò rỉ \| 5.4. Obfuscation & Policy Gate |
+| **Phần 6** | **Thực nghiệm An toàn Cấu hình Hạ tầng (IaC Security) với Trivy Config Engine trên Kubernetes Manifests**<br>6.1. Nguy cơ lỗi cấu hình K8s \| 6.2. Kiến trúc Adapter Trivy & Checkov \| 6.3. Quét K8s manifests \| 6.4. SARIF & Dashboard \| 6.5. Thực nghiệm Rà soát IaC Security Độc lập trong Môi trường Cô lập Mạng 100% |
+| **Phần 7** | **Thực nghiệm An toàn Container Image với Trivy Image và Hadolint Dockerfile AST Linter**<br>7.1. Bề mặt tấn công OS packages \| 7.2. Kiến trúc Adapter Container Scanning \| 7.3. Quét đối chứng Debian vs Distroless \| 7.4. SARIF & Dashboard \| 7.5. Môi trường Mạng Cô lập 100% \| 7.6. Tích hợp Hadolint AST Dockerfile Linter & Thực nghiệm A/B trên 23 Go Microservices |
+| **Phần 8** | **Thực nghiệm Kiểm thử Động Ứng dụng (DAST) với Nuclei Engine trên Microservices Runtime**<br>8.1. Giới hạn kiểm thử tĩnh & Nhu cầu DAST \| 8.2. Kiến trúc Adapter Nuclei \| 8.3. Quét runtime user-service (:8081) \| 8.4. SARIF, Dashboard & So sánh ZAP \| 8.5. Thực nghiệm Rà soát DAST Độc lập trong Môi trường Cô lập Mạng 100% |
+| **Phần 9** | **Thực nghiệm An toàn Chuỗi Cung ứng (Supply Chain Security), Tiêu chuẩn SLSA v1.0 và Chữ ký số Cosign**<br>9.1. Đặt vấn đề nguy cơ chuỗi cung ứng \| 9.2. Kiến trúc Cosign & SLSA v1.0 \| 9.3. Ký số binary & Phát hiện giả mạo \| 9.4. Nạp Attestation lên Control Plane \| 9.5. OPA Rego Policy Gate \| 9.6. Thực nghiệm Ký số Cosign & Tạo Chứng thực SLSA v1.0 Độc lập trong Môi trường Cô lập Mạng 100% |
+| **Phần 10** | **Thực nghiệm Trụ cột Dependency Firewall & Ngăn chặn Mã độc Chủ động**<br>10.1. Tại sao cần Dependency Firewall thay vì chỉ quét sau khi tải? \| 10.2. Cơ chế Hoạt động của DevGuard Dependency Firewall In-line Proxy \| 10.3. Kết quả Thực nghiệm: Chặn Trực tiếp Gói Độc hại & So sánh Đối chứng 3 Kịch bản (A / B / C) \| 10.4. Ma trận Kiểm tra An ninh Thư viện trên Toàn bộ 23 Go Microservices \| 10.5. Quản trị Cấu hình Proxy và Giám sát Rủi ro Thư viện trên DevGuard Web UI |
+| **Phần 11** | **Thực nghiệm Cổng Kiểm soát Chất lượng An ninh Tập trung (Unified Quality Gate)**<br>11.1. Đặt vấn đề phân mảnh CI scripts \| 11.2. Cấu trúc Unified Quality Gate: Hợp nhất Kết quả Kiểm tra qua OASIS SARIF & VEX Engine \| 11.3. Cơ chế Triệt tiêu Cảnh báo Sai lệch (False Positive Mitigation): Distroless Nonroot & VEX Suppression \| 11.4. Kết quả Thực nghiệm A/B: Kịch bản Chặn Vi phạm (Exit Code 1) vs Kịch bản Cho phép (Exit Code 0) \| 11.5. Quản trị Tuân thủ Tập trung và Tích hợp Toàn diện trên DevGuard Web Dashboard \| 11.6. Thực nghiệm Rà soát Điểm Kiểm soát Chất lượng Tập trung trong Môi trường Cô lập Mạng 100% |
+| **Phần 12** | **Kiến trúc DevGuard và Định hướng Mở rộng Hệ sinh thái Microservices**<br>12.1. Tính năng 1: Static Reachability Analysis tự động sinh OpenVEX \| 12.2. Tính năng 2: Kubernetes In-Cluster Agent & Admission Controller \| 12.3. So sánh A/B trực tiếp trên GitHub Actions |
+| **Phần 13** | **So sánh Định lượng & Đánh giá Hiệu năng Hệ thống trên 23 Go Microservices**<br>13.1. So sánh tính năng \| 13.2. So sánh hiệu quả vận hành \| 13.3. Benchmark chuyên sâu: Khả năng chịu tải (Load Test) với 23 Services \| 13.4. Kết quả A/B Benchmark CI/CD trên GitHub Actions |
+| **Phần 14** | **Kết luận và Định hướng Phát triển (Conclusion & Future Work)**<br>14.1. Tổng kết 5 Thành tựu Kỹ thuật Cốt lõi \| 14.2. Đánh giá Giá trị Đóng góp Kỹ thuật của Đề tài \| 14.3. Định hướng Phát triển & Mở rộng Kế tiếp (Future Work) |
 | | **Tài liệu tham khảo chuyên ngành (NIST SP 800-218 SSDF, SLSA v1.0, In-Toto, CycloneDX, OpenVEX, NTIA)** |
 
 ---
@@ -122,7 +122,6 @@
 | **Hình 13.3** | DevGuard hoàn thành quét đồng thời 23 services trong 2m45s |
 | **Hình 13.4** | Pipeline truyền thống (ci-service.yml) mất 17m45s khi bỏ qua kiểm tra an ninh trên 23 services |
 | **Hình 13.5** | So sánh mức độ triệt tiêu cảnh báo sai lệch (False Positives) nhờ Reachability Analysis |
-| **Hình 14.1** | Biểu đồ Gantt lộ trình tích hợp an ninh DevGuard cho 23 services |
 
 ---
 
@@ -368,7 +367,7 @@ Mỗi bản dựng phần mềm được gán định danh chuẩn hóa theo đ�
 
 ---
 
-## Phần 3: Vận hành Nền tảng DevGuard trong Môi trường Mạng Cô lập 100% (Air-Gapped Zero-Trust)
+## Phần 3: Thực nghiệm Vận hành Nền tảng DevGuard trong Môi trường Cô lập Mạng 100% (Air-Gapped Zero-Trust)
 
 ### 3.1. Đặt vấn đề, Tiêu chuẩn Phòng thủ Zero-Trust & Yêu cầu Môi trường Mạng Cô lập Air-Gapped
 Trong các tổ chức tài chính, ngân hàng, cơ quan chính phủ và các hệ thống hạ tầng thông tin trọng yếu quốc gia, quy trình phát triển và vận hành an ninh phần mềm (DevSecOps) bắt buộc phải tuân thủ nghiêm ngặt các quy chuẩn về phân vùng mạng cô lập:
@@ -478,7 +477,7 @@ Giao diện Web Dashboard của DevGuard (`http://localhost:3000`) vận hành �
 
 ---
 
-## Phần 4: Thực nghiệm 3 - Đánh giá Trụ cột SAST và Tích hợp Opengrep Native trên Go Microservices
+## Phần 4: Thực nghiệm An toàn Mã nguồn Tĩnh (SAST) với Opengrep Native
 
 ### 4.1. Đặt vấn đề, Khủng hoảng Giấy phép Semgrep & Lập luận Chuyển dịch Tất yếu sang Opengrep
 Trong kiến trúc nguyên bản ban đầu của giải pháp DevGuard thượng nguồn (upstream), trụ cột Static Application Security Testing (SAST) được thiết kế phụ thuộc vào công cụ Semgrep CLI thông qua lệnh thực thi `os/exec` (`core/cmd/devguard-scanner/commands/sast.go`). Tuy nhiên, qua quá trình nghiên cứu, khảo sát và thực nghiệm triển khai thực tế trên hệ thống 23 Microservices viết bằng ngôn ngữ Go trong môi trường doanh nghiệp có yêu cầu an ninh cao, nhóm đề tài nhận định việc tiếp tục sử dụng Semgrep tiềm ẩn nhiều rủi ro nghiêm trọng và đã chủ động đưa ra quyết định kiến trúc: **Từ bỏ hoàn toàn Semgrep upstream để chuyển dịch dứt khoát sang Opengrep Native Engine**.
@@ -678,7 +677,7 @@ Khác với Semgrep CLI mặc định luôn cố gắng kết nối tới Semgre
 
 ---
 
-## Phần 5: Thực nghiệm 4 - Đánh giá Trụ cột Secret Scanning và Tích hợp Gitleaks Native trên Go Microservices
+## Phần 5: Thực nghiệm Quét Rò rỉ Thông tin Bí mật (Secret Scanning) với Gitleaks Native
 
 ### 5.1. Đặt vấn đề & Thách thức An ninh Rò rỉ Thông tin Xác thực (Secret Leaks)
 Rò rỉ khóa bí mật (API Keys, Token truy cập, Mật khẩu cơ sở dữ liệu, Private Keys) trong mã nguồn là một trong những nguyên nhân hàng đầu dẫn đến các vụ xâm nhập hệ thống nghiêm trọng (OWASP Top 10 - A07: Identification and Authentication Failures). Trong kiến trúc Microservices với 23 dịch vụ phân tán, nguy cơ này càng tăng cao:
@@ -788,7 +787,7 @@ Khác với các công cụ SaaS rà quét bí mật trên đám mây đòi hỏ
 
 ---
 
-## Phần 6: Thực nghiệm 5 - Đánh giá Trụ cột IaC Security (Infrastructure as Code) và Tích hợp Trivy Config Engine trên Kubernetes Manifests
+## Phần 6: Thực nghiệm An toàn Cấu hình Hạ tầng (IaC Security) với Trivy Config Engine trên Kubernetes Manifests
 
 ### 6.1. Đặt vấn đề & Nguy cơ từ Lỗi Cấu hình Hạ tầng Kubernetes (IaC Misconfigurations)
 Trong kiến trúc triển khai Microservices trên nền tảng Kubernetes (K8s), mã hạ tầng (Infrastructure as Code - IaC) bao gồm các tệp `deployment.yaml`, `service.yaml`, `configmap.yaml`, `kustomization.yaml` và `Dockerfile` đóng vai trò bản thiết kế quyết định mức độ phơi nhiễm an ninh của hệ thống tại thời gian chạy (runtime).
@@ -908,7 +907,7 @@ Khác với các công cụ IaC scanner truyền thống như Checkov (phụ thu
 > **Mở rộng Kiểm soát An ninh Cấu hình Hạ tầng (IaC) sang Dockerfile AST:**  
 > Bên cạnh việc rà soát Kubernetes Manifests bằng Trivy Config, việc phân tích cú pháp tĩnh tệp `Dockerfile` theo chuẩn CIS Docker Benchmark v1.6.0 và NIST SP 800-190 được tích hợp chuyên sâu qua động cơ **Hadolint v2.12.0** và được kiểm chứng định lượng A/B Benchmark trên 23 vi dịch vụ tại **Mục 7.6**.
 
-## Phần 7: Thực nghiệm 6 - Đánh giá Trụ cột Container Security: Tích hợp Trivy Image Engine & Hadolint Dockerfile AST Linter
+## Phần 7: Thực nghiệm An toàn Container Image với Trivy Image và Hadolint Dockerfile AST Linter
 
 ### 7.1. Đặt vấn đề & Nguy cơ từ Bề mặt Tấn công của Container Image (Container Vulnerability & Attack Surface Bloat)
 Trong quy trình phát triển và đóng gói vi dịch vụ (Microservices), Container Image là đơn vị đóng gói và phân phối thực thi trực tiếp trên cụm Kubernetes. Tuy nhiên, cách thức xây dựng Dockerfile truyền thống thường mang lại những nguy cơ an ninh nghiêm trọng:
@@ -1158,7 +1157,7 @@ Hệ thống thiết lập tệp cấu hình chuẩn hóa `.hadolint.yaml` đặ
 
 ---
 
-## Phần 8: Thực nghiệm 7 - Đánh giá Trụ cột DAST (Dynamic Application Security Testing) và Tích hợp Nuclei Engine trên Microservices Runtime
+## Phần 8: Thực nghiệm Kiểm thử Động Ứng dụng (DAST) với Nuclei Engine trên Microservices Runtime
 
 ### 8.1. Đặt vấn đề & Sự cần thiết của DAST trong Kiến trúc Microservices
 Trong chuỗi cung ứng phần mềm hiện đại, các trụ cột kiểm thử tĩnh và đóng gói (SAST, Secret Scanning, IaC Security, Container Security) đóng vai trò cực kỳ quan trọng trong việc bảo vệ mã nguồn và môi trường trước khi triển khai. Tuy nhiên, các kỹ thuật kiểm thử tĩnh hoàn toàn bất lực trước những rủi ro an ninh phát sinh độc quyền tại thời gian chạy (Runtime):
@@ -1274,7 +1273,7 @@ Khác với các công cụ DAST truyền thống như OWASP ZAP (đòi hỏi Ja
 
 ---
 
-## Phần 9: Thực nghiệm 8 - Đánh giá Trụ cột Supply Chain Security, Tiêu chuẩn SLSA v1.0 & Chữ ký số Cosign
+## Phần 9: Thực nghiệm An toàn Chuỗi Cung ứng (Supply Chain Security), Tiêu chuẩn SLSA v1.0 và Chữ ký số Cosign
 
 ### 9.1. Đặt vấn đề & Nguy cơ Tấn công Chuỗi Cung ứng Phần mềm (Supply Chain Threats & Untrusted Binaries)
 Trong chuỗi cung ứng phần mềm Cloud-Native hiện đại, các cuộc tấn công không còn giới hạn ở việc khai thác lỗ hổng trong mã nguồn ứng dụng mà đã dịch chuyển mạnh mẽ sang việc xâm nhập và phá hoại tính toàn vẹn (tampering) chính quy trình xây dựng (build pipeline), hệ thống máy chủ tích hợp liên tục (CI workers) và các phần mềm trung gian (artifacts):
@@ -1417,7 +1416,7 @@ Khác với mô hình Sigstore Cloud SaaS công cộng (phụ thuộc vào máy 
 
 ---
 
-## Phần 10: Thực nghiệm PoC Trụ cột Dependency Firewall & Ngăn chặn Mã độc Chủ động
+## Phần 10: Thực nghiệm Trụ cột Dependency Firewall & Ngăn chặn Mã độc Chủ động
 
 ### 10.1. Tại sao cần Dependency Firewall thay vì chỉ quét sau khi tải?
 Trước đây, các công cụ quét an toàn thư viện (SCA) thường hoạt động theo cơ chế "hậu kiểm": lập trình viên hoặc máy chủ CI chạy lệnh `go get` hoặc `go mod download` để tải toàn bộ mã nguồn thư viện về máy trạm trước, sau đó mới tiến hành quét tệp `go.sum` hoặc SBOM để đối soát lỗ hổng CVE.
@@ -1557,7 +1556,7 @@ Không chỉ vận hành ở mức in-line proxy dòng lệnh qua biến môi tr
 
 ---
 
-## Phần 11: Thực nghiệm 10 - Đánh giá Trụ cột CI/CD Policy Gate & Cổng Kiểm tra An ninh Tập trung (Unified Quality Gate)
+## Phần 11: Thực nghiệm Cổng Kiểm soát Chất lượng An ninh Tập trung (Unified Quality Gate)
 
 ### 11.1. Đặt vấn đề & Hạn chế khi dùng nhiều script kiểm tra an ninh phân tán (The CI/CD Policy Gate Fragmentation Crisis)
 Trong các kiến trúc CI/CD truyền thống triển khai cho hệ thống Microservices, việc thực thi chính sách an ninh (Security Quality Gate) thường rơi vào tình trạng phân mảnh và thiếu nhất quán nghiêm trọng:
@@ -1712,7 +1711,7 @@ Toàn bộ thông số đo đạc kỹ thuật đã được kết xuất ra t�
 
 ---
 
-## Phần 12: Kiến trúc DevGuard và định hướng mở rộng cho hệ sinh thái Microservices
+## Phần 12: Kiến trúc DevGuard và Định hướng Mở rộng Hệ sinh thái Microservices
 
 DevGuard cung cấp 2 tính năng trọng tâm mà đề tài kế thừa và phát huy hiệu quả trên hạ tầng Kubernetes:
 
@@ -1820,7 +1819,7 @@ Theo khẳng định tại Step Summary của bài kiểm tra Benchmark: *"Toàn
 
 ---
 
-## Phần 13: So sánh định lượng & Hiệu năng
+## Phần 13: So sánh Định lượng & Đánh giá Hiệu năng Hệ thống trên 23 Go Microservices
 
 ### 13.1. So sánh tính năng
 
@@ -1896,29 +1895,24 @@ Bảng so sánh kỹ thuật chi tiết giữa 2 pipeline:
 
 ---
 
-## Phần 14: Kết luận và lộ trình triển khai
+## Phần 14: Kết luận và Định hướng Phát triển (Conclusion & Future Work)
 
-### 14.1. Kết luận
-Thực nghiệm cho thấy:
-1. DevGuard hoạt động ổn định, tương thích với kiến trúc 23 Go Microservices hiện tại.
-2. Việc thay thế chuỗi công cụ rời rạc bằng Control Plane tập trung giúp nâng cao mức độ bảo mật chuỗi cung ứng và giải quyết được vấn đề cảnh báo sai lệch (False Positives) (false positive) - nguyên nhân chính gây chặn pipeline phát hành.
-3. Đề tài kế thừa và vận dụng hiệu quả các tính năng của DevGuard, hoàn thiện quy trình kiểm soát an ninh tự động cho 23 Go microservices trên Kubernetes.
+### 14.1. Tổng kết 5 Thành tựu Kỹ thuật Cốt lõi
+Nghiên cứu đã hiện thực hóa thành công và kiểm chứng định lượng toàn diện nền tảng an ninh chuỗi cung ứng phần mềm (SSCS) dựa trên DevGuard Control Plane cho kiến trúc 23 Go Microservices trên Kubernetes. Báo cáo ghi nhận 5 thành tựu kỹ thuật cốt lõi:
+- **Hiện thực hóa trọn vẹn 10 trụ cột an ninh:** Tích hợp đồng bộ từ SCA, SAST (Opengrep native), Secret Scanning (Gitleaks native), IaC Security (Trivy Config), Container Security (Trivy Image & Hadolint Dockerfile AST), DAST (Nuclei runtime), Chữ ký số Cosign & Tiêu chuẩn SLSA v1.0, In-line Dependency Firewall Proxy, cho tới Cổng chính sách tập trung Unified Quality Gate.
+- **Khả năng vận hành độc lập trong mạng cô lập (Air-Gapped Zero-Trust):** 100% các công cụ kiểm tra và Control Plane đều hoạt động ngoại tuyến, sử dụng cơ sở dữ liệu lỗ hổng và bộ quy tắc offline được đóng gói sẵn, không gửi dữ liệu ra Internet và bảo đảm an toàn tuyệt đối cho môi trường nội bộ doanh nghiệp.
+- **Đột phá phòng thủ chủ động với In-line Dependency Firewall Proxy:** Chuyển dịch thành công từ cơ chế hậu kiểm sang tiền kiểm, chặn đứng 100% mã độc thực tế (OSV MAL-*) ngay khi lệnh tải phát sinh, loại bỏ hoàn toàn rủi ro xâm nhập của tệp độc hại về máy trạm phát triển (Pre-Execution Infection) kết hợp cơ chế cách ly gói thư viện mới phát hành 48 giờ chống Repojacking.
+- **Triệt tiêu triệt để cảnh báo sai lệch (False Positives):** Sự phối hợp giữa Distroless Nonroot base image, Reachability Analysis và VEX Rule Engine đã giải quyết bài toán nhức nhối nhất của quy trình CI/CD truyền thống, giữ tỷ lệ vượt qua cổng an ninh đạt 100% trên các bản dựng hợp lệ mà không thỏa hiệp an ninh.
+- **Tối ưu hóa tài nguyên và hiệu năng vượt trội:** Rút ngắn thời gian kiểm tra đồng thời toàn bộ 23 microservices từ 17 phút 45 giây xuống còn 2 phút 45 giây (nhanh gấp ~6.4 lần), tiết kiệm đáng kể thời gian và chi phí vận hành hạ tầng CI/CD.
 
-### 14.2. Lộ trình triển khai
+### 14.2. Đánh giá Giá trị Đóng góp Kỹ thuật của Đề tài
+Đề tài không dừng lại ở việc áp dụng công cụ đơn lẻ mà đã xây dựng một kiến trúc tham chiếu hoàn chỉnh cho an ninh phần mềm doanh nghiệp: (1) Thay thế chuỗi script phân mảnh bằng Control Plane tập trung chuẩn hóa OASIS SARIF và CycloneDX SBOM; (2) Thiết lập bộ kiểm thử tự động hóa (Test Harness) với 11 tệp dữ liệu đo đạc định lượng JSON và minh chứng thực tế 100% có thể kiểm chứng độc lập.
 
-```mermaid
-gantt
-    title Lộ trình tích hợp an ninh DevGuard cho 23 microservices
-    dateFormat  YYYY-MM-DD
-    section Giai đoạn 1: Triển khai PoC
-    Thiết lập Control Plane & Quét CI/CD toàn bộ services :done, p1, 2026-09-01, 2026-09-14
-    section Giai đoạn 2: Kiểm soát Kubernetes
-    Triển khai Admission Webhook & Nghiệm thu        :active, p2, 2026-09-15, 2026-09-30
-```
-*Hình 14.1: Biểu đồ Gantt lộ trình tích hợp an ninh DevGuard cho 23 services.*
-
-- **Giai đoạn 1 (Tuần 1-2) - Triển khai PoC:** Thiết lập Control Plane (kế thừa DevGuard) và tích hợp quét CI/CD đồng loạt cho toàn bộ 23 microservices. Đánh giá tính chịu tải của DB và API, kích hoạt Static Reachability để giảm cảnh báo sai lệch (False Positives).
-- **Giai đoạn 2 (Tuần 3-4) - Kiểm soát Kubernetes:** Cài k8s-agent Validating Admission Webhook trên Kubernetes Staging/Production để tự động chặn Pod vi phạm tại runtime, hoàn thành giai đoạn đánh giá và sẵn sàng cho môi trường production.
+### 14.3. Định hướng Phát triển & Mở rộng Kế tiếp (Future Work)
+Từ nền tảng thực nghiệm vững chắc đã đạt được, hệ thống mở ra các hướng phát triển chuyên sâu tiếp theo:
+- **Mở rộng Đa Hệ sinh thái Ngôn ngữ:** Phát triển các module proxy tương tự cho npm (Node.js), PyPI (Python) và Maven (Java) để bảo vệ toàn diện các hệ thống Microservices đa ngôn ngữ.
+- **Giám sát Hành vi Runtime Sâu với eBPF:** Tích hợp công nghệ eBPF (như Tetragon / Cilium) trên các cụm Kubernetes để đối chiếu SBOM tĩnh với các syscall/mạng thực tế tại runtime, phát hiện các cuộc tấn công Zero-Day xâm nhập tiến trình.
+- **Tự động hóa Sửa lỗi bằng Mô hình An ninh (Automated Remediation):** Tích hợp mô hình AI chuyên trách để tự động phân tích SARIF và tạo Pull Request đề xuất nâng cấp phiên bản thư viện an toàn hoặc sửa lỗi cấu hình Dockerfile/IaC một cách chuẩn xác.
 
 ---
 
