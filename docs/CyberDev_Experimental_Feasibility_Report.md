@@ -32,11 +32,11 @@
 | **Phần 4** | **Thực nghiệm PoC Trụ cột SAST & Tích hợp Opengrep Engine**<br>4.1. Vấn đề bản quyền Semgrep và lý do chọn Opengrep \| 4.2. Kiến trúc Adapter DevGuard Scanner \| 4.3. Bộ 5 kịch bản PoC Go Microservices \| 4.4. Đo đạc định lượng, Chuẩn hóa SARIF & Policy Gate |
 | **Phần 5** | **Thực nghiệm PoC Trụ cột Secret Scanning & Tích hợp Gitleaks Engine**<br>5.1. Thách thức rò rỉ secret \| 5.2. Kiến trúc Adapter Gitleaks \| 5.3. Quét baseline & rò rỉ \| 5.4. Obfuscation & Policy Gate |
 | **Phần 6** | **Thực nghiệm PoC Trụ cột IaC Security & Tích hợp Trivy Config Engine**<br>6.1. Nguy cơ lỗi cấu hình K8s \| 6.2. Kiến trúc Adapter Trivy & Checkov \| 6.3. Quét K8s manifests \| 6.4. SARIF & Dashboard \| 6.5. Thực nghiệm Rà soát IaC Security Độc lập trong Môi trường Cô lập Mạng 100% |
-| **Phần 7** | **Thực nghiệm PoC Trụ cột Container Security & Tích hợp Trivy Image Engine**<br>7.1. Bề mặt tấn công OS packages \| 7.2. Kiến trúc Adapter Container Scanning \| 7.3. Quét đối chứng Debian vs Distroless \| 7.4. SARIF & Dashboard \| 7.5. Thực nghiệm Rà soát Container Security Độc lập trong Môi trường Cô lập Mạng 100% \| 7.6. Tích hợp Hadolint AST Dockerfile Linter & Thực nghiệm A/B trên 23 Go Microservices |
+| **Phần 7** | **Thực nghiệm PoC Trụ cột Container Security: Trivy Image Engine & Hadolint Dockerfile AST Linter**<br>7.1. Bề mặt tấn công OS packages \| 7.2. Kiến trúc Adapter Container Scanning \| 7.3. Quét đối chứng Debian vs Distroless \| 7.4. SARIF & Dashboard \| 7.5. Môi trường Mạng Cô lập 100% \| 7.6. Tích hợp Hadolint AST Dockerfile Linter & Thực nghiệm A/B trên 23 Go Microservices |
 | **Phần 8** | **Thực nghiệm PoC Trụ cột DAST & Tích hợp Nuclei Engine**<br>8.1. Giới hạn kiểm thử tĩnh & Nhu cầu DAST \| 8.2. Kiến trúc Adapter Nuclei \| 8.3. Quét runtime user-service (:8081) \| 8.4. SARIF, Dashboard & So sánh ZAP \| 8.5. Thực nghiệm Rà soát DAST Độc lập trong Môi trường Cô lập Mạng 100% |
 | **Phần 9** | **Thực nghiệm PoC Trụ cột Supply Chain Security, Tiêu chuẩn SLSA v1.0 & Chữ ký số Cosign**<br>9.1. Đặt vấn đề nguy cơ chuỗi cung ứng \| 9.2. Kiến trúc Cosign & SLSA v1.0 \| 9.3. Ký số binary & Phát hiện giả mạo \| 9.4. Nạp Attestation lên Control Plane \| 9.5. OPA Rego Policy Gate \| 9.6. Thực nghiệm Ký số Cosign & Tạo Chứng thực SLSA v1.0 Độc lập trong Môi trường Cô lập Mạng 100% |
 | **Phần 10** | **Thực nghiệm PoC Trụ cột Dependency Firewall & Ngăn chặn Mã độc Chủ động**<br>10.1. Tại sao cần Dependency Firewall thay vì chỉ quét sau khi tải? \| 10.2. Cơ chế Hoạt động của DevGuard Dependency Firewall In-line Proxy \| 10.3. Kết quả Thực nghiệm: Chặn Trực tiếp Gói Độc hại & So sánh Đối chứng 3 Kịch bản (A / B / C) \| 10.4. Ma trận Kiểm tra An ninh Thư viện trên Toàn bộ 23 Go Microservices \| 10.5. Quản trị Cấu hình Proxy và Giám sát Rủi ro Thư viện trên DevGuard Web UI |
-| **Phần 11** | **Thực nghiệm PoC Trụ cột CI/CD Policy Gate & Cổng Kiểm tra An ninh Tập trung (Unified Quality Gate)**<br>11.1. Đặt vấn đề phân mảnh CI scripts \| 11.2. Cấu trúc Unified Quality Gate: Hợp nhất Kết quả Kiểm tra qua OASIS SARIF & VEX Engine \| 11.3. Cơ chế Giảm Cảnh báo Giả (False Positive Mitigation): Distroless Nonroot & VEX Suppression \| 11.4. Kết quả Thực nghiệm A/B: Kịch bản Chặn Vi phạm (Exit Code 1) vs Kịch bản Cho phép (Exit Code 0) \| 11.5. Quản trị Tuân thủ Tập trung và Tích hợp Toàn diện trên DevGuard Web Dashboard \| 11.6. Thực nghiệm Rà soát Điểm Kiểm soát Chất lượng Tập trung trong Môi trường Cô lập Mạng 100% |
+| **Phần 11** | **Thực nghiệm PoC Trụ cột CI/CD Policy Gate & Cổng Kiểm tra An ninh Tập trung (Unified Quality Gate)**<br>11.1. Đặt vấn đề phân mảnh CI scripts \| 11.2. Cấu trúc Unified Quality Gate: Hợp nhất Kết quả Kiểm tra qua OASIS SARIF & VEX Engine \| 11.3. Cơ chế Triệt tiêu Cảnh báo Sai lệch (False Positive Mitigation): Distroless Nonroot & VEX Suppression \| 11.4. Kết quả Thực nghiệm A/B: Kịch bản Chặn Vi phạm (Exit Code 1) vs Kịch bản Cho phép (Exit Code 0) \| 11.5. Quản trị Tuân thủ Tập trung và Tích hợp Toàn diện trên DevGuard Web Dashboard \| 11.6. Thực nghiệm Rà soát Điểm Kiểm soát Chất lượng Tập trung trong Môi trường Cô lập Mạng 100% |
 | **Phần 12** | **Kiến trúc DevGuard và Định hướng Mở rộng Microservices**<br>12.1. Tính năng 1: Static Reachability Analysis tự động sinh OpenVEX \| 12.2. Tính năng 2: Kubernetes In-Cluster Agent & Admission Controller \| 12.3. So sánh A/B trực tiếp trên GitHub Actions |
 | **Phần 13** | **So sánh định lượng & Hiệu năng hệ thống**<br>13.1. So sánh tính năng \| 13.2. So sánh hiệu quả vận hành \| 13.3. Benchmark chuyên sâu: Khả năng chịu tải (Load Test) với 23 Services \| 13.4. Kết quả A/B Benchmark CI/CD trên GitHub Actions |
 | **Phần 14** | **Kết luận và Lộ trình triển khai**<br>14.1. Kết luận kỹ thuật \| 14.2. Lộ trình triển khai Giai đoạn 1 & Giai đoạn 2 |
@@ -88,6 +88,7 @@
 | **Hình 7.5** | Chạy Trivy Image trong container runner airgapped-net |
 | **Hình 7.6** | Quét kiểm tra cú pháp Dockerfile AST với Hadolint trên PowerShell |
 | **Hình 7.7** | Cấu hình quy tắc an ninh .hadolint.yaml và kết quả phân tích AST trên Windows Terminal |
+| **Hình 7.8** | Biểu đồ đối chứng số lượng vi phạm AST và hiệu quả tối ưu hóa bản dựng Hadolint (Baseline vs Distroless Hardened) |
 | **Hình 8.1** | Quét live endpoint với Nuclei DAST trên PowerShell |
 | **Hình 8.2** | Quản lý rủi ro DAST trên Dashboard |
 | **Hình 8.3** | So sánh kiến trúc DAST: OWASP ZAP và Nuclei Offline |
@@ -119,8 +120,8 @@
 | **Hình 13.1** | Đánh giá tuân thủ ISO 27001 và BSI trên Dashboard |
 | **Hình 13.2** | So sánh thời gian chạy CI/CD khi tải đồng thời 23 services |
 | **Hình 13.3** | DevGuard hoàn thành quét đồng thời 23 services trong 2m45s |
-| **Hình 13.4** | Pipeline cũ mất 17m45s khi bỏ qua kiểm tra an ninh trên 23 services |
-| **Hình 13.5** | So sánh tỷ lệ giảm cảnh báo giả nhờ Reachability Analysis |
+| **Hình 13.4** | Pipeline truyền thống (ci-service.yml) mất 17m45s khi bỏ qua kiểm tra an ninh trên 23 services |
+| **Hình 13.5** | So sánh mức độ triệt tiêu cảnh báo sai lệch (False Positives) nhờ Reachability Analysis |
 | **Hình 14.1** | Biểu đồ Gantt lộ trình tích hợp an ninh DevGuard cho 23 services |
 
 ---
@@ -155,7 +156,7 @@
 | **Bảng 11.1** | Đặc tả cấu trúc OpenVEX Statement tự động |
 | **Bảng 11.2** | So sánh hiệu năng Policy Gate: Cloud Webhooks vs DevGuard |
 | **Bảng 12** | So sánh A/B Benchmark trên GitHub Actions |
-| **Bảng 13** | So sánh tính năng pipeline cũ và DevGuard Control Plane |
+| **Bảng 13** | So sánh năng lực vận hành giữa Pipeline truyền thống (ci-service.yml) và DevGuard Control Plane |
 | **Bảng 14** | So sánh chỉ số hiệu quả vận hành |
 | **Bảng 15** | So sánh kỹ thuật chi tiết trên 23 microservices |
 
@@ -186,7 +187,7 @@ Nhằm định hướng và đánh giá toàn diện năng lực của DevGuard 
 | Hạng mục An ninh | Khả năng hiện có của DevGuard | Kết quả kiểm thử thực tế trong đề tài |
 | :--- | :--- | :--- |
 | **1. SAST (Phân tích mã nguồn tĩnh)** | Hỗ trợ nạp và trực quan hóa báo cáo theo chuẩn quốc tế OASIS SARIF từ các công cụ phân tích tĩnh. | **Đạt yêu cầu:** Tích hợp thành công Opengrep vận hành trong môi trường cô lập 100%. Thực nghiệm trên `user-service` nhận diện chính xác cấu hình TLS 1.3 không an toàn, xuất báo cáo SARIF v2.1.0 chuẩn hóa và kích hoạt dừng pipeline kịp thời (Exit Code 1). |
-| **2. SCA (Quét thành phần phụ thuộc)** | Tự động phân tích các thành phần phụ thuộc, đối soát CVE, khởi tạo và quản lý đặc tả SBOM cùng tài liệu VEX. | **Đạt yêu cầu:** Tự động sinh đặc tả SBOM CycloneDX v1.6 cho toàn bộ 44 thư viện phụ thuộc của `user-service`, tra cứu cơ sở dữ liệu CVE nội bộ trên PostgreSQL, kết hợp OpenVEX Rule Engine loại bỏ cảnh báo giả đối với các hàm không khả dụng thực thi (Unreachable Code). |
+| **2. SCA (Quét thành phần phụ thuộc)** | Tự động phân tích các thành phần phụ thuộc, đối soát CVE, khởi tạo và quản lý đặc tả SBOM cùng tài liệu VEX. | **Đạt yêu cầu:** Tự động sinh đặc tả SBOM CycloneDX v1.6 cho toàn bộ 44 thư viện phụ thuộc của `user-service`, tra cứu cơ sở dữ liệu CVE nội bộ trên PostgreSQL, kết hợp OpenVEX Rule Engine loại bỏ cảnh báo sai lệch (False Positives) đối với các hàm không khả dụng thực thi (Unreachable Code). |
 | **3. Dependency Firewall** | Đóng vai trò In-line Proxy trung gian (`GOPROXY`), kiểm soát luồng dữ liệu thời gian thực, thực thi chính sách cấm và cách ly gói mới. | **Đạt yêu cầu:** Chặn đứng 100% gói mã độc và gói cấm theo chính sách; kích hoạt cơ chế cách ly (Cooldown Period 48 giờ) đối với gói mới nhằm phòng ngừa tấn công chiếm đoạt tài khoản nhà phát triển (maintainer account takeover); tích hợp bộ đệm nội bộ (LRU Cache) giúp tăng tốc độ phản hồi 44.6 lần; kiểm toán 23 microservices đạt chuẩn an toàn 100%. |
 | **4. Secret Scanning (Rà soát bí mật)** | Tích hợp engine chuyên dụng nhận diện khóa bí mật, token, mật khẩu và khóa riêng tư trong lịch sử mã nguồn. | **Đạt yêu cầu:** Tích hợp Gitleaks v8.30.1. Rà soát toàn bộ lịch sử 522 commit, phát hiện chính xác các API token và khóa riêng RSA bị lộ, tự động che giấu chuỗi nhạy cảm (Secret Masking) và ngăn chặn mã nguồn vi phạm (Exit Code 1). |
 | **5. IaC Security (An ninh hạ tầng)** | Thẩm định các lỗ hổng cấu hình trong Kubernetes manifests, Dockerfile và hạ tầng định nghĩa dưới dạng mã (IaC). | **Đạt yêu cầu:** Tích hợp Trivy Config và Hadolint vận hành offline. Phát hiện chính xác cấu hình thực thi với đặc quyền root trong Dockerfile và lỗi thiếu khai báo Namespace / bảo mật Secret trong Kubernetes manifest của `user-service`, ngăn chặn rủi ro trước khi triển khai. |
@@ -305,7 +306,7 @@ Sau khi hoàn tất cấu hình kỹ thuật và các bản vá tương thích, 
 Chuỗi kiểm thử an ninh ban đầu của hệ thống được định nghĩa trong tệp `.github/workflows/ci-service.yml` (757 dòng cấu hình), bao gồm 4 giai đoạn tuần tự:
 - **Khởi tạo SBOM (Syft / `anchore/sbom-action`):** Xuất tệp đặc tả `sbom.spdx.json` và lưu trữ phân tán trên GitHub Artifacts. Dữ liệu bị phân mảnh theo từng lần chạy riêng lẻ, thiếu vắng cơ sở dữ liệu tập trung để phục vụ truy vấn và đối soát chéo.
 - **Rà quét Lỗ hổng Bảo mật (Grype / `anchore/scan-action`):** Phân tích container image và kết xuất báo cáo `grype-report.json`. Hạn chế lớn nhất là công cụ không thể đánh giá được hàm chứa mã lỗi có thực sự được kích hoạt trong luồng thực thi của mã nguồn hay không.
-- **Cổng Kiểm soát An ninh (Security Gate - Python Script):** Phân tích tệp `security-gate-findings.json` và kích hoạt lệnh dừng chuỗi (`raise SystemExit`) khi phát hiện CVE có khả năng khắc phục (fixable) ở mức độ nghiêm trọng High hoặc Critical. Cơ chế này thường xuyên gây ra cảnh báo giả (False Positives) đối với các đoạn mã không khả dụng thực thi (Unreachable Code), dẫn tới đình trệ bất hợp lý quy trình phát hành phần mềm.
+- **Cổng Kiểm soát An ninh (Security Gate - Python Script):** Phân tích tệp `security-gate-findings.json` và kích hoạt lệnh dừng chuỗi (`raise SystemExit`) khi phát hiện CVE có khả năng khắc phục (fixable) ở mức độ nghiêm trọng High hoặc Critical. Cơ chế này thường xuyên gây ra cảnh báo sai lệch (False Positives) đối với các đoạn mã không khả dụng thực thi (Unreachable Code), dẫn tới đình trệ bất hợp lý quy trình phát hành phần mềm.
 - **Ký số & Chứng thực Nguồn gốc (Cosign / SLSA Attestation):** Thực hiện ký số và đẩy bản ghi chứng thực lên OCI Registry, tuy nhiên thiếu vắng chốt chặn Admission Webhook để kiểm soát điều kiện nạp tại môi trường Kubernetes runtime.
 
 ---
@@ -354,7 +355,7 @@ DevGuard hỗ trợ trực quan hóa quan hệ phụ thuộc đa tầng từ ứ
 *Hình 2.4: Đồ thị phụ thuộc của user-auth-service.*
 
 #### 5. VEX Rule Engine
-DevGuard cung cấp cơ chế thiết lập VEX Rules linh hoạt nhằm đánh giá và miễn trừ các cảnh báo giả từ lỗ hổng không khả dụng thực thi. Hình 2.5 minh họa 2 quy tắc VEX đã được áp dụng cho vi dịch vụ user-auth-service.
+DevGuard cung cấp cơ chế thiết lập VEX Rules linh hoạt nhằm đánh giá và miễn trừ các cảnh báo sai lệch (False Positives) từ lỗ hổng không khả dụng thực thi. Hình 2.5 minh họa 2 quy tắc VEX đã được áp dụng cho vi dịch vụ user-auth-service.
 
 ![Quản lý VEX Rules](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/user_auth_vex_rules.png)
 *Hình 2.5: Quản lý và xử lý VEX Rules trên Dashboard.*
@@ -682,7 +683,7 @@ Khác với Semgrep CLI mặc định luôn cố gắng kết nối tới Semgre
 ### 5.1. Đặt vấn đề & Thách thức An ninh Rò rỉ Thông tin Xác thực (Secret Leaks)
 Rò rỉ khóa bí mật (API Keys, Token truy cập, Mật khẩu cơ sở dữ liệu, Private Keys) trong mã nguồn là một trong những nguyên nhân hàng đầu dẫn đến các vụ xâm nhập hệ thống nghiêm trọng (OWASP Top 10 - A07: Identification and Authentication Failures). Trong kiến trúc Microservices với 23 dịch vụ phân tán, nguy cơ này càng tăng cao:
 1. **Rò rỉ vào lịch sử phiên bản (Git History):** Lập trình viên có thể vô tình đưa các thông tin xác thực tạm thời vào lịch sử commit phục vụ kiểm thử cục bộ. Ngay cả khi đã xóa đoạn mã ở commit tiếp theo, khóa bí mật vẫn tồn tại vĩnh viễn trong cây cấu trúc git (git tree) và đồ thị commit (commit graph) nếu không được rà soát lịch sử git chuyên sâu.
-2. **Cảnh báo giả từ các mẫu tài liệu (High False Positive Rate):** Nhiều công cụ regex đơn giản phát hiện nhầm các chuỗi mẫu trong tài liệu (như `AKIAIOSFODNN7EXAMPLE`) hoặc chuỗi ngẫu nhiên trong test fixture, gây nhiễu và làm nản lòng đội ngũ phát triển.
+2. **Cảnh báo sai lệch từ các mẫu tài liệu (High False Positive Rate):** Nhiều công cụ regex đơn giản phát hiện nhầm các chuỗi mẫu trong tài liệu (như `AKIAIOSFODNN7EXAMPLE`) hoặc chuỗi ngẫu nhiên trong test fixture, gây nhiễu và làm nản lòng đội ngũ phát triển.
 3. **Nguy cơ rò rỉ thứ cấp qua tệp nhật ký khi gửi báo cáo (Secondary Leakage via SARIF):** Khi phát hiện khóa bí mật, nếu scanner không thực hiện cơ chế che giấu (masking/obfuscation) mà gửi nguyên văn chuỗi bí mật lên Control Plane hoặc lưu vào cơ sở dữ liệu trung tâm, chính hệ thống bảo mật lại trở thành nguồn rò rỉ thông tin xác thực thứ cấp.
 
 ---
@@ -693,7 +694,7 @@ Nhằm khắc phục triệt để các hạn chế trên, DevGuard Scanner đã
 - **Hỗ trợ 2 Chế độ Rà quét Linh hoạt:**
   - *Chế độ Git Repository (`gitleaks git`):* Rà soát chuyên sâu toàn bộ lịch sử commit, tất cả các nhánh và commit graph, đảm bảo không sót bất kỳ thông tin xác thực nào bị ẩn giấu trong các commit cũ.
   - *Chế độ Thư mục (`gitleaks dir` qua cờ `--dir`):* Phục vụ kiểm tra nhanh thư mục mã nguồn đang chỉnh sửa (working tree, uncommitted files), cực kỳ phù hợp cho pre-commit hook và pipeline CI nhanh.
-- **Bộ lọc Entropy Shannon & Allowlist Ngữ cảnh:** Gitleaks áp dụng thuật toán tính toán độ hỗn loạn Shannon Entropy kết hợp 160+ quy tắc phát hiện chuẩn (AWS, GitHub, Slack, RSA Private Keys, Stripe, GCP, v.v.). Các chuỗi có entropy thấp hoặc nằm trong danh mục mẫu tài liệu chuẩn được tự động bỏ qua, giảm thiểu tối đa tỷ lệ cảnh báo giả.
+- **Bộ lọc Entropy Shannon & Allowlist Ngữ cảnh:** Gitleaks áp dụng thuật toán tính toán độ hỗn loạn Shannon Entropy kết hợp 160+ quy tắc phát hiện chuẩn (AWS, GitHub, Slack, RSA Private Keys, Stripe, GCP, v.v.). Các chuỗi có entropy thấp hoặc nằm trong danh mục mẫu tài liệu chuẩn được tự động bỏ qua, giảm thiểu tối đa tỷ lệ cảnh báo sai lệch (False Positives).
 
 *Bảng 6: Đánh giá cơ chế rà quét secret của Gitleaks*
 
@@ -903,7 +904,11 @@ Khác với các công cụ IaC scanner truyền thống như Checkov (phụ thu
 
 ---
 
-## Phần 7: Thực nghiệm 6 - Đánh giá Trụ cột Container Security và Tích hợp Trivy Image Engine Đối chứng Base Image
+> [!NOTE]
+> **Mở rộng Kiểm soát An ninh Cấu hình Hạ tầng (IaC) sang Dockerfile AST:**  
+> Bên cạnh việc rà soát Kubernetes Manifests bằng Trivy Config, việc phân tích cú pháp tĩnh tệp `Dockerfile` theo chuẩn CIS Docker Benchmark v1.6.0 và NIST SP 800-190 được tích hợp chuyên sâu qua động cơ **Hadolint v2.12.0** và được kiểm chứng định lượng A/B Benchmark trên 23 vi dịch vụ tại **Mục 7.6**.
+
+## Phần 7: Thực nghiệm 6 - Đánh giá Trụ cột Container Security: Tích hợp Trivy Image Engine & Hadolint Dockerfile AST Linter
 
 ### 7.1. Đặt vấn đề & Nguy cơ từ Bề mặt Tấn công của Container Image (Container Vulnerability & Attack Surface Bloat)
 Trong quy trình phát triển và đóng gói vi dịch vụ (Microservices), Container Image là đơn vị đóng gói và phân phối thực thi trực tiếp trên cụm Kubernetes. Tuy nhiên, cách thức xây dựng Dockerfile truyền thống thường mang lại những nguy cơ an ninh nghiêm trọng:
@@ -926,7 +931,7 @@ DevGuard Scanner CLI đã được nâng cấp kiến trúc tích hợp sâu v�
 | Tiêu chí kỹ thuật | Base Image Truyền thống (Debian/Ubuntu) | Multi-stage Distroless Nonroot (Google Distroless) | Ý nghĩa an ninh thực tiễn |
 | :--- | :--- | :--- | :--- |
 | **Bề mặt tấn công (OS Packages)** | Mang theo 200+ gói OS (`libc6`, `apt`, `systemd`...) | Chỉ giữ lại binary Go và `ca-certificates` | Loại bỏ 100% các lỗ hổng tầng hệ điều hành không liên quan |
-| **Số lượng CVEs tầng OS** | 46 CVEs (nhiều lỗ hổng mức High/Medium trong `libc6`) | 0 CVEs tầng OS packages | Tránh phát sinh cảnh báo giả và gián đoạn sai lệch quy trình CI/CD |
+| **Số lượng CVEs tầng OS** | 46 CVEs (nhiều lỗ hổng mức High/Medium trong `libc6`) | 0 CVEs tầng OS packages | Tránh phát sinh cảnh báo sai lệch (False Positives) và gián đoạn sai lệch quy trình CI/CD |
 | **Công cụ Shell & Package Manager** | Có sẵn `/bin/sh`, `/bin/bash`, `apt`, `dpkg`, `curl` | Hoàn toàn không có shell, không có package manager | Ngăn chặn kẻ tấn công tải mã độc và khai thác tương tác khi có RCE |
 | **Quyền thực thi Runtime (User ID)** | Mặc định chạy dưới quyền `root` (UID 0) | Ép buộc chạy non-root (`UID 65532:65532`) | Ngăn ngừa triệt để nguy cơ leo thang đặc quyền và Container Breakout |
 | **Dung lượng Image kích thước** | Thường từ 150 MB đến 400 MB | Siêu nhẹ, chỉ từ 15 MB đến 25 MB (giảm 10 - 15 lần) | Tối ưu hóa tốc độ tải image (pull time) và triển khai trên cụm K8s |
@@ -1094,6 +1099,11 @@ Hệ thống thiết lập tệp cấu hình chuẩn hóa `.hadolint.yaml` đặ
 
 ![Ảnh chụp màn hình cửa sổ Windows Terminal thực tế hiển thị cấu hình quy chuẩn .hadolint.yaml và kết quả rà soát AST](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/real_terminal_hadolint_violations.png)
 *Hình 7.7: Cấu hình quy tắc an ninh .hadolint.yaml và kết quả phân tích AST trên Windows Terminal.*
+
+![Biểu đồ đối chứng số lượng vi phạm AST và hiệu quả tối ưu hóa bản dựng Hadolint](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/hadolint_ab_comparison_chart.png)
+*Hình 7.8: Biểu đồ đối chứng số lượng vi phạm AST và hiệu quả tối ưu hóa bản dựng Hadolint (Baseline vs Distroless Hardened).*
+
+
 
 #### 7.6.4. Ma trận Kết quả Rà soát Cú pháp Dockerfile trên 23 Go Microservices
 Để chứng minh tính khả thi và độ ổn định trong môi trường quy mô lớn, nhóm nghiên cứu đã mở rộng rà soát tự động toàn bộ 23 vi dịch vụ Go trong hệ sinh thái dự án:
@@ -1552,9 +1562,9 @@ Không chỉ vận hành ở mức in-line proxy dòng lệnh qua biến môi tr
 ### 11.1. Đặt vấn đề & Hạn chế khi dùng nhiều script kiểm tra an ninh phân tán (The CI/CD Policy Gate Fragmentation Crisis)
 Trong các kiến trúc CI/CD truyền thống triển khai cho hệ thống Microservices, việc thực thi chính sách an ninh (Security Quality Gate) thường rơi vào tình trạng phân mảnh và thiếu nhất quán nghiêm trọng:
 1. **Khủng hoảng Nhân bản Script (Script Sprawl & Maintenance Overhead):** Trong hệ sinh thái 23 Go microservices của đề tài, mỗi repository dịch vụ sở hữu riêng một bộ script kiểm tra (trung bình 6 scripts/service gồm `check_secrets.sh`, `parse_trivy.py`, `enforce_quality_gate.py`, `verify_cosign.sh`...). Tổng cộng **138 tệp script** phân tán độc lập trên 23 kho mã nguồn. Khi cần thay đổi ngưỡng chặn an ninh (ví dụ: siết chặt CVSS >= 7.0 hoặc chấp thuận tạm thời 1 CVE mới), kỹ sư bảo mật buộc phải sửa đổi, tạo Pull Request và merge thủ công trên toàn bộ 23 repositories.
-2. **Thiếu Ngữ cảnh Khai thác & Bế tắc Cảnh báo Giả (False Positive Deadlock):** Các đoạn script kiểm tra thuần túy trên runner (như `enforce_quality_gate.py` trong workflow cũ `ci-service.yml`) chỉ thực hiện thao tác so sánh thô: đọc tệp JSON kết quả từ Trivy/Grype và đếm số lượng CVE có severity là `HIGH` hoặc `CRITICAL`. Script trên runner hoàn toàn không có khả năng phân tích ngữ cảnh: liệu hàm bị lỗi có thực sự được mã nguồn Go gọi tới hay không (Call-Graph Reachability)? Hệ quả là trên toàn bộ 23/23 microservices, pipeline đều bị chặn đứng (Build FAILED) bởi 46 CVEs tầng OS packages có sẵn trong base image Debian/Ubuntu, mặc dù ứng dụng hoàn toàn không sử dụng các thư viện hệ thống đó.
-3. **Hiện tượng "Gate Fatigue" và Xu hướng Tắt Kiểm tra An ninh:** Khi đối mặt với việc pipeline liên tục bị gián đoạn do cảnh báo giả, các đội ngũ phát triển thường có xu hướng thêm cờ `|| true` hoặc cấu hình `exit 0` bỏ qua kiểm tra an ninh trong CI. Điều này làm mất đi hoàn toàn ý nghĩa của cổng kiểm soát chất lượng phần mềm.
-4. **Yêu cầu Cốt lõi của Unified Security Quality Gate:** Cần một điểm kiểm soát chất lượng an ninh tập trung (Centralized Policy Enforcement Point), có khả năng hợp nhất kết quả rà quét từ mọi công cụ an ninh (SCA, SAST, Secret Scanning, IaC, Container, DAST) qua một chuẩn giao tiếp mở (OASIS SARIF v2.1.0), kết nối trực tiếp với VEX Rule Engine để loại bỏ cảnh báo giả trước khi ra quyết định dừng (Exit Code 1) hoặc cho phép (Exit Code 0) pipeline CI/CD.
+2. **Thiếu Ngữ cảnh Khai thác & Bế tắc do Cảnh báo Sai lệch (False Positive Deadlock):** Các đoạn script kiểm tra thuần túy trên runner (như `enforce_quality_gate.py` trong workflow truyền thống `ci-service.yml`) chỉ thực hiện thao tác so sánh thô: đọc tệp JSON kết quả từ Trivy/Grype và đếm số lượng CVE có severity là `HIGH` hoặc `CRITICAL`. Script trên runner hoàn toàn không có khả năng phân tích ngữ cảnh: liệu hàm bị lỗi có thực sự được mã nguồn Go gọi tới hay không (Call-Graph Reachability)? Hệ quả là trên toàn bộ 23/23 microservices, pipeline đều bị chặn đứng (Build FAILED) bởi 46 CVEs tầng OS packages có sẵn trong base image Debian/Ubuntu, mặc dù ứng dụng hoàn toàn không sử dụng các thư viện hệ thống đó.
+3. **Hiện tượng "Gate Fatigue" và Xu hướng Tắt Kiểm tra An ninh:** Khi đối mặt với việc pipeline liên tục bị gián đoạn do cảnh báo sai lệch (False Positives), các đội ngũ phát triển thường có xu hướng thêm cờ `|| true` hoặc cấu hình `exit 0` bỏ qua kiểm tra an ninh trong CI. Điều này làm mất đi hoàn toàn ý nghĩa của cổng kiểm soát chất lượng phần mềm.
+4. **Yêu cầu Cốt lõi của Unified Security Quality Gate:** Cần một điểm kiểm soát chất lượng an ninh tập trung (Centralized Policy Enforcement Point), có khả năng hợp nhất kết quả rà quét từ mọi công cụ an ninh (SCA, SAST, Secret Scanning, IaC, Container, DAST) qua một chuẩn giao tiếp mở (OASIS SARIF v2.1.0), kết nối trực tiếp với VEX Rule Engine để loại bỏ cảnh báo sai lệch (False Positives) trước khi ra quyết định dừng (Exit Code 1) hoặc cho phép (Exit Code 0) pipeline CI/CD.
 
 ---
 
@@ -1582,7 +1592,7 @@ DevGuard hiện thực hóa kiến trúc cổng kiểm soát chất lượng an 
 | :--- | :--- | :--- | :--- |
 | **Số lượng scripts bảo trì** | 138 scripts phân tán trên 23 services (6 scripts/service) | 0 scripts — Tích hợp trong 1 binary duy nhất (`devguard-scanner`) | Giảm 100% chi phí bảo trì script; loại bỏ nguy cơ phân mảnh cấu hình giữa các microservices |
 | **Định dạng dữ liệu đầu vào** | Đọc các tệp JSON thô, không chuẩn hóa từ Syft/Grype | Chuẩn hóa quốc tế OASIS SARIF v2.1.0 cho toàn bộ 6 trụ cột an ninh | Tương thích đa nền tảng, dễ dàng tích hợp với GitHub Code Scanning, SonarQube, Jira |
-| **Xử lý Cảnh báo giả (False Positives)** | Đếm thô tổng số CVE, không phân biệt hàm có được gọi hay không | Tự động loại bỏ cảnh báo giả qua VEX Statement & Call-Graph Reachability | Chống tắc nghẽn CI/CD; loại bỏ hiện tượng "Gate Fatigue" gây mất thời gian cho lập trình viên |
+| **Xử lý Cảnh báo sai lệch (False Positives)** | Đếm thô tổng số CVE, không phân biệt hàm có được gọi hay không | Tự động loại bỏ cảnh báo sai lệch (False Positives) qua VEX Statement & Call-Graph Reachability | Chống tắc nghẽn CI/CD; loại bỏ hiện tượng "Gate Fatigue" gây mất thời gian cho lập trình viên |
 | **Cơ chế Cập nhật Ngưỡng vi phạm** | Sửa code Python/Bash, tạo PR và merge trên từng repository | Cập nhật tập trung tức thì trên Control Plane API / Web Dashboard | Thay đổi chính sách an ninh toàn công ty trong 5 giây mà không chạm vào 1 dòng mã nguồn |
 | **Mã thoát (Exit Code Enforcement)** | Script tự viết `sys.exit(1)`, dễ bị bypass bằng cờ `|| true` | Native binary trả về Exit Code 1 khi `openCount > 0`, Exit Code 0 khi `openCount == 0` | Đảm bảo tính nghiêm ngặt tuyệt đối của cổng kiểm soát chất lượng an ninh trong pipeline CI/CD |
 | **Vận hành Mạng cô lập (Air-Gapped)** | Cần cài đặt runtime Python, dependencies (`pip install`) trên runner | Binary Go độc lập tĩnh (self-contained), hoạt động 100% không cần Internet | Vận hành tin cậy trong các hạ tầng Zero-Trust, mạng quân sự và ngân hàng bảo mật cao |
@@ -1590,8 +1600,8 @@ DevGuard hiện thực hóa kiến trúc cổng kiểm soát chất lượng an 
 ---
 
 ### 11.3. Cơ chế Lọc bỏ Cảnh báo Sai (False Positive Mitigation): Distroless Nonroot & VEX Suppression
-Thực nghiệm chuyên sâu đã làm sáng tỏ nguyên nhân gốc rễ và cơ chế giải quyết triệt để vấn đề cảnh báo giả trong pipeline CI/CD:
-1. **Thực trạng Cảnh báo Giả từ Base Image Debian:**
+Thực nghiệm chuyên sâu đã làm sáng tỏ nguyên nhân gốc rễ và cơ chế giải quyết triệt để vấn đề cảnh báo sai lệch (False Positives) trong pipeline CI/CD:
+1. **Thực trạng Cảnh báo Sai lệch từ Base Image Debian:**
    Khi quét container image truyền thống sử dụng base image Debian 12.13 (`golang:1.22`), Trivy phát hiện **46 CVEs thuộc tầng hệ điều hành** (trong đó có các lỗ hổng Critical/High trong thư viện hệ thống `libc6`, `libssl3`, `coreutils`...). Với script kiểm tra cũ, cả 23/23 services đều bị đánh rớt vì vượt ngưỡng vi phạm (`HIGH/CRITICAL > 0`). Tuy nhiên, vi dịch vụ `user-service` là một ứng dụng Go độc lập, được biên dịch tĩnh (`CGO_ENABLED=0`) và hoàn toàn không sử dụng bất kỳ thư viện C nào của Debian.
 2. **Thu hẹp tối đa bề mặt tấn công với Multi-stage Distroless Nonroot:**
    Áp dụng kỹ thuật Dockerfile Multi-stage chuyển sang base image tối giản `gcr.io/distroless/static-debian12:nonroot`:
@@ -1658,10 +1668,10 @@ Trước khi kích hoạt động cơ đánh giá chính sách tập trung, quy 
 3. **Tầng 3 (TCP Egress Drop):** Cố gắng mở socket TCP tới cổng HTTPS 443 của dịch vụ SaaS đám mây -> Kết nối bị từ chối / timeout tức thì, lưu lượng mạng gửi ra ngoài ghi nhận chính xác 0.00 Bytes outbound.
 4. **Tầng 4 (Local Control Plane):** Kiểm tra trạng thái máy chủ DevGuard nội bộ tại `http://localhost:8080/healthz` -> Phản hồi HTTP 200 OK (PostgreSQL 16 và Echo daemon sẵn sàng nạp dữ liệu chính sách).
 
-#### 11.6.2. Cơ chế Đánh giá Hợp nhất 6 Trụ cột & Khử Cảnh báo giả với OpenVEX Core
+#### 11.6.2. Cơ chế Đánh giá Hợp nhất 6 Trụ cột & Khử Cảnh báo sai lệch (False Positives) với OpenVEX Core
 Khác biệt hoàn toàn so với các pipeline CI/CD truyền thống vốn phụ thuộc vào hàng loạt scripts rời rạc hoặc webhooks gọi ra dịch vụ SaaS của bên thứ ba, DevGuard thực thi toàn bộ logic đánh giá chính sách tại hạ tầng On-Premise:
 - **Hợp nhất 6 Trụ cột An ninh:** Cổng kiểm tra an ninh tập hợp đồng thời kết quả rà quét từ: (1) SAST Opengrep v1.16.0; (2) Secret Scanning Gitleaks v8.30.1; (3) IaC Trivy Config v0.74.0; (4) Container Security Trivy Image v0.74.0; (5) DAST Nuclei v3.11.1; và (6) Supply Chain Cosign v2.4.0 & SLSA v1.0 Provenance.
-- **Loại bỏ Cảnh báo giả OS Packages với OpenVEX Core:** Trong mô hình truyền thống, 46 CVEs tầng hệ điều hành Debian sẽ ngay lập tức kích hoạt lỗi chặn (false block). DevGuard áp dụng hồ sơ VEX chuẩn (`docs/vex_rules.json`) kết hợp kiến trúc Multi-stage Distroless Nonroot, tự động chứng minh 100% các lỗ hổng này không nằm trong mã thực thi (unreachable), qua đó dập tắt cảnh báo giả mà vẫn đảm bảo an toàn tuyệt đối.
+- **Loại bỏ Cảnh báo sai lệch (False Positives) OS Packages với OpenVEX Core:** Trong mô hình truyền thống, 46 CVEs tầng hệ điều hành Debian sẽ ngay lập tức kích hoạt lỗi chặn (false block). DevGuard áp dụng hồ sơ VEX chuẩn (`docs/vex_rules.json`) kết hợp kiến trúc Multi-stage Distroless Nonroot, tự động chứng minh 100% các lỗ hổng này không nằm trong mã thực thi (unreachable), qua đó dập tắt cảnh báo sai lệch (False Positives) mà vẫn đảm bảo an toàn tuyệt đối.
 
 #### 11.6.3. Kiểm thử A/B Định lượng: Chặn đứng (Exit Code 1) vs Phê duyệt (Exit Code 0)
 Bộ điều phối thực nghiệm tiến hành đánh giá đối chiếu qua 2 kịch bản thực tế:
@@ -1669,7 +1679,7 @@ Bộ điều phối thực nghiệm tiến hành đánh giá đối chiếu qua 
    - Khi đưa vào các bản dựng cũ chứa lỗi vi phạm nghiêm trọng (thiếu TLS 1.3 trong SAST, rò rỉ secret giả lập, cấu hình K8s chạy quyền root, 46 CVEs Debian và tệp nhị phân bị can thiệp làm sai lệch mã băm SHA-256), Policy Gate phát hiện tổng cộng **59 active unhandled issues** vượt ngưỡng cho phép (`max_allowed = 0`).
    - Kết quả: Hệ thống lập tức từ chối xuất xưởng, in ma trận cảnh báo đỏ chi tiết và **trả về Exit Code 1** trong thời gian **355.85 ms**, bộ nhớ RAM tiêu thụ chỉ **13.18 MB** và **0.00 Bytes Egress**.
 2. **Kịch bản B (Passing / Remediated & OpenVEX Suppressed):**
-   - Khi chuyển sang bản dựng hoàn thiện đã được vá lỗi, loại bỏ secret, cấu hình K8s Nonroot, sử dụng Distroless base image và ký số Cosign ECDSA P-256 kèm hồ sơ SLSA v1.0, Policy Gate ghi nhận **0 unhandled issues** và 46 cảnh báo giả được khử an toàn qua OpenVEX.
+   - Khi chuyển sang bản dựng hoàn thiện đã được vá lỗi, loại bỏ secret, cấu hình K8s Nonroot, sử dụng Distroless base image và ký số Cosign ECDSA P-256 kèm hồ sơ SLSA v1.0, Policy Gate ghi nhận **0 unhandled issues** và 46 cảnh báo sai lệch (False Positives) được khử an toàn qua OpenVEX.
    - Kết quả: Hệ thống ban hành thông điệp xanh `[PASS] POLICY GATE APPROVED`, cấp chứng nhận triển khai và **trả về Exit Code 0** trong thời gian **358.31 ms**, RAM tiêu thụ **13.23 MB**, lưu lượng Egress tuyệt đối **0.00 Bytes**.
 
 ![Cửa sổ Windows PowerShell thực tế chạy bộ điều phối kiểm thử Air-Gapped Unified Policy Gate ngắt mạng 100%, đánh giá A/B blocking vs passing](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/airgap_terminal_policy_gate.png)
@@ -1685,7 +1695,7 @@ Toàn bộ thông số đo đạc kỹ thuật đã được kết xuất ra t�
 | **3. Dữ liệu Gửi ra Internet (Egress)** | ~245.0 KB (Gửi metadata lỗi ra đám mây) | **0.00 Bytes** (Tuyệt đối không rò rỉ thông tin) | Giữ bí mật toàn bộ thông tin kiến trúc và cấu hình hệ thống. |
 | **4. Thời gian Đánh giá (Latency)** | 4,850 ms (Trễ TLS và API webhooks) | **358.3 ms** (Nhanh gấp **13.5 lần**) | Giảm thiểu thời gian chờ của kỹ sư trên mỗi lần commit code. |
 | **5. Mức Tiêu thụ Bộ nhớ RAM Đỉnh** | 95.0 MB (Overhead mạng và đa tiến trình) | **13.2 MB** (Tiết kiệm **86.1%** RAM) | Tối ưu hóa tài nguyên trên máy chủ và runner On-Premise. |
-| **6. Khử Cảnh báo giả (VEX Engine)** | Thủ công hoặc không hỗ trợ OpenVEX | Tự động 100% qua OpenVEX Statements | Loại bỏ hoàn toàn tình trạng cảnh báo sai lệch gây mất thời gian cho lập trình viên. |
+| **6. Khử Cảnh báo sai lệch (False Positives) (VEX Engine)** | Thủ công hoặc không hỗ trợ OpenVEX | Tự động 100% qua OpenVEX Statements | Loại bỏ hoàn toàn tình trạng cảnh báo sai lệch gây mất thời gian cho lập trình viên. |
 | **7. Quyết định K8s Admission Webhook** | Bất đồng bộ, độ trễ triển khai cao | Đồng bộ tức thì với Admission Controller | Ngăn chặn Pod không đạt chuẩn khởi chạy ngay tại runtime cụm K8s. |
 | **8. Kết quả Thực thi Chính sách** | Phụ thuộc kết nối Internet công cộng | Chính xác 100% (Exit Code 1 vs Exit Code 0) | Đáp ứng trọn vẹn tiêu chuẩn ISO 27001 và NIST SP 800-218 SSDF. |
 
@@ -1694,7 +1704,7 @@ Toàn bộ thông số đo đạc kỹ thuật đã được kết xuất ra t�
 #### 11.6.5. Thực nghiệm Rà soát trên CI/CD Container Runner trong Mạng Docker airgapped-net
 Để kiểm chứng khả năng tích hợp vào các pipeline tự động hóa thực tế của doanh nghiệp, kịch bản kiểm soát chính sách tập trung đã được đóng gói và kích hoạt trực tiếp bên trong Container Runner gắn vào mạng `airgapped-net` (`"Internal": true`, subnet `172.23.0.0/16`):
 - **Cô lập Môi trường Thực thi:** Container runner hoàn toàn không có default gateway ra Internet (lệnh `ping 8.8.8.8` trả về `Network unreachable`, `nc cloud-policy.devguard.io` trả về `bad address`).
-- **Nạp SARIF và Thẩm định OpenVEX Nội bộ:** Runner nạp toàn bộ 5 báo cáo SARIF và hồ sơ SLSA Provenance vào bộ phân tích chính sách, tự động áp dụng rule OpenVEX để loại bỏ 46 cảnh báo giả tầng OS Debian.
+- **Nạp SARIF và Thẩm định OpenVEX Nội bộ:** Runner nạp toàn bộ 5 báo cáo SARIF và hồ sơ SLSA Provenance vào bộ phân tích chính sách, tự động áp dụng rule OpenVEX để loại bỏ 46 cảnh báo sai lệch (False Positives) tầng OS Debian.
 - **Ban hành Quyết định Quality Gate:** Toàn bộ 6 trụ cột đều đạt trạng thái tuân thủ, DevGuard Control Plane nội bộ ghi nhận kết quả và container runner kết thúc thành công với **Exit Code 0**, sẵn sàng cấp phát token cho bước triển khai Kubernetes.
 
 ![Cửa sổ Windows PowerShell thực tế chạy CI/CD Container Runner trong mạng Docker airgapped-net ngắt Internet, thực thi cổng kiểm tra an ninh (Policy Gate)](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/airgap_docker_policy_gate_runner.png)
@@ -1743,7 +1753,7 @@ sequenceDiagram
 | `justification` | VEX Justification Enum | `code_not_reachable` | Mã nguồn microservice không hề gọi đến hàm hoặc symbol chứa mã lỗi (kiểm chứng qua đồ thị gọi AST) |
 | `impact_statement` | String (Báo cáo tác động) | `Automated AST call-graph analysis verified zero execution paths to vulnerable symbol.` | Cung cấp bằng chứng kiểm toán máy (Machine-readable audit trail) phục vụ Kubernetes Admission Controller |
 
-Nhờ đó pipeline CI/CD tránh bị đình trệ do cảnh báo giả, tiết kiệm hơn 80% thời gian xử lý.
+Nhờ đó pipeline CI/CD tránh bị đình trệ do cảnh báo sai lệch (False Positives), tiết kiệm hơn 80% thời gian xử lý.
 
 ### 12.2. Tính năng 2: Kubernetes In-Cluster Agent & Admission Controller
 - **Cơ chế:** Triển khai `k8s-agent` làm Validating Admission Webhook trên Kubernetes.
@@ -1814,12 +1824,12 @@ Theo khẳng định tại Step Summary của bài kiểm tra Benchmark: *"Toàn
 
 ### 13.1. So sánh tính năng
 
-*Bảng 13: So sánh tính năng pipeline cũ và DevGuard Control Plane*
+*Bảng 13: So sánh tính năng pipeline truyền thống và DevGuard Control Plane*
 
 | Tiêu chí | Pipeline rời rạc (cũ) | DevGuard (PoC) | Lợi ích |
 | :--- | :--- | :--- | :--- |
 | **Quản lý SBOM** | Tệp JSON cục bộ, phân tán | CycloneDX lưu tập trung, truy vấn theo Version/Ref | Tra cứu nhanh khi có zero-day mới |
-| **Xử lý cảnh báo giả (VEX)** | Không có, phải chỉnh sửa tệp ignore thủ công | VEX Rule tập trung, tự động nhận diện Reachability | Giảm cảnh báo giả, không chặn release |
+| **Xử lý cảnh báo sai lệch (False Positives) (VEX)** | Không có, phải chỉnh sửa tệp ignore thủ công | VEX Rule tập trung, tự động nhận diện Reachability | Giảm cảnh báo sai lệch (False Positives), không chặn release |
 | **Kiểm soát Secret & SAST & IaC** | Các công cụ chạy riêng rẽ | Ingest SARIF vào Control Plane | Tập trung mọi rủi ro vào 1 Dashboard |
 | **Hồ sơ nguồn gốc SLSA (Provenance)** | Ký Cosign đơn lẻ | In-Toto Attestation đa bước | Đạt chuẩn SLSA Level 3 |
 | **Kiểm soát trên Kubernetes** | Kiểm tra thủ công trước deploy | Admission Webhook tự động chặn | Bảo vệ Zero-Trust tại runtime |
@@ -1832,10 +1842,10 @@ Theo khẳng định tại Step Summary của bài kiểm tra Benchmark: *"Toàn
 
 *Bảng 14: So sánh chỉ số hiệu quả vận hành*
 
-| Chỉ số | Pipeline cũ (23 Services) | DevGuard | Cải thiện |
+| Chỉ số | Pipeline truyền thống (ci-service.yml) (23 Services) | DevGuard | Cải thiện |
 | :--- | :--- | :--- | :--- |
 | **Số scripts cần duy trì** | 6 scripts / service | 1 CLI (`devguard-scanner`) | Giảm 83% |
-| **Thời gian xử lý cảnh báo giả** | 4.5 giờ / phát hiện | 15 phút (tự động qua VEX) | Giảm 94% |
+| **Thời gian xử lý cảnh báo sai lệch (False Positives)** | 4.5 giờ / phát hiện | 15 phút (tự động qua VEX) | Giảm 94% |
 | **Phạm vi kiểm soát** | Chỉ quét container image | Mã nguồn + Dependencies + In-Toto + K8s | Toàn bộ SDLC |
 | **Thời gian phát hiện ảnh hưởng CVE** | Phải build lại 23 services | Truy vấn SBOM DB (< 5 giây) | Gần như tức thì |
 
@@ -1843,16 +1853,16 @@ Theo khẳng định tại Step Summary của bài kiểm tra Benchmark: *"Toàn
 
 ### 13.3. Benchmark chuyên sâu: Khả năng chịu tải (Load Test) với 23 Services
 
-Thực nghiệm đã mở rộng phạm vi bằng cách kích hoạt một Pipeline Matrix song song trên toàn bộ 23 microservices của hệ sinh thái để ép tải hệ thống DevGuard (Run ID #34103301097), và đồng thời chạy lại toàn bộ CI cũ `ci-service.yml` trên 23 services (Run ID #34104255412) để đối chiếu A/B. Kết quả:
+Thực nghiệm đã mở rộng phạm vi bằng cách kích hoạt một Pipeline Matrix song song trên toàn bộ 23 microservices của hệ sinh thái để ép tải hệ thống DevGuard (Run ID #34103301097), và đồng thời chạy lại toàn bộ CI truyền thống `ci-service.yml` trên 23 services (Run ID #34104255412) để đối chiếu A/B. Kết quả:
 
 - **Hiệu suất CI/CD & Mạng (Concurrency)**:
-  - **Kịch bản thực tế (Pipeline cũ thất bại do rào cản cảnh báo giả)**: Mất **hơn 7 phút** (dù đã có cache Docker layers) vì phải build image trước khi quét. Quá trình xử lý cồng kềnh và tốn tài nguyên.
-  - **Kịch bản lý tưởng (Cả hai cùng vượt qua kiểm tra - All Green)**: Khi cấu hình chấp thuận cho Pipeline cũ bỏ qua lỗi (Warning Mode) để vượt qua 100%, thời gian chạy toàn hệ thống lên tới **17 phút 45 giây** (Run ID #34105605094, do phải xếp hàng đợi tài nguyên và chi phí tải các artifact, attestations).
-  - **DevGuard Pipeline**: 23 runners quét độc lập mã nguồn (AST) và gửi SBOM về Control Plane. Thời gian hoàn thành chỉ mất **~2 phút 45 giây** (Nhanh gấp **~6.4 lần** so với kịch bản xanh của pipeline cũ). API Control Plane không gặp tình trạng thắt nút cổ chai (bottleneck).
+  - **Kịch bản thực tế (Pipeline truyền thống (ci-service.yml) thất bại do rào cản cảnh báo sai lệch (False Positives))**: Mất **hơn 7 phút** (dù đã có cache Docker layers) vì phải build image trước khi quét. Quá trình xử lý cồng kềnh và tốn tài nguyên.
+  - **Kịch bản lý tưởng (Cả hai cùng vượt qua kiểm tra - All Green)**: Khi cấu hình chấp thuận cho Pipeline truyền thống (ci-service.yml) bỏ qua lỗi (Warning Mode) để vượt qua 100%, thời gian chạy toàn hệ thống lên tới **17 phút 45 giây** (Run ID #34105605094, do phải xếp hàng đợi tài nguyên và chi phí tải các artifact, attestations).
+  - **DevGuard Pipeline**: 23 runners quét độc lập mã nguồn (AST) và gửi SBOM về Control Plane. Thời gian hoàn thành chỉ mất **~2 phút 45 giây** (Nhanh gấp **~6.4 lần** so với kịch bản xanh của pipeline truyền thống). API Control Plane không gặp tình trạng thắt nút cổ chai (bottleneck).
 - **Dung lượng & Truy vấn Database**: PostgreSQL 16 tăng trưởng dung lượng lên khoảng 2.37 GB sau khi tiếp nhận toàn bộ dữ liệu phụ thuộc và PURL của 23 services. Nhờ extension pg-semver, tốc độ truy vấn lỗ hổng (Zero-Day) cho toàn hệ sinh thái vẫn đạt phản hồi < 1 giây.
-- **Tỷ lệ giảm cảnh báo giả (Reachability)**: 
-  - **Pipeline cũ (`ci-service.yml`)**: Ở chế độ Enforce mặc định, thất bại (Failed) ở bước `Enforce security gate` trên **toàn bộ 23/23 services**. Các cảnh báo giả (CVE mức High từ OS base image) làm gián đoạn hoàn toàn chuỗi phát hành vì script cũ không thể biết mã nguồn Go có thực sự gọi hàm lỗi hay không.
-  - **DevGuard Pipeline**: Quá trình quét AST Call-Graph loại trừ triệt để cảnh báo giả, ghi nhận 0 CVE nào thực sự tác động (reachable). Tỷ lệ thành công **100%**, giúp pipeline luôn thông suốt.
+- **Tỷ lệ giảm cảnh báo sai lệch (False Positives) (Reachability)**: 
+  - **Pipeline truyền thống (`ci-service.yml`)**: Ở chế độ Enforce mặc định, thất bại (Failed) ở bước `Enforce security gate` trên **toàn bộ 23/23 services**. Các cảnh báo sai lệch (False Positives) (CVE mức High từ OS base image) làm gián đoạn hoàn toàn chuỗi phát hành vì script truyền thống không thể biết mã nguồn Go có thực sự gọi hàm lỗi hay không.
+  - **DevGuard Pipeline**: Quá trình quét AST Call-Graph loại trừ triệt để cảnh báo sai lệch (False Positives), ghi nhận 0 CVE nào thực sự tác động (reachable). Tỷ lệ thành công **100%**, giúp pipeline luôn thông suốt.
 
 ![Biểu đồ so sánh thời gian chạy CI/CD khi tải đồng thời 23 services](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/benchmark_time_chart.png)
 *Hình 13.2: So sánh thời gian chạy CI/CD khi tải đồng thời 23 services.*
@@ -1860,11 +1870,11 @@ Thực nghiệm đã mở rộng phạm vi bằng cách kích hoạt một Pipel
 ![Kết quả GitHub Actions chạy DevGuard hoàn thành đồng thời 23 services](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/github_actions_devguard_23s.png)
 *Hình 13.3: DevGuard hoàn thành quét đồng thời 23 services trong 2m45s.*
 
-![Kết quả GitHub Actions chạy Pipeline cũ mất 17m45s trên 23 services](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/github_actions_17m45s.png)
-*Hình 13.4: Pipeline cũ mất 17m45s khi bỏ qua kiểm tra an ninh trên 23 services.*
+![Kết quả GitHub Actions chạy Pipeline truyền thống (ci-service.yml) mất 17m45s trên 23 services](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/github_actions_17m45s.png)
+*Hình 13.4: Pipeline truyền thống (ci-service.yml) mất 17m45s khi bỏ qua kiểm tra an ninh trên 23 services.*
 
-![Biểu đồ so sánh tỷ lệ giảm cảnh báo giả nhờ Reachability Analysis](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/benchmark_reachability_chart.png)
-*Hình 13.5: So sánh tỷ lệ giảm cảnh báo giả nhờ Reachability Analysis.*
+![Biểu đồ so sánh tỷ lệ giảm cảnh báo sai lệch (False Positives) nhờ Reachability Analysis](file:///c:/Users/ADMIN/Documents/design-and-implementation-of-automated-supply-chain-security-for-go-microservices-on-kubernetes/docs/images/benchmark_reachability_chart.png)
+*Hình 13.5: So sánh tỷ lệ giảm cảnh báo sai lệch (False Positives) nhờ Reachability Analysis.*
 
 ### 13.4. Kết quả A/B Benchmark CI/CD trên GitHub Actions
 
@@ -1877,12 +1887,12 @@ Bảng so sánh kỹ thuật chi tiết giữa 2 pipeline:
 | **Kiến trúc** | Stateless Runner (Syft + Grype + Python Gate) | Control Plane tập trung (API + DB + Dashboard) | Từ script rời rạc sang hệ thống tập trung |
 | **Định dạng SBOM** | SPDX JSON lưu tạm trên Runner | CycloneDX lưu PostgreSQL + pg-semver | Tập trung dữ liệu bảo mật |
 | **Truy vấn Zero-Day** | Phải quét lại toàn bộ 23 services | Truy vấn qua PURL & SBOM DB (< 1 giây) | Giảm 99% thời gian điều tra |
-| **Xử lý cảnh báo giả** | Chặn build khi có CVE fixable | VEX Rule Engine & Reachability | Giữ thông suốt CI/CD |
+| **Xử lý cảnh báo sai lệch (False Positives)** | Chặn build khi có CVE fixable | VEX Rule Engine & Reachability | Giữ thông suốt CI/CD |
 | **Chứng thực chuỗi cung ứng** | Ký Cosign, upload OCI thủ công | In-Toto Attestation gắn kết SBOM | Xác thực từ commit đến runtime |
 | **Kiểm soát Kubernetes** | Lưu trên OCI, không có Webhook | Admission Webhook chặn Pod vi phạm | Bảo vệ Zero-Trust tại runtime |
 
 > **Nhận xét:**
-> Kết quả cho thấy sự khác biệt chính nằm ở việc chuyển từ quy trình CI thuần túy (stateless runner, tạo tệp JSON tạm, chặn build khi gặp cảnh báo giả) sang hệ thống quản lý tập trung (lưu trữ lâu dài, phân tích Reachability, kiểm soát tại runtime).
+> Kết quả cho thấy sự khác biệt chính nằm ở việc chuyển từ quy trình CI thuần túy (stateless runner, tạo tệp JSON tạm, chặn build khi gặp cảnh báo sai lệch (False Positives)) sang hệ thống quản lý tập trung (lưu trữ lâu dài, phân tích Reachability, kiểm soát tại runtime).
 
 ---
 
@@ -1891,7 +1901,7 @@ Bảng so sánh kỹ thuật chi tiết giữa 2 pipeline:
 ### 14.1. Kết luận
 Thực nghiệm cho thấy:
 1. DevGuard hoạt động ổn định, tương thích với kiến trúc 23 Go Microservices hiện tại.
-2. Việc thay thế chuỗi công cụ rời rạc bằng Control Plane tập trung giúp nâng cao mức độ bảo mật chuỗi cung ứng và giải quyết được vấn đề cảnh báo giả (false positive) - nguyên nhân chính gây chặn pipeline phát hành.
+2. Việc thay thế chuỗi công cụ rời rạc bằng Control Plane tập trung giúp nâng cao mức độ bảo mật chuỗi cung ứng và giải quyết được vấn đề cảnh báo sai lệch (False Positives) (false positive) - nguyên nhân chính gây chặn pipeline phát hành.
 3. Đề tài kế thừa và vận dụng hiệu quả các tính năng của DevGuard, hoàn thiện quy trình kiểm soát an ninh tự động cho 23 Go microservices trên Kubernetes.
 
 ### 14.2. Lộ trình triển khai
@@ -1907,7 +1917,7 @@ gantt
 ```
 *Hình 14.1: Biểu đồ Gantt lộ trình tích hợp an ninh DevGuard cho 23 services.*
 
-- **Giai đoạn 1 (Tuần 1-2) - Triển khai PoC:** Thiết lập Control Plane (kế thừa DevGuard) và tích hợp quét CI/CD đồng loạt cho toàn bộ 23 microservices. Đánh giá tính chịu tải của DB và API, kích hoạt Static Reachability để giảm cảnh báo giả.
+- **Giai đoạn 1 (Tuần 1-2) - Triển khai PoC:** Thiết lập Control Plane (kế thừa DevGuard) và tích hợp quét CI/CD đồng loạt cho toàn bộ 23 microservices. Đánh giá tính chịu tải của DB và API, kích hoạt Static Reachability để giảm cảnh báo sai lệch (False Positives).
 - **Giai đoạn 2 (Tuần 3-4) - Kiểm soát Kubernetes:** Cài k8s-agent Validating Admission Webhook trên Kubernetes Staging/Production để tự động chặn Pod vi phạm tại runtime, hoàn thành giai đoạn đánh giá và sẵn sàng cho môi trường production.
 
 ---
@@ -1942,7 +1952,7 @@ gantt
 6. **OpenVEX Specification v0.2.0 & CISA VEX Implementation Guide**  
    Open Source Security Foundation (OpenSSF) & Cybersecurity and Infrastructure Security Agency (CISA), 2023.  
    Đặc tả VEX: [https://openvex.dev](https://openvex.dev) | [CISA VEX Resources](https://www.cisa.gov/resources-tools/resources/vulnerability-exploitability-exchange-vex)  
-   *Đặc tả kỹ thuật trao đổi trạng thái khả năng khai thác lỗ hổng (VEX), cho phép máy móc tự động xác định trạng thái not_affected khi lỗ hổng không thể kích hoạt trong mã nguồn, giải quyết triệt để vấn đề cảnh báo giả.*
+   *Đặc tả kỹ thuật trao đổi trạng thái khả năng khai thác lỗ hổng (VEX), cho phép máy móc tự động xác định trạng thái not_affected khi lỗ hổng không thể kích hoạt trong mã nguồn, giải quyết triệt để vấn đề cảnh báo sai lệch (False Positives).*
 
 7. **NTIA / CISA Minimum Elements for a Software Bill of Materials (SBOM)**  
    National Telecommunications and Information Administration (NTIA), U.S. Department of Commerce, 2021.  
