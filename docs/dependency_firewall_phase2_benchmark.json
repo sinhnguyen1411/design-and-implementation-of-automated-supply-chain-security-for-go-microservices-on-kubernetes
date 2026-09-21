@@ -1,38 +1,38 @@
 {
-  "timestamp": "2026-09-20T19:10:31Z",
+  "timestamp": "2026-09-21T13:33:34Z",
   "total": 8,
   "passed": 8,
   "pass_rate": 100.0,
-  "avg_latency_ms": 15.8875,
+  "avg_latency_ms": 210.20250000000001,
   "results": [
     {
       "path": "github.com/gin-gonic/gin/@v/v1.9.1.info",
       "status_code": 200,
       "expected_status": 200,
-      "latency_ms": 9.18,
+      "latency_ms": 1393.16,
       "headers": {
-        "Content-Type": "text/plain; charset=utf-8",
+        "Content-Type": "application/json",
         "Vary": "Origin",
-        "X-Cache": "HIT",
+        "X-Cache": "MISS",
         "X-Proxy-Type": "go",
-        "Date": "Sun, 20 Sep 2026 12:10:31 GMT",
+        "Date": "Mon, 21 Sep 2026 06:33:34 GMT",
         "Content-Length": "189"
       },
       "body_snippet": "{\"Version\":\"v1.9.1\",\"Time\":\"2023-06-01T02:26:20Z\",\"Origin\":{\"VCS\":\"git\",\"URL\":\"https://github.com/gin-gonic/gin\",\"Ref\":\"refs/tags/v1.9.1\",\"Hash\":\"4ea0e648e38a63d6caff14100f5eab5c50",
       "passed": true,
-      "cache_status": "HIT"
+      "cache_status": "MISS"
     },
     {
       "path": "github.com/gin-gonic/gin/@v/v1.9.1.info",
       "status_code": 200,
       "expected_status": 200,
-      "latency_ms": 4.65,
+      "latency_ms": 26.04,
       "headers": {
         "Content-Type": "text/plain; charset=utf-8",
         "Vary": "Origin",
         "X-Cache": "HIT",
         "X-Proxy-Type": "go",
-        "Date": "Sun, 20 Sep 2026 12:10:31 GMT",
+        "Date": "Mon, 21 Sep 2026 06:33:34 GMT",
         "Content-Length": "189"
       },
       "body_snippet": "{\"Version\":\"v1.9.1\",\"Time\":\"2023-06-01T02:26:20Z\",\"Origin\":{\"VCS\":\"git\",\"URL\":\"https://github.com/gin-gonic/gin\",\"Ref\":\"refs/tags/v1.9.1\",\"Hash\":\"4ea0e648e38a63d6caff14100f5eab5c50",
@@ -43,29 +43,29 @@
       "path": "go.uber.org/zap/@v/v1.26.0.info",
       "status_code": 200,
       "expected_status": 200,
-      "latency_ms": 23.74,
+      "latency_ms": 88.62,
       "headers": {
-        "Content-Type": "text/plain; charset=utf-8",
+        "Content-Type": "application/json",
         "Vary": "Origin",
-        "X-Cache": "HIT",
+        "X-Cache": "MISS",
         "X-Proxy-Type": "go",
-        "Date": "Sun, 20 Sep 2026 12:10:31 GMT",
+        "Date": "Mon, 21 Sep 2026 06:33:34 GMT",
         "Content-Length": "189"
       },
       "body_snippet": "{\"Version\":\"v1.26.0\",\"Time\":\"2023-09-14T20:29:58Z\",\"Origin\":{\"VCS\":\"git\",\"URL\":\"https://github.com/uber-go/zap\",\"Ref\":\"refs/tags/v1.26.0\",\"Hash\":\"96038b71a7d96b8c14fedb3aeddcb3d0d7",
       "passed": true,
-      "cache_status": "HIT"
+      "cache_status": "MISS"
     },
     {
       "path": "github.com/sirupsen/logrus/@v/v1.9.3.info",
       "status_code": 403,
       "expected_status": 403,
-      "latency_ms": 3.68,
+      "latency_ms": 18.45,
       "headers": {
         "Content-Type": "application/json",
         "Vary": "Origin",
         "X-Not-Allowed-Package": "blocked",
-        "Date": "Sun, 20 Sep 2026 12:10:31 GMT",
+        "Date": "Mon, 21 Sep 2026 06:33:34 GMT",
         "Content-Length": "266"
       },
       "body_snippet": "{\"blocked\":true,\"error\":\"Forbidden\",\"message\":\"This package has been blocked by the dependency proxy rules\",\"path\":\"github.com/sirupsen/logrus/@v/v1.9.3.info/\",\"reason\":\"Package gi",
@@ -76,12 +76,12 @@
       "path": "github.com/dgrijalva/jwt-go/@v/v3.2.0.info",
       "status_code": 403,
       "expected_status": 403,
-      "latency_ms": 3.51,
+      "latency_ms": 3.99,
       "headers": {
         "Content-Type": "application/json",
         "Vary": "Origin",
         "X-Not-Allowed-Package": "blocked",
-        "Date": "Sun, 20 Sep 2026 12:10:31 GMT",
+        "Date": "Mon, 21 Sep 2026 06:33:34 GMT",
         "Content-Length": "269"
       },
       "body_snippet": "{\"blocked\":true,\"error\":\"Forbidden\",\"message\":\"This package has been blocked by the dependency proxy rules\",\"path\":\"github.com/dgrijalva/jwt-go/@v/v3.2.0.info/\",\"reason\":\"Package g",
@@ -92,12 +92,12 @@
       "path": "github.com/fake-org/malicious-package/@v/v1.0.0.info",
       "status_code": 403,
       "expected_status": 403,
-      "latency_ms": 5.41,
+      "latency_ms": 30.0,
       "headers": {
         "Content-Type": "application/json",
         "Vary": "Origin",
         "X-Malicious-Package": "blocked",
-        "Date": "Sun, 20 Sep 2026 12:10:31 GMT",
+        "Date": "Mon, 21 Sep 2026 06:33:34 GMT",
         "Content-Length": "357"
       },
       "body_snippet": "{\"blocked\":true,\"error\":\"Forbidden\",\"message\":\"This package has been blocked by the malicious package firewall\",\"path\":\"github.com/fake-org/malicious-package/@v/v1.0.0.info/\",\"reas",
@@ -108,12 +108,12 @@
       "path": "github.com/boltdb-go/bolt/@v/v1.3.1.info",
       "status_code": 403,
       "expected_status": 403,
-      "latency_ms": 17.64,
+      "latency_ms": 6.22,
       "headers": {
         "Content-Type": "application/json",
         "Vary": "Origin",
         "X-Malicious-Package": "blocked",
-        "Date": "Sun, 20 Sep 2026 12:10:31 GMT",
+        "Date": "Mon, 21 Sep 2026 06:33:34 GMT",
         "Content-Length": "303"
       },
       "body_snippet": "{\"blocked\":true,\"error\":\"Forbidden\",\"message\":\"This package has been blocked by the malicious package firewall\",\"path\":\"github.com/boltdb-go/bolt/@v/v1.3.1.info/\",\"reason\":\"Package",
@@ -124,12 +124,12 @@
       "path": "golang.org/x/sync/@v/v0.6.0.info",
       "status_code": 403,
       "expected_status": 403,
-      "latency_ms": 59.29,
+      "latency_ms": 115.14,
       "headers": {
         "Content-Type": "application/json",
         "Vary": "Origin",
         "X-Too-New-Package": "blocked",
-        "Date": "Sun, 20 Sep 2026 12:10:31 GMT",
+        "Date": "Mon, 21 Sep 2026 06:33:34 GMT",
         "Content-Length": "282"
       },
       "body_snippet": "{\"blocked\":true,\"error\":\"Forbidden\",\"message\":\"This package has been blocked because it was released too recently\",\"path\":\"golang.org/x/sync/@v/v0.6.0.info/\",\"reason\":\"Package gola",

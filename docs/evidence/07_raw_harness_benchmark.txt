@@ -5,21 +5,21 @@
 [CONFIG] Updated Firewall Policy: 3 rule(s), minReleaseAge=48h
 
 [1] Thử gói an toàn (kỳ vọng: HTTP 200 OK)
-  [GIN v1.9.1 - Chưa cache] Mã: 200 | Thời gian: 42.34ms | Cache: HIT | Đạt: True
-  [GIN v1.9.1 - Đã cache  ] Mã: 200 | Thời gian: 7.58ms | Cache: HIT | Đạt: True
-  [ZAP v1.26.0            ] Mã: 200 | Thời gian: 5.94ms | Cache: HIT | Đạt: True
+  [GIN v1.9.1 - Chưa cache (Cold)] Mã: 200 | Thời gian: 1393.16ms | Cache: MISS | Đạt: True
+  [GIN v1.9.1 - Đã cache (Warm)  ] Mã: 200 | Thời gian: 26.04ms | Cache: HIT | Đạt: True (Nhanh hơn 53.5 lần)
+  [ZAP v1.26.0                   ] Mã: 200 | Thời gian: 88.62ms | Cache: MISS | Đạt: True
 
 [2] Thử gói bị cấm theo luật công ty (kỳ vọng: HTTP 403)
-  [LOGRUS v1.9.3          ] Mã: 403 | Thời gian: 23.12ms | Chặn bởi luật: Đúng | Đạt: True
-  [JWT-GO v3.2.0          ] Mã: 403 | Thời gian: 16.16ms | Chặn bởi luật: Đúng | Đạt: True
+  [LOGRUS v1.9.3                 ] Mã: 403 | Thời gian: 18.45ms | Chặn bởi luật: Đúng | Đạt: True
+  [JWT-GO v3.2.0                 ] Mã: 403 | Thời gian: 3.99ms | Chặn bởi luật: Đúng | Đạt: True
 
 [3] Thử gói chứa mã độc trong OSV DB (kỳ vọng: HTTP 403)
-  [Mã độc thử nghiệm      ] Mã: 403 | Thời gian: 9.49ms | Chặn mã độc: Đúng | Đạt: True
-  [Mã độc boltdb-go thật  ] Mã: 403 | Thời gian: 5.85ms | Chặn mã độc: Đúng | Đạt: True
+  [Mã độc thử nghiệm             ] Mã: 403 | Thời gian: 30.0ms | Chặn mã độc: Đúng | Đạt: True
+  [Mã độc boltdb-go thật         ] Mã: 403 | Thời gian: 6.22ms | Chặn mã độc: Đúng | Đạt: True
 
 [4] Thử gói mới phát hành cần cách ly (kỳ vọng: HTTP 403)
 [CONFIG] Updated Firewall Policy: 3 rule(s), minReleaseAge=100000h
-  [Gói mới chưa đủ tuổi   ] Mã: 403 | Thời gian: 288.8ms | Chặn cách ly: Đúng | Đạt: True
+  [Gói mới chưa đủ tuổi          ] Mã: 403 | Thời gian: 115.14ms | Chặn cách ly: Đúng | Đạt: True
 [CONFIG] Updated Firewall Policy: 3 rule(s), minReleaseAge=48h
 
 ================================================================================
@@ -27,9 +27,9 @@
 ================================================================================
   Tổng số ca kiểm thử          : 8
   Số ca đạt kỳ vọng            : 8 / 8 (100.0%)
-  Thời gian phản hồi trung bình: 49.91 ms
-  Khi chưa có cache (lần đầu)  : 42.34 ms
-  Khi đã có cache nội bộ       : 7.58 ms (nhanh hơn 5.6 lần)
+  Thời gian phản hồi trung bình: 210.20 ms
+  Khi chưa có cache (lần đầu)  : 1393.16 ms
+  Khi đã có cache nội bộ       : 26.04 ms (nhanh hơn 53.5 lần)
   Tỷ lệ chặn mã độc            : 100% (không lọt file về máy)
   Tỷ lệ chặn gói bị cấm        : 100%
   Tỷ lệ cách ly gói mới ra lò  : 100%
